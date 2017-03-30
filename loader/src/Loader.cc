@@ -33,33 +33,33 @@ namespace plugin
 /////////////////////////////////////////////////
 class PluginLoaderPrivate
 {
-  public:
-    /// \brief Directories that should be searched for plugins
-    std::vector<std::string> searchPaths;
+  /// \brief Directories that should be searched for plugins
+  public: std::vector<std::string> searchPaths;
 
-    /// \brief A list of known plugins
-    std::vector<PluginInfo> plugins;
+  /// \brief A list of known plugins
+  public: std::vector<PluginInfo> plugins;
 
-    /// \brief format the name to start with "::"
-    std::string NormalizeName(std::string _name) const;
+  /// \brief format the name to start with "::"
+  public: std::string NormalizeName(std::string _name) const;
 
-    /// \brief format the path to use "/" as a separator with "/" at the end
-    std::string NormalizePath(std::string _path) const;
+  /// \brief format the path to use "/" as a separator with "/" at the end
+  public: std::string NormalizePath(std::string _path) const;
 
-    /// \brief generates paths to try searching for the named library
-    std::vector<std::string> GenerateSearchNames(std::string _libName) const;
+  /// \brief generates paths to try searching for the named library
+  public: std::vector<std::string> GenerateSearchNames(
+              std::string _libName) const;
 
-    /// \brief attempt to load a library at the given path
-    void* LoadLibrary(std::string _full_path) const;
+  /// \brief attempt to load a library at the given path
+  public: void *LoadLibrary(std::string _full_path) const;
 
-    /// \brief get plugin info for a library that has only one plugin
-    PluginInfo GetSinglePlugin(void *_dlHandle) const;
+  /// \brief get plugin info for a library that has only one plugin
+  public: PluginInfo GetSinglePlugin(void *_dlHandle) const;
 
-    /// \brief return true if string starts with another string
-    bool StartsWith(std::string _s1, std::string _s2) const;
+  /// \brief return true if string starts with another string
+  public: bool StartsWith(std::string _s1, std::string _s2) const;
 
-    /// \brief return true if string ends with another string
-    bool EndsWith(std::string _s1, std::string _s2) const;
+  /// \brief return true if string ends with another string
+  public:  bool EndsWith(std::string _s1, std::string _s2) const;
 };
 
 /////////////////////////////////////////////////
@@ -118,12 +118,13 @@ std::vector<std::string> PluginLoader::SearchPaths() const
 bool PluginLoader::LoadLibrary(std::string _libName)
 {
   bool loadedLibrary = false;
-  std::vector<std::string> searchNames = this->impl->GenerateSearchNames(_libName);
+  std::vector<std::string> searchNames =
+    this->impl->GenerateSearchNames(_libName);
   
-  for (auto iter = searchNames.cbegin(); iter != searchNames.cend(); ++iter)
+  for (auto const &possibleName : searchNames)
   {
     // Attempt to load the library at this path
-    void *dlHandle = this->impl->LoadLibrary(*iter);
+    void *dlHandle = this->impl->LoadLibrary(possibleName);
     if (nullptr != dlHandle)
     {
       // Found a shared library, does it have the symbols we're looking for?
@@ -145,31 +146,28 @@ bool PluginLoader::LoadLibrary(std::string _libName)
 std::vector<std::string> PluginLoader::InterfacesImplemented() const
 {
   std::vector<std::string> interfaces;
-  auto begin = this->impl->plugins.cbegin();
-  auto end = this->impl->plugins.cend();
-  for (auto pluginIter = begin; pluginIter != end; ++pluginIter)
+  for (auto const &plugin : this->impl->plugins)
   {
     if (interfaces.cend() == std::find(
-          interfaces.cbegin(), interfaces.cend(), pluginIter->interface))
+          interfaces.cbegin(), interfaces.cend(), plugin.interface))
     {
-      interfaces.push_back(pluginIter->interface);
+      interfaces.push_back(plugin.interface);
     }
   }
   return interfaces;
 }
 
 /////////////////////////////////////////////////
-std::vector<std::string> PluginLoader::PluginsImplementing(std::string _interface) const
+std::vector<std::string> PluginLoader::PluginsImplementing(
+    std::string _interface) const
 {
   std::string interface = this->impl->NormalizeName(_interface);
   std::vector<std::string> plugins;
-  auto begin = this->impl->plugins.cbegin();
-  auto end = this->impl->plugins.cend();
-  for (auto pluginIter = begin; pluginIter != end; ++pluginIter)
+  for (auto const &plugin : this->impl->plugins)
   {
-    if (pluginIter->interface == interface)
+    if (plugin.interface == interface)
     {
-      plugins.push_back(pluginIter->name);
+      plugins.push_back(plugin.name);
     }
   }
   return plugins;
@@ -178,21 +176,19 @@ std::vector<std::string> PluginLoader::PluginsImplementing(std::string _interfac
 /////////////////////////////////////////////////
 void* PluginLoader::Instantiate(std::string _name, std::size_t _baseId) const
 {
-  void *plugin = nullptr;
+  void *instance = nullptr;
   std::string name = this->impl->NormalizeName(_name);
   std::vector<std::string> plugins;
-  auto begin = this->impl->plugins.cbegin();
-  auto end = this->impl->plugins.cend();
-  for (auto pluginIter = begin; pluginIter != end; ++pluginIter)
+  for (auto const &plugin : this->impl->plugins)
   {
-    if (pluginIter->baseClassHash == _baseId && pluginIter->name == name)
+    if (plugin.baseClassHash == _baseId && plugin.name == name)
     {
       // Creates plugin on heap
-      plugin = pluginIter->factory();
+      instance = plugin.factory();
       break;
     }
   }
-  return plugin;
+  return instance;
 }
 
 /////////////////////////////////////////////////
@@ -251,7 +247,7 @@ bool PluginLoaderPrivate::EndsWith(std::string _s1, std::string _s2) const
 std::vector<std::string> PluginLoaderPrivate::GenerateSearchNames(
     std::string _libName) const
 {
-  // figure out all possible prefixes or extensions the library name could have
+  // test for possible prefixes or extensions on the library name
   bool hasLib = this->StartsWith(_libName, "lib");
   bool hasDotSo = this->EndsWith(_libName, ".so");
   bool hasDotDll = this->EndsWith(_libName, ".dll");
@@ -269,27 +265,23 @@ std::vector<std::string> PluginLoaderPrivate::GenerateSearchNames(
 
   // Create possible basenames on different platforms
   std::vector<std::string> basenames;
-  for (auto iter = initNames.cbegin(); iter != initNames.cend(); ++iter)
+  for (auto const &name : initNames)
   {
-    basenames.push_back(*iter);
-    basenames.push_back("lib" + *iter + ".so");
-    basenames.push_back(*iter + ".so");
-    basenames.push_back(*iter + ".dll");
-    basenames.push_back("lib" + *iter + ".dylib");
-    basenames.push_back(*iter + ".dylib");
+    basenames.push_back(name);
+    basenames.push_back("lib" + name + ".so");
+    basenames.push_back(name + ".so");
+    basenames.push_back(name + ".dll");
+    basenames.push_back("lib" + name + ".dylib");
+    basenames.push_back(name + ".dylib");
   }
 
   std::vector<std::string> searchNames;
   // Concatenate these possible basenames with the search paths
-  auto pathsBegin = this->searchPaths.cbegin();
-  auto pathsEnd = this->searchPaths.cend();
-  auto namesBegin = basenames.cbegin();
-  auto namesEnd = basenames.cend();
-  for (auto pathsIter = pathsBegin; pathsIter != pathsEnd; ++pathsIter)
+  for (auto const &path : this->searchPaths)
   {
-    for (auto namesIter = namesBegin; namesIter != namesEnd; ++namesIter)
+    for (auto const &name : basenames)
     {
-      searchNames.push_back(*pathsIter + *namesIter);
+      searchNames.push_back(path + name);
     }
   }
   return searchNames;
