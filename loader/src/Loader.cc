@@ -20,8 +20,8 @@
 #include <functional>
 #include <sstream>
 
-#include "ignition/common/plugin/PluginInfo.hh"
-#include "ignition/common/plugin/PluginLoader.hh"
+#include "ignition/common/PluginInfo.hh"
+#include "ignition/common/PluginLoader.hh"
 
 namespace ignition
 {
