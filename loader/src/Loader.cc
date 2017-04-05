@@ -88,7 +88,7 @@ std::string PluginLoader::PrettyStr() const
 /////////////////////////////////////////////////
 PluginLoader::PluginLoader()
 {
-  this->impl.reset(new PluginLoaderPrivate());
+  this->dataPtr.reset(new PluginLoaderPrivate());
 }
 
 /////////////////////////////////////////////////
@@ -99,19 +99,19 @@ PluginLoader::~PluginLoader()
 /////////////////////////////////////////////////
 void PluginLoader::AddSearchPath(std::string _path)
 {
-  std::string path = this->impl->NormalizePath(_path);
-  auto begin = this->impl->searchPaths.cbegin();
-  auto end = this->impl->searchPaths.cend();
+  std::string path = this->dataPtr->NormalizePath(_path);
+  auto begin = this->dataPtr->searchPaths.cbegin();
+  auto end = this->dataPtr->searchPaths.cend();
   if (end == std::find(begin, end, path))
   {
-    this->impl->searchPaths.push_back(path);
+    this->dataPtr->searchPaths.push_back(path);
   }
 }
 
 /////////////////////////////////////////////////
 std::vector<std::string> PluginLoader::SearchPaths() const
 {
-  return this->impl->searchPaths;
+  return this->dataPtr->searchPaths;
 }
 
 /////////////////////////////////////////////////
@@ -119,21 +119,21 @@ bool PluginLoader::LoadLibrary(std::string _libName)
 {
   bool loadedLibrary = false;
   std::vector<std::string> searchNames =
-    this->impl->GenerateSearchNames(_libName);
+    this->dataPtr->GenerateSearchNames(_libName);
   
   for (auto const &possibleName : searchNames)
   {
     // Attempt to load the library at this path
-    void *dlHandle = this->impl->LoadLibrary(possibleName);
+    void *dlHandle = this->dataPtr->LoadLibrary(possibleName);
     if (nullptr != dlHandle)
     {
       // Found a shared library, does it have the symbols we're looking for?
-      PluginInfo plugin = this->impl->GetSinglePlugin(dlHandle);
+      PluginInfo plugin = this->dataPtr->GetSinglePlugin(dlHandle);
       if (plugin.name.size())
       {
-        plugin.name = this->impl->NormalizeName(plugin.name);
-        plugin.interface = this->impl->NormalizeName(plugin.interface);
-        this->impl->plugins.push_back(plugin);
+        plugin.name = this->dataPtr->NormalizeName(plugin.name);
+        plugin.interface = this->dataPtr->NormalizeName(plugin.interface);
+        this->dataPtr->plugins.push_back(plugin);
         loadedLibrary = true;
       }
       break;
@@ -146,7 +146,7 @@ bool PluginLoader::LoadLibrary(std::string _libName)
 std::vector<std::string> PluginLoader::InterfacesImplemented() const
 {
   std::vector<std::string> interfaces;
-  for (auto const &plugin : this->impl->plugins)
+  for (auto const &plugin : this->dataPtr->plugins)
   {
     if (interfaces.cend() == std::find(
           interfaces.cbegin(), interfaces.cend(), plugin.interface))
@@ -161,9 +161,9 @@ std::vector<std::string> PluginLoader::InterfacesImplemented() const
 std::vector<std::string> PluginLoader::PluginsImplementing(
     std::string _interface) const
 {
-  std::string interface = this->impl->NormalizeName(_interface);
+  std::string interface = this->dataPtr->NormalizeName(_interface);
   std::vector<std::string> plugins;
-  for (auto const &plugin : this->impl->plugins)
+  for (auto const &plugin : this->dataPtr->plugins)
   {
     if (plugin.interface == interface)
     {
@@ -177,9 +177,9 @@ std::vector<std::string> PluginLoader::PluginsImplementing(
 void* PluginLoader::Instantiate(std::string _name, std::size_t _baseId) const
 {
   void *instance = nullptr;
-  std::string name = this->impl->NormalizeName(_name);
+  std::string name = this->dataPtr->NormalizeName(_name);
   std::vector<std::string> plugins;
-  for (auto const &plugin : this->impl->plugins)
+  for (auto const &plugin : this->dataPtr->plugins)
   {
     if (plugin.baseClassHash == _baseId && plugin.name == name)
     {
