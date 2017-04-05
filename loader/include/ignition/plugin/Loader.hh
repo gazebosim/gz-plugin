@@ -47,7 +47,7 @@ class PluginLoader
   public: std::string PrettyStr() const;
 
   /// \brief Adds a path to search for plugins
-  public: void AddSearchPath(std::string _path);
+  public: void AddSearchPath(const std::string &_path);
 
   /// \brief Returns paths that are being searched for plugins
   public: std::vector<std::string> SearchPaths() const;
@@ -57,16 +57,16 @@ class PluginLoader
 
   /// \brief Returns a list of plugin names that implement the interface
   public: std::vector<std::string> PluginsImplementing(
-               std::string _interface) const;
+               const std::string &_interface) const;
 
   /// \brief Load a library with a plugin by name
-  public: bool LoadLibrary(std::string _libName);
+  public: bool LoadLibrary(const std::string &_libName);
 
   /// \brief Instantiates a plugin of the name and base class
   ///
   /// ex: pl.Instantiate<animals::AnimalBase>("animals::farm::Donkey")
   public: template <typename T>
-  std::unique_ptr<T> Instantiate(std::string _name) const
+  std::unique_ptr<T> Instantiate(const std::string &_name) const
   {
     // type hash used to simplify this API
     std::unique_ptr<T> ptr;
@@ -75,7 +75,8 @@ class PluginLoader
     return ptr;
   }
 
-  private: void* Instantiate(std::string _name, std::size_t _baseId) const;
+  private: void* Instantiate(
+               const std::string &_name, std::size_t _baseId) const;
 
   private: std::shared_ptr<PluginLoaderPrivate> dataPtr;
 

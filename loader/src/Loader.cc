@@ -40,26 +40,26 @@ class PluginLoaderPrivate
   public: std::vector<PluginInfo> plugins;
 
   /// \brief format the name to start with "::"
-  public: std::string NormalizeName(std::string _name) const;
+  public: std::string NormalizeName(const std::string &_name) const;
 
   /// \brief format the path to use "/" as a separator with "/" at the end
-  public: std::string NormalizePath(std::string _path) const;
+  public: std::string NormalizePath(const std::string &_path) const;
 
   /// \brief generates paths to try searching for the named library
   public: std::vector<std::string> GenerateSearchNames(
-              std::string _libName) const;
+              const std::string &_libName) const;
 
   /// \brief attempt to load a library at the given path
-  public: void *LoadLibrary(std::string _full_path) const;
+  public: void *LoadLibrary(const std::string &_full_path) const;
 
   /// \brief get plugin info for a library that has only one plugin
   public: PluginInfo GetSinglePlugin(void *_dlHandle) const;
 
   /// \brief return true if string starts with another string
-  public: bool StartsWith(std::string _s1, std::string _s2) const;
+  public: bool StartsWith(const std::string &_s1, const std::string &_s2) const;
 
   /// \brief return true if string ends with another string
-  public:  bool EndsWith(std::string _s1, std::string _s2) const;
+  public: bool EndsWith(const std::string &_s1, const std::string &_s2) const;
 };
 
 /////////////////////////////////////////////////
@@ -97,7 +97,7 @@ PluginLoader::~PluginLoader()
 }
 
 /////////////////////////////////////////////////
-void PluginLoader::AddSearchPath(std::string _path)
+void PluginLoader::AddSearchPath(const std::string &_path)
 {
   std::string path = this->dataPtr->NormalizePath(_path);
   auto begin = this->dataPtr->searchPaths.cbegin();
@@ -115,7 +115,7 @@ std::vector<std::string> PluginLoader::SearchPaths() const
 }
 
 /////////////////////////////////////////////////
-bool PluginLoader::LoadLibrary(std::string _libName)
+bool PluginLoader::LoadLibrary(const std::string &_libName)
 {
   bool loadedLibrary = false;
   std::vector<std::string> searchNames =
@@ -159,7 +159,7 @@ std::vector<std::string> PluginLoader::InterfacesImplemented() const
 
 /////////////////////////////////////////////////
 std::vector<std::string> PluginLoader::PluginsImplementing(
-    std::string _interface) const
+    const std::string &_interface) const
 {
   std::string interface = this->dataPtr->NormalizeName(_interface);
   std::vector<std::string> plugins;
@@ -174,7 +174,8 @@ std::vector<std::string> PluginLoader::PluginsImplementing(
 }
 
 /////////////////////////////////////////////////
-void* PluginLoader::Instantiate(std::string _name, std::size_t _baseId) const
+void* PluginLoader::Instantiate(
+    const std::string &_name, std::size_t _baseId) const
 {
   void *instance = nullptr;
   std::string name = this->dataPtr->NormalizeName(_name);
@@ -192,30 +193,33 @@ void* PluginLoader::Instantiate(std::string _name, std::size_t _baseId) const
 }
 
 /////////////////////////////////////////////////
-std::string PluginLoaderPrivate::NormalizeName(std::string _name) const
+std::string PluginLoaderPrivate::NormalizeName(const std::string &_name) const
 {
+  std::string name = _name;
   if (!this->StartsWith(_name, "::"))
   {
-    _name = std::string("::") + _name;
+    name = std::string("::") + _name;
   }
-  return _name;
+  return name;
 }
 
 /////////////////////////////////////////////////
-std::string PluginLoaderPrivate::NormalizePath(std::string _path) const
+std::string PluginLoaderPrivate::NormalizePath(const std::string &_path) const
 {
+  std::string path = _path;
   // Use '/' because it works on Linux, OSX, and Windows
-  std::replace(_path.begin(), _path.end(), '\\', '/');
+  std::replace(path.begin(), path.end(), '\\', '/');
   //Make last character '/'
-  if (!this->EndsWith(_path, "/"))
+  if (!this->EndsWith(path, "/"))
   {
-    _path += '/';
+    path += '/';
   }
-  return _path;
+  return path;
 }
 
 /////////////////////////////////////////////////
-bool PluginLoaderPrivate::StartsWith(std::string _s1, std::string _s2) const
+bool PluginLoaderPrivate::StartsWith(
+    const std::string &_s1, const std::string &_s2) const
 {
   bool result = false;
   if (_s1.size() >= _s2.size())
@@ -229,7 +233,8 @@ bool PluginLoaderPrivate::StartsWith(std::string _s1, std::string _s2) const
 }
 
 /////////////////////////////////////////////////
-bool PluginLoaderPrivate::EndsWith(std::string _s1, std::string _s2) const
+bool PluginLoaderPrivate::EndsWith(
+    const std::string &_s1, const std::string &_s2) const
 {
   bool result = false;
   if (_s1.size() >= _s2.size())
@@ -245,7 +250,7 @@ bool PluginLoaderPrivate::EndsWith(std::string _s1, std::string _s2) const
 
 /////////////////////////////////////////////////
 std::vector<std::string> PluginLoaderPrivate::GenerateSearchNames(
-    std::string _libName) const
+    const std::string &_libName) const
 {
   // test for possible prefixes or extensions on the library name
   bool hasLib = this->StartsWith(_libName, "lib");
@@ -288,7 +293,7 @@ std::vector<std::string> PluginLoaderPrivate::GenerateSearchNames(
 }
 
 /////////////////////////////////////////////////
-void* PluginLoaderPrivate::LoadLibrary(std::string _full_path) const
+void* PluginLoaderPrivate::LoadLibrary(const std::string &_full_path) const
 {
   // Somehow this works on windows builds?
   return dlopen(_full_path.c_str(), RTLD_LAZY|RTLD_GLOBAL);
