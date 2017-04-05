@@ -172,7 +172,7 @@ std::vector<std::string> PluginLoader::PluginsImplementing(
 }
 
 /////////////////////////////////////////////////
-void* PluginLoader::Instantiate(
+void *PluginLoader::Instantiate(
     const std::string &_name, std::size_t _baseId) const
 {
   void *instance = nullptr;

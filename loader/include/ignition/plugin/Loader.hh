@@ -73,7 +73,7 @@ class PluginLoader
     return ptr;
   }
 
-  private: void* Instantiate(
+  private: void *Instantiate(
                const std::string &_name, std::size_t _baseId) const;
 
   private: std::shared_ptr<PluginLoaderPrivate> dataPtr;
