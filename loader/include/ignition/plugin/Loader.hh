@@ -41,28 +41,38 @@ class PluginLoader
   /// \brief Destructor
   public: ~PluginLoader();
 
-  /// \brief Returns a printable string with info about plugins
+  /// \brief Makes a printable string with info about plugins
+  /// \returns a pretty string
   public: std::string PrettyStr() const;
 
   /// \brief Adds a path to search for plugins
+  /// \param[in] _path A file path
   public: void AddSearchPath(const std::string &_path);
 
-  /// \brief Returns paths that are being searched for plugins
+  /// \brief get paths that are being searched for plugins
+  /// \returns paths that are searched
   public: std::vector<std::string> SearchPaths() const;
 
-  /// \brief Returns a list of interfaces that the loader has plugins for
+  /// \brief get names of interfaces that the loader has plugins for
+  /// \returns interfaces that are implemented
   public: std::vector<std::string> InterfacesImplemented() const;
 
-  /// \brief Returns a list of plugin names that implement the interface
+  /// \brief get plugin names that implement the interface
+  /// \param[in] _interface name of an interface
+  /// \returns names of plugins that implement the interface
   public: std::vector<std::string> PluginsImplementing(
                const std::string &_interface) const;
 
   /// \brief Load a library with a plugin by name
+  /// \param[in] _libName name of a shared library
+  /// \returns true iff library was loaded and contained a plugin
   public: bool LoadLibrary(const std::string &_libName);
 
   /// \brief Instantiates a plugin of the name and base class
   ///
   /// ex: pl.Instantiate<animals::AnimalBase>("animals::farm::Donkey")
+  /// \param[in] _name name of a plugin
+  /// \returns ptr to instantiated plugin
   public: template <typename T>
   std::unique_ptr<T> Instantiate(const std::string &_name) const
   {
@@ -73,6 +83,10 @@ class PluginLoader
     return ptr;
   }
 
+  /// \brief Instantiates a plugin of the name and base class hash
+  /// \param[in] _name name of a plugin
+  /// \param[in] _baseId typeid() hash_code() of base class type
+  /// \returns pointer to instantiated plugin
   private: void *Instantiate(
                const std::string &_name, std::size_t _baseId) const;
 
