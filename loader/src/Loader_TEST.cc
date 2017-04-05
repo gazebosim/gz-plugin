@@ -23,21 +23,21 @@
 /////////////////////////////////////////////////
 TEST(PluginLoader, InitialNoSearchPaths)
 {
-  ignition::common::plugin::PluginLoader pm;
+  ignition::common::PluginLoader pm;
   EXPECT_EQ(0, pm.SearchPaths().size());
 }
 
 /////////////////////////////////////////////////
 TEST(PluginLoader, InitialNoInterfacesImplemented)
 {
-  ignition::common::plugin::PluginLoader pm;
+  ignition::common::PluginLoader pm;
   EXPECT_EQ(0, pm.InterfacesImplemented().size());
 }
 
 /////////////////////////////////////////////////
 TEST(PluginLoader, AddOneSearchPath)
 {
-  ignition::common::plugin::PluginLoader pm;
+  ignition::common::PluginLoader pm;
   pm.AddSearchPath("./");
   ASSERT_EQ(1, pm.SearchPaths().size());
   EXPECT_EQ("./", pm.SearchPaths()[0]);
@@ -46,7 +46,7 @@ TEST(PluginLoader, AddOneSearchPath)
 /////////////////////////////////////////////////
 TEST(PluginLoader, SearchPathGetsTrailingSlash)
 {
-  ignition::common::plugin::PluginLoader pm;
+  ignition::common::PluginLoader pm;
   pm.AddSearchPath("/usr/local/lib");
   ASSERT_EQ(1, pm.SearchPaths().size());
   EXPECT_EQ("/usr/local/lib/", pm.SearchPaths()[0]);
@@ -55,7 +55,7 @@ TEST(PluginLoader, SearchPathGetsTrailingSlash)
 /////////////////////////////////////////////////
 TEST(PluginLoader, SearchPathUsesForwardSlashes)
 {
-  ignition::common::plugin::PluginLoader pm;
+  ignition::common::PluginLoader pm;
   pm.AddSearchPath("C:\\user\\alice\\gazebolibs\\");
   ASSERT_EQ(1, pm.SearchPaths().size());
   EXPECT_EQ("C:/user/alice/gazebolibs/", pm.SearchPaths()[0]);
@@ -64,7 +64,7 @@ TEST(PluginLoader, SearchPathUsesForwardSlashes)
 /////////////////////////////////////////////////
 TEST(PluginLoader, LoadNonexistantLibrary)
 {
-  ignition::common::plugin::PluginLoader pm;
+  ignition::common::PluginLoader pm;
   pm.AddSearchPath("../util");
   EXPECT_FALSE(pm.LoadLibrary("DoesNotExist"));
 }

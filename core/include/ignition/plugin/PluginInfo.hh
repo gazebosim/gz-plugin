@@ -26,8 +26,6 @@ namespace ignition
 {
 namespace common
 {
-namespace plugin
-{
 
 /// \brief sentinel value to check if a plugin was built with the same
 ///     version of the PluginInfo struct
@@ -55,7 +53,6 @@ struct PluginInfo
 };
 
 
-}
 }
 }
 

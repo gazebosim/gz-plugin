@@ -27,8 +27,6 @@ namespace ignition
 {
 namespace common
 {
-namespace plugin
-{
 
 /////////////////////////////////////////////////
 class PluginLoaderPrivate
@@ -328,6 +326,5 @@ PluginInfo PluginLoaderPrivate::GetSinglePlugin(void *_dlHandle) const
   return plugin;
 }
 
-}
 }
 }

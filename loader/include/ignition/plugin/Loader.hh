@@ -28,8 +28,6 @@ namespace ignition
 {
 namespace common
 {
-namespace plugin
-{
 
 /// \brief Forward declaration
 class PluginLoaderPrivate;
@@ -82,7 +80,6 @@ class PluginLoader
 
 };
 
-}
 }
 }
 

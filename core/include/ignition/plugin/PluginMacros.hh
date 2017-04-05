@@ -63,9 +63,9 @@
       "Class and Base class must be different"); \
   \
   extern "C" IGN_PLUGIN_VISIBLE const \
-  ignition::common::plugin::PluginInfo IGNCOMMONSinglePluginInfo() \
+  ignition::common::PluginInfo IGNCOMMONSinglePluginInfo() \
   { \
-    ignition::common::plugin::PluginInfo plugin; \
+    ignition::common::PluginInfo plugin; \
     plugin.name = #className; \
     plugin.interface = #baseClass; \
     plugin.baseClassHash = typeid(baseClass).hash_code(); \
@@ -75,11 +75,11 @@
   \
   extern "C" IGN_PLUGIN_VISIBLE const \
   std::size_t IGNCOMMONSinglePluginInfoSize = \
-    sizeof(ignition::common::plugin::PluginInfo); \
+    sizeof(ignition::common::PluginInfo); \
   \
   extern "C" IGN_PLUGIN_VISIBLE const \
   int IGNCOMMONPluginAPIVersion = \
-    ignition::common::plugin::PLUGIN_API_VERSION;
+    ignition::common::PLUGIN_API_VERSION;
 
 /// TODO macro supporting multiple plugins per shared library
 
