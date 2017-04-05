@@ -42,34 +42,34 @@
 /// \brief Register a shared library with only one plugin
 /// 
 /// Adds a function that returns a struct with info about the plugin
-#define IGN_COMMON_REGISTER_SINGLE_PLUGIN(class_name, base_class) \
+#define IGN_COMMON_REGISTER_SINGLE_PLUGIN(className, baseClass) \
   struct IGN_macro_must_be_used_in_global_namespace; \
   static_assert(std::is_same<IGN_macro_must_be_used_in_global_namespace, \
       ::IGN_macro_must_be_used_in_global_namespace>::value, \
       "Macro must be used in global namespace"); \
   \
   /* TODO FQN name check does not catch all cases */ \
-  static_assert(std::is_same<base_class, ::base_class>::value, \
-      #base_class " must be fully qualified like ::ns::BaseClass"); \
+  static_assert(std::is_same<baseClass, ::baseClass>::value, \
+      #baseClass " must be fully qualified like ::ns::BaseClass"); \
   \
   /* TODO FQN name check does not catch all cases */ \
-  static_assert(std::is_same<class_name, ::class_name>::value, \
-      #class_name " must be fully qualified like ::ns::MyClass"); \
+  static_assert(std::is_same<className, ::className>::value, \
+      #className " must be fully qualified like ::ns::MyClass"); \
   \
-  static_assert(std::is_base_of<base_class, class_name>::value, \
-      #class_name " must inherit from " #base_class); \
+  static_assert(std::is_base_of<baseClass, className>::value, \
+      #className " must inherit from " #baseClass); \
   \
-  static_assert(!std::is_same<class_name, base_class>::value, \
+  static_assert(!std::is_same<className, baseClass>::value, \
       "Class and Base class must be different"); \
   \
   extern "C" IGN_PLUGIN_VISIBLE const \
   ignition::common::plugin::PluginInfo IGNCOMMONSinglePluginInfo() \
   { \
     ignition::common::plugin::PluginInfo plugin; \
-    plugin.name = #class_name; \
-    plugin.interface = #base_class; \
-    plugin.baseClassHash = typeid(base_class).hash_code(); \
-    plugin.factory = []() { return static_cast<void*>(new class_name()); }; \
+    plugin.name = #className; \
+    plugin.interface = #baseClass; \
+    plugin.baseClassHash = typeid(baseClass).hash_code(); \
+    plugin.factory = []() { return static_cast<void*>(new className()); }; \
     return plugin; \
   }; \
   \
