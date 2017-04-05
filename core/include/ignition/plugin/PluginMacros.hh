@@ -48,9 +48,11 @@
       ::IGN_macro_must_be_used_in_global_namespace>::value, \
       "Macro must be used in global namespace"); \
   \
+  /* TODO FQN name check does not catch all cases */ \
   static_assert(std::is_same<base_class, ::base_class>::value, \
       #base_class " must be fully qualified like ::ns::BaseClass"); \
   \
+  /* TODO FQN name check does not catch all cases */ \
   static_assert(std::is_same<class_name, ::class_name>::value, \
       #class_name " must be fully qualified like ::ns::MyClass"); \
   \
