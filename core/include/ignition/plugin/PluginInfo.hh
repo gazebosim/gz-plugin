@@ -26,7 +26,6 @@ namespace ignition
 {
 namespace common
 {
-
 /// \brief sentinel value to check if a plugin was built with the same
 ///     version of the PluginInfo struct
 //
@@ -51,8 +50,6 @@ struct PluginInfo
   /// \brief a method that instantiates a new instance of a plugin
   std::function<void*()> factory;
 };
-
-
 }
 }
 

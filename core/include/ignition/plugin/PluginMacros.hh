@@ -40,15 +40,16 @@
 
 
 /// \brief Register a shared library with only one plugin
-/// 
+///
 /// Adds a function that returns a struct with info about the plugin
 #define IGN_COMMON_REGISTER_SINGLE_PLUGIN(className, baseClass) \
   struct IGN_macro_must_be_used_in_global_namespace; \
-  static_assert(std::is_same<IGN_macro_must_be_used_in_global_namespace, \
+  static_assert(std::is_same < IGN_macro_must_be_used_in_global_namespace, \
       ::IGN_macro_must_be_used_in_global_namespace>::value, \
       "Macro must be used in global namespace"); \
   \
   /* TODO FQN name check does not catch all cases */ \
+  /* cppcheck-suppress */ \
   static_assert(std::is_same<baseClass, ::baseClass>::value, \
       #baseClass " must be fully qualified like ::ns::BaseClass"); \
   \
@@ -69,7 +70,9 @@
     plugin.name = #className; \
     plugin.interface = #baseClass; \
     plugin.baseClassHash = typeid(baseClass).hash_code(); \
-    plugin.factory = []() { return static_cast<void*>(new className()); }; \
+    plugin.factory = []() { \
+      return static_cast<void*>( new className()); \
+    }; \
     return plugin; \
   }; \
   \

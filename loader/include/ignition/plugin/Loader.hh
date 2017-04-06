@@ -28,7 +28,6 @@ namespace ignition
 {
 namespace common
 {
-
 /// \brief Forward declaration
 class PluginLoaderPrivate;
 
@@ -91,9 +90,7 @@ class PluginLoader
                const std::string &_name, std::size_t _baseId) const;
 
   private: std::shared_ptr<PluginLoaderPrivate> dataPtr;
-
 };
-
 }
 }
 

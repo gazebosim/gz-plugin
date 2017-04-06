@@ -27,7 +27,6 @@ namespace ignition
 {
 namespace common
 {
-
 /////////////////////////////////////////////////
 class PluginLoaderPrivate
 {
@@ -76,8 +75,7 @@ std::string PluginLoader::PrettyStr() const
   pretty << "\tKnown Plugins: " << interfaces.size() << std::endl;
   for (auto interface : interfaces)
   {
-    auto plugins = this->PluginsImplementing(interface);
-    for (auto plugin : plugins)
+    for (auto plugin : this->PluginsImplementing(interface))
       pretty << "\t\t" << plugin << " (" << interface << ")" << std::endl;
   }
   return pretty.str();
@@ -118,7 +116,7 @@ bool PluginLoader::LoadLibrary(const std::string &_libName)
   bool loadedLibrary = false;
   std::vector<std::string> searchNames =
     this->dataPtr->GenerateSearchNames(_libName);
-  
+
   for (auto const &possibleName : searchNames)
   {
     // Attempt to load the library at this path
@@ -177,7 +175,6 @@ void *PluginLoader::Instantiate(
 {
   void *instance = nullptr;
   std::string name = this->dataPtr->NormalizeName(_name);
-  std::vector<std::string> plugins;
   for (auto const &plugin : this->dataPtr->plugins)
   {
     if (plugin.baseClassHash == _baseId && plugin.name == name)
@@ -207,7 +204,7 @@ std::string PluginLoaderPrivate::NormalizePath(const std::string &_path) const
   std::string path = _path;
   // Use '/' because it works on Linux, OSX, and Windows
   std::replace(path.begin(), path.end(), '\\', '/');
-  //Make last character '/'
+  // Make last character '/'
   if (!this->EndsWith(path, "/"))
   {
     path += '/';
@@ -325,6 +322,5 @@ PluginInfo PluginLoaderPrivate::GetSinglePlugin(void *_dlHandle) const
   }
   return plugin;
 }
-
 }
 }
