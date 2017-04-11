@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <dlfcn.h>
 #include <functional>
+#include <locale>
 #include <sstream>
 
 #include "ignition/common/PluginInfo.hh"
@@ -247,11 +248,14 @@ bool PluginLoaderPrivate::EndsWith(
 std::vector<std::string> PluginLoaderPrivate::GenerateSearchNames(
     const std::string &_libName) const
 {
+  std::string lowercaseLibName = _libName;
+  for (int i = 0; i < _libName.size(); ++i)
+    lowercaseLibName[i] = std::tolower(_libName[i], std::locale());
   // test for possible prefixes or extensions on the library name
   bool hasLib = this->StartsWith(_libName, "lib");
-  bool hasDotSo = this->EndsWith(_libName, ".so");
-  bool hasDotDll = this->EndsWith(_libName, ".dll");
-  bool hasDotDylib = this->EndsWith(_libName, ".dylib");
+  bool hasDotSo = this->EndsWith(lowercaseLibName, ".so");
+  bool hasDotDll = this->EndsWith(lowercaseLibName, ".dll");
+  bool hasDotDylib = this->EndsWith(lowercaseLibName, ".dylib");
 
   // Try removing non cross platform parts of names
   std::vector<std::string> initNames;
@@ -273,6 +277,11 @@ std::vector<std::string> PluginLoaderPrivate::GenerateSearchNames(
     basenames.push_back(name + ".dll");
     basenames.push_back("lib" + name + ".dylib");
     basenames.push_back(name + ".dylib");
+    basenames.push_back("lib" + name + ".SO");
+    basenames.push_back(name + ".SO");
+    basenames.push_back(name + ".DLL");
+    basenames.push_back("lib" + name + ".DYLIB");
+    basenames.push_back(name + ".DYLIB");
   }
 
   std::vector<std::string> searchNames;
