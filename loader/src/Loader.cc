@@ -217,30 +217,22 @@ std::string PluginLoaderPrivate::NormalizePath(const std::string &_path) const
 bool PluginLoaderPrivate::StartsWith(
     const std::string &_s1, const std::string &_s2) const
 {
-  bool result = false;
   if (_s1.size() >= _s2.size())
   {
-    if (0 == _s1.compare(0, _s2.size(), _s2))
-    {
-      result = true;
-    }
+    return 0 == _s1.compare(0, _s2.size(), _s2);
   }
-  return result;
+  return false;
 }
 
 /////////////////////////////////////////////////
 bool PluginLoaderPrivate::EndsWith(
     const std::string &_s1, const std::string &_s2) const
 {
-  bool result = false;
   if (_s1.size() >= _s2.size())
   {
-    if (0 == _s1.compare(_s1.size() - _s2.size(), _s2.size(), _s2))
-    {
-      result = true;
-    }
+    return 0 == _s1.compare(_s1.size() - _s2.size(), _s2.size(), _s2);
   }
-  return result;
+  return false;
 }
 
 
