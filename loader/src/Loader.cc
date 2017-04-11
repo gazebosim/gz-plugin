@@ -67,15 +67,15 @@ std::string PluginLoader::PrettyStr() const
   std::stringstream pretty;
   pretty << "PluginLoader State" << std::endl;
   pretty << "\tSearch Paths: " << searchPaths.size() << std::endl;
-  for (auto path : searchPaths)
+  for (auto const &path : searchPaths)
     pretty << "\t\t" << path << std::endl;
   pretty << "\tKnown Interfaces: " << interfaces.size() << std::endl;
-  for (auto interface : interfaces)
+  for (auto const &interface : interfaces)
     pretty << "\t\t" << interface << std::endl;
   pretty << "\tKnown Plugins: " << interfaces.size() << std::endl;
-  for (auto interface : interfaces)
+  for (auto const &interface : interfaces)
   {
-    for (auto plugin : this->PluginsImplementing(interface))
+    for (auto const &plugin : this->PluginsImplementing(interface))
       pretty << "\t\t" << plugin << " (" << interface << ")" << std::endl;
   }
   return pretty.str();
