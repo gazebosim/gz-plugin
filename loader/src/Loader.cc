@@ -255,7 +255,7 @@ std::vector<std::string> PluginLoaderPrivate::GenerateSearchNames(
   if (hasLib && hasDotSo)
     initNames.push_back(_libName.substr(3, _libName.size() - 6));
   if (hasDotDll)
-    initNames.push_back(_libName.substr(0, _libName.size() - 3));
+    initNames.push_back(_libName.substr(0, _libName.size() - 4));
   if (hasLib && hasDotDylib)
     initNames.push_back(_libName.substr(3, _libName.size() - 9));
 
