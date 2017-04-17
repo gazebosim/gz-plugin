@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
-*/
+ */
 
 
 #ifndef IGNITION_COMMON_PLUGIN_PLUGININFO_HH_
@@ -24,33 +24,33 @@
 
 namespace ignition
 {
-namespace common
-{
-/// \brief sentinel value to check if a plugin was built with the same
-///     version of the PluginInfo struct
-//
-/// This must be incremented when the PluginInfo struct changes
-const int PLUGIN_API_VERSION = 1;
+  namespace common
+  {
+    /// \brief sentinel value to check if a plugin was built with the same
+    ///     version of the PluginInfo struct
+    //
+    /// This must be incremented when the PluginInfo struct changes
+    const int PLUGIN_API_VERSION = 1;
 
 
-/// \brief Holds info required to construct a plugin
-struct PluginInfo
-{
-  /// \brief the name of the plugin
-  std::string name;
+    /// \brief Holds info required to construct a plugin
+    struct PluginInfo
+    {
+      /// \brief the name of the plugin
+      std::string name;
 
-  /// \brief the name of the type of plugin this implements
-  std::string interface;
+      /// \brief the name of the type of plugin this implements
+      std::string interface;
 
-  /// \brief returns a hash that can be used to compare the base class type
-  ///
-  /// This is only used to make the PluginLoader::Instantiate API simpler
-  std::size_t baseClassHash;
+      /// \brief returns a hash that can be used to compare the base class type
+      ///
+      /// This is only used to make the PluginLoader::Instantiate API simpler
+      std::size_t baseClassHash;
 
-  /// \brief a method that instantiates a new instance of a plugin
-  std::function<void*()> factory;
-};
-}
+      /// \brief a method that instantiates a new instance of a plugin
+      std::function<void*()> factory;
+    };
+  }
 }
 
 #endif
