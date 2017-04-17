@@ -51,7 +51,7 @@ namespace ignition
       public: void *LoadLibrary(const std::string &_full_path) const;
 
       /// \brief get plugin info for a library that has only one plugin
-      public: PluginInfo GetSinglePlugin(void *_dlHandle) const;
+      public: PluginInfo LoadPlugin(void *_dlHandle) const;
 
       /// \brief return true if string starts with another string
       public: bool StartsWith(const std::string &_s1, const std::string &_s2)
@@ -127,7 +127,7 @@ namespace ignition
         if (nullptr != dlHandle)
         {
           // Found a shared library, does it have the symbols we're looking for?
-          PluginInfo plugin = this->dataPtr->GetSinglePlugin(dlHandle);
+          PluginInfo plugin = this->dataPtr->LoadPlugin(dlHandle);
           if (plugin.name.size())
           {
             plugin.name = this->dataPtr->NormalizeName(plugin.name);
@@ -300,7 +300,7 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    PluginInfo PluginLoaderPrivate::GetSinglePlugin(void *_dlHandle) const
+    PluginInfo PluginLoaderPrivate::LoadPlugin(void *_dlHandle) const
     {
       PluginInfo plugin;
       if (nullptr != _dlHandle)
