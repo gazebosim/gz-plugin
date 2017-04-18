@@ -44,14 +44,6 @@ namespace ignition
       /// \returns a pretty string
       public: std::string PrettyStr() const;
 
-      /// \brief Adds a path to search for plugins
-      /// \param[in] _path A file path
-      public: void AddSearchPath(const std::string &_path);
-
-      /// \brief get paths that are being searched for plugins
-      /// \returns paths that are searched
-      public: std::vector<std::string> SearchPaths() const;
-
       /// \brief get names of interfaces that the loader has plugins for
       /// \returns interfaces that are implemented
       public: std::vector<std::string> InterfacesImplemented() const;
@@ -62,10 +54,10 @@ namespace ignition
       public: std::vector<std::string> PluginsImplementing(
                   const std::string &_interface) const;
 
-      /// \brief Load a library with a plugin by name
-      /// \param[in] _libName name of a shared library
+      /// \brief Load a library at the given path
+      /// \param[in] _pathToLibrary is the path to a libaray
       /// \returns true iff library was loaded and contained a plugin
-      public: bool LoadLibrary(const std::string &_libName);
+      public: bool LoadLibrary(const std::string &_pathToLibrary);
 
       /// \brief Instantiates a plugin of the name and base class
       ///
