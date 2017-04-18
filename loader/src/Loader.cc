@@ -80,7 +80,7 @@ namespace ignition
     /////////////////////////////////////////////////
     std::string PluginLoader::LoadLibrary(const std::string &_pathToLibrary)
     {
-      std::string newPlugin = "";
+      std::string newPlugin;
       // Attempt to load the library at this path
       void *dlHandle = this->dataPtr->LoadLibrary(_pathToLibrary);
       if (nullptr != dlHandle)
