@@ -56,8 +56,8 @@ namespace ignition
 
       /// \brief Load a library at the given path
       /// \param[in] _pathToLibrary is the path to a libaray
-      /// \returns true iff library was loaded and contained a plugin
-      public: bool LoadLibrary(const std::string &_pathToLibrary);
+      /// \returns name of plugin if library exists and contains a plugin
+      public: std::string LoadLibrary(const std::string &_pathToLibrary);
 
       /// \brief Instantiates a plugin of the name and base class
       ///

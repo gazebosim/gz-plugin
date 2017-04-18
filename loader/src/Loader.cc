@@ -78,9 +78,9 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    bool PluginLoader::LoadLibrary(const std::string &_pathToLibrary)
+    std::string PluginLoader::LoadLibrary(const std::string &_pathToLibrary)
     {
-      bool loadedLibrary = false;
+      std::string newPlugin = "";
       // Attempt to load the library at this path
       void *dlHandle = this->dataPtr->LoadLibrary(_pathToLibrary);
       if (nullptr != dlHandle)
@@ -92,10 +92,10 @@ namespace ignition
           plugin.name = this->dataPtr->NormalizeName(plugin.name);
           plugin.interface = this->dataPtr->NormalizeName(plugin.interface);
           this->dataPtr->plugins.push_back(plugin);
-          loadedLibrary = true;
+          newPlugin = plugin.name;
         }
       }
-      return loadedLibrary;
+      return newPlugin;
     }
 
     /////////////////////////////////////////////////

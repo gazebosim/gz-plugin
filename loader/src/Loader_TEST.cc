@@ -31,7 +31,7 @@ TEST(PluginLoader, InitialNoInterfacesImplemented)
 TEST(PluginLoader, LoadNonexistantLibrary)
 {
   ignition::common::PluginLoader pm;
-  EXPECT_FALSE(pm.LoadLibrary("/path/to/place/that/libDoesNotExist.so"));
+  EXPECT_EQ(std::string(""), pm.LoadLibrary("/path/to/place/that/libDoesNotExist.so"));
 }
 
 /////////////////////////////////////////////////
