@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_COMMON_PLUGIN_PLUGININFO_HH_
-#define IGNITION_COMMON_PLUGIN_PLUGININFO_HH_
+#ifndef IGNITION_COMMON_PLUGININFO_HH_
+#define IGNITION_COMMON_PLUGININFO_HH_
 
 #include <functional>
 #include <string>
