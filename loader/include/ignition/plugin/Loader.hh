@@ -24,6 +24,8 @@
 #include <typeinfo>
 #include <vector>
 
+#include <ignition/common/System.hh>
+
 namespace ignition
 {
   namespace common
@@ -32,7 +34,7 @@ namespace ignition
     class PluginLoaderPrivate;
 
     /// \brief Class for loading plugins
-    class PluginLoader
+    class IGNITION_COMMON_VISIBLE PluginLoader
     {
       /// \brief Constructor
       public: PluginLoader();
