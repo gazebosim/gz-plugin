@@ -64,19 +64,19 @@
       "Class and Base class must be different"); \
   \
   extern "C" IGN_PLUGIN_VISIBLE const \
-  std::size_t IGNCOMMONSinglePluginInfo(void *outputInfo, std::size_t size) \
+  std::size_t IGNCOMMONSinglePluginInfo(void *_outputInfo, std::size_t _size) \
   { \
-    if (size == sizeof(ignition::common::PluginInfo)) \
+    if (_size == sizeof(ignition::common::PluginInfo)) \
     { \
       ignition::common::PluginInfo *plugin = \
-          static_cast<ignition::common::PluginInfo*>(outputInfo); \
+          static_cast<ignition::common::PluginInfo*>(_outputInfo); \
       plugin->name = #className; \
       plugin->interface = #baseClass; \
       plugin->baseClassHash = typeid(baseClass).hash_code(); \
       plugin->factory = []() { \
         return static_cast<void*>( new className()); \
       }; \
-      return size; \
+      return _size; \
     } \
     return 0; \
   }; \
