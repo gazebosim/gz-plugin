@@ -187,6 +187,19 @@ namespace ignition
           std::size_t size = *(static_cast<std::size_t*>(sizePtr));
           if (PLUGIN_API_VERSION == version && sizeof(PluginInfo) == size)
           {
+            // API 2 IGNCOMMONSinglePluginInfo accepts a void * and size_t
+            // The pointer is a PluginInfo struct, and the size is the size
+            // of the struct. If successfull it returns the size, else 0
+            std::size_t (*Info)(void *, std::size_t) =
+              reinterpret_cast<std::size_t(*)(void *, std::size_t)>(infoPtr);
+            void *vPlugin = static_cast<void *>(&plugin);
+            Info(vPlugin, sizeof(PluginInfo));
+          }
+          else if (PLUGIN_API_VERSION == 1 && sizeof(PluginInfo) == size)
+          {
+            // API 1 IGNCOMMONSinglePluginInfo returns a PluginInfo struct,
+            // but that causes a compiler warning on OSX about c-linkage since
+            // the struct is not C compatible
             PluginInfo (*Info)() = reinterpret_cast<PluginInfo(*)()>(infoPtr);
             plugin = Info();
           }
