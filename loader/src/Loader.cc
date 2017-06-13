@@ -25,6 +25,7 @@
 #include "ignition/common/PluginInfo.hh"
 #include "ignition/common/PluginLoader.hh"
 #include "ignition/common/StringUtils.hh"
+#include "ignition/common/Util.hh"
 
 namespace ignition
 {
