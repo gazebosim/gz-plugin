@@ -21,9 +21,11 @@
 #include <locale>
 #include <sstream>
 
+#include "ignition/common/Console.hh"
 #include "ignition/common/PluginInfo.hh"
 #include "ignition/common/PluginLoader.hh"
 #include "ignition/common/StringUtils.hh"
+#include "ignition/common/Util.hh"
 
 namespace ignition
 {
@@ -68,8 +70,8 @@ namespace ignition
 
     /////////////////////////////////////////////////
     PluginLoader::PluginLoader()
+      : dataPtr(new PluginLoaderPrivate())
     {
-      this->dataPtr.reset(new PluginLoaderPrivate());
     }
 
     /////////////////////////////////////////////////
@@ -81,6 +83,13 @@ namespace ignition
     std::string PluginLoader::LoadLibrary(const std::string &_pathToLibrary)
     {
       std::string newPlugin;
+
+      if (!exists(_pathToLibrary))
+      {
+        ignerr << "Library[" << _pathToLibrary << "] does not exist!\n";
+        return newPlugin;
+      }
+
       // Attempt to load the library at this path
       void *dlHandle = this->dataPtr->LoadLibrary(_pathToLibrary);
       if (nullptr != dlHandle)
