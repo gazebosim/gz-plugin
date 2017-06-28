@@ -104,6 +104,11 @@ namespace ignition
           newPlugin = plugin.name;
         }
       }
+      else
+      {
+        ignerr << "Library[" << _pathToLibrary << "] error: " << dlerror()
+          << std::endl;
+      }
       return newPlugin;
     }
 
