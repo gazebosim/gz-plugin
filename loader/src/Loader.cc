@@ -44,7 +44,7 @@ namespace ignition
       public: std::string NormalizeName(const std::string &_name) const;
 
       /// \brief attempt to load a library at the given path
-      public: void *LoadLibrary(const std::string &_full_path) const;
+      public: void *LoadLibrary(const std::string &_pathToLibrary) const;
 
       /// \brief get plugin info for a library that has only one plugin
       public: PluginInfo LoadPlugin(void *_dlHandle) const;
@@ -86,7 +86,7 @@ namespace ignition
 
       if (!exists(_pathToLibrary))
       {
-        ignerr << "Library[" << _pathToLibrary << "] does not exist!\n";
+        ignerr << "Library [" << _pathToLibrary << "] does not exist!\n";
         return newPlugin;
       }
 
@@ -102,6 +102,11 @@ namespace ignition
           plugin.interface = this->dataPtr->NormalizeName(plugin.interface);
           this->dataPtr->plugins.push_back(plugin);
           newPlugin = plugin.name;
+        }
+        else
+        {
+          ignerr << "Failed to load plugin from library [" << _pathToLibrary <<
+                    "].\n";
         }
       }
       else
@@ -184,41 +189,56 @@ namespace ignition
     PluginInfo PluginLoaderPrivate::LoadPlugin(void *_dlHandle) const
     {
       PluginInfo plugin;
-      if (nullptr != _dlHandle)
-      {
-        std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
-        std::string sizeSymbol = "IGNCOMMONSinglePluginInfoSize";
-        std::string infoSymbol = "IGNCOMMONSinglePluginInfo";
-        void *versionPtr = dlsym(_dlHandle, versionSymbol.c_str());
-        void *sizePtr = dlsym(_dlHandle, sizeSymbol.c_str());
-        void *infoPtr = dlsym(_dlHandle, infoSymbol.c_str());
 
-        // Does the library have the right symbols?
-        if (nullptr != versionPtr && nullptr != sizePtr && nullptr != infoPtr)
-        {
-          // Check abi version, and also check size because bugs happen
-          int version = *(static_cast<int*>(versionPtr));
-          std::size_t size = *(static_cast<std::size_t*>(sizePtr));
-          if (PLUGIN_API_VERSION == version && sizeof(PluginInfo) == size)
-          {
-            // API 2 IGNCOMMONSinglePluginInfo accepts a void * and size_t
-            // The pointer is a PluginInfo struct, and the size is the size
-            // of the struct. If successfull it returns the size, else 0
-            std::size_t (*Info)(void *, std::size_t) =
-              reinterpret_cast<std::size_t(*)(void *, std::size_t)>(infoPtr);
-            void *vPlugin = static_cast<void *>(&plugin);
-            Info(vPlugin, sizeof(PluginInfo));
-          }
-          else if (PLUGIN_API_VERSION == 1 && sizeof(PluginInfo) == size)
-          {
-            // API 1 IGNCOMMONSinglePluginInfo returns a PluginInfo struct,
-            // but that causes a compiler warning on OSX about c-linkage since
-            // the struct is not C compatible
-            PluginInfo (*Info)() = reinterpret_cast<PluginInfo(*)()>(infoPtr);
-            plugin = Info();
-          }
-        }
+      if (nullptr == _dlHandle)
+      {
+        ignerr << "Passed NULL handle.\n";
+        return plugin;
       }
+
+      std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
+      std::string sizeSymbol = "IGNCOMMONSinglePluginInfoSize";
+      std::string infoSymbol = "IGNCOMMONSinglePluginInfo";
+      void *versionPtr = dlsym(_dlHandle, versionSymbol.c_str());
+      void *sizePtr = dlsym(_dlHandle, sizeSymbol.c_str());
+      void *infoPtr = dlsym(_dlHandle, infoSymbol.c_str());
+
+      // Does the library have the right symbols?
+      if (nullptr == versionPtr || nullptr == sizePtr || nullptr == infoPtr)
+      {
+        ignerr << "Library doesn't have the right symbols.\n";
+        return plugin;
+      }
+
+      // Check abi version, and also check size because bugs happen
+      int version = *(static_cast<int*>(versionPtr));
+      std::size_t size = *(static_cast<std::size_t*>(sizePtr));
+      if (PLUGIN_API_VERSION == version && sizeof(PluginInfo) == size)
+      {
+        // API 2 IGNCOMMONSinglePluginInfo accepts a void * and size_t
+        // The pointer is a PluginInfo struct, and the size is the size
+        // of the struct. If successfull it returns the size, else 0
+        std::size_t (*Info)(void *, std::size_t) =
+          reinterpret_cast<std::size_t(*)(void *, std::size_t)>(infoPtr);
+        void *vPlugin = static_cast<void *>(&plugin);
+        Info(vPlugin, sizeof(PluginInfo));
+      }
+      else if (PLUGIN_API_VERSION == 1 && sizeof(PluginInfo) == size)
+      {
+        // API 1 IGNCOMMONSinglePluginInfo returns a PluginInfo struct,
+        // but that causes a compiler warning on OSX about c-linkage since
+        // the struct is not C compatible
+        PluginInfo (*Info)() = reinterpret_cast<PluginInfo(*)()>(infoPtr);
+        plugin = Info();
+      }
+      else
+      {
+        ignerr << "Wrong plugin size for API version [" <<
+                  PLUGIN_API_VERSION << "]. Expected [" << size << "], got [" <<
+                  sizeof(PluginInfo) << "]" << std::endl;
+        return plugin;
+      }
+
       return plugin;
     }
   }
