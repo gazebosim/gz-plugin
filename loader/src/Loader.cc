@@ -20,6 +20,7 @@
 #include <functional>
 #include <locale>
 #include <sstream>
+#include <unordered_map>
 
 #include "ignition/common/Console.hh"
 #include "ignition/common/PluginInfo.hh"
@@ -32,13 +33,26 @@ namespace ignition
   namespace common
   {
     /////////////////////////////////////////////////
+    PluginInfo convertPluginFromOldVersion(const PluginInfo_v2& old_info)
+    {
+      PluginInfo info;
+      info.name = old_info.name;
+      info.interfaces.insert(old_info.interface);
+      info.factory = old_info.factory;
+
+      return info;
+    }
+
+    /////////////////////////////////////////////////
     class PluginLoaderPrivate
     {
       /// \brief Directories that should be searched for plugins
       public: std::vector<std::string> searchPaths;
 
+      using PluginMap = std::unordered_map<std::string, PluginInfo>;
+
       /// \brief A list of known plugins
-      public: std::vector<PluginInfo> plugins;
+      public: PluginMap plugins;
 
       /// \brief format the name to start with "::"
       public: std::string NormalizeName(const std::string &_name) const;
@@ -47,7 +61,7 @@ namespace ignition
       public: void *LoadLibrary(const std::string &_pathToLibrary) const;
 
       /// \brief get plugin info for a library that has only one plugin
-      public: PluginInfo LoadPlugin(void *_dlHandle) const;
+      public: std::vector<PluginInfo> LoadPlugins(void *_dlHandle) const;
     };
 
     /////////////////////////////////////////////////
@@ -59,12 +73,18 @@ namespace ignition
       pretty << "\tKnown Interfaces: " << interfaces.size() << std::endl;
       for (auto const &interface : interfaces)
         pretty << "\t\t" << interface << std::endl;
-      pretty << "\tKnown Plugins: " << interfaces.size() << std::endl;
-      for (auto const &interface : interfaces)
+
+      pretty << "\tKnown Plugins: " << dataPtr->plugins.size() << std::endl;
+      for (const auto& pair : dataPtr->plugins)
       {
-        for (auto const &plugin : this->PluginsImplementing(interface))
-          pretty << "\t\t" << plugin << " (" << interface << ")" << std::endl;
+        const PluginInfo& plugin = pair.second;
+        pretty << "\t\t[" << plugin.name << "] which implements "
+               << plugin.interfaces.size() << " interfaces:\n";
+        for(const std::string& interface : plugin.interfaces)
+          std::cout << "\t\t\t" << interface << "\n";
       }
+      std::cout << std::endl;
+
       return pretty.str();
     }
 
@@ -95,17 +115,28 @@ namespace ignition
       if (nullptr != dlHandle)
       {
         // Found a shared library, does it have the symbols we're looking for?
-        PluginInfo plugin = this->dataPtr->LoadPlugin(dlHandle);
-        if (plugin.name.size())
+        std::vector<PluginInfo> plugins = this->dataPtr->LoadPlugins(dlHandle);
+
+        for(PluginInfo &plugin : plugins)
         {
+          if(plugin.name.empty())
+            continue;
+
           plugin.name = this->dataPtr->NormalizeName(plugin.name);
-          plugin.interface = this->dataPtr->NormalizeName(plugin.interface);
-          this->dataPtr->plugins.push_back(plugin);
+
+          std::unordered_set<std::string> normalizedSet;
+          normalizedSet.reserve(plugin.interfaces.size());
+          for(const std::string &interface : plugin.interfaces)
+            normalizedSet.insert(this->dataPtr->NormalizeName(interface));
+          plugin.interfaces = normalizedSet;
+
+          this->dataPtr->plugins.insert(std::make_pair(plugin.name, plugin));
           newPlugin = plugin.name;
         }
-        else
+
+        if(plugins.empty())
         {
-          ignerr << "Failed to load plugin from library [" << _pathToLibrary <<
+          ignerr << "Failed to load plugins from library [" << _pathToLibrary <<
                     "].\n";
         }
       }
@@ -118,52 +149,46 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    std::vector<std::string> PluginLoader::InterfacesImplemented() const
+    std::unordered_set<std::string> PluginLoader::InterfacesImplemented() const
     {
-      std::vector<std::string> interfaces;
+      std::unordered_set<std::string> interfaces;
       for (auto const &plugin : this->dataPtr->plugins)
       {
-        if (interfaces.cend() == std::find(
-              interfaces.cbegin(), interfaces.cend(), plugin.interface))
-        {
-          interfaces.push_back(plugin.interface);
-        }
+        for(auto const &interface : plugin.second.interfaces)
+          interfaces.insert(interface);
       }
       return interfaces;
     }
 
     /////////////////////////////////////////////////
-    std::vector<std::string> PluginLoader::PluginsImplementing(
+    std::unordered_set<std::string> PluginLoader::PluginsImplementing(
         const std::string &_interface) const
     {
-      std::string interface = this->dataPtr->NormalizeName(_interface);
-      std::vector<std::string> plugins;
+      const std::string interface = this->dataPtr->NormalizeName(_interface);
+      std::unordered_set<std::string> plugins;
       for (auto const &plugin : this->dataPtr->plugins)
       {
-        if (plugin.interface == interface)
-        {
-          plugins.push_back(plugin.name);
-        }
+        if(plugin.second.interfaces.find(interface) !=
+           plugin.second.interfaces.end())
+          plugins.insert(plugin.second.name);
       }
+
       return plugins;
     }
 
     /////////////////////////////////////////////////
     void *PluginLoader::Instantiate(
-        const std::string &_name, std::size_t _baseId) const
+        const std::string &_name) const
     {
-      void *instance = nullptr;
-      std::string name = this->dataPtr->NormalizeName(_name);
-      for (auto const &plugin : this->dataPtr->plugins)
-      {
-        if (plugin.baseClassHash == _baseId && plugin.name == name)
-        {
-          // Creates plugin on heap
-          instance = plugin.factory();
-          break;
-        }
-      }
-      return instance;
+      const std::string name = this->dataPtr->NormalizeName(_name);
+
+      PluginLoaderPrivate::PluginMap::iterator it =
+          this->dataPtr->plugins.find(name);
+
+      if(this->dataPtr->plugins.end() == it)
+        return nullptr;
+
+      return it->second.factory();
     }
 
     /////////////////////////////////////////////////
@@ -186,14 +211,15 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    PluginInfo PluginLoaderPrivate::LoadPlugin(void *_dlHandle) const
+    std::vector<PluginInfo> PluginLoaderPrivate::LoadPlugins(
+        void *_dlHandle) const
     {
-      PluginInfo plugin;
+      std::vector<PluginInfo> plugins;
 
       if (nullptr == _dlHandle)
       {
         ignerr << "Passed NULL handle.\n";
-        return plugin;
+        return plugins;
       }
 
       std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
@@ -207,7 +233,7 @@ namespace ignition
       if (nullptr == versionPtr || nullptr == sizePtr || nullptr == infoPtr)
       {
         ignerr << "Library doesn't have the right symbols.\n";
-        return plugin;
+        return plugins;
       }
 
       // Check abi version, and also check size because bugs happen
@@ -215,31 +241,42 @@ namespace ignition
       std::size_t size = *(static_cast<std::size_t*>(sizePtr));
       if (PLUGIN_API_VERSION == version && sizeof(PluginInfo) == size)
       {
-        // API 2 IGNCOMMONSinglePluginInfo accepts a void * and size_t
-        // The pointer is a PluginInfo struct, and the size is the size
-        // of the struct. If successfull it returns the size, else 0
+        // TODO(MXG): Implement this
+
         std::size_t (*Info)(void *, std::size_t) =
           reinterpret_cast<std::size_t(*)(void *, std::size_t)>(infoPtr);
         void *vPlugin = static_cast<void *>(&plugin);
         Info(vPlugin, sizeof(PluginInfo));
       }
-      else if (PLUGIN_API_VERSION == 1 && sizeof(PluginInfo) == size)
+      else if (PLUGIN_API_VERSION == 2 && sizeof(PluginInfo_v2) == size)
+      {
+        PluginInfo_v2 plugin;
+        // API 2 IGNCOMMONSinglePluginInfo accepts a void * and size_t
+        // The pointer is a PluginInfo_v2 struct, and the size is the size
+        // of the struct. If successful it returns the size, else 0
+        std::size_t (*Info)(void *, std::size_t) =
+          reinterpret_cast<std::size_t(*)(void *, std::size_t)>(infoPtr);
+        void *vPlugin = static_cast<void *>(&plugin);
+        Info(vPlugin, sizeof(PluginInfo_v2));
+        plugins.push_back(convertPluginFromOldVersion(plugin));
+      }
+      else if (PLUGIN_API_VERSION == 1 && sizeof(PluginInfo_v2) == size)
       {
         // API 1 IGNCOMMONSinglePluginInfo returns a PluginInfo struct,
         // but that causes a compiler warning on OSX about c-linkage since
         // the struct is not C compatible
-        PluginInfo (*Info)() = reinterpret_cast<PluginInfo(*)()>(infoPtr);
-        plugin = Info();
+        PluginInfo_v2 (*Info)() = reinterpret_cast<PluginInfo_v2(*)()>(infoPtr);
+        plugins.push_back(convertPluginFromOldVersion(Info()));
       }
       else
       {
         ignerr << "Wrong plugin size for API version [" <<
-                  PLUGIN_API_VERSION << "]. Expected [" << size << "], got [" <<
-                  sizeof(PluginInfo) << "]" << std::endl;
-        return plugin;
+                  PLUGIN_API_VERSION << "]. Expected [" << sizeof(PluginInfo_v2)
+                  << "], got [" << size << "]" << std::endl;
+        return plugins;
       }
 
-      return plugin;
+      return plugins;
     }
   }
 }

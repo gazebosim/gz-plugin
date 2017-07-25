@@ -21,6 +21,7 @@
 
 #include <functional>
 #include <string>
+#include <unordered_set>
 
 namespace ignition
 {
@@ -30,11 +31,26 @@ namespace ignition
     ///     version of the PluginInfo struct
     //
     /// This must be incremented when the PluginInfo struct changes
-    const int PLUGIN_API_VERSION = 2;
+    const int PLUGIN_API_VERSION = 3;
 
 
     /// \brief Holds info required to construct a plugin
     struct PluginInfo
+    {
+      /// \brief The name of the plugin
+      std::string name;
+
+      /// \brief The names of the types of interfaces that this plugin provides
+      std::unordered_set<std::string> interfaces;
+
+      /// \brief A method that instantiates a new instance of a plugin
+      std::function<void*()> factory;
+    };
+
+
+    /// \brief Older version of PluginInfo for backwards compatibility. Works
+    /// with Plugins up to version 2.
+    struct PluginInfo_v2
     {
       /// \brief the name of the plugin
       std::string name;

@@ -22,7 +22,7 @@
 #include <memory>
 #include <string>
 #include <typeinfo>
-#include <vector>
+#include <unordered_set>
 
 #include <ignition/common/System.hh>
 
@@ -48,12 +48,12 @@ namespace ignition
 
       /// \brief get names of interfaces that the loader has plugins for
       /// \returns interfaces that are implemented
-      public: std::vector<std::string> InterfacesImplemented() const;
+      public: std::unordered_set<std::string> InterfacesImplemented() const;
 
       /// \brief get plugin names that implement the interface
       /// \param[in] _interface name of an interface
       /// \returns names of plugins that implement the interface
-      public: std::vector<std::string> PluginsImplementing(
+      public: std::unordered_set<std::string> PluginsImplementing(
                   const std::string &_interface) const;
 
       /// \brief Load a library at the given path
@@ -72,7 +72,7 @@ namespace ignition
                 // type hash used to simplify this API
                 std::unique_ptr<T> ptr;
                 ptr.reset(static_cast<T*>(
-                      this->Instantiate(_name, typeid(T).hash_code())));
+                      this->Instantiate(_name)));
                 return ptr;
               }
 
@@ -80,8 +80,7 @@ namespace ignition
       /// \param[in] _name name of a plugin
       /// \param[in] _baseId typeid() hash_code() of base class type
       /// \returns pointer to instantiated plugin
-      private: void *Instantiate(
-                   const std::string &_name, std::size_t _baseId) const;
+      private: void *Instantiate(const std::string &_name) const;
 
       private: std::shared_ptr<PluginLoaderPrivate> dataPtr;
     };
