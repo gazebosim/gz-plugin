@@ -81,11 +81,7 @@ namespace ignition
       /// \returns pointer for the instantiated Plugin
       public: template <typename PluginType>
               std::unique_ptr<PluginType> Instantiate(
-                  const std::string &_pluginName) const
-              {
-                return std::unique_ptr<PluginType>(
-                      new PluginType(this->PrivateGetPluginInfo(_pluginName)));
-              }
+                  const std::string &_pluginName) const;
 
       private: PluginInfo PrivateGetPluginInfo(
                   const std::string &_pluginName) const;
@@ -94,5 +90,7 @@ namespace ignition
     };
   }
 }
+
+#include "ignition/common/detail/PluginLoader.hh"
 
 #endif

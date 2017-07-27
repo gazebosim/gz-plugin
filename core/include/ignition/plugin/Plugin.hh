@@ -41,38 +41,22 @@ namespace ignition
       /// general  interfaces which do not meet this condition, use
       /// GetInterface<Interface>(_interfaceName).
       public: template<typename Interface>
-              Interface *GetInterface()
-              {
-                return static_cast<Interface*>(
-                      PrivateGetInterface(Interface::InterfaceName));
-              }
+              Interface *GetInterface();
 
       /// \brief const-qualified version of GetInterface<Interface>()
       public: template<typename Interface>
-              const Interface *GetInterface() const
-              {
-                return static_cast<const Interface*>(
-                      PrivateGetInterface(Interface::InterfaceName));
-              }
+              const Interface *GetInterface() const;
 
       /// \brief Get an interface with the given name, casted to the specified
       /// class type.
       public: template<typename Interface>
-              Interface *GetInterface(const std::string &_interfaceName)
-              {
-                return static_cast<Interface*>(
-                      PrivateGetInterface(_interfaceName));
-              }
+              Interface *GetInterface(const std::string &_interfaceName);
 
       /// \brief Get a const-qualified interface with the given name, casted
       /// to the specified const class type.
       public: template<typename Interface>
               const Interface *GetInterface(
-                  const std::string &_interfaceName) const
-              {
-                return static_cast<const Interface*>(
-                      PrivateGetInterface(_interfaceName));
-              }
+                  const std::string &_interfaceName) const;
 
       /// \brief Returns true if this Plugin has the specified type of
       /// interface. Note that this function only works when the Interface type
@@ -81,10 +65,7 @@ namespace ignition
       /// interfaces which do not meet this condition, use
       /// GetInterface<Interface>(_interfaceName).
       public: template<typename Interface>
-              bool HasInterface() const
-              {
-                return HasInterface(Interface::InterfaceName);
-              }
+              bool HasInterface() const;
 
       /// \brief Returns true if this Plugin has the specified type of
       /// interface.
@@ -113,5 +94,7 @@ namespace ignition
     };
   }
 }
+
+#include "ignition/common/detail/Plugin.hh"
 
 #endif // IGNITION_COMMON_PLUGIN_HH_

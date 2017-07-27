@@ -23,6 +23,7 @@
 #include <type_traits>
 #include <unordered_set>
 #include "ignition/common/PluginInfo.hh"
+#include "ignition/common/SuppressWarning.hh"
 
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -59,6 +60,7 @@
 /// in your library.
 #define IGN_COMMON_BEGIN_ADDING_PLUGINS\
   IGN_COMMON_REGISTER_PLUGININFO_META_DATA\
+  IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)\
   struct IGN_macro_must_be_used_in_global_namespace;\
   static_assert(std::is_same < IGN_macro_must_be_used_in_global_namespace,\
       ::IGN_macro_must_be_used_in_global_namespace>::value,\
@@ -134,7 +136,8 @@
     if(_pluginId > pluginCount)\
       return 0u;\
     return pluginCount - _pluginId;\
-  }
+  }\
+  IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
 
 
 /// \brief Register a shared library with only one plugin
