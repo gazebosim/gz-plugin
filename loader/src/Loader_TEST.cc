@@ -24,7 +24,7 @@
 TEST(PluginLoader, InitialNoInterfacesImplemented)
 {
   ignition::common::PluginLoader pm;
-  EXPECT_EQ(0, pm.InterfacesImplemented().size());
+  EXPECT_EQ(0u, pm.InterfacesImplemented().size());
 }
 
 /////////////////////////////////////////////////

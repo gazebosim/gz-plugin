@@ -24,6 +24,7 @@
 #include <unordered_set>
 #include "ignition/common/PluginInfo.hh"
 
+
 #if defined _WIN32 || defined __CYGWIN__
   #ifdef __GNUC__
     #define IGN_PLUGIN_VISIBLE __attribute__ ((dllexport))
@@ -62,13 +63,13 @@
   static_assert(std::is_same < IGN_macro_must_be_used_in_global_namespace,\
       ::IGN_macro_must_be_used_in_global_namespace>::value,\
       "Macro for registering plugins must be used in global namespace");\
-  extern "C" IGN_PLUGIN_VISIBLE const\
+  extern "C" IGN_PLUGIN_VISIBLE\
   std::size_t IGNCOMMONMultiPluginInfo(\
       void *_outputInfo, const std::size_t _pluginId, const std::size_t _size)\
   {\
     if (_size != sizeof(ignition::common::PluginInfo))\
     {\
-      return 0;\
+      return 0u;\
     }\
     std::size_t pluginCount = 0;\
     std::unordered_set<std::string> visitedPlugins;\
@@ -106,7 +107,7 @@
           plugin->interfaces.insert( std::make_pair(\
               #interface , [=](void* v_ptr) { \
                   className * d_ptr = static_cast< className *>(v_ptr);\
-                  return static_cast< interface *>(d_ptr);;\
+                  return static_cast< interface *>(d_ptr);\
               }));\
           plugin->factory = []() {\
             return static_cast<void*>( new className() );\
@@ -131,7 +132,7 @@
 /// finished.
 #define IGN_COMMON_FINISH_ADDING_PLUGINS\
     if(_pluginId > pluginCount)\
-      return 0;\
+      return 0u;\
     return pluginCount - _pluginId;\
   }
 

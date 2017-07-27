@@ -114,6 +114,7 @@ namespace ignition
     Plugin& Plugin::operator=(Plugin &&other)
     {
       std::swap(dataPtr, other.dataPtr);
+      return *this;
     }
   }
 }

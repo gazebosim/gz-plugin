@@ -136,10 +136,10 @@ namespace ignition
       if (nullptr != dlHandle)
       {
         // Found a shared library, does it have the symbols we're looking for?
-        std::vector<PluginInfo> plugins = this->dataPtr->LoadPlugins(
+        std::vector<PluginInfo> loadedPlugins = this->dataPtr->LoadPlugins(
               dlHandle, _pathToLibrary);
 
-        for(PluginInfo &plugin : plugins)
+        for(PluginInfo &plugin : loadedPlugins)
         {
           if(plugin.name.empty())
             continue;
@@ -158,7 +158,7 @@ namespace ignition
           newPlugins.insert(plugin.name);
         }
 
-        if(plugins.empty())
+        if(loadedPlugins.empty())
         {
           ignerr << "Failed to load plugins from library [" << _pathToLibrary <<
                     "].\n";
@@ -228,12 +228,12 @@ namespace ignition
     std::vector<PluginInfo> PluginLoaderPrivate::LoadPlugins(
         void *_dlHandle, const std::string& _pathToLibrary) const
     {
-      std::vector<PluginInfo> plugins;
+      std::vector<PluginInfo> loadedPlugins;
 
       if (nullptr == _dlHandle)
       {
         ignerr << "Passed NULL handle.\n";
-        return plugins;
+        return loadedPlugins;
       }
 
       const std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
@@ -251,7 +251,7 @@ namespace ignition
       {
         ignerr << "Library [" << _pathToLibrary
                << "] doesn't have the right symbols.\n";
-        return plugins;
+        return loadedPlugins;
       }
 
       // Check abi version, and also check size because bugs happen
@@ -286,7 +286,7 @@ namespace ignition
         size_t id = 0;
         while(Info(vPlugin, id, sizeof(PluginInfo)) > 0)
         {
-          plugins.push_back(plugin);
+          loadedPlugins.push_back(plugin);
           ++id;
         }
       }
@@ -301,7 +301,7 @@ namespace ignition
           reinterpret_cast<std::size_t(*)(void *, std::size_t)>(singleInfoPtr);
         void *vPlugin = static_cast<void *>(&plugin);
         Info(vPlugin, sizeof(PluginInfo_v2));
-        plugins.push_back(convertPluginFromOldVersion(plugin));
+        loadedPlugins.push_back(convertPluginFromOldVersion(plugin));
       }
       else if (1 == version && nullptr != singleInfoPtr
                && sizeof(PluginInfo_v2) == size)
@@ -310,7 +310,7 @@ namespace ignition
         // but that causes a compiler warning on OSX about c-linkage since
         // the struct is not C compatible
         PluginInfo_v2 (*Info)() = reinterpret_cast<PluginInfo_v2(*)()>(singleInfoPtr);
-        plugins.push_back(convertPluginFromOldVersion(Info()));
+        loadedPlugins.push_back(convertPluginFromOldVersion(Info()));
       }
       else
       {
@@ -322,10 +322,10 @@ namespace ignition
                << "]. Expected [" << expectedSize << "], got ["
                << size << "]\n";
 
-        return plugins;
+        return loadedPlugins;
       }
 
-      return plugins;
+      return loadedPlugins;
     }
   }
 }
