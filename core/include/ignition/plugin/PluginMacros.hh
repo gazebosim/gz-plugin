@@ -63,7 +63,7 @@
   static_assert(!std::is_same<className, baseClass>::value, \
       "Class and Base class must be different"); \
   \
-  extern "C" IGN_PLUGIN_VISIBLE const \
+  extern "C" IGN_PLUGIN_VISIBLE \
   std::size_t IGNCOMMONSinglePluginInfo(void *_outputInfo, std::size_t _size) \
   { \
     if (_size == sizeof(ignition::common::PluginInfo)) \
@@ -79,7 +79,7 @@
       return _size; \
     } \
     return 0; \
-  }; \
+  } \
   \
   extern "C" IGN_PLUGIN_VISIBLE const \
   std::size_t IGNCOMMONSinglePluginInfoSize = \
