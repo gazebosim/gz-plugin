@@ -21,7 +21,7 @@
 
 #include <functional>
 #include <string>
-#include <unordered_set>
+#include <unordered_map>
 
 namespace ignition
 {
@@ -40,11 +40,19 @@ namespace ignition
       /// \brief The name of the plugin
       std::string name;
 
-      /// \brief The names of the types of interfaces that this plugin provides
-      std::unordered_set<std::string> interfaces;
+      /// \brief The keys are the names of the types of interfaces that this
+      /// plugin provides. The values are functions that convert a void pointer
+      /// (which actually points to the plugin instance) to another void pointer
+      /// (which actually points to the location of the interface within the
+      /// plugin instance).
+      using InterfaceCastingMap = std::unordered_map<std::string, std::function<void*(void*)>>;
+      InterfaceCastingMap interfaces;
 
       /// \brief A method that instantiates a new instance of a plugin
       std::function<void*()> factory;
+
+      /// \brief A method that safely deletes an instance of the plugin
+      std::function<void(void*)> deleter;
     };
 
 

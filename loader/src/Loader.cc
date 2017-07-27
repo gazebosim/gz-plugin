@@ -23,10 +23,13 @@
 #include <unordered_map>
 
 #include "ignition/common/Console.hh"
+#include "ignition/common/Plugin.hh"
 #include "ignition/common/PluginInfo.hh"
 #include "ignition/common/PluginLoader.hh"
 #include "ignition/common/StringUtils.hh"
 #include "ignition/common/Util.hh"
+
+#include "PluginUtils.hh"
 
 namespace ignition
 {
@@ -37,8 +40,19 @@ namespace ignition
     {
       PluginInfo info;
       info.name = old_info.name;
-      info.interfaces.insert(old_info.interface);
+
+      // This is known to cause bugs if interface is not the first object in
+      // the inheritance structure of the object that v_ptr points to.
+      info.interfaces.insert(
+            std::make_pair(old_info.interface,
+                           [](void* v_ptr){ return v_ptr; }));
       info.factory = old_info.factory;
+
+      // Dev Note (MXG): This is an attempt at backwards compability, but it is
+      // really doomed to fail, because we have no way of defining a deleter
+      // here, which is needed by the Plugin class in order to correctly delete
+      // its Plugin instance. We really have no choice but to clobber backwards
+      // compatibility.
 
       return info;
     }
@@ -51,17 +65,15 @@ namespace ignition
 
       using PluginMap = std::unordered_map<std::string, PluginInfo>;
 
-      /// \brief A list of known plugins
+      /// \brief A map from known plugin names to their PluginInfo
       public: PluginMap plugins;
-
-      /// \brief format the name to start with "::"
-      public: std::string NormalizeName(const std::string &_name) const;
 
       /// \brief attempt to load a library at the given path
       public: void *LoadLibrary(const std::string &_pathToLibrary) const;
 
       /// \brief get plugin info for a library that has only one plugin
-      public: std::vector<PluginInfo> LoadPlugins(void *_dlHandle) const;
+      public: std::vector<PluginInfo> LoadPlugins(
+        void *_dlHandle, const std::string& _pathToLibrary) const;
     };
 
     /////////////////////////////////////////////////
@@ -78,12 +90,13 @@ namespace ignition
       for (const auto& pair : dataPtr->plugins)
       {
         const PluginInfo& plugin = pair.second;
+        const size_t i_size = plugin.interfaces.size();
         pretty << "\t\t[" << plugin.name << "] which implements "
-               << plugin.interfaces.size() << " interfaces:\n";
-        for(const std::string& interface : plugin.interfaces)
-          std::cout << "\t\t\t" << interface << "\n";
+               << i_size << PluralCast(" interface", i_size) << ":\n";;
+        for(const auto& interface : plugin.interfaces)
+          pretty << "\t\t\t" << interface.first << "\n";
       }
-      std::cout << std::endl;
+      pretty << std::endl;
 
       return pretty.str();
     }
@@ -100,14 +113,15 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    std::string PluginLoader::LoadLibrary(const std::string &_pathToLibrary)
+    std::unordered_set<std::string> PluginLoader::LoadLibrary(
+        const std::string &_pathToLibrary)
     {
-      std::string newPlugin;
+      std::unordered_set<std::string> newPlugins;
 
       if (!exists(_pathToLibrary))
       {
         ignerr << "Library [" << _pathToLibrary << "] does not exist!\n";
-        return newPlugin;
+        return newPlugins;
       }
 
       // Attempt to load the library at this path
@@ -115,23 +129,26 @@ namespace ignition
       if (nullptr != dlHandle)
       {
         // Found a shared library, does it have the symbols we're looking for?
-        std::vector<PluginInfo> plugins = this->dataPtr->LoadPlugins(dlHandle);
+        std::vector<PluginInfo> plugins = this->dataPtr->LoadPlugins(
+              dlHandle, _pathToLibrary);
 
         for(PluginInfo &plugin : plugins)
         {
           if(plugin.name.empty())
             continue;
 
-          plugin.name = this->dataPtr->NormalizeName(plugin.name);
+          plugin.name = NormalizeName(plugin.name);
 
-          std::unordered_set<std::string> normalizedSet;
-          normalizedSet.reserve(plugin.interfaces.size());
-          for(const std::string &interface : plugin.interfaces)
-            normalizedSet.insert(this->dataPtr->NormalizeName(interface));
-          plugin.interfaces = normalizedSet;
+          PluginInfo::InterfaceCastingMap normalizedMap;
+          normalizedMap.reserve(plugin.interfaces.size());
+          for(const auto &interface : plugin.interfaces)
+            normalizedMap.insert(std::make_pair(
+                     NormalizeName(interface.first),
+                     interface.second));
+          plugin.interfaces = normalizedMap;
 
           this->dataPtr->plugins.insert(std::make_pair(plugin.name, plugin));
-          newPlugin = plugin.name;
+          newPlugins.insert(plugin.name);
         }
 
         if(plugins.empty())
@@ -145,7 +162,7 @@ namespace ignition
         ignerr << "Library[" << _pathToLibrary << "] error: " << dlerror()
           << std::endl;
       }
-      return newPlugin;
+      return newPlugins;
     }
 
     /////////////////////////////////////////////////
@@ -155,7 +172,7 @@ namespace ignition
       for (auto const &plugin : this->dataPtr->plugins)
       {
         for(auto const &interface : plugin.second.interfaces)
-          interfaces.insert(interface);
+          interfaces.insert(interface.first);
       }
       return interfaces;
     }
@@ -164,7 +181,7 @@ namespace ignition
     std::unordered_set<std::string> PluginLoader::PluginsImplementing(
         const std::string &_interface) const
     {
-      const std::string interface = this->dataPtr->NormalizeName(_interface);
+      const std::string interface = NormalizeName(_interface);
       std::unordered_set<std::string> plugins;
       for (auto const &plugin : this->dataPtr->plugins)
       {
@@ -177,30 +194,20 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    void *PluginLoader::Instantiate(
-        const std::string &_name) const
+    std::unique_ptr<Plugin> PluginLoader::Instantiate(
+        const std::string &_plugin) const
     {
-      const std::string name = this->dataPtr->NormalizeName(_name);
+      const std::string plugin = NormalizeName(_plugin);
 
-      PluginLoaderPrivate::PluginMap::iterator it =
-          this->dataPtr->plugins.find(name);
+      PluginLoaderPrivate::PluginMap::const_iterator it =
+          this->dataPtr->plugins.find(plugin);
 
       if(this->dataPtr->plugins.end() == it)
         return nullptr;
 
-      return it->second.factory();
-    }
+      const PluginInfo& info = it->second;
 
-    /////////////////////////////////////////////////
-    std::string PluginLoaderPrivate::NormalizeName(const std::string &_name)
-      const
-    {
-      std::string name = _name;
-      if (!StartsWith(_name, "::"))
-      {
-        name = std::string("::") + _name;
-      }
-      return name;
+      return std::unique_ptr<Plugin>(new Plugin(info));
     }
 
     /////////////////////////////////////////////////
@@ -212,7 +219,7 @@ namespace ignition
 
     /////////////////////////////////////////////////
     std::vector<PluginInfo> PluginLoaderPrivate::LoadPlugins(
-        void *_dlHandle) const
+        void *_dlHandle, const std::string& _pathToLibrary) const
     {
       std::vector<PluginInfo> plugins;
 
@@ -222,57 +229,92 @@ namespace ignition
         return plugins;
       }
 
-      std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
-      std::string sizeSymbol = "IGNCOMMONSinglePluginInfoSize";
-      std::string infoSymbol = "IGNCOMMONSinglePluginInfo";
+      const std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
+      const std::string sizeSymbol = "IGNCOMMONSinglePluginInfoSize";
+      const std::string singleInfoSymbol = "IGNCOMMONSinglePluginInfo";
+      const std::string multiInfoSymbol = "IGNCOMMONMultiPluginInfo";
       void *versionPtr = dlsym(_dlHandle, versionSymbol.c_str());
       void *sizePtr = dlsym(_dlHandle, sizeSymbol.c_str());
-      void *infoPtr = dlsym(_dlHandle, infoSymbol.c_str());
+      void *singleInfoPtr = dlsym(_dlHandle, singleInfoSymbol.c_str());
+      void *multiInfoPtr = dlsym(_dlHandle, multiInfoSymbol.c_str());
 
       // Does the library have the right symbols?
-      if (nullptr == versionPtr || nullptr == sizePtr || nullptr == infoPtr)
+      if (nullptr == versionPtr || nullptr == sizePtr
+          || (nullptr == singleInfoPtr && nullptr == multiInfoPtr))
       {
-        ignerr << "Library doesn't have the right symbols.\n";
+        ignerr << "Library [" << _pathToLibrary
+               << "] doesn't have the right symbols.\n";
         return plugins;
       }
 
       // Check abi version, and also check size because bugs happen
       int version = *(static_cast<int*>(versionPtr));
       std::size_t size = *(static_cast<std::size_t*>(sizePtr));
-      if (PLUGIN_API_VERSION == version && sizeof(PluginInfo) == size)
-      {
-        // TODO(MXG): Implement this
 
-        std::size_t (*Info)(void *, std::size_t) =
-          reinterpret_cast<std::size_t(*)(void *, std::size_t)>(infoPtr);
-        void *vPlugin = static_cast<void *>(&plugin);
-        Info(vPlugin, sizeof(PluginInfo));
+      if (version < 3)
+      {
+        ignwarn << "The library [" << _pathToLibrary << "] is using version ["
+                << version << "] of the ignition::common Plugin API. This has "
+                << "known bugs and is therefore deprecated. Please rebuild "
+                << "your library with the latest version of "
+                << "ignition::common!\n";
       }
-      else if (PLUGIN_API_VERSION == 2 && sizeof(PluginInfo_v2) == size)
+      else if (version < PLUGIN_API_VERSION)
+      {
+        ignwarn << "The library [" << _pathToLibrary <<"] is using an outdated "
+                << "version [" << version << "] of the ignition::common Plugin "
+                << "API. The latest version is [" << PLUGIN_API_VERSION
+                << "].\n";
+      }
+
+      if (PLUGIN_API_VERSION == version && nullptr != multiInfoPtr
+          && sizeof(PluginInfo) == size)
+      {
+        std::size_t (*Info)(void * const, std::size_t, std::size_t) =
+          reinterpret_cast<std::size_t(*)(void * const, std::size_t, std::size_t)>(
+              multiInfoPtr);
+
+        PluginInfo plugin;
+        void *vPlugin = static_cast<void *>(&plugin);
+        size_t id = 0;
+        while(Info(vPlugin, id, sizeof(PluginInfo)) > 0)
+        {
+          plugins.push_back(plugin);
+          ++id;
+        }
+      }
+      else if (2 == version && nullptr != singleInfoPtr
+               && sizeof(PluginInfo_v2) == size)
       {
         PluginInfo_v2 plugin;
         // API 2 IGNCOMMONSinglePluginInfo accepts a void * and size_t
         // The pointer is a PluginInfo_v2 struct, and the size is the size
         // of the struct. If successful it returns the size, else 0
         std::size_t (*Info)(void *, std::size_t) =
-          reinterpret_cast<std::size_t(*)(void *, std::size_t)>(infoPtr);
+          reinterpret_cast<std::size_t(*)(void *, std::size_t)>(singleInfoPtr);
         void *vPlugin = static_cast<void *>(&plugin);
         Info(vPlugin, sizeof(PluginInfo_v2));
         plugins.push_back(convertPluginFromOldVersion(plugin));
       }
-      else if (PLUGIN_API_VERSION == 1 && sizeof(PluginInfo_v2) == size)
+      else if (1 == version && nullptr != singleInfoPtr
+               && sizeof(PluginInfo_v2) == size)
       {
         // API 1 IGNCOMMONSinglePluginInfo returns a PluginInfo struct,
         // but that causes a compiler warning on OSX about c-linkage since
         // the struct is not C compatible
-        PluginInfo_v2 (*Info)() = reinterpret_cast<PluginInfo_v2(*)()>(infoPtr);
+        PluginInfo_v2 (*Info)() = reinterpret_cast<PluginInfo_v2(*)()>(singleInfoPtr);
         plugins.push_back(convertPluginFromOldVersion(Info()));
       }
       else
       {
-        ignerr << "Wrong plugin size for API version [" <<
-                  PLUGIN_API_VERSION << "]. Expected [" << sizeof(PluginInfo_v2)
-                  << "], got [" << size << "]" << std::endl;
+        const size_t expectedSize = PLUGIN_API_VERSION==3?
+              sizeof(PluginInfo) : sizeof(PluginInfo_v2);
+
+        ignerr << "The library [" << _pathToLibrary << "] has the wrong plugin "
+               << "size for API version [" << PLUGIN_API_VERSION
+               << "]. Expected [" << expectedSize << "], got ["
+               << size << "]\n";
+
         return plugins;
       }
 

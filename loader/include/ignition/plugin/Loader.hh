@@ -32,6 +32,8 @@ namespace ignition
   {
     /// \brief Forward declaration
     class PluginLoaderPrivate;
+    class PluginInfo;
+    class Plugin;
 
     /// \brief Class for loading plugins
     class IGNITION_COMMON_VISIBLE PluginLoader
@@ -58,29 +60,35 @@ namespace ignition
 
       /// \brief Load a library at the given path
       /// \param[in] _pathToLibrary is the path to a libaray
-      /// \returns name of plugin if library exists and contains a plugin
-      public: std::string LoadLibrary(const std::string &_pathToLibrary);
+      /// \returns the set of plugins that have been loaded from the library
+      public: std::unordered_set<std::string> LoadLibrary(
+                  const std::string &_pathToLibrary);
 
-      /// \brief Instantiates a plugin of the name and base class
+      /// \brief Instantiates a plugin for the given plugin name
       ///
-      /// ex: pl.Instantiate<animals::AnimalBase>("animals::farm::Donkey")
-      /// \param[in] _name name of a plugin
+      /// \param[in] _plugin name of the plugin to instantiate
       /// \returns ptr to instantiated plugin
-      public: template <typename T>
-              std::unique_ptr<T> Instantiate(const std::string &_name) const
+      public: std::unique_ptr<Plugin> Instantiate(
+                  const std::string &_pluginName) const;
+
+      /// \brief Instantiates a plugin of PluginType for the given plugin name.
+      /// This can be used to create a specialized Plugin.
+      ///
+      /// \param[in] PluginType The specialized type of Plugin that you want to
+      /// construct.
+      /// \param[in] _pluginName The name of the plugin that you want to
+      /// instantiate
+      /// \returns pointer for the instantiated Plugin
+      public: template <typename PluginType>
+              std::unique_ptr<PluginType> Instantiate(
+                  const std::string &_pluginName) const
               {
-                // type hash used to simplify this API
-                std::unique_ptr<T> ptr;
-                ptr.reset(static_cast<T*>(
-                      this->Instantiate(_name)));
-                return ptr;
+                return std::unique_ptr<PluginType>(
+                      new PluginType(this->PrivateGetPluginInfo(_pluginName)));
               }
 
-      /// \brief Instantiates a plugin of the name and base class hash
-      /// \param[in] _name name of a plugin
-      /// \param[in] _baseId typeid() hash_code() of base class type
-      /// \returns pointer to instantiated plugin
-      private: void *Instantiate(const std::string &_name) const;
+      private: PluginInfo PrivateGetPluginInfo(
+                  const std::string &_pluginName) const;
 
       private: std::shared_ptr<PluginLoaderPrivate> dataPtr;
     };

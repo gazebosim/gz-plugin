@@ -21,8 +21,8 @@
 
 #include <typeinfo>
 #include <type_traits>
+#include <unordered_set>
 #include "ignition/common/PluginInfo.hh"
-
 
 #if defined _WIN32 || defined __CYGWIN__
   #ifdef __GNUC__
@@ -49,19 +49,19 @@
   int IGNCOMMONPluginAPIVersion = \
     ignition::common::PLUGIN_API_VERSION;
 
-
 /// \brief Begin registering a set of plugins that are contained within this
 /// shared library. Use a sequence of calls to the macro IGN_COMMON_ADD_PLUGIN(),
 /// passing in a different class name to each call. When all the classes have
 /// been added, call IGN_COMMON_FINISH_ADDING_PLUGINS.
 ///
-/// Be sure to only use this macro in the global namespace, and only use it once.
+/// Be sure to only use this macro in the global namespace, and only use it once
+/// in your library.
 #define IGN_COMMON_BEGIN_ADDING_PLUGINS\
   IGN_COMMON_REGISTER_PLUGININFO_META_DATA\
-  struct IGN_macro_must_be_used_in_global_namespace; \
-  static_assert(std::is_same < IGN_macro_must_be_used_in_global_namespace, \
-      ::IGN_macro_must_be_used_in_global_namespace>::value, \
-      "Macro for registering plugins must be used in global namespace"); \
+  struct IGN_macro_must_be_used_in_global_namespace;\
+  static_assert(std::is_same < IGN_macro_must_be_used_in_global_namespace,\
+      ::IGN_macro_must_be_used_in_global_namespace>::value,\
+      "Macro for registering plugins must be used in global namespace");\
   extern "C" IGN_PLUGIN_VISIBLE const\
   std::size_t IGNCOMMONMultiPluginInfo(\
       void *_outputInfo, const std::size_t _pluginId, const std::size_t _size)\
@@ -70,51 +70,75 @@
     {\
       return 0;\
     }\
-    std::size_t pluginCount = 0;
-// TODO Should we print some kind of error in the event that the size does not
-// match? Otherwise it may be difficult to debug cases where
-// IGNCOMMONMultiPluginInfo seems to return 0 for no apparent reason.
+    std::size_t pluginCount = 0;\
+    std::unordered_set<std::string> visitedPlugins;\
+    ignition::common::PluginInfo *plugin = \
+        static_cast<ignition::common::PluginInfo*>(_outputInfo);\
+    plugin->name.clear();
 
-/// \brief Add a plugin from this shared library. This macro could be called
+
+/// \brief Add a plugin from this shared library. This macro must be called
 /// consecutively on each class that this shared library wants to provide as a
 /// plugin. This macro must be called in between IGN_COMMON_BEGIN_ADDING_PLUGINS
-/// and IGN_COMMON_FINISH_ADDING_PLUGINS.
-#define IGN_COMMON_ADD_PLUGIN(className)\
+/// and IGN_COMMON_FINISH_ADDING_PLUGINS. If a class provides multiple
+/// interfaces, then simply call this macro repeatedly on the class, once for
+/// each interface. The multiple interfaces will automatically be collapsed into
+/// one plugin that provides all of them.
+#define IGN_COMMON_ADD_PLUGIN(className, interface)\
     /* cppcheck-suppress */ \
-    static_assert(std::is_same<className, ::className>::value, \
-        #className " must be fully qualified like ::ns::MyClass"); \
+    static_assert(std::is_same<className, ::className>::value,\
+        #className " must be fully qualified like ::ns::MyClass");\
     \
-    if(_pluginId == pluginCount)\
+    static_assert(!std::is_abstract<className>::value,\
+        #className " must not be an abstract class. It contains at least one "\
+        "pure virtual function!");\
     {\
-      ignition::common::PluginInfo *plugin =\
-          static_cast<ignition::common::PluginInfo*>(_outputInfo);\
-      plugin->name = #className;\
-      const std::array<const char*, className :: PluginInterfaces.size()> interfaces\
-          = className :: PluginInterfaces;\
-      plugin->interfaces.reserve(interfaces.size());\
-      for (const char* interface : interfaces)\
-        plugin->interfaces.insert(interface);\
-      plugin->factory = []() {\
-        return static_cast<void*>( new className() );\
-      };\
-    }\
-    ++pluginCount;
+      const bool insertion = visitedPlugins.insert( #className ).second;\
+      if(insertion)\
+      {\
+        ++pluginCount;\
+        if(_pluginId == pluginCount-1)\
+        {\
+          plugin->name = #className;\
+          plugin->interfaces.insert( std::make_pair(\
+              #interface , [=](void* v_ptr) { \
+                  className * d_ptr = static_cast< className *>(v_ptr);\
+                  return static_cast< interface *>(d_ptr);;\
+              }));\
+          plugin->factory = []() {\
+            return static_cast<void*>( new className() );\
+          };\
+          plugin->deleter = [](void* ptr) {\
+            delete static_cast< className* >(ptr);\
+          };\
+        }\
+      }\
+      else if( #className == plugin->name )\
+      {\
+        plugin->interfaces.insert( std::make_pair(\
+            #interface , [&](void* v_ptr) {\
+                className * d_ptr = static_cast< className *>(v_ptr);\
+                return static_cast< interface *>(d_ptr);\
+            }));\
+      }\
+    }
+
 
 /// \brief Call this macro after all calls to IGN_COMMON_ADD_PLUGIN have been
 /// finished.
 #define IGN_COMMON_FINISH_ADDING_PLUGINS\
-    if(pluginId > pluginCount)\
+    if(_pluginId > pluginCount)\
       return 0;\
-    return pluginCount - pluginId;\
-  };
+    return pluginCount - _pluginId;\
+  }
 
 
 /// \brief Register a shared library with only one plugin
 ///
 /// Adds a function that returns a struct with info about the plugin
-#define IGN_COMMON_REGISTER_SINGLE_PLUGIN(className) \
+#define IGN_COMMON_REGISTER_SINGLE_PLUGIN(className, interface) \
   IGN_COMMON_BEGIN_ADDING_PLUGINS\
-  IGN_COMMON_ADD_PLUGIN(className)\
+  IGN_COMMON_ADD_PLUGIN(className, interface)\
   IGN_COMMON_FINISH_ADDING_PLUGINS
 
 #endif
