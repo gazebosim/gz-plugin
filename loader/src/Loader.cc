@@ -51,8 +51,15 @@ namespace ignition
       // Dev Note (MXG): This is an attempt at backwards compability, but it is
       // really doomed to fail, because we have no way of defining a deleter
       // here, which is needed by the Plugin class in order to correctly delete
-      // its Plugin instance. We really have no choice but to clobber backwards
-      // compatibility.
+      // its plugin instance. We really have no choice but to clobber backwards
+      // compatibility. We can choose to have a deleter that deletes a pointer
+      // to void type (which is an undefined operation) or we can accept a
+      // memory leak for each old-fashioned plugin that gets loaded. There is no
+      // good option here to accommodate backwards compatibility (which is prone
+      // to bugs itself), so I am not sure which of these choices is less bad.
+
+//      info.deleter = [](void* v_ptr) { delete v_ptr; }; // <-- Undefined behavior
+      info.deleter = [](void*) { /* Do nothing */ }; // <-- Memory leaks
 
       return info;
     }
