@@ -32,9 +32,11 @@ namespace ignition
       //
       // Dev Note (MXG): We use std::map here instead of std::unordered_map
       // because iterators to a std::map are not invalidated by the insertion
-      // operation. This allows us to do optimizations with template magic to
-      // provide direct access to interfaces whose availability we can
-      // anticipate at run time.
+      // operation (whereas all iterators to a std::unordered_map are
+      // potentially invalidated each time an insertion is performed on the
+      // std::unordered_map). Holding onto valid iterators allows us to do
+      // optimizations with template magic to provide direct access to
+      // interfaces whose availability we can anticipate at run time.
       //
       // It is also worth noting that ordered vs unordered lookup time is very
       // similar on strings with relatively small lengths (5-20 characters) and
@@ -45,8 +47,8 @@ namespace ignition
 
       /// \brief ptr which manages the lifecycle of the plugin instance. Note
       /// that we cannot use a std::unique_ptr<void> here because unique_ptr
-      /// is statically constrained to only hold onto a complete type, which
-      /// "void" never qualifies as.
+      /// is statically constrained to only hold onto a complete type, and
+      /// "void" never qualifies as a complete type.
       public: void *pluginInstance;
 
       /// \brief Function which can be invoked to delete our plugin instance
@@ -55,6 +57,8 @@ namespace ignition
       /// \brief Destructor
       public: ~PluginPrivate()
       {
+        // When the Plugin object is deleted, we must delete our pluginInstance
+        // using the deleter that was provided by the external library.
         pluginDeleter(pluginInstance);
       }
     };
@@ -81,12 +85,18 @@ namespace ignition
       }
     }
 
+    bool Plugin::HasInterface(const std::string &_interfaceName) const
+    {
+      const std::string interfaceName = NormalizeName(_interfaceName);
+      return (this->dataPtr->interfaces.count(interfaceName) != 0);
+    }
+
     Plugin::~Plugin()
     {
       delete dataPtr;
     }
 
-    void *Plugin::GetInterface(const std::string &_interfaceName)
+    void *Plugin::PrivateGetInterface(const std::string &_interfaceName) const
     {
       const std::string interfaceName = NormalizeName(_interfaceName);
       const auto &it = this->dataPtr->interfaces.find(interfaceName);
@@ -94,6 +104,16 @@ namespace ignition
         return nullptr;
 
       return it->second;
+    }
+
+    Plugin::Plugin(Plugin &&other)
+    {
+      std::swap(dataPtr, other.dataPtr);
+    }
+
+    Plugin& Plugin::operator=(Plugin &&other)
+    {
+      std::swap(dataPtr, other.dataPtr);
     }
   }
 }

@@ -90,8 +90,11 @@
         #className " must be fully qualified like ::ns::MyClass");\
     \
     static_assert(!std::is_abstract<className>::value,\
-        #className " must not be an abstract class. It contains at least one "\
+        "[" #className "] must not be an abstract class. It contains at least one "\
         "pure virtual function!");\
+    static_assert(std::is_base_of<interface, className>::value,\
+        "[" #interface "] is not a base class of [" #className "], so it cannot "\
+        "be used as a plugin interface for [" #className "]!");\
     {\
       const bool insertion = visitedPlugins.insert( #className ).second;\
       if(insertion)\
@@ -138,7 +141,7 @@
 /// Adds a function that returns a struct with info about the plugin
 #define IGN_COMMON_REGISTER_SINGLE_PLUGIN(className, interface) \
   IGN_COMMON_BEGIN_ADDING_PLUGINS\
-  IGN_COMMON_ADD_PLUGIN(className, interface)\
+    IGN_COMMON_ADD_PLUGIN(className, interface)\
   IGN_COMMON_FINISH_ADDING_PLUGINS
 
 #endif
