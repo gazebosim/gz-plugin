@@ -39,10 +39,10 @@ namespace ignition
       // interfaces whose availability we can anticipate at run time.
       //
       // It is also worth noting that ordered vs unordered lookup time is very
-      // similar on strings with relatively small lengths (5-20 characters) and
-      // a relatively small set of strings (5-20 entries), and those conditions
-      // match our expected use case here. In fact, ordered lookup can sometimes
-      // outperform unordered in these conditions.
+      // similar on sets where the strings have relatively small lengths (5-20
+      // characters) and a relatively small number of entries in the set (5-20
+      // entries). Those conditions match our expected use case here. In fact,
+      // ordered lookup can sometimes outperform unordered in these conditions.
       public: std::map<std::string, void*> interfaces;
 
       /// \brief ptr which manages the lifecycle of the plugin instance. Note

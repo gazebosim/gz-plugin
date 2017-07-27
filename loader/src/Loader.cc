@@ -78,7 +78,7 @@ namespace ignition
       /// \brief attempt to load a library at the given path
       public: void *LoadLibrary(const std::string &_pathToLibrary) const;
 
-      /// \brief get plugin info for a library that has only one plugin
+      /// \brief get all the plugin info for a library
       public: std::vector<PluginInfo> LoadPlugins(
         void *_dlHandle, const std::string& _pathToLibrary) const;
     };

@@ -31,14 +31,15 @@ namespace ignition
     class Plugin
     {
       /// \brief Destructor. Deletes the plugin instance that this object is
-      /// provided interfaces for.
+      /// providing interfaces for.
       public: virtual ~Plugin();
 
       /// \brief Get an interface of the specified type. Note that this function
       /// only works when the Interface type has its name statically embedded
-      /// in its class definition as `static constexpr const char*
-      /// Interface::InterfaceName`. For more general  interfaces which do not
-      /// meet this condition, use GetInterface<Interface>(_interfaceName).
+      /// in its class definition as
+      /// `static constexpr const char* Interface::InterfaceName`. For more
+      /// general  interfaces which do not meet this condition, use
+      /// GetInterface<Interface>(_interfaceName).
       public: template<typename Interface>
               Interface *GetInterface()
               {
