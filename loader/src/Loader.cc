@@ -204,17 +204,26 @@ namespace ignition
     std::unique_ptr<Plugin> PluginLoader::Instantiate(
         const std::string &_plugin) const
     {
-      const std::string plugin = NormalizeName(_plugin);
+      const PluginInfo *info = PrivateGetPluginInfo(_plugin);
+      if (info)
+        return std::unique_ptr<Plugin>(new Plugin(info));
+
+      return nullptr;
+    }
+
+    /////////////////////////////////////////////////
+    const PluginInfo *PluginLoader::PrivateGetPluginInfo(
+        const std::string &_pluginName) const
+    {
+      const std::string plugin = NormalizeName(_pluginName);
 
       PluginLoaderPrivate::PluginMap::const_iterator it =
           this->dataPtr->plugins.find(plugin);
 
-      if(this->dataPtr->plugins.end() == it)
+      if (this->dataPtr->plugins.end() == it)
         return nullptr;
 
-      const PluginInfo& info = it->second;
-
-      return std::unique_ptr<Plugin>(new Plugin(info));
+      return &(it->second);
     }
 
     /////////////////////////////////////////////////

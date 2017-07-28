@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_COMMON_PLUGINLOADER_HH_
-#define IGNITION_COMMON_PLUGINLOADER_HH_
+#ifndef IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
+#define IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
 
 #include "ignition/common/PluginLoader.hh"
 
@@ -29,10 +29,15 @@ namespace ignition
     std::unique_ptr<PluginType> PluginLoader::Instantiate(
         const std::string &_pluginName) const
     {
-      return std::unique_ptr<PluginType>(
-            new PluginType(this->PrivateGetPluginInfo(_pluginName)));
+      const PluginInfo *info =
+          this->PrivateGetPluginInfo(_pluginName);
+
+      if(info)
+        return std::unique_ptr<PluginType>(new PluginType(info));
+
+      return nullptr;
     }
   }
 }
 
-#endif // IGNITION_COMMON_PLUGINLOADER_HH_
+#endif // IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_

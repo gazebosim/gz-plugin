@@ -83,7 +83,9 @@ namespace ignition
               std::unique_ptr<PluginType> Instantiate(
                   const std::string &_pluginName) const;
 
-      private: PluginInfo PrivateGetPluginInfo(
+      /// \brief Get a pointer to the PluginInfo corresponding to _pluginName.
+      /// Returns nullptr if there is no info for the requested _pluginName.
+      private: const PluginInfo *PrivateGetPluginInfo(
                   const std::string &_pluginName) const;
 
       private: std::shared_ptr<PluginLoaderPrivate> dataPtr;

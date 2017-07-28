@@ -26,7 +26,7 @@ namespace ignition
   namespace common
   {
     //////////////////////////////////////////////////
-    template<typename Interface>
+    template <typename Interface>
     Interface *Plugin::GetInterface()
     {
       return static_cast<Interface*>(
@@ -34,7 +34,7 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
-    template<typename Interface>
+    template <typename Interface>
     const Interface *Plugin::GetInterface() const
     {
       return static_cast<const Interface*>(
@@ -42,7 +42,7 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
-    template<typename Interface>
+    template <typename Interface>
     Interface *Plugin::GetInterface(const std::string &_interfaceName)
     {
       return static_cast<Interface*>(
@@ -50,7 +50,7 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
-    template<typename Interface>
+    template <typename Interface>
     const Interface *Plugin::GetInterface(
         const std::string &_interfaceName) const
     {
@@ -59,7 +59,7 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
-    template<typename Interface>
+    template <typename Interface>
     bool Plugin::HasInterface() const
     {
       return this->HasInterface(Interface::InterfaceName);

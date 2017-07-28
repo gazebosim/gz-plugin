@@ -27,6 +27,12 @@ namespace ignition
   {
     class PluginPrivate
     {
+      public: PluginPrivate()
+                : pluginInstance(nullptr)
+              {
+                // Do nothing
+              }
+
       /// \brief Map from interface names to their locations within the plugin
       /// instance
       //
@@ -43,7 +49,7 @@ namespace ignition
       // characters) and a relatively small number of entries in the set (5-20
       // entries). Those conditions match our expected use case here. In fact,
       // ordered lookup can sometimes outperform unordered in these conditions.
-      public: std::map<std::string, void*> interfaces;
+      public: Plugin::InterfaceMap interfaces;
 
       /// \brief ptr which manages the lifecycle of the plugin instance. Note
       /// that we cannot use a std::unique_ptr<void> here because unique_ptr
@@ -59,29 +65,33 @@ namespace ignition
       {
         // When the Plugin object is deleted, we must delete our pluginInstance
         // using the deleter that was provided by the external library.
-        pluginDeleter(pluginInstance);
+        if(pluginInstance)
+          pluginDeleter(pluginInstance);
       }
     };
 
-    Plugin::Plugin(const PluginInfo &info)
+    Plugin::Plugin(const PluginInfo *info)
       : dataPtr(new PluginPrivate)
     {
-      // Create a new instance of the plugin, and store it in our dataPtr
-      this->dataPtr->pluginInstance = info.factory();
-
-      // Grab a copy of the plugin's deleter
-      this->dataPtr->pluginDeleter = info.deleter;
-
-      void * const instance = this->dataPtr->pluginInstance;
-      // For each interface provided by the plugin, insert its location within
-      // the instance into the map
-      for(const auto &entry : info.interfaces)
+      if(info)
       {
-        // entry.first: name of the interface
-        // entry.second: function which casts the pluginInstance pointer to the
-        //               correct location of the interface within the plugin
-        this->dataPtr->interfaces.insert(
-              std::make_pair(entry.first, entry.second(instance)));
+        // Create a new instance of the plugin, and store it in our dataPtr
+        this->dataPtr->pluginInstance = info->factory();
+
+        // Grab a copy of the plugin's deleter
+        this->dataPtr->pluginDeleter = info->deleter;
+
+        void * const instance = this->dataPtr->pluginInstance;
+        // For each interface provided by the plugin, insert its location within
+        // the instance into the map
+        for(const auto &entry : info->interfaces)
+        {
+          // entry.first: name of the interface
+          // entry.second: function which casts the pluginInstance pointer to the
+          //               correct location of the interface within the plugin
+          this->dataPtr->interfaces.insert(
+                std::make_pair(entry.first, entry.second(instance)));
+        }
       }
     }
 
@@ -115,6 +125,13 @@ namespace ignition
     {
       std::swap(dataPtr, other.dataPtr);
       return *this;
+    }
+
+    Plugin::InterfaceMap::iterator Plugin::PrivateGetOrCreateIterator(
+        const std::string &_interfaceName)
+    {
+      return this->dataPtr->interfaces.insert(
+            std::make_pair(_interfaceName, nullptr)).first;
     }
   }
 }

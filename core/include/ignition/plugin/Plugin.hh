@@ -19,7 +19,7 @@
 #ifndef IGNITION_COMMON_PLUGIN_HH_
 #define IGNITION_COMMON_PLUGIN_HH_
 
-#include <memory>
+#include <map>
 
 namespace ignition
 {
@@ -40,21 +40,21 @@ namespace ignition
       /// `static constexpr const char* Interface::InterfaceName`. For more
       /// general  interfaces which do not meet this condition, use
       /// GetInterface<Interface>(_interfaceName).
-      public: template<typename Interface>
+      public: template <typename Interface>
               Interface *GetInterface();
 
       /// \brief const-qualified version of GetInterface<Interface>()
-      public: template<typename Interface>
+      public: template <typename Interface>
               const Interface *GetInterface() const;
 
       /// \brief Get an interface with the given name, casted to the specified
       /// class type.
-      public: template<typename Interface>
+      public: template <typename Interface>
               Interface *GetInterface(const std::string &_interfaceName);
 
       /// \brief Get a const-qualified interface with the given name, casted
       /// to the specified const class type.
-      public: template<typename Interface>
+      public: template <typename Interface>
               const Interface *GetInterface(
                   const std::string &_interfaceName) const;
 
@@ -64,7 +64,7 @@ namespace ignition
       /// constexpr const char* Interface::InterfaceName`. For more general
       /// interfaces which do not meet this condition, use
       /// GetInterface<Interface>(_interfaceName).
-      public: template<typename Interface>
+      public: template <typename Interface>
               bool HasInterface() const;
 
       /// \brief Returns true if this Plugin has the specified type of
@@ -79,10 +79,11 @@ namespace ignition
       private: PluginPrivate* dataPtr;
 
       friend class PluginLoader;
+      template <typename...> friend class SpecializedPlugin;
 
       /// \brief Constructor. Creates a plugin instance based on the PluginInfo
       /// provided. This should only be called by PluginLoader to ensure safety.
-      private: Plugin(const PluginInfo &info);
+      private: Plugin(const PluginInfo *info);
 
       // It is not safe to copy or assign this Plugin by value
       public: Plugin(const Plugin&) = delete;
@@ -91,6 +92,10 @@ namespace ignition
       // It is safe to move this Plugin
       public: Plugin(Plugin &&other);
       public: Plugin& operator=(Plugin &&other);
+
+      using InterfaceMap = std::map<std::string, void*>;
+      private: InterfaceMap::iterator PrivateGetOrCreateIterator(
+          const std::string &_interfaceName);
     };
   }
 }
