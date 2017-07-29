@@ -25,14 +25,46 @@ namespace ignition
 {
   namespace common
   {
-    class PluginInfo;
+    // Forward declarations
+    namespace detail { template <class...> class ComposePlugin; }
+    struct PluginInfo;
 
+    /// \brief Declaration of the variadic template for SpecializedPlugin. This
+    /// class definition is a C++ syntax formality.
+    ///
+    /// Look at the definition of SpecializedPlugin<SpecInterface> instead.
     template <class... OtherSpecInterfaces>
     class SpecializedPlugin
     {
       public: ~SpecializedPlugin() = default;
     };
 
+    /// \brief This class allows Plugin instances to have zero-cost access to
+    /// interfaces that can be anticipated at compile time. The Plugin does not
+    /// have to actually contain the interface in order to get this performance
+    /// improvement. This template is variadic, so it can support arbitrarily
+    /// many interfaces.
+    ///
+    /// Usage example:
+    ///
+    ///     using MySpecialPlugin = SpecializedPlugin<
+    ///         MyInterface1, FooInterface, MyInterface2, BarInterface>;
+    ///
+    ///     std::unique_ptr<MySpecialPlugin> plugin =
+    ///             loader->Instantiate<MySpecialPlugin>(pluginName);
+    ///
+    /// Then, calling the function
+    ///
+    ///     plugin->GetInterface<FooInterface>();
+    ///
+    /// will not have any cost associated with it. It will provide direct access
+    /// to the the `FooInterface*` of `plugin`. If `plugin` does not actually
+    /// offer `FooInterface`, then it will return a nullptr at zero cost.
+    ///
+    /// Only interfaces that have been "specialized" can be passed as arguments
+    /// to the SpecializedPlugin template. To specialize an interface, simply
+    /// put the macro IGN_COMMON_SPECIALIZE_INTERFACE(~) from
+    /// ignition/common/PluginMacros.hh into its class definition.
     template <class SpecInterface>
     class SpecializedPlugin<SpecInterface> : public virtual Plugin
     {
@@ -41,15 +73,20 @@ namespace ignition
       /// \brief Default destructor
       public: virtual ~SpecializedPlugin() = default;
 
+      // Documentation inherited
       public: template <class Interface>
               Interface *GetInterface();
 
+      // Documentation inherited
       public: template <class Interface>
               const Interface *GetInterface() const;
 
+      // Documentation inherited
       public: template <class Interface>
               bool HasInterface() const;
 
+      /// \brief Returns true if this SpecializedPlugin has been specialized for
+      /// Interface, otherwise returns false.
       public: template <class Interface>
               static constexpr bool IsSpecializedFor();
 
@@ -58,28 +95,37 @@ namespace ignition
       // Declare friendship
       friend class PluginLoader;
       template <class...> friend class SpecializedPlugin;
+      template <class...> friend class detail::ComposePlugin;
 
       private: template <class T> struct type { };
 
+      /// \brief Delegate the function to the standard Plugin method
       private: template <class Interface>
                Interface *PrivateGetSpecInterface(type<Interface>);
 
+      /// \brief Use a zero-cost accessor to provide this specialized interface
       private: SpecInterface *PrivateGetSpecInterface(type<SpecInterface>);
 
+      /// \brief Delegate the function to the standard Plugin method
       private: template <class Interface>
                const Interface *PrivateGetSpecInterface(type<Interface>) const;
 
+      /// \brief Use a zero-cost accessor to provide this specialized interface
       private: const SpecInterface *PrivateGetSpecInterface(
                    type<SpecInterface>) const;
 
+      /// \brief Delegate the function to the standard Plugin method
       private: template <class Interface>
                bool PrivateHasSpecInterface(type<Interface>) const;
 
+      /// \brief Use a zero-cost accessor to check on this specialized interface
       private: bool PrivateHasSpecInterface(type<SpecInterface>) const;
 
+      /// \brief Return false because Interface does not match SpecInterface
       private: template <class Interface>
                static constexpr bool PrivateIsSpecializedFor(type<Interface>);
 
+      /// \brief Return true
       private: static constexpr bool PrivateIsSpecializedFor(
                    type<SpecInterface>);
 
@@ -91,8 +137,8 @@ namespace ignition
       // using PIMPL. The iterator is const because it must always point to the
       // same entry throughout its entire lifecycle.
 
-      /// \brief Default constructor
-      private: SpecializedPlugin(const PluginInfo *info);
+      /// \brief Standard constructor
+      private: SpecializedPlugin(const PluginInfo *info = nullptr);
     };
   }
 }

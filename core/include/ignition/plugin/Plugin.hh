@@ -25,8 +25,10 @@ namespace ignition
 {
   namespace common
   {
+    // Forward declarations
     class PluginPrivate;
-    class PluginInfo;
+    struct PluginInfo;
+    namespace detail { template<class...> class ComposePlugin; }
 
     class Plugin
     {
@@ -71,6 +73,15 @@ namespace ignition
       /// interface.
       public: bool HasInterface(const std::string &_interfaceName) const;
 
+      /// \brief This function always returns false if it is called on this
+      /// basic Plugin class type. The SpecializedPlugin can shadow this to
+      /// return true when it is specialized for this Interface type, however
+      /// the function must be called on the SpecializedPlugin type and not
+      /// this base class type, because this is a shadowed function, not a
+      /// virtual function.
+      public: template <class Interface>
+              static constexpr bool IsSpecializedFor();
+
       /// \brief Type-agnostic retriever for interfaces
       private: void *PrivateGetInterface(
                   const std::string &_interfaceName) const;
@@ -78,24 +89,25 @@ namespace ignition
       /// \brief PIMPL pointer to the implementation of this class
       private: PluginPrivate* dataPtr;
 
+      // Declare friendship
       friend class PluginLoader;
       template <typename...> friend class SpecializedPlugin;
+      template <typename...> friend class detail::ComposePlugin;
 
       /// \brief Constructor. Creates a plugin instance based on the PluginInfo
       /// provided. This should only be called by PluginLoader to ensure safety.
-      private: Plugin(const PluginInfo *info);
+      private: Plugin(const PluginInfo *info = nullptr);
 
-      // It is not safe to copy or assign this Plugin by value
-      public: Plugin(const Plugin&) = delete;
-      public: Plugin& operator=(const Plugin&) = delete;
-
-      // It is safe to move this Plugin
-      public: Plugin(Plugin &&other);
-      public: Plugin& operator=(Plugin &&other);
-
-      using InterfaceMap = std::map<std::string, void*>;
+      public: using InterfaceMap = std::map<std::string, void*>;
       private: InterfaceMap::iterator PrivateGetOrCreateIterator(
           const std::string &_interfaceName);
+
+      // It is not safe to copy or assign this Plugin
+      // TODO(MXG): Consider if this can be made safe
+      public: Plugin(const Plugin&) = delete;
+      public: Plugin& operator=(const Plugin&) = delete;
+      public: Plugin(Plugin &&other) = delete;
+      public: Plugin& operator=(Plugin &&other) = delete;
     };
   }
 }

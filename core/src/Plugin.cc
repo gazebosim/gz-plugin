@@ -70,6 +70,27 @@ namespace ignition
       }
     };
 
+    bool Plugin::HasInterface(const std::string &_interfaceName) const
+    {
+      const std::string interfaceName = NormalizeName(_interfaceName);
+      return (this->dataPtr->interfaces.count(interfaceName) != 0);
+    }
+
+    Plugin::~Plugin()
+    {
+      delete dataPtr;
+    }
+
+    void *Plugin::PrivateGetInterface(const std::string &_interfaceName) const
+    {
+      const std::string interfaceName = NormalizeName(_interfaceName);
+      const auto &it = this->dataPtr->interfaces.find(interfaceName);
+      if(this->dataPtr->interfaces.end() == it)
+        return nullptr;
+
+      return it->second;
+    }
+
     Plugin::Plugin(const PluginInfo *info)
       : dataPtr(new PluginPrivate)
     {
@@ -93,38 +114,6 @@ namespace ignition
                 std::make_pair(entry.first, entry.second(instance)));
         }
       }
-    }
-
-    bool Plugin::HasInterface(const std::string &_interfaceName) const
-    {
-      const std::string interfaceName = NormalizeName(_interfaceName);
-      return (this->dataPtr->interfaces.count(interfaceName) != 0);
-    }
-
-    Plugin::~Plugin()
-    {
-      delete dataPtr;
-    }
-
-    void *Plugin::PrivateGetInterface(const std::string &_interfaceName) const
-    {
-      const std::string interfaceName = NormalizeName(_interfaceName);
-      const auto &it = this->dataPtr->interfaces.find(interfaceName);
-      if(this->dataPtr->interfaces.end() == it)
-        return nullptr;
-
-      return it->second;
-    }
-
-    Plugin::Plugin(Plugin &&other)
-    {
-      std::swap(dataPtr, other.dataPtr);
-    }
-
-    Plugin& Plugin::operator=(Plugin &&other)
-    {
-      std::swap(dataPtr, other.dataPtr);
-      return *this;
     }
 
     Plugin::InterfaceMap::iterator Plugin::PrivateGetOrCreateIterator(

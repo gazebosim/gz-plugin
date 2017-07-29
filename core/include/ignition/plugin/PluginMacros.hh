@@ -19,133 +19,122 @@
 #ifndef IGNITION_COMMON_REGISTERMACROS_HH_
 #define IGNITION_COMMON_REGISTERMACROS_HH_
 
-#include <typeinfo>
-#include <type_traits>
-#include <unordered_set>
-#include "ignition/common/PluginInfo.hh"
-#include "ignition/common/SuppressWarning.hh"
+#include "ignition/common/detail/PluginMacros.hh"
+
+// -------------------- Specialize a plugin interface -------------------------
+
+/// \brief Call this macro inside a public scope of an interface in order to get
+/// performance benefits for that interface in a SpecializedPlugin. Pass in the
+/// fully qualified name of the interface class (i.e. explicitly include the
+/// namespaces of the class).
+///
+/// Usage example:
+///
+///     namespace mylibrary {
+///       namespace ns {
+///         class SomeInterface
+///         {
+///           public:
+///             IGN_COMMON_SPECIALIZE_INTERFACE(mylibrary::ns::SomeInterface)
+///           // ... declarations of interface functions ...
+///         };
+///       } // namespace ns
+///     } // namespace mylibrary
+///
+/// Interfaces with this macro can be utilized by SpecializedPlugin to get zero
+/// cost access to this type of interface. Note that this performance benefit is
+/// available even if the plugin that gets loaded does not offer this interface;
+/// you just get zero cost access to a nullptr instead. Always be sure to verify
+/// the existence of an interface that you query from a plugin by checking
+/// whether it's a nullptr!
+#define IGN_COMMON_SPECIALIZE_INTERFACE(interfaceName)\
+  DETAIL_IGN_COMMON_SPECIALIZE_INTERFACE(interfaceName)
 
 
-#if defined _WIN32 || defined __CYGWIN__
-  #ifdef __GNUC__
-    #define IGN_PLUGIN_VISIBLE __attribute__ ((dllexport))
-  #else
-    #define IGN_PLUGIN_VISIBLE __declspec(dllexport)
-  #endif
-#else
-  #if __GNUC__ >= 4
-    #define IGN_PLUGIN_VISIBLE __attribute__ ((visibility ("default")))
-  #else
-    #define IGN_PLUGIN_VISIBLE
-  #endif
-#endif
+// ------------- Add a set of plugins or a set of interfaces ------------------
 
+// The following three macros can be used to produce multiple plugins and/or
+// multiple interfaces from your shared library.
 
-/// \brief Register the PluginInfo meta data
-#define IGN_COMMON_REGISTER_PLUGININFO_META_DATA\
-  extern "C" IGN_PLUGIN_VISIBLE const \
-  std::size_t IGNCOMMONSinglePluginInfoSize = \
-    sizeof(ignition::common::PluginInfo); \
-  \
-  extern "C" IGN_PLUGIN_VISIBLE const \
-  int IGNCOMMONPluginAPIVersion = \
-    ignition::common::PLUGIN_API_VERSION;
+/* Usage example for multiple plugins and one interface:
+ *
+ *     IGN_COMMON_BEGIN_ADDING_PLUGINS
+ *       IGN_COMMON_ADD_PLUGIN(mylibrary::ns::SomeClass1, mylibrary::ns::SomeInterface)
+ *       IGN_COMMON_ADD_PLUGIN(mylibrary::ns::SomeClass2, mylibrary::ns::SomeInterface)
+ *     IGN_COMMON_FINISH_ADDING_PLUGINS
+ *
+ *
+ * Usage example for one plugin and multiple interfaces:
+ *
+ *     IGN_COMMON_BEGIN_ADDING_PLUGINS
+ *       IGN_COMMON_ADD_PLUGIN(mylibrary::ns::SomeClass, mylibrary::ns::Interface1)
+ *       IGN_COMMON_ADD_PLUGIN(mylibrary::ns::SomeClass, mylibrary::ns::Interface2)
+ *     IGN_COMMON_FINISH_ADDING_PLUGINS
+ *
+ *
+ * Usage example for multiple plugins and multiple interfaces:
+ *
+ *     IGN_COMMON_BEGIN_ADDING_PLUGINS
+ *       IGN_COMMON_ADD_PLUGIN(mylibrary::ns::SomeClass, mylibrary::ns::FooInterface)
+ *       IGN_COMMON_ADD_PLUGIN(mylibrary::ns::SomeOtherClass, mylibrary::ns::BarInterface)
+ *       IGN_COMMON_ADD_PLUGIN(mylibrary::ns::SomeClass, mylibrary::ns::SomeInterface)
+ *       IGN_COMMON_ADD_PLUGIN(mylibrary::ns::SomeOtherClass, mylibrary::ns::FooInterface)
+ *       IGN_COMMON_ADD_PLUGIN(mylibrary::ns::SomeOtherClass, mylibrary::ns::SomeInterface)
+ *     IGN_COMMON_FINISH_ADDING_PLUGINS
+ */
+
+// Note that the order in which (Plugin, Interface) pairs are added does not
+// matter. Multiple plugins are allowed to provide the same interface. There is
+// no inherent limit on the number of interfaces or plugins that are allowed.
+//
+// These macros MUST be called in the global namespace in a source file of your
+// library's codebase. A single library is only allowed to have ONE block of
+// these macros (i.e. if you find yourself invoking
+// IGN_COMMON_BEGIN_ADDING_PLUGINS more than once in your library, then you are
+// doing something that is not permitted). Recommended practice is to have a
+// single source file (e.g. plugins.cpp) in your library's codebase that is
+// dedicated to hosting these macros.
+
 
 /// \brief Begin registering a set of plugins that are contained within this
-/// shared library. Use a sequence of calls to the macro IGN_COMMON_ADD_PLUGIN(),
-/// passing in a different class name to each call. When all the classes have
-/// been added, call IGN_COMMON_FINISH_ADDING_PLUGINS.
+/// shared library. After invoking this macro, use a sequence of calls to
+/// IGN_COMMON_ADD_PLUGIN(~,~), passing in a different plugin and interface name
+/// to each call. When all the plugins and interfaces have been added, call
+/// IGN_COMMON_FINISH_ADDING_PLUGINS.
 ///
 /// Be sure to only use this macro in the global namespace, and only use it once
 /// in your library.
 #define IGN_COMMON_BEGIN_ADDING_PLUGINS\
-  IGN_COMMON_REGISTER_PLUGININFO_META_DATA\
-  IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)\
-  struct IGN_macro_must_be_used_in_global_namespace;\
-  static_assert(std::is_same < IGN_macro_must_be_used_in_global_namespace,\
-      ::IGN_macro_must_be_used_in_global_namespace>::value,\
-      "Macro for registering plugins must be used in global namespace");\
-  extern "C" IGN_PLUGIN_VISIBLE\
-  std::size_t IGNCOMMONMultiPluginInfo(\
-      void *_outputInfo, const std::size_t _pluginId, const std::size_t _size)\
-  {\
-    if (_size != sizeof(ignition::common::PluginInfo))\
-    {\
-      return 0u;\
-    }\
-    std::size_t pluginCount = 0;\
-    std::unordered_set<std::string> visitedPlugins;\
-    ignition::common::PluginInfo *plugin = \
-        static_cast<ignition::common::PluginInfo*>(_outputInfo);\
-    plugin->name.clear();
+  DETAIL_IGN_COMMON_BEGIN_ADDING_PLUGINS
 
 
-/// \brief Add a plugin from this shared library. This macro must be called
-/// consecutively on each class that this shared library wants to provide as a
-/// plugin. This macro must be called in between IGN_COMMON_BEGIN_ADDING_PLUGINS
-/// and IGN_COMMON_FINISH_ADDING_PLUGINS. If a class provides multiple
-/// interfaces, then simply call this macro repeatedly on the class, once for
-/// each interface. The multiple interfaces will automatically be collapsed into
-/// one plugin that provides all of them.
-#define IGN_COMMON_ADD_PLUGIN(className, interface)\
-    /* cppcheck-suppress */ \
-    static_assert(std::is_same<className, ::className>::value,\
-        #className " must be fully qualified like ::ns::MyClass");\
-    \
-    static_assert(!std::is_abstract<className>::value,\
-        "[" #className "] must not be an abstract class. It contains at least one "\
-        "pure virtual function!");\
-    static_assert(std::is_base_of<interface, className>::value,\
-        "[" #interface "] is not a base class of [" #className "], so it cannot "\
-        "be used as a plugin interface for [" #className "]!");\
-    {\
-      const bool insertion = visitedPlugins.insert( #className ).second;\
-      if(insertion)\
-      {\
-        ++pluginCount;\
-        if(_pluginId == pluginCount-1)\
-        {\
-          plugin->name = #className;\
-          plugin->interfaces.insert( std::make_pair(\
-              #interface , [=](void* v_ptr) { \
-                  className * d_ptr = static_cast< className *>(v_ptr);\
-                  return static_cast< interface *>(d_ptr);\
-              }));\
-          plugin->factory = []() {\
-            return static_cast<void*>( new className() );\
-          };\
-          plugin->deleter = [](void* ptr) {\
-            delete static_cast< className* >(ptr);\
-          };\
-        }\
-      }\
-      else if( #className == plugin->name )\
-      {\
-        plugin->interfaces.insert( std::make_pair(\
-            #interface , [&](void* v_ptr) {\
-                className * d_ptr = static_cast< className *>(v_ptr);\
-                return static_cast< interface *>(d_ptr);\
-            }));\
-      }\
-    }
+/// \brief Add a plugin and interface from this shared library. This macro must
+/// be called consecutively on each class that this shared library wants to
+/// provide as a plugin or interface. This macro must be called in between
+/// IGN_COMMON_BEGIN_ADDING_PLUGINS and IGN_COMMON_FINISH_ADDING_PLUGINS. If a
+/// plugin provides multiple interfaces, then simply call this macro repeatedly
+/// on the plugin, once for each interface. The multiple interfaces will
+/// automatically be collapsed into one plugin that provides all of them.
+#define IGN_COMMON_ADD_PLUGIN(plugin, interface)\
+  DETAIL_IGN_COMMON_ADD_PLUGIN(plugin, interface)
 
 
 /// \brief Call this macro after all calls to IGN_COMMON_ADD_PLUGIN have been
 /// finished.
 #define IGN_COMMON_FINISH_ADDING_PLUGINS\
-    if(_pluginId > pluginCount)\
-      return 0u;\
-    return pluginCount - _pluginId;\
-  }\
-  IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
+  DETAIL_IGN_COMMON_FINISH_ADDING_PLUGINS
 
 
-/// \brief Register a shared library with only one plugin
-///
-/// Adds a function that returns a struct with info about the plugin
-#define IGN_COMMON_REGISTER_SINGLE_PLUGIN(className, interface) \
+// -------------- Add a single plugin with a single interface -----------------
+
+/// \brief Register a shared library with only one plugin and one interface.
+/// This macro is NOT compatible with IGN_COMMON_ADD_PLUGIN or any of the
+/// above macros for adding multiple plugins and/or multiple interfaces. This is
+/// simply a convenience function if you want to add one plugin with one
+/// interface from your library.
+#define IGN_COMMON_REGISTER_SINGLE_PLUGIN(plugin, interface) \
   IGN_COMMON_BEGIN_ADDING_PLUGINS\
-    IGN_COMMON_ADD_PLUGIN(className, interface)\
+    IGN_COMMON_ADD_PLUGIN(plugin, interface)\
   IGN_COMMON_FINISH_ADDING_PLUGINS
 
 #endif

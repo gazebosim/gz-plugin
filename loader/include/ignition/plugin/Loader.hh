@@ -32,7 +32,7 @@ namespace ignition
   {
     /// \brief Forward declaration
     class PluginLoaderPrivate;
-    class PluginInfo;
+    struct PluginInfo;
     class Plugin;
 
     /// \brief Class for loading plugins
