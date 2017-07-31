@@ -73,6 +73,10 @@ namespace ignition
       /// \brief Default destructor
       public: virtual ~SpecializedPlugin() = default;
 
+      // Inherit function overloads
+      public: using Plugin::GetInterface;
+      public: using Plugin::HasInterface;
+
       // Documentation inherited
       public: template <class Interface>
               Interface *GetInterface();

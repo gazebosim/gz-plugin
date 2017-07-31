@@ -19,7 +19,9 @@
 
 #include "ignition/common/Plugin.hh"
 #include "ignition/common/PluginInfo.hh"
+#include "ignition/common/Console.hh"
 #include "PluginUtils.hh"
+
 
 namespace ignition
 {
@@ -114,13 +116,24 @@ namespace ignition
                 std::make_pair(entry.first, entry.second(instance)));
         }
       }
+      else
+      {
+        // Dev note (MXG): We offer a nullptr default value to make virtual
+        // inheritance more straightforward. In reality, a Plugin should never
+        // be instantiated with a nullptr PluginInfo*, and our implementation
+        // should ensure this. If we ever enter this section of code, then a
+        // serious bug has occurred.
+        ignerr << "Plugin is being instantiated with nullptr PluginInfo. This "
+               << "should not be possible! Please report this bug.\n";
+        assert(false);
+      }
     }
 
     Plugin::InterfaceMap::iterator Plugin::PrivateGetOrCreateIterator(
         const std::string &_interfaceName)
     {
       return this->dataPtr->interfaces.insert(
-            std::make_pair(_interfaceName, nullptr)).first;
+            std::make_pair(NormalizeName(_interfaceName), nullptr)).first;
     }
   }
 }

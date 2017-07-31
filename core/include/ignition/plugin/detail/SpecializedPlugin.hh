@@ -21,6 +21,14 @@
 
 #include "ignition/common/SpecializedPlugin.hh"
 
+// This preprocessor token should only be used by the unittest that is
+// responsible for checking that the specialized routines are being used to
+// access specialized plugin interfaces.
+#ifdef IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
+bool usedSpecializedInterfaceAccess;
+#endif // IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
+
+
 namespace ignition
 {
   namespace common
@@ -71,6 +79,9 @@ namespace ignition
     SpecInterface *SpecializedPlugin<SpecInterface>::PrivateGetSpecInterface(
         type<SpecInterface>)
     {
+      #ifdef IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
+      usedSpecializedInterfaceAccess = true;
+      #endif // IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
       return static_cast<SpecInterface*>(
             this->privateSpecInterfaceIterator->second);
     }
@@ -89,6 +100,9 @@ namespace ignition
     const SpecInterface *SpecializedPlugin<SpecInterface>::
     PrivateGetSpecInterface(type<SpecInterface>) const
     {
+      #ifdef IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
+      usedSpecializedInterfaceAccess = true;
+      #endif // IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
       return static_cast<SpecInterface*>(
             this->privateSpecInterfaceIterator->second);
     }
@@ -107,6 +121,9 @@ namespace ignition
     bool SpecializedPlugin<SpecInterface>::PrivateHasSpecInterface(
         type<SpecInterface>) const
     {
+      #ifdef IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
+      usedSpecializedInterfaceAccess = true;
+      #endif // IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
       return (nullptr != this->privateSpecInterfaceIterator->second);
     }
 
@@ -166,16 +183,16 @@ namespace ignition
                  }
       };
 
-#define DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH_IMPL(ReturnType, Function, Suffix, Args)\
-  public:\
-  template <class T>\
-  ReturnType Function Suffix\
-  {\
-    if(Base1::template IsSpecializedFor<T>())\
-      return Base1::template Function <T> Args ;\
-  \
-    return Base2::template Function <T> Args ;\
-  }
+      #define DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH_IMPL(ReturnType, Function, Suffix, Args)\
+        public:\
+        template <class T>\
+        ReturnType Function Suffix\
+        {\
+          if(Base1::template IsSpecializedFor<T>())\
+            return Base1::template Function <T> Args ;\
+        \
+          return Base2::template Function <T> Args ;\
+        }
 
       template <class Base1, class Base2>
       class ComposePlugin<Base1, Base2> : public virtual Base1, public virtual Base2
@@ -186,6 +203,10 @@ namespace ignition
 
         /// \brief Default destructor
         public: virtual ~ComposePlugin() = default;
+
+        // Inherit function overloads
+        using Plugin::GetInterface;
+        using Plugin::HasInterface;
 
         // Implement the various functions that need to be dispatched to the
         // base classes.
