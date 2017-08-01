@@ -40,7 +40,7 @@ namespace ignition
       public: ~SpecializedPluginPtr() = default;
     };
 
-    /// \brief This class allows PluginPtr instances to have zero-cost access to
+    /// \brief This class allows PluginPtr instances to have low-cost access to
     /// interfaces that can be anticipated at compile time. The PluginPtr does
     /// not have to actually contain the interface in order to get this
     /// performance improvement. This template is variadic, so it can support
@@ -60,7 +60,7 @@ namespace ignition
     ///
     /// will not have any cost associated with it. It will provide direct access
     /// to the the `FooInterface*` of `plugin`. If `plugin` does not actually
-    /// offer `FooInterface`, then it will return a nullptr at zero cost.
+    /// offer `FooInterface`, then it will return a nullptr at very low cost.
     ///
     /// Only interfaces that have been "specialized" can be passed as arguments
     /// to the SpecializedPluginPtr template. To specialize an interface, simply
@@ -111,14 +111,14 @@ namespace ignition
       private: template <class Interface>
                Interface *PrivateGetSpecInterface(type<Interface>);
 
-      /// \brief Use a zero-cost accessor to provide this specialized interface
+      /// \brief Use a low-cost accessor to provide this specialized interface
       private: SpecInterface *PrivateGetSpecInterface(type<SpecInterface>);
 
       /// \brief Delegate the function to the standard PluginPtr method
       private: template <class Interface>
                const Interface *PrivateGetSpecInterface(type<Interface>) const;
 
-      /// \brief Use a zero-cost accessor to provide this specialized interface
+      /// \brief Use a low-cost accessor to provide this specialized interface
       private: const SpecInterface *PrivateGetSpecInterface(
                    type<SpecInterface>) const;
 
@@ -126,7 +126,7 @@ namespace ignition
       private: template <class Interface>
                bool PrivateHasSpecInterface(type<Interface>) const;
 
-      /// \brief Use a zero-cost accessor to check on this specialized interface
+      /// \brief Use a low-cost accessor to check on this specialized interface
       private: bool PrivateHasSpecInterface(type<SpecInterface>) const;
 
       /// \brief Return false because Interface does not match SpecInterface

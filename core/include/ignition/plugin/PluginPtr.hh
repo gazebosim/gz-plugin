@@ -30,6 +30,22 @@ namespace ignition
     struct PluginInfo;
     namespace detail { template<class...> class ComposePlugin; }
 
+    /// \brief This class manages the lifecycle of a plugin instance. It can
+    /// receive a plugin instance from the ignition::common::PluginLoader class
+    /// or by copy-construction or assignment from another PluginPtr instance.
+    ///
+    /// This class behaves similarly to a std::shared_ptr where multiple
+    /// PluginPtr objects can share a single plugin instance, and the plugin
+    /// instance will not be deleted until all PluginPtr objects that refer to
+    /// it are either destroyed, cleared, or begin referring to a different
+    /// plugin instance.
+    ///
+    /// A PluginPtr object can be "cast" to a SpecializedPluginPtr object by
+    /// simply using the copy/move constructor or assignment operator of a
+    /// SpecializedPluginPtr object. Note that this "cast" does have a small
+    /// amount of overhead associated with it, but it may result in huge savings
+    /// after initialization is finished if you frequently access the interfaces
+    /// that the SpecializedPluginPtr is specialized for.
     class PluginPtr
     {
       /// \brief Destructor. Deletes this PluginPtr's reference to the plugin
