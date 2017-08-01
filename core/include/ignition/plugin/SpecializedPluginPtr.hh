@@ -16,10 +16,11 @@
  */
 
 
-#ifndef IGNITION_COMMON_SPECIALIZEDPLUGIN_HH_
-#define IGNITION_COMMON_SPECIALIZEDPLUGIN_HH_
+#ifndef IGNITION_COMMON_SPECIALIZEDPLUGINPTR_HH_
+#define IGNITION_COMMON_SPECIALIZEDPLUGINPTR_HH_
 
 #include "ignition/common/PluginPtr.hh"
+#include "ignition/common/detail/SpecializedPluginPtrMacros.hh"
 
 namespace ignition
 {
@@ -29,14 +30,14 @@ namespace ignition
     namespace detail { template <class...> class ComposePlugin; }
     struct PluginInfo;
 
-    /// \brief Declaration of the variadic template for SpecializedPlugin. This
-    /// class definition is a C++ syntax formality.
+    /// \brief Declaration of the variadic template for SpecializedPluginPtr.
+    /// This class definition is a C++ syntax formality.
     ///
-    /// Look at the definition of SpecializedPlugin<SpecInterface> instead.
+    /// Look at the definition of SpecializedPluginPtr<SpecInterface> instead.
     template <class... OtherSpecInterfaces>
-    class SpecializedPlugin
+    class SpecializedPluginPtr
     {
-      public: ~SpecializedPlugin() = default;
+      public: ~SpecializedPluginPtr() = default;
     };
 
     /// \brief This class allows PluginPtr instances to have zero-cost access to
@@ -47,7 +48,7 @@ namespace ignition
     ///
     /// Usage example:
     ///
-    ///     using MySpecialPlugin = SpecializedPlugin<
+    ///     using MySpecialPlugin = SpecializedPluginPtr<
     ///         MyInterface1, FooInterface, MyInterface2, BarInterface>;
     ///
     ///     std::unique_ptr<MySpecialPlugin> plugin =
@@ -62,16 +63,19 @@ namespace ignition
     /// offer `FooInterface`, then it will return a nullptr at zero cost.
     ///
     /// Only interfaces that have been "specialized" can be passed as arguments
-    /// to the SpecializedPlugin template. To specialize an interface, simply
+    /// to the SpecializedPluginPtr template. To specialize an interface, simply
     /// put the macro IGN_COMMON_SPECIALIZE_INTERFACE(~) from
     /// ignition/common/PluginMacros.hh into its class definition.
     template <class SpecInterface>
-    class SpecializedPlugin<SpecInterface> : public virtual PluginPtr
+    class SpecializedPluginPtr<SpecInterface> : public virtual PluginPtr
     {
       // ---------- Public API ----------
 
-      /// \brief Default destructor
-      public: virtual ~SpecializedPlugin() = default;
+      /// \brief Default constructor. Initializes this object without any plugin
+      /// instance. IsValid() will return false.
+      public: SpecializedPluginPtr();
+
+      DETAIL_IGN_COMMON_PLUGIN_CONSTRUCT_DESTRUCT_ASSIGN(SpecializedPluginPtr)
 
       // Inherit function overloads
       public: using PluginPtr::GetInterface;
@@ -89,7 +93,7 @@ namespace ignition
       public: template <class Interface>
               bool HasInterface() const;
 
-      /// \brief Returns true if this SpecializedPlugin has been specialized for
+      /// \brief Returns true if this SpecializedPluginPtr has been specialized for
       /// Interface, otherwise returns false.
       public: template <class Interface>
               static constexpr bool IsSpecializedFor();
@@ -98,7 +102,7 @@ namespace ignition
 
       // Declare friendship
       friend class PluginLoader;
-      template <class...> friend class SpecializedPlugin;
+      template <class...> friend class SpecializedPluginPtr;
       template <class...> friend class detail::ComposePlugin;
 
       private: template <class T> struct type { };
@@ -142,11 +146,11 @@ namespace ignition
       // same entry throughout its entire lifecycle.
 
       /// \brief Standard constructor
-      private: SpecializedPlugin(const PluginInfo *info = nullptr);
+      private: SpecializedPluginPtr(const PluginInfo *info);
     };
   }
 }
 
 #include "ignition/common/detail/SpecializedPluginPtr.hh"
 
-#endif // IGNITION_COMMON_SPECIALIZEDPLUGIN_HH_
+#endif // IGNITION_COMMON_SPECIALIZEDPLUGINPTR_HH_

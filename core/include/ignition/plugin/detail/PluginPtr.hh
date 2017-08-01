@@ -67,4 +67,20 @@ namespace ignition
   }
 }
 
+// Note that opening up namespace std is legal here because we are specializing
+// a templated structure from the STL, which is permitted (and even encouraged).
+namespace std
+{
+  /// \brief Template specialization that provides a hash function for PluginPtr
+  /// so that it can easily be used in STL objects like std::unordered_set and
+  /// std::unordered_map
+  template <> struct hash<ignition::common::PluginPtr>
+  {
+    size_t operator()(const ignition::common::PluginPtr &ptr) const
+    {
+      return ptr.Hash();
+    }
+  };
+}
+
 #endif // IGNITION_COMMON_DETAIL_PLUGIN_HH_

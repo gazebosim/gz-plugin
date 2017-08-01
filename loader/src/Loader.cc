@@ -167,7 +167,7 @@ namespace ignition
       else
       {
         ignerr << "Library[" << _pathToLibrary << "] error: " << dlerror()
-          << std::endl;
+               << std::endl;
       }
       return newPlugins;
     }
@@ -227,6 +227,7 @@ namespace ignition
     {
       // Somehow this works on windows builds?
       return dlopen(_full_path.c_str(), RTLD_LAZY|RTLD_GLOBAL);
+      // TODO(MXG): Consider checking for errors here using dlerror()
     }
 
     /////////////////////////////////////////////////

@@ -29,8 +29,41 @@
 #include "util/DummyPlugins.hh"
 
 
+#define IGN_CREATE_SPEC_INTERFACE(name)\
+  class name { public: IGN_COMMON_SPECIALIZE_INTERFACE(name) };
+
+IGN_CREATE_SPEC_INTERFACE(Interface1)
+IGN_CREATE_SPEC_INTERFACE(Interface2)
+IGN_CREATE_SPEC_INTERFACE(Interface3)
+IGN_CREATE_SPEC_INTERFACE(Interface4)
+IGN_CREATE_SPEC_INTERFACE(Interface5)
+IGN_CREATE_SPEC_INTERFACE(Interface6)
+IGN_CREATE_SPEC_INTERFACE(Interface7)
+IGN_CREATE_SPEC_INTERFACE(Interface8)
+IGN_CREATE_SPEC_INTERFACE(Interface9)
+IGN_CREATE_SPEC_INTERFACE(Interface10)
+IGN_CREATE_SPEC_INTERFACE(Interface11)
+IGN_CREATE_SPEC_INTERFACE(Interface12)
+IGN_CREATE_SPEC_INTERFACE(Interface13)
+
+
+// Load this plugin type up with specialized interfaces to make sure that using
+// many specializations does not have a noticeable impact on performance.
 using SpecializedPluginPtr =
-    ignition::common::SpecializedPlugin<
+    ignition::common::SpecializedPluginPtr<
+        Interface1,
+        Interface2,
+        Interface3,
+        Interface4,
+        Interface5,
+        Interface6,
+        Interface7,
+        Interface8,
+        Interface9,
+        Interface10,
+        Interface11,
+        Interface12,
+        Interface13,
         test::util::DummyIntBase,
         test::util::DummySetterBase>;
 
@@ -86,10 +119,10 @@ TEST(PluginSpecialization, AccessTime)
   std::cout << std::setprecision(3);
   std::cout << std::right;
 
-  igndbg << "Avg specialized time: "
-         << std::setw(8) << std::right << spec_avg << "\n"
+  std::cout << "Avg specialized time: "
+         << std::setw(8) << std::right << spec_avg << " ns\n"
          << "Avg normal time:      "
-         << std::setw(8) << std::right << norm_avg << std::endl;
+         << std::setw(8) << std::right << norm_avg << " ns" << std::endl;
 
   // The time required for the specialized access should be much lower than the
   // time required by the normal access.

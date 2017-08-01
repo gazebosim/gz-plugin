@@ -37,6 +37,11 @@ namespace ignition
       /// deleted, the plugin will also be deleted.
       public: virtual ~PluginPtr();
 
+      /// \brief Default constructor. Creates a PluginPtr object that does not
+      /// point to any plugin instance. IsValid() will return false until a
+      /// plugin instance is provided.
+      public: PluginPtr();
+
       /// \brief Copy constructor. This PluginPtr will now point at the same
       /// plugin instance as _other, and they will share ownership. If this
       /// PluginPtr was holding an instance to another plugin, that instance
@@ -60,6 +65,38 @@ namespace ignition
       /// an instance to another plugin, that instance will be deleted if no
       /// other PluginPtr is referencing it.
       public: PluginPtr& operator=(PluginPtr &&_other);
+
+      /// \brief Comparison operator. Returns true if this Plugin is holding the
+      /// same plugin instance as _other, otherwise returns false.
+      public: bool operator ==(const PluginPtr &_other) const;
+
+      /// \brief Returns true if the pointer value of the plugin instance held
+      /// by this PluginPtr is less than the pointer value of the instance held
+      /// by _other.
+      public: bool operator <(const PluginPtr &_other) const;
+
+      /// \brief Returns true if the pointer value of the plugin instance held
+      /// by this PluginPtr is greater than the pointer value of the instance
+      /// held by _other.
+      public: bool operator >(const PluginPtr &_other) const;
+
+      /// \brief Returns true if the pointer instance held by this PluginPtr is
+      /// different from the pointer instance held by _other.
+      public: bool operator !=(const PluginPtr &_other) const;
+
+      /// \brief Returns true if the value of the pointer instance held by this
+      /// PluginPtr is less than or equal to the value of the pointer instance
+      /// held by _other.
+      public: bool operator <=(const PluginPtr &_other) const;
+
+      /// \brief Returns true if the value of the pointer instance held by this
+      /// PluginPtr is greater than or equal to the value of the pointer
+      /// instance held by _other.
+      public: bool operator >=(const PluginPtr &_other) const;
+
+      /// \brief Produces a hash for the plugin instance that this PluginPtr is
+      /// holding.
+      public: std::size_t Hash() const;
 
       /// \brief Get an interface of the specified type. Note that this function
       /// only works when the Interface type has its name statically embedded
@@ -99,9 +136,9 @@ namespace ignition
       public: bool HasInterface(const std::string &_interfaceName) const;
 
       /// \brief This function always returns false if it is called on this
-      /// basic PluginPtr class type. The SpecializedPlugin can shadow this to
-      /// return true when it is specialized for this Interface type, however
-      /// the function must be called on the SpecializedPlugin type and not
+      /// basic PluginPtr class type. The SpecializedPluginPtr can shadow this
+      /// to return true when it is specialized for this Interface type, however
+      /// the function must be called on the SpecializedPluginPtr type and not
       /// this base class type, because this is a shadowed function, not a
       /// virtual function.
       public: template <class Interface>
@@ -125,12 +162,13 @@ namespace ignition
 
       // Declare friendship
       friend class PluginLoader;
-      template <typename...> friend class SpecializedPlugin;
+      template <typename...> friend class SpecializedPluginPtr;
       template <typename...> friend class detail::ComposePlugin;
 
-      /// \brief Constructor. Creates a plugin instance based on the PluginInfo
-      /// provided. This should only be called by PluginLoader to ensure safety.
-      private: explicit PluginPtr(const PluginInfo *info = nullptr);
+      /// \brief Private constructor. Creates a plugin instance based on the
+      /// PluginInfo provided. This should only be called by PluginLoader to
+      /// ensure that the PluginInfo is well-formed, so we keep it private.
+      private: explicit PluginPtr(const PluginInfo *info);
 
       public: using InterfaceMap = std::map<std::string, void*>;
       private: InterfaceMap::iterator PrivateGetOrCreateIterator(
