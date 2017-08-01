@@ -33,7 +33,7 @@ namespace ignition
     /// \brief Forward declaration
     class PluginLoaderPrivate;
     struct PluginInfo;
-    class Plugin;
+    class PluginPtr;
 
     /// \brief Class for loading plugins
     class IGNITION_COMMON_VISIBLE PluginLoader
@@ -68,19 +68,18 @@ namespace ignition
       ///
       /// \param[in] _plugin name of the plugin to instantiate
       /// \returns ptr to instantiated plugin
-      public: std::unique_ptr<Plugin> Instantiate(
-                  const std::string &_pluginName) const;
+      public: PluginPtr Instantiate(const std::string &_pluginName) const;
 
       /// \brief Instantiates a plugin of PluginType for the given plugin name.
-      /// This can be used to create a specialized Plugin.
+      /// This can be used to create a specialized PluginPtr.
       ///
-      /// \param[in] PluginType The specialized type of Plugin that you want to
-      /// construct.
+      /// \param[in] PluginType The specialized type of PluginPtrPtr that you want
+      /// to construct.
       /// \param[in] _pluginName The name of the plugin that you want to
       /// instantiate
-      /// \returns pointer for the instantiated Plugin
-      public: template <typename PluginType>
-              std::unique_ptr<PluginType> Instantiate(
+      /// \returns pointer for the instantiated PluginPtr
+      public: template <typename PluginPtrType>
+              PluginPtrType Instantiate(
                   const std::string &_pluginName) const;
 
       /// \brief Get a pointer to the PluginInfo corresponding to _pluginName.

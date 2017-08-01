@@ -25,17 +25,11 @@ namespace ignition
 {
   namespace common
   {
-    template <typename PluginType>
-    std::unique_ptr<PluginType> PluginLoader::Instantiate(
+    template <typename PluginPtrType>
+    PluginPtrType PluginLoader::Instantiate(
         const std::string &_pluginName) const
     {
-      const PluginInfo *info =
-          this->PrivateGetPluginInfo(_pluginName);
-
-      if(info)
-        return std::unique_ptr<PluginType>(new PluginType(info));
-
-      return nullptr;
+      return PluginPtrType(this->PrivateGetPluginInfo(_pluginName));
     }
   }
 }

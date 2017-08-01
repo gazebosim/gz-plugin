@@ -19,7 +19,7 @@
 #ifndef IGNITION_COMMON_DETAIL_PLUGIN_HH_
 #define IGNITION_COMMON_DETAIL_PLUGIN_HH_
 
-#include "ignition/common/Plugin.hh"
+#include "ignition/common/PluginPtr.hh"
 
 namespace ignition
 {
@@ -27,7 +27,7 @@ namespace ignition
   {
     //////////////////////////////////////////////////
     template <typename Interface>
-    Interface *Plugin::GetInterface()
+    Interface *PluginPtr::GetInterface()
     {
       return static_cast<Interface*>(
             this->PrivateGetInterface(Interface::InterfaceName));
@@ -35,7 +35,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <typename Interface>
-    const Interface *Plugin::GetInterface() const
+    const Interface *PluginPtr::GetInterface() const
     {
       return static_cast<const Interface*>(
             this->PrivateGetInterface(Interface::InterfaceName));
@@ -43,7 +43,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <typename Interface>
-    Interface *Plugin::GetInterface(const std::string &_interfaceName)
+    Interface *PluginPtr::GetInterface(const std::string &_interfaceName)
     {
       return static_cast<Interface*>(
             this->PrivateGetInterface(_interfaceName));
@@ -51,7 +51,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <typename Interface>
-    const Interface *Plugin::GetInterface(
+    const Interface *PluginPtr::GetInterface(
         const std::string &_interfaceName) const
     {
       return static_cast<const Interface*>(
@@ -60,7 +60,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <typename Interface>
-    bool Plugin::HasInterface() const
+    bool PluginPtr::HasInterface() const
     {
       return this->HasInterface(Interface::InterfaceName);
     }

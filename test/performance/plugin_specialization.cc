@@ -22,14 +22,14 @@
 
 #include "ignition/common/PluginLoader.hh"
 #include "ignition/common/SystemPaths.hh"
-#include "ignition/common/SpecializedPlugin.hh"
+#include "ignition/common/SpecializedPluginPtr.hh"
 #include "ignition/common/Console.hh"
 
 #include "test_config.h"
 #include "util/DummyPlugins.hh"
 
 
-using SpecializedPlugin =
+using SpecializedPluginPtr =
     ignition::common::SpecializedPlugin<
         test::util::DummyIntBase,
         test::util::DummySetterBase>;
@@ -48,8 +48,8 @@ TEST(PluginSpecialization, AccessTime)
   pl.LoadLibrary(path);
 
   // Load up the plugin
-  std::unique_ptr<SpecializedPlugin> plugin =
-      pl.Instantiate<SpecializedPlugin>("::test::util::DummyMultiPlugin");
+  SpecializedPluginPtr plugin =
+      pl.Instantiate<SpecializedPluginPtr>("::test::util::DummyMultiPlugin");
 
   // Declare the variables that will be used to retrieve the interface pointers
   test::util::DummySetterBase *setterBase;
@@ -61,7 +61,7 @@ TEST(PluginSpecialization, AccessTime)
   const auto spec_start = std::chrono::high_resolution_clock::now();
   for(std::size_t i=0; i < NumTests; ++i)
   {
-    setterBase = plugin->GetInterface<test::util::DummySetterBase>();
+    setterBase = plugin.GetInterface<test::util::DummySetterBase>();
   }
   const auto spec_finish = std::chrono::high_resolution_clock::now();
 
@@ -69,7 +69,7 @@ TEST(PluginSpecialization, AccessTime)
   const auto norm_start = std::chrono::high_resolution_clock::now();
   for(std::size_t i=0; i < NumTests; ++i)
   {
-    doubleBase = plugin->GetInterface<test::util::DummyDoubleBase>(
+    doubleBase = plugin.GetInterface<test::util::DummyDoubleBase>(
           "test::util::DummyDoubleBase");
   }
   const auto norm_finish = std::chrono::high_resolution_clock::now();

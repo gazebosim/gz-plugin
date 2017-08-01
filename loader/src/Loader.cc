@@ -23,7 +23,7 @@
 #include <unordered_map>
 
 #include "ignition/common/Console.hh"
-#include "ignition/common/Plugin.hh"
+#include "ignition/common/PluginPtr.hh"
 #include "ignition/common/PluginInfo.hh"
 #include "ignition/common/PluginLoader.hh"
 #include "ignition/common/StringUtils.hh"
@@ -50,7 +50,7 @@ namespace ignition
 
       // Dev Note (MXG): This is an attempt at backwards compability, but it is
       // really doomed to fail, because we have no way of defining a deleter
-      // here, which is needed by the Plugin class in order to correctly delete
+      // here, which is needed by the PluginPtr class in order to correctly delete
       // its plugin instance. We really have no choice but to clobber backwards
       // compatibility. We can choose to have a deleter that deletes a pointer
       // to void type (which is an undefined operation) or we can accept a
@@ -201,14 +201,10 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    std::unique_ptr<Plugin> PluginLoader::Instantiate(
+    PluginPtr PluginLoader::Instantiate(
         const std::string &_plugin) const
     {
-      const PluginInfo *info = PrivateGetPluginInfo(_plugin);
-      if (info)
-        return std::unique_ptr<Plugin>(new Plugin(info));
-
-      return nullptr;
+      return PluginPtr(this->PrivateGetPluginInfo(_plugin));
     }
 
     /////////////////////////////////////////////////

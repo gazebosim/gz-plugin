@@ -19,7 +19,7 @@
 #ifndef IGNITION_COMMON_SPECIALIZEDPLUGIN_HH_
 #define IGNITION_COMMON_SPECIALIZEDPLUGIN_HH_
 
-#include "ignition/common/Plugin.hh"
+#include "ignition/common/PluginPtr.hh"
 
 namespace ignition
 {
@@ -39,11 +39,11 @@ namespace ignition
       public: ~SpecializedPlugin() = default;
     };
 
-    /// \brief This class allows Plugin instances to have zero-cost access to
-    /// interfaces that can be anticipated at compile time. The Plugin does not
-    /// have to actually contain the interface in order to get this performance
-    /// improvement. This template is variadic, so it can support arbitrarily
-    /// many interfaces.
+    /// \brief This class allows PluginPtr instances to have zero-cost access to
+    /// interfaces that can be anticipated at compile time. The PluginPtr does
+    /// not have to actually contain the interface in order to get this
+    /// performance improvement. This template is variadic, so it can support
+    /// arbitrarily many interfaces.
     ///
     /// Usage example:
     ///
@@ -66,7 +66,7 @@ namespace ignition
     /// put the macro IGN_COMMON_SPECIALIZE_INTERFACE(~) from
     /// ignition/common/PluginMacros.hh into its class definition.
     template <class SpecInterface>
-    class SpecializedPlugin<SpecInterface> : public virtual Plugin
+    class SpecializedPlugin<SpecInterface> : public virtual PluginPtr
     {
       // ---------- Public API ----------
 
@@ -74,8 +74,8 @@ namespace ignition
       public: virtual ~SpecializedPlugin() = default;
 
       // Inherit function overloads
-      public: using Plugin::GetInterface;
-      public: using Plugin::HasInterface;
+      public: using PluginPtr::GetInterface;
+      public: using PluginPtr::HasInterface;
 
       // Documentation inherited
       public: template <class Interface>
@@ -103,14 +103,14 @@ namespace ignition
 
       private: template <class T> struct type { };
 
-      /// \brief Delegate the function to the standard Plugin method
+      /// \brief Delegate the function to the standard PluginPtr method
       private: template <class Interface>
                Interface *PrivateGetSpecInterface(type<Interface>);
 
       /// \brief Use a zero-cost accessor to provide this specialized interface
       private: SpecInterface *PrivateGetSpecInterface(type<SpecInterface>);
 
-      /// \brief Delegate the function to the standard Plugin method
+      /// \brief Delegate the function to the standard PluginPtr method
       private: template <class Interface>
                const Interface *PrivateGetSpecInterface(type<Interface>) const;
 
@@ -118,7 +118,7 @@ namespace ignition
       private: const SpecInterface *PrivateGetSpecInterface(
                    type<SpecInterface>) const;
 
-      /// \brief Delegate the function to the standard Plugin method
+      /// \brief Delegate the function to the standard PluginPtr method
       private: template <class Interface>
                bool PrivateHasSpecInterface(type<Interface>) const;
 
@@ -135,7 +135,7 @@ namespace ignition
 
       /// \brief Iterator that points to the entry of the specialized interface
       private:
-      const Plugin::InterfaceMap::iterator privateSpecInterfaceIterator;
+      const PluginPtr::InterfaceMap::iterator privateSpecInterfaceIterator;
       // Dev note (MXG): The privateSpecInterfaceIterator object must be
       // available to the user during their compile time, so it cannot be hidden
       // using PIMPL. The iterator is const because it must always point to the
@@ -147,6 +147,6 @@ namespace ignition
   }
 }
 
-#include "ignition/common/detail/SpecializedPlugin.hh"
+#include "ignition/common/detail/SpecializedPluginPtr.hh"
 
 #endif // IGNITION_COMMON_SPECIALIZEDPLUGIN_HH_
