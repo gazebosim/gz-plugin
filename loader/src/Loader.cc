@@ -35,36 +35,8 @@ namespace ignition
 {
   namespace common
   {
-    /////////////////////////////////////////////////
-    PluginInfo convertPluginFromOldVersion(const PluginInfo_v2& old_info)
-    {
-      PluginInfo info;
-      info.name = old_info.name;
-
-      // This is known to cause bugs if interface is not the first object in
-      // the inheritance structure of the object that v_ptr points to.
-      info.interfaces.insert(
-            std::make_pair(old_info.interface,
-                           [](void* v_ptr){ return v_ptr; }));
-      info.factory = old_info.factory;
-
-      // Dev Note (MXG): This is an attempt at backwards compability, but it is
-      // really doomed to fail, because we have no way of defining a deleter
-      // here, which is needed by the PluginPtr class in order to correctly delete
-      // its plugin instance. We really have no choice but to clobber backwards
-      // compatibility. We can choose to have a deleter that deletes a pointer
-      // to void type (which is an undefined operation) or we can accept a
-      // memory leak for each old-fashioned plugin that gets loaded. There is no
-      // good option here to accommodate backwards compatibility (which is prone
-      // to bugs itself), so I am not sure which of these choices is less bad.
-
-//      info.deleter = [](void* v_ptr) { delete v_ptr; }; // <-- Undefined behavior
-      info.deleter = [](void*) { /* Do nothing */ }; // <-- Memory leaks
-
-      return info;
-    }
-
-    /////////////////////////////////////////////////
+  /////////////////////////////////////////////////
+    /// \brief PIMPL Implementation of the PluginLoader class
     class PluginLoaderPrivate
     {
       /// \brief Directories that should be searched for plugins
@@ -244,16 +216,14 @@ namespace ignition
 
       const std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
       const std::string sizeSymbol = "IGNCOMMONSinglePluginInfoSize";
-      const std::string singleInfoSymbol = "IGNCOMMONSinglePluginInfo";
       const std::string multiInfoSymbol = "IGNCOMMONMultiPluginInfo";
       void *versionPtr = dlsym(_dlHandle, versionSymbol.c_str());
       void *sizePtr = dlsym(_dlHandle, sizeSymbol.c_str());
-      void *singleInfoPtr = dlsym(_dlHandle, singleInfoSymbol.c_str());
       void *multiInfoPtr = dlsym(_dlHandle, multiInfoSymbol.c_str());
 
       // Does the library have the right symbols?
       if (nullptr == versionPtr || nullptr == sizePtr
-          || (nullptr == singleInfoPtr && nullptr == multiInfoPtr))
+          || nullptr == multiInfoPtr)
       {
         ignerr << "Library [" << _pathToLibrary
                << "] doesn't have the right symbols.\n";
@@ -264,15 +234,7 @@ namespace ignition
       int version = *(static_cast<int*>(versionPtr));
       std::size_t size = *(static_cast<std::size_t*>(sizePtr));
 
-      if (version < 3)
-      {
-        ignwarn << "The library [" << _pathToLibrary << "] is using version ["
-                << version << "] of the ignition::common Plugin API. This has "
-                << "known bugs and is therefore deprecated. Please rebuild "
-                << "your library with the latest version of "
-                << "ignition::common!\n";
-      }
-      else if (version < PLUGIN_API_VERSION)
+      if (version < PLUGIN_API_VERSION)
       {
         ignwarn << "The library [" << _pathToLibrary <<"] is using an outdated "
                 << "version [" << version << "] of the ignition::common Plugin "
@@ -280,8 +242,7 @@ namespace ignition
                 << "].\n";
       }
 
-      if (PLUGIN_API_VERSION == version && nullptr != multiInfoPtr
-          && sizeof(PluginInfo) == size)
+      if (sizeof(PluginInfo) == size)
       {
         std::size_t (*Info)(void * const, std::size_t, std::size_t) =
           reinterpret_cast<std::size_t(*)(void * const, std::size_t, std::size_t)>(
@@ -296,32 +257,9 @@ namespace ignition
           ++id;
         }
       }
-      else if (2 == version && nullptr != singleInfoPtr
-               && sizeof(PluginInfo_v2) == size)
-      {
-        PluginInfo_v2 plugin;
-        // API 2 IGNCOMMONSinglePluginInfo accepts a void * and size_t
-        // The pointer is a PluginInfo_v2 struct, and the size is the size
-        // of the struct. If successful it returns the size, else 0
-        std::size_t (*Info)(void *, std::size_t) =
-          reinterpret_cast<std::size_t(*)(void *, std::size_t)>(singleInfoPtr);
-        void *vPlugin = static_cast<void *>(&plugin);
-        Info(vPlugin, sizeof(PluginInfo_v2));
-        loadedPlugins.push_back(convertPluginFromOldVersion(plugin));
-      }
-      else if (1 == version && nullptr != singleInfoPtr
-               && sizeof(PluginInfo_v2) == size)
-      {
-        // API 1 IGNCOMMONSinglePluginInfo returns a PluginInfo struct,
-        // but that causes a compiler warning on OSX about c-linkage since
-        // the struct is not C compatible
-        PluginInfo_v2 (*Info)() = reinterpret_cast<PluginInfo_v2(*)()>(singleInfoPtr);
-        loadedPlugins.push_back(convertPluginFromOldVersion(Info()));
-      }
       else
       {
-        const size_t expectedSize = PLUGIN_API_VERSION==3?
-              sizeof(PluginInfo) : sizeof(PluginInfo_v2);
+        const size_t expectedSize = sizeof(PluginInfo);
 
         ignerr << "The library [" << _pathToLibrary << "] has the wrong plugin "
                << "size for API version [" << PLUGIN_API_VERSION

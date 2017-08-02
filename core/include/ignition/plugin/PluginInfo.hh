@@ -31,7 +31,7 @@ namespace ignition
     ///     version of the PluginInfo struct
     //
     /// This must be incremented when the PluginInfo struct changes
-    const int PLUGIN_API_VERSION = 3;
+    const int PLUGIN_API_VERSION = 1;
 
 
     /// \brief Holds info required to construct a plugin
@@ -54,26 +54,6 @@ namespace ignition
 
       /// \brief A method that safely deletes an instance of the plugin
       std::function<void(void*)> deleter;
-    };
-
-
-    /// \brief Older version of PluginInfo for backwards compatibility. Works
-    /// with Plugins up to version 2.
-    struct PluginInfo_v2
-    {
-      /// \brief the name of the plugin
-      std::string name;
-
-      /// \brief the name of the type of plugin this implements
-      std::string interface;
-
-      /// \brief returns a hash that can be used to compare the base class type
-      ///
-      /// This is only used to make the PluginLoader::Instantiate API simpler
-      std::size_t baseClassHash;
-
-      /// \brief a method that instantiates a new instance of a plugin
-      std::function<void*()> factory;
     };
   }
 }
