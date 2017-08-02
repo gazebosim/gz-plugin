@@ -88,7 +88,7 @@ namespace ignition
                   const std::string &_pluginName) const;
 
       /// \brief PIMPL pointer to class implementation
-      private: std::shared_ptr<PluginLoaderPrivate> dataPtr;
+      private: std::unique_ptr<PluginLoaderPrivate> dataPtr;
     };
   }
 }

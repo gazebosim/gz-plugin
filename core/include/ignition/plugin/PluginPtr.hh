@@ -20,6 +20,7 @@
 #define IGNITION_COMMON_PLUGIN_HH_
 
 #include <map>
+#include <memory>
 
 namespace ignition
 {
@@ -173,8 +174,12 @@ namespace ignition
       private: void *PrivateGetInterface(
                   const std::string &_interfaceName) const;
 
-      /// \brief PIMPL pointer to the implementation of this class
-      private: PluginPtrPrivate* dataPtr;
+      /// \brief PIMPL pointer to the implementation of this class. This must
+      /// remain const-qualified because the implementation of this class and
+      /// the SpecializedPluginPtr class depends on the fact that this dataPtr
+      /// instance will never be replaced in the entire lifespan of this
+      /// PluginPtr object.
+      private: const std::unique_ptr<PluginPtrPrivate> dataPtr;
 
       // Declare friendship
       friend class PluginLoader;

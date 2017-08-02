@@ -84,11 +84,13 @@ namespace ignition
     PluginLoader::PluginLoader()
       : dataPtr(new PluginLoaderPrivate())
     {
+      // Do nothing.
     }
 
     /////////////////////////////////////////////////
     PluginLoader::~PluginLoader()
     {
+      // Do nothing.
     }
 
     /////////////////////////////////////////////////
