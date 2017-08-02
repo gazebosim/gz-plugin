@@ -21,7 +21,7 @@
 
 #include "ignition/common/detail/PluginMacros.hh"
 
-// -------------------- Specialize a plugin interface -------------------------
+// --------------- Specialize a plugin interface (optional) -------------------
 
 /// \brief Call this macro inside a public scope of an interface in order to get
 /// performance benefits for that interface in a SpecializedPluginPtr. Pass in
