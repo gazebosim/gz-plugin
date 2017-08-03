@@ -93,8 +93,8 @@ namespace ignition
       public: template <class Interface>
               bool HasInterface() const;
 
-      /// \brief Returns true if this SpecializedPluginPtr has been specialized for
-      /// Interface, otherwise returns false.
+      /// \brief Returns true if this SpecializedPluginPtr has been specialized
+      /// for Interface, otherwise returns false.
       public: template <class Interface>
               static constexpr bool IsSpecializedFor();
 
@@ -146,7 +146,7 @@ namespace ignition
       // same entry throughout its entire lifecycle.
 
       /// \brief Standard constructor
-      private: SpecializedPluginPtr(const PluginInfo *info);
+      private: explicit SpecializedPluginPtr(const PluginInfo *info);
     };
   }
 }

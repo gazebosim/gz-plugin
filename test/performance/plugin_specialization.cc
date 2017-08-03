@@ -92,7 +92,7 @@ TEST(PluginSpecialization, AccessTime)
 
   // Test the specialized case
   const auto spec_start = std::chrono::high_resolution_clock::now();
-  for(std::size_t i=0; i < NumTests; ++i)
+  for (std::size_t i = 0; i < NumTests; ++i)
   {
     setterBase = plugin.GetInterface<test::util::DummySetterBase>();
   }
@@ -100,7 +100,7 @@ TEST(PluginSpecialization, AccessTime)
 
   // Test the normal case
   const auto norm_start = std::chrono::high_resolution_clock::now();
-  for(std::size_t i=0; i < NumTests; ++i)
+  for (std::size_t i = 0; i < NumTests; ++i)
   {
     doubleBase = plugin.GetInterface<test::util::DummyDoubleBase>(
           "test::util::DummyDoubleBase");
@@ -112,8 +112,11 @@ TEST(PluginSpecialization, AccessTime)
   const auto norm_time = std::chrono::duration_cast<std::chrono::nanoseconds>(
         norm_finish - norm_start).count();
 
-  const double spec_avg = (double)(spec_time)/(double)(NumTests);
-  const double norm_avg = (double)(norm_time)/(double)(NumTests);
+  const double spec_avg =
+      static_cast<double>(spec_time)/static_cast<double>(NumTests);
+
+  const double norm_avg =
+      static_cast<double>(norm_time)/static_cast<double>(NumTests);
 
   std::cout << std::fixed;
   std::cout << std::setprecision(3);

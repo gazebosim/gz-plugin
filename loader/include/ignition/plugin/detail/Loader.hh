@@ -34,4 +34,4 @@ namespace ignition
   }
 }
 
-#endif // IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
+#endif

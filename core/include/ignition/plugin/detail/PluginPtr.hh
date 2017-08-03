@@ -83,4 +83,4 @@ namespace std
   };
 }
 
-#endif // IGNITION_COMMON_DETAIL_PLUGIN_HH_
+#endif

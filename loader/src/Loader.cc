@@ -72,7 +72,7 @@ namespace ignition
         const size_t i_size = plugin.interfaces.size();
         pretty << "\t\t[" << plugin.name << "] which implements "
                << i_size << PluralCast(" interface", i_size) << ":\n";;
-        for(const auto& interface : plugin.interfaces)
+        for (const auto& interface : plugin.interfaces)
           pretty << "\t\t\t" << interface.first << "\n";
       }
       pretty << std::endl;
@@ -113,16 +113,16 @@ namespace ignition
         std::vector<PluginInfo> loadedPlugins = this->dataPtr->LoadPlugins(
               dlHandle, _pathToLibrary);
 
-        for(PluginInfo &plugin : loadedPlugins)
+        for (PluginInfo &plugin : loadedPlugins)
         {
-          if(plugin.name.empty())
+          if (plugin.name.empty())
             continue;
 
           plugin.name = NormalizeName(plugin.name);
 
           PluginInfo::InterfaceCastingMap normalizedMap;
           normalizedMap.reserve(plugin.interfaces.size());
-          for(const auto &interface : plugin.interfaces)
+          for (const auto &interface : plugin.interfaces)
             normalizedMap.insert(std::make_pair(
                      NormalizeName(interface.first),
                      interface.second));
@@ -132,7 +132,7 @@ namespace ignition
           newPlugins.insert(plugin.name);
         }
 
-        if(loadedPlugins.empty())
+        if (loadedPlugins.empty())
         {
           ignerr << "Failed to load plugins from library [" << _pathToLibrary <<
                     "].\n";
@@ -152,7 +152,7 @@ namespace ignition
       std::unordered_set<std::string> interfaces;
       for (auto const &plugin : this->dataPtr->plugins)
       {
-        for(auto const &interface : plugin.second.interfaces)
+        for (auto const &interface : plugin.second.interfaces)
           interfaces.insert(interface.first);
       }
       return interfaces;
@@ -166,7 +166,7 @@ namespace ignition
       std::unordered_set<std::string> plugins;
       for (auto const &plugin : this->dataPtr->plugins)
       {
-        if(plugin.second.interfaces.find(interface) !=
+        if (plugin.second.interfaces.find(interface) !=
            plugin.second.interfaces.end())
           plugins.insert(plugin.second.name);
       }
@@ -253,7 +253,7 @@ namespace ignition
         PluginInfo plugin;
         void *vPlugin = static_cast<void *>(&plugin);
         size_t id = 0;
-        while(Info(vPlugin, id, sizeof(PluginInfo)) > 0)
+        while (Info(vPlugin, id, sizeof(PluginInfo)) > 0)
         {
           loadedPlugins.push_back(plugin);
           ++id;

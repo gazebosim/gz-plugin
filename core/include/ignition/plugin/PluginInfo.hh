@@ -46,7 +46,7 @@ namespace ignition
       /// (which actually points to the location of the interface within the
       /// plugin instance).
       using InterfaceCastingMap =
-          std::unordered_map<std::string, std::function<void*(void*)>>;
+          std::unordered_map< std::string, std::function<void*(void*)> >;
       InterfaceCastingMap interfaces;
 
       /// \brief A method that instantiates a new instance of a plugin

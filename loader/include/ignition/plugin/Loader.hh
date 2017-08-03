@@ -73,8 +73,8 @@ namespace ignition
       /// \brief Instantiates a plugin of PluginType for the given plugin name.
       /// This can be used to create a specialized PluginPtr.
       ///
-      /// \param[in] PluginType The specialized type of PluginPtrPtr that you want
-      /// to construct.
+      /// \param[in] PluginType The specialized type of PluginPtrPtr that you
+      /// want to construct.
       /// \param[in] _pluginName The name of the plugin that you want to
       /// instantiate
       /// \returns pointer for the instantiated PluginPtr

@@ -20,6 +20,7 @@
 #define IGNITION_COMMON_PLUGIN_HH_
 
 #include <map>
+#include <string>
 #include <memory>
 
 namespace ignition
@@ -200,4 +201,4 @@ namespace ignition
 
 #include "ignition/common/detail/PluginPtr.hh"
 
-#endif // IGNITION_COMMON_PLUGIN_HH_
+#endif

@@ -39,4 +39,4 @@ namespace ignition
 }
 
 
-#endif // IGNITION_COMMON_PLUGINUTILS_HH_
+#endif
