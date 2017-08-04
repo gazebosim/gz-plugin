@@ -16,53 +16,149 @@
  */
 
 
-#ifndef IGNITION_COMMON_DETAIL_PLUGIN_HH_
-#define IGNITION_COMMON_DETAIL_PLUGIN_HH_
+#ifndef IGNITION_COMMON_DETAIL_PLUGINPTR_HH_
+#define IGNITION_COMMON_DETAIL_PLUGINPTR_HH_
 
 #include "ignition/common/PluginPtr.hh"
+#include "ignition/common/TemplateHelpers.hh"
 
 namespace ignition
 {
   namespace common
   {
     //////////////////////////////////////////////////
-    template <typename Interface>
-    Interface *PluginPtr::GetInterface()
+    template <typename PluginType>
+    TemplatePluginPtr<PluginType>::TemplatePluginPtr()
+      : dataPtr(new PluginType)
     {
-      return static_cast<Interface*>(
-            this->PrivateGetInterface(Interface::InterfaceName));
+      // Do nothing
     }
 
     //////////////////////////////////////////////////
-    template <typename Interface>
-    const Interface *PluginPtr::GetInterface() const
+    template <typename PluginType>
+    TemplatePluginPtr<PluginType>::TemplatePluginPtr(
+        const TemplatePluginPtr &_other)
+      : dataPtr(new PluginType)
     {
-      return static_cast<const Interface*>(
-            this->PrivateGetInterface(Interface::InterfaceName));
+      this->dataPtr->PrivateCopyPluginInstance(*_other.dataPtr);
     }
 
     //////////////////////////////////////////////////
-    template <typename Interface>
-    Interface *PluginPtr::GetInterface(const std::string &_interfaceName)
+    template <typename PluginType>
+    template <typename OtherPluginType>
+    TemplatePluginPtr<PluginType>::TemplatePluginPtr(
+        const TemplatePluginPtr<OtherPluginType> &_other)
+      : dataPtr(new PluginType)
     {
-      return static_cast<Interface*>(
-            this->PrivateGetInterface(_interfaceName));
+      static_assert(ConstCompatible<PluginType, OtherPluginType>::value,
+                "The requested PluginPtr cast would discard const qualifiers");
+      this->dataPtr->PrivateCopyPluginInstance(*_other.dataPtr);
     }
 
     //////////////////////////////////////////////////
-    template <typename Interface>
-    const Interface *PluginPtr::GetInterface(
-        const std::string &_interfaceName) const
+    template <typename PluginType>
+    TemplatePluginPtr<PluginType>& TemplatePluginPtr<PluginType>::operator =(
+        const TemplatePluginPtr &_other)
     {
-      return static_cast<const Interface*>(
-            this->PrivateGetInterface(_interfaceName));
+      this->dataPtr->PrivateCopyPluginInstance(*_other.dataPtr);
+      return *this;
     }
 
     //////////////////////////////////////////////////
-    template <typename Interface>
-    bool PluginPtr::HasInterface() const
+    template <typename PluginType>
+    template <typename OtherPluginType>
+    TemplatePluginPtr<PluginType>& TemplatePluginPtr<PluginType>::operator =(
+        const TemplatePluginPtr<OtherPluginType> &_other)
     {
-      return this->HasInterface(Interface::InterfaceName);
+      static_assert(ConstCompatible<PluginType, OtherPluginType>::value,
+                "The requested PluginPtr cast would discard const qualifiers");
+      this->dataPtr->PrivateCopyPluginInstance(*_other.dataPtr);
+      return *this;
+    }
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
+    TemplatePluginPtr<PluginType>::TemplatePluginPtr(
+        TemplatePluginPtr &&_other)
+      : dataPtr(std::move(_other.dataPtr))
+    {
+      // Do nothing
+    }
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
+    TemplatePluginPtr<PluginType>& TemplatePluginPtr::operator =(
+        TemplatePluginPtr &&_other)
+    {
+      this->dataPtr = std::move(_other.dataPtr);
+      return *this;
+    }
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
+    PluginType* TemplatePluginPtr<PluginType>::operator ->() const
+    {
+      return dataPtr.get();
+    }
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
+    PluginType& TemplatePluginPtr<PluginType>::operator *() const
+    {
+      return (*dataPtr);
+    }
+
+    //////////////////////////////////////////////////
+    #define DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR(op)\
+      template <typename PluginType>\
+      bool TemplatePluginPtr::operator op (const PluginPtr &_other) const\
+      {\
+        return (this->dataPtr->PrivateGetInstancePtr() op \
+                _other.dataPtr->PrivateGetInstancePtr() );\
+      }
+
+    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( == )
+    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( < )
+    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( > )
+    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( != )
+    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( <= )
+    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( >= )
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
+    std::size_t TemplatePluginPtr<PluginType>::Hash() const
+    {
+      return std::hash< std::shared_ptr<void> >()(
+                   this->dataPtr->PrivateGetInstancePtr());
+    }
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
+    bool TemplatePluginPtr<PluginType>::IsEmpty() const
+    {
+      return (nullptr == this->dataPtr->PrivateGetInstancePtr());
+    }
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
+    TemplatePluginPtr::operator bool() const
+    {
+      return !this->IsEmpty();
+    }
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
+    void TemplatePluginPtr<PluginType>::Clear()
+    {
+      this->dataPtr->PrivateSetPluginInstance(nullptr);
+    }
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
+    TemplatePluginPtr<PluginType>::TemplatePluginPtr(const PluginInfo *info)
+      : dataPtr(new PluginType)
+    {
+      dataPtr->PrivateSetPluginInstance(info);
     }
   }
 }
@@ -74,9 +170,9 @@ namespace std
   /// \brief Template specialization that provides a hash function for PluginPtr
   /// so that it can easily be used in STL objects like std::unordered_set and
   /// std::unordered_map
-  template <> struct hash<ignition::common::PluginPtr>
+  template <> struct hash<ignition::common::TemplatePluginPtr>
   {
-    size_t operator()(const ignition::common::PluginPtr &ptr) const
+    size_t operator()(const ignition::common::TemplatePluginPtr &ptr) const
     {
       return ptr.Hash();
     }

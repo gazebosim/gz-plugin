@@ -67,7 +67,7 @@ namespace ignition
     /// put the macro IGN_COMMON_SPECIALIZE_INTERFACE(~) from
     /// ignition/common/PluginMacros.hh into its class definition.
     template <class SpecInterface>
-    class SpecializedPluginPtr<SpecInterface> : public virtual PluginPtr
+    class SpecializedPluginPtr<SpecInterface> : public virtual TemplatePluginPtr
     {
       // ---------- Public API ----------
 
@@ -78,8 +78,8 @@ namespace ignition
       DETAIL_IGN_COMMON_PLUGIN_CONSTRUCT_DESTRUCT_ASSIGN(SpecializedPluginPtr)
 
       // Inherit function overloads
-      public: using PluginPtr::GetInterface;
-      public: using PluginPtr::HasInterface;
+      public: using TemplatePluginPtr::GetInterface;
+      public: using TemplatePluginPtr::HasInterface;
 
       // Documentation inherited
       public: template <class Interface>
@@ -139,7 +139,7 @@ namespace ignition
 
       /// \brief Iterator that points to the entry of the specialized interface
       private:
-      const PluginPtr::InterfaceMap::iterator privateSpecInterfaceIterator;
+      const TemplatePluginPtr::InterfaceMap::iterator privateSpecInterfaceIterator;
       // Dev note (MXG): The privateSpecInterfaceIterator object must be
       // available to the user during their compile time, so it cannot be hidden
       // using PIMPL. The iterator is const because it must always point to the

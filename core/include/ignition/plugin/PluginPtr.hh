@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_COMMON_PLUGIN_HH_
-#define IGNITION_COMMON_PLUGIN_HH_
+#ifndef IGNITION_COMMON_PLUGINPTR_HH_
+#define IGNITION_COMMON_PLUGINPTR_HH_
 
 #include <map>
 #include <string>
@@ -28,7 +28,6 @@ namespace ignition
   namespace common
   {
     // Forward declarations
-    class PluginPtrPrivate;
     struct PluginInfo;
     namespace detail { template<class...> class ComposePlugin; }
 
@@ -48,139 +47,114 @@ namespace ignition
     /// amount of overhead associated with it, but it may result in huge savings
     /// after initialization is finished if you frequently access the interfaces
     /// that the SpecializedPluginPtr is specialized for.
-    class PluginPtr
+    template <typename PluginType>
+    class TemplatePluginPtr final
     {
       /// \brief Destructor. Deletes this PluginPtr's reference to the plugin
       /// instance. Once all PluginPtrs that refer to the plugin instances are
       /// deleted, the plugin will also be deleted.
-      public: virtual ~PluginPtr();
+      public: ~TemplatePluginPtr() = default;
 
       /// \brief Default constructor. Creates a PluginPtr object that does not
       /// point to any plugin instance. IsValid() will return false until a
       /// plugin instance is provided.
-      public: PluginPtr();
+      public: TemplatePluginPtr();
 
       /// \brief Copy constructor. This PluginPtr will now point at the same
       /// plugin instance as _other, and they will share ownership. If this
       /// PluginPtr was holding an instance to another plugin, that instance
       /// will be deleted if no other PluginPtr is referencing it.
-      public: PluginPtr(const PluginPtr &_other);
+      public: TemplatePluginPtr(const TemplatePluginPtr &_other);
+
+      /// \brief Casting constructor. This PluginPtr will now point at the same
+      /// plugin instance as _other, and they will share ownership. This
+      /// essentially allows casting between PluginPtrs that are holding
+      /// different types of plugin wrappers.
+      public: template <typename OtherPluginType>
+              TemplatePluginPtr(
+                  const TemplatePluginPtr<OtherPluginType> &_other);
 
       /// \brief Copy assignment operator. This PluginPtr will now point at the
       /// same plugin instance as _other, and they will share ownership. If this
       /// PluginPtr was holding an instance to another plugin, that instance
       /// will be deleted if no other PluginPtr is referencing it.
-      public: PluginPtr& operator =(const PluginPtr &_other);
+      public: TemplatePluginPtr& operator =(const TemplatePluginPtr &_other);
+
+      /// \brief Casting operator. This PluginPtr will now point at the same
+      /// plugin instance as _other, and they will share ownership. This
+      /// essentially allows casting between PluginPtrs that are holding
+      /// different types of plugin wrappers.
+      public: template <typename OtherPluginType>
+              TemplatePluginPtr& operator =(
+                  const TemplatePluginPtr<OtherPluginType> &_other);
 
       /// \brief Move constructor. This PluginPtr will take ownership of the
       /// plugin instance held by _other. If this PluginPtr was holding an
       /// instance to another plugin, that instance will be deleted if no other
       /// PluginPtr is referencing it.
-      public: PluginPtr(PluginPtr &&_other);
+      public: TemplatePluginPtr(TemplatePluginPtr &&_other);
 
       /// \brief Move assignment operator. This PluginPtr will take ownership
       /// of the plugin instance held by _other.  If this PluginPtr was holding
       /// an instance to another plugin, that instance will be deleted if no
       /// other PluginPtr is referencing it.
-      public: PluginPtr& operator=(PluginPtr &&_other);
+      public: TemplatePluginPtr& operator=(TemplatePluginPtr &&_other);
+
+      /// \brief Access the wrapper for the plugin instance and call one of its
+      /// member functions.
+      public: PluginType* operator->() const;
+
+      /// \brief Get a reference to the wrapper for the plugin instance that is
+      /// being managed by this PluginPtr.
+      public: PluginType& operator*() const;
 
       /// \brief Comparison operator. Returns true if this Plugin is holding the
       /// same plugin instance as _other, otherwise returns false.
-      public: bool operator ==(const PluginPtr &_other) const;
+      public: bool operator ==(const TemplatePluginPtr &_other) const;
 
       /// \brief Returns true if the pointer value of the plugin instance held
       /// by this PluginPtr is less than the pointer value of the instance held
       /// by _other.
-      public: bool operator <(const PluginPtr &_other) const;
+      public: bool operator <(const TemplatePluginPtr &_other) const;
 
       /// \brief Returns true if the pointer value of the plugin instance held
       /// by this PluginPtr is greater than the pointer value of the instance
       /// held by _other.
-      public: bool operator >(const PluginPtr &_other) const;
+      public: bool operator >(const TemplatePluginPtr &_other) const;
 
       /// \brief Returns true if the pointer instance held by this PluginPtr is
       /// different from the pointer instance held by _other.
-      public: bool operator !=(const PluginPtr &_other) const;
+      public: bool operator !=(const TemplatePluginPtr &_other) const;
 
       /// \brief Returns true if the value of the pointer instance held by this
       /// PluginPtr is less than or equal to the value of the pointer instance
       /// held by _other.
-      public: bool operator <=(const PluginPtr &_other) const;
+      public: bool operator <=(const TemplatePluginPtr &_other) const;
 
       /// \brief Returns true if the value of the pointer instance held by this
       /// PluginPtr is greater than or equal to the value of the pointer
       /// instance held by _other.
-      public: bool operator >=(const PluginPtr &_other) const;
+      public: bool operator >=(const TemplatePluginPtr &_other) const;
 
       /// \brief Produces a hash for the plugin instance that this PluginPtr is
       /// holding.
       public: std::size_t Hash() const;
 
-      /// \brief Get an interface of the specified type. Note that this function
-      /// only works when the Interface type has its name statically embedded
-      /// in its class definition as
-      /// `static constexpr const char* Interface::InterfaceName`. For more
-      /// general  interfaces which do not meet this condition, use
-      /// GetInterface<Interface>(_interfaceName).
-      public: template <typename Interface>
-              Interface *GetInterface();
+      /// \brief Returns false if this PluginPtr is pointing at a valid plugin
+      /// instance. If it is instead pointing at a nullptr, this returns true.
+      public: bool IsEmpty() const;
 
-      /// \brief const-qualified version of GetInterface<Interface>()
-      public: template <typename Interface>
-              const Interface *GetInterface() const;
-
-      /// \brief Get an interface with the given name, casted to the specified
-      /// class type.
-      public: template <typename Interface>
-              Interface *GetInterface(const std::string &_interfaceName);
-
-      /// \brief Get a const-qualified interface with the given name, casted
-      /// to the specified const class type.
-      public: template <typename Interface>
-              const Interface *GetInterface(
-                  const std::string &_interfaceName) const;
-
-      /// \brief Returns true if this PluginPtr has the specified type of
-      /// interface. Note that this function only works when the Interface type
-      /// has its name statically embedded in its class definition as `static
-      /// constexpr const char* Interface::InterfaceName`. For more general
-      /// interfaces which do not meet this condition, use
-      /// GetInterface<Interface>(_interfaceName).
-      public: template <typename Interface>
-              bool HasInterface() const;
-
-      /// \brief Returns true if this PluginPtr has the specified type of
-      /// interface.
-      public: bool HasInterface(const std::string &_interfaceName) const;
-
-      /// \brief This function always returns false if it is called on this
-      /// basic PluginPtr class type. The SpecializedPluginPtr can shadow this
-      /// to return true when it is specialized for this Interface type, however
-      /// the function must be called on the SpecializedPluginPtr type and not
-      /// this base class type, because this is a shadowed function, not a
-      /// virtual function.
-      public: template <class Interface>
-              static constexpr bool IsSpecializedFor();
-
-      /// \brief Returns true if this PluginPtr is pointing at a valid plugin
-      /// instance. If it is instead pointing at a nullptr, this returns false.
-      public: bool IsValid() const;
+      /// \brief Implicitly convert this PluginPtr to a boolean. Returns the
+      /// opposite value of IsEmpty().
+      public: operator bool() const;
 
       /// \brief Clears the Plugin instance from this PluginPtr. IsValid() will
       /// return false after this is used, and none of the interfaces will be
       /// available any longer.
       public: void Clear();
 
-      /// \brief Type-agnostic retriever for interfaces
-      private: void *PrivateGetInterface(
-                  const std::string &_interfaceName) const;
-
-      /// \brief PIMPL pointer to the implementation of this class. This must
-      /// remain const-qualified because the implementation of this class and
-      /// the SpecializedPluginPtr class depends on the fact that this dataPtr
-      /// instance will never be replaced in the entire lifespan of this
-      /// PluginPtr object.
-      private: const std::unique_ptr<PluginPtrPrivate> dataPtr;
+      /// \brief Pointer to the plugin wrapper that this PluginPtr is managing.
+      private: std::unique_ptr<PluginType> dataPtr;
 
       // Declare friendship
       friend class PluginLoader;
@@ -190,11 +164,7 @@ namespace ignition
       /// \brief Private constructor. Creates a plugin instance based on the
       /// PluginInfo provided. This should only be called by PluginLoader to
       /// ensure that the PluginInfo is well-formed, so we keep it private.
-      private: explicit PluginPtr(const PluginInfo *info);
-
-      public: using InterfaceMap = std::map<std::string, void*>;
-      private: InterfaceMap::iterator PrivateGetOrCreateIterator(
-          const std::string &_interfaceName);
+      private: explicit TemplatePluginPtr(const PluginInfo *info);
     };
   }
 }
