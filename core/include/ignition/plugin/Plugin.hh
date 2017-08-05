@@ -29,6 +29,7 @@ namespace ignition
     // Forward declarations
     struct PluginInfo;
     class PluginPrivate;
+    namespace detail { template <class...> class ComposePlugin; }
 
     class Plugin
     {
@@ -79,7 +80,9 @@ namespace ignition
 
       // -------------------- Private API -----------------------
 
-      template <typename> friend class TemplatePluginPtr;
+      template <class> friend class TemplatePluginPtr;
+      template <class...> friend class SpecializedPlugin;
+      template <class...> friend class detail::ComposePlugin;
 
       /// \brief Default constructor. This is kept private to ensure that
       /// Plugins are always managed by a PluginPtr object.
@@ -100,8 +103,7 @@ namespace ignition
       private: const std::shared_ptr<void>& PrivateGetInstancePtr() const;
 
 
-      public: using InterfaceMap =
-              std::map<std::string, std::shared_ptr<void> >;
+      public: using InterfaceMap = std::map<std::string, void*>;
 
       /// \brief Get or create an iterator to the std::map that holds pointers
       /// to the various interfaces provided by this plugin instance.
@@ -112,7 +114,7 @@ namespace ignition
       private: const std::unique_ptr<PluginPrivate> dataPtr;
 
       /// \brief Virtual destructor
-      public: virtual ~PluginPtr();
+      public: virtual ~Plugin();
     };
   }
 }

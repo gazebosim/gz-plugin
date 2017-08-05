@@ -94,7 +94,7 @@ TEST(PluginSpecialization, AccessTime)
   const auto spec_start = std::chrono::high_resolution_clock::now();
   for (std::size_t i = 0; i < NumTests; ++i)
   {
-    setterBase = plugin.GetInterface<test::util::DummySetterBase>();
+    setterBase = plugin->GetInterface<test::util::DummySetterBase>();
   }
   const auto spec_finish = std::chrono::high_resolution_clock::now();
 
@@ -102,7 +102,7 @@ TEST(PluginSpecialization, AccessTime)
   const auto norm_start = std::chrono::high_resolution_clock::now();
   for (std::size_t i = 0; i < NumTests; ++i)
   {
-    doubleBase = plugin.GetInterface<test::util::DummyDoubleBase>(
+    doubleBase = plugin->GetInterface<test::util::DummyDoubleBase>(
           "test::util::DummyDoubleBase");
   }
   const auto norm_finish = std::chrono::high_resolution_clock::now();

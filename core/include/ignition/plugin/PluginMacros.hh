@@ -24,7 +24,7 @@
 // --------------- Specialize a plugin interface (optional) -------------------
 
 /// \brief Call this macro inside a public scope of an interface in order to get
-/// performance benefits for that interface in a SpecializedPluginPtr. Pass in
+/// performance benefits for that interface in a SpecializedPlugin. Pass in
 /// the fully qualified name of the interface class (i.e. explicitly include the
 /// namespaces of the class).
 ///
@@ -41,7 +41,7 @@
 ///       } // namespace ns
 ///     } // namespace mylibrary
 ///
-/// Interfaces with this macro can be utilized by SpecializedPluginPtr to get
+/// Interfaces with this macro can be utilized by SpecializedPlugin to get
 /// low cost access to this type of interface. Note that this performance
 /// benefit is available even if the plugin that gets loaded does not offer this
 /// interface; you just get low cost access to a nullptr instead. Always be sure

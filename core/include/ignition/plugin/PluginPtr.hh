@@ -23,6 +23,8 @@
 #include <string>
 #include <memory>
 
+#include "ignition/common/Plugin.hh"
+
 namespace ignition
 {
   namespace common
@@ -158,14 +160,17 @@ namespace ignition
 
       // Declare friendship
       friend class PluginLoader;
-      template <typename...> friend class SpecializedPluginPtr;
-      template <typename...> friend class detail::ComposePlugin;
+      template <class> friend class TemplatePluginPtr;
 
-      /// \brief Private constructor. Creates a plugin instance based on the
+      /// \brief Private constructor. CreSpecializedPlugince based on the
       /// PluginInfo provided. This should only be called by PluginLoader to
       /// ensure that the PluginInfo is well-formed, so we keep it private.
       private: explicit TemplatePluginPtr(const PluginInfo *info);
     };
+
+    /// \brief Typical usage for TemplatePluginPtr is to just hold a generic
+    /// Plugin type.
+    using PluginPtr = TemplatePluginPtr<Plugin>;
   }
 }
 

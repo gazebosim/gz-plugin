@@ -24,7 +24,8 @@
 #include <typeinfo>
 #include <unordered_set>
 
-#include <ignition/common/System.hh>
+#include "ignition/common/System.hh"
+#include "ignition/common/PluginPtr.hh"
 
 namespace ignition
 {
@@ -33,7 +34,6 @@ namespace ignition
     /// \brief Forward declaration
     class PluginLoaderPrivate;
     struct PluginInfo;
-    class PluginPtr;
 
     /// \brief Class for loading plugins
     class IGNITION_COMMON_VISIBLE PluginLoader

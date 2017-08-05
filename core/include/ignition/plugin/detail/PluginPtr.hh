@@ -87,7 +87,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <typename PluginType>
-    TemplatePluginPtr<PluginType>& TemplatePluginPtr::operator =(
+    TemplatePluginPtr<PluginType>& TemplatePluginPtr<PluginType>::operator =(
         TemplatePluginPtr &&_other)
     {
       this->dataPtr = std::move(_other.dataPtr);
@@ -111,7 +111,8 @@ namespace ignition
     //////////////////////////////////////////////////
     #define DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR(op)\
       template <typename PluginType>\
-      bool TemplatePluginPtr::operator op (const PluginPtr &_other) const\
+      bool TemplatePluginPtr<PluginType>::operator op (\
+            const TemplatePluginPtr &_other) const\
       {\
         return (this->dataPtr->PrivateGetInstancePtr() op \
                 _other.dataPtr->PrivateGetInstancePtr() );\
@@ -141,7 +142,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <typename PluginType>
-    TemplatePluginPtr::operator bool() const
+    TemplatePluginPtr<PluginType>::operator bool() const
     {
       return !this->IsEmpty();
     }
@@ -170,9 +171,11 @@ namespace std
   /// \brief Template specialization that provides a hash function for PluginPtr
   /// so that it can easily be used in STL objects like std::unordered_set and
   /// std::unordered_map
-  template <> struct hash<ignition::common::TemplatePluginPtr>
+  template <typename PluginType>
+  struct hash<ignition::common::TemplatePluginPtr<PluginType>>
   {
-    size_t operator()(const ignition::common::TemplatePluginPtr &ptr) const
+    size_t operator()(
+        const ignition::common::TemplatePluginPtr<PluginType> &ptr) const
     {
       return ptr.Hash();
     }

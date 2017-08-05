@@ -18,8 +18,8 @@
 
 #include "ignition/common/Plugin.hh"
 #include "ignition/common/PluginInfo.hh"
+#include "ignition/common/Console.hh"
 #include "PluginUtils.hh"
-
 
 namespace ignition
 {
@@ -84,7 +84,7 @@ namespace ignition
                     //               pointer to the correct location of the
                     //               interface within the plugin
                     this->interfaces[entry.first] =
-                        entry.second(this->pluginInstancePtr);
+                        entry.second(this->pluginInstancePtr.get());
                   }
                 }
               }
@@ -175,7 +175,7 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
-    Plugin::~PluginPtr()
+    Plugin::~Plugin()
     {
       // Do nothing. We need this definition to be in a source file so that
       // the destructor of PluginPrivate is visible to std::unique_ptr.
