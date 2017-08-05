@@ -73,6 +73,7 @@ namespace ignition
 
       // Inherit function overloads
       public: using Plugin::GetInterface;
+      public: using Plugin::as_shared_ptr;
       public: using Plugin::HasInterface;
 
       // Documentation inherited
@@ -82,6 +83,14 @@ namespace ignition
       // Documentation inherited
       public: template <class Interface>
               const Interface *GetInterface() const;
+
+      // Documentation inherited
+      public: template <class Interface>
+              std::shared_ptr<Interface> as_shared_ptr();
+
+      // Documentation inherited
+      public: template <class Interface>
+              std::shared_ptr<const Interface> as_shared_ptr() const;
 
       // Documentation inherited
       public: template <class Interface>
@@ -102,14 +111,14 @@ namespace ignition
 
       private: template <class T> struct type { };
 
-      /// \brief Delegate the function to the standard PluginPtr method
+      /// \brief Delegate the function to the standard Plugin method
       private: template <class Interface>
                Interface *PrivateGetSpecInterface(type<Interface>);
 
       /// \brief Use a low-cost accessor to provide this specialized interface
       private: SpecInterface *PrivateGetSpecInterface(type<SpecInterface>);
 
-      /// \brief Delegate the function to the standard PluginPtr method
+      /// \brief Delegate the function to the standard Plugin method
       private: template <class Interface>
                const Interface *PrivateGetSpecInterface(type<Interface>) const;
 

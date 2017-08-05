@@ -52,6 +52,31 @@ namespace ignition
     /////////////////////////////////////////////////
     template <class SpecInterface>
     template <class Interface>
+    std::shared_ptr<Interface> SpecializedPlugin<SpecInterface>::as_shared_ptr()
+    {
+      Interface *ptr = this->GetInterface<Interface>();
+      if(ptr)
+        return std::shared_ptr<Interface>(this->PrivateGetInstancePtr(), ptr);
+
+      return nullptr;
+    }
+
+    /////////////////////////////////////////////////
+    template <class SpecInterface>
+    template <class Interface>
+    std::shared_ptr<const Interface>
+    SpecializedPlugin<SpecInterface>::as_shared_ptr() const
+    {
+      const Interface *ptr = this->GetInterface<Interface>();
+      if(ptr)
+        return std::shared_ptr<Interface>(this->PrivateGetInstancePtr(), ptr);
+
+      return nullptr;
+    }
+
+    /////////////////////////////////////////////////
+    template <class SpecInterface>
+    template <class Interface>
     bool SpecializedPlugin<SpecInterface>::HasInterface() const
     {
       return this->PrivateHasSpecInterface(type<Interface>());
@@ -189,6 +214,7 @@ namespace ignition
 
         // Inherit function overloads
         using Plugin::GetInterface;
+        using Plugin::as_shared_ptr;
         using Plugin::HasInterface;
 
         /// \brief Implement functions whose only role is to dispatch its functionality
@@ -208,6 +234,8 @@ namespace ignition
 
 DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(T*, GetInterface, (), ())
 DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(const T*, GetInterface, () const, ())
+DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(std::shared_ptr<T>, as_shared_ptr, (), ())
+DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(std::shared_ptr<const T>, as_shared_ptr, () const, ())
 DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(bool, HasInterface, () const, ())
 
         public: template<class T>

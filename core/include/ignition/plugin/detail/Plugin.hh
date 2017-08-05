@@ -60,6 +60,44 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <class Interface>
+    std::shared_ptr<Interface> Plugin::as_shared_ptr()
+    {
+      return this->as_shared_ptr<Interface>(Interface::InterfaceName);
+    }
+
+    //////////////////////////////////////////////////
+    template <class Interface>
+    std::shared_ptr<const Interface> Plugin::as_shared_ptr() const
+    {
+      return this->as_shared_ptr<Interface>(Interface::InterfaceName);
+    }
+
+    //////////////////////////////////////////////////
+    template <class Interface>
+    std::shared_ptr<Interface> Plugin::as_shared_ptr(
+        const std::string &_interfaceName)
+    {
+      Interface *ptr = this->GetInterface<Interface>(_interfaceName);
+      if(ptr)
+        return std::shared_ptr<Interface>(this->PrivateGetInstancePtr(), ptr);
+
+      return nullptr;
+    }
+
+    //////////////////////////////////////////////////
+    template <class Interface>
+    std::shared_ptr<const Interface> Plugin::as_shared_ptr(
+        const std::string &_interfaceName) const
+    {
+      const Interface *ptr = this->GetInterface<Interface>(_interfaceName);
+      if(ptr)
+        return std::shared_ptr<Interface>(this->PrivateGetInstancePtr(), ptr);
+
+      return nullptr;
+    }
+
+    //////////////////////////////////////////////////
+    template <class Interface>
     bool Plugin::HasInterface() const
     {
       return this->HasInterface(Interface::InterfaceName);

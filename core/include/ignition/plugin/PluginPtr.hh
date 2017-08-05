@@ -102,6 +102,9 @@ namespace ignition
       /// other PluginPtr is referencing it.
       public: TemplatePluginPtr& operator=(TemplatePluginPtr &&_other);
 
+      /// \brief nullptr assignment operator. Same as calling Clear()
+      public: TemplatePluginPtr& operator=(std::nullptr_t);
+
       /// \brief Access the wrapper for the plugin instance and call one of its
       /// member functions.
       public: PluginType* operator->() const;
@@ -162,7 +165,7 @@ namespace ignition
       friend class PluginLoader;
       template <class> friend class TemplatePluginPtr;
 
-      /// \brief Private constructor. CreSpecializedPlugince based on the
+      /// \brief Private constructor. Creates a plugin instance based on the
       /// PluginInfo provided. This should only be called by PluginLoader to
       /// ensure that the PluginInfo is well-formed, so we keep it private.
       private: explicit TemplatePluginPtr(const PluginInfo *info);
@@ -171,6 +174,10 @@ namespace ignition
     /// \brief Typical usage for TemplatePluginPtr is to just hold a generic
     /// Plugin type.
     using PluginPtr = TemplatePluginPtr<Plugin>;
+
+    /// \brief This produces a PluginPtr whose Plugin wrapper only grants access
+    /// to const-qualified interfaces of the plugin instance.
+    using ConstPluginPtr = TemplatePluginPtr<const Plugin>;
   }
 }
 

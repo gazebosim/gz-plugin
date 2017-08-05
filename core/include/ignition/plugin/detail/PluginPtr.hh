@@ -96,6 +96,15 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <typename PluginType>
+    TemplatePluginPtr<PluginType>& TemplatePluginPtr<PluginType>::operator =(
+        std::nullptr_t)
+    {
+      this->Clear();
+      return *this;
+    }
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
     PluginType* TemplatePluginPtr<PluginType>::operator ->() const
     {
       return dataPtr.get();

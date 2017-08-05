@@ -147,13 +147,13 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
-    void Plugin::PrivateCopyPluginInstance(const Plugin &_other)
+    void Plugin::PrivateCopyPluginInstance(const Plugin &_other) const
     {
       this->dataPtr->Initialize(_other.dataPtr.get());
     }
 
     //////////////////////////////////////////////////
-    void Plugin::PrivateSetPluginInstance(const PluginInfo *_info)
+    void Plugin::PrivateSetPluginInstance(const PluginInfo *_info) const
     {
       this->dataPtr->Initialize(_info);
     }

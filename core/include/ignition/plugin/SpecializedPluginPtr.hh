@@ -26,7 +26,7 @@ namespace ignition
 {
   namespace common
   {
-    /// \brief This class allows PluginPtr instances to have low-cost access to
+    /// \brief This alias allows PluginPtr instances to have low-cost access to
     /// interfaces that can be anticipated at compile time. The plugin does
     /// not have to actually offer the specialized interface in order to get
     /// this performance improvement. This template is variadic, so it can
@@ -55,7 +55,13 @@ namespace ignition
     /// definition.
     template <typename... SpecInterfaces>
     using SpecializedPluginPtr =
-              TemplatePluginPtr<SpecializedPlugin<SpecInterfaces...>>;
+              TemplatePluginPtr< SpecializedPlugin<SpecInterfaces...> >;
+
+    /// \brief This alias creates a specialized PluginPtr whose interfaces are
+    /// all const-qualified.
+    template <typename... SpecInterfaces>
+    using ConstSpecializedPluginPtr =
+              TemplatePluginPtr< const SpecializedPlugin<SpecInterfaces...> >;
   }
 }
 

@@ -56,6 +56,30 @@ namespace ignition
               const Interface *GetInterface(
                   const std::string &_interfaceName) const;
 
+      /// \brief Get the requested interface as a std::shared_ptr. Note that
+      /// this function only works when the Interface type is specialized using
+      /// the macro IGN_COMMON_SPECIALIZE_INTERFACE. For more general interfaces
+      /// which do not meet this condition, use
+      /// as_shared_ptr<Interface>(_interfaceName).
+      public: template <class Interface>
+              std::shared_ptr<Interface> as_shared_ptr();
+
+      /// \brief Same as as_shared_ptr<Interface>(), but it returns a
+      /// std::shared_ptr to a const-qualified Interface.
+      public: template <class Interface>
+              std::shared_ptr<const Interface> as_shared_ptr() const;
+
+      /// \brief Get the requested interface as a std::shared_ptr.
+      public: template <class Interface>
+              std::shared_ptr<Interface> as_shared_ptr(
+                  const std::string &_interfaceName);
+
+      /// \brief Same as as_shared_ptr<Interface>(std::string), but it returns a
+      /// std::shared_ptr to a const-qualified Interface.
+      public: template <class Interface>
+              std::shared_ptr<const Interface> as_shared_ptr(
+                  const std::string &_interfaceName) const;
+
       /// \brief Returns true if this PluginPtr has the specified type of
       /// interface. Note that this function only works when the Interface type
       /// is specialized using the macro IGN_COMMON_SPECIALIZE_INTERFACE. For
@@ -93,10 +117,10 @@ namespace ignition
                   const std::string &_interfaceName) const;
 
       /// \brief Copy the plugin instance from another Plugin object
-      private: void PrivateCopyPluginInstance(const Plugin &_other);
+      private: void PrivateCopyPluginInstance(const Plugin &_other) const;
 
       /// \brief Create a new plugin instance based on the info provided
-      private: void PrivateSetPluginInstance(const PluginInfo *_info);
+      private: void PrivateSetPluginInstance(const PluginInfo *_info) const;
 
       /// \brief Get a reference to the std::shared_ptr being managed by this
       /// wrapper
