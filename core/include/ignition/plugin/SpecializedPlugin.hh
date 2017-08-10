@@ -27,7 +27,6 @@ namespace ignition
   {
     // Forward declarations
     namespace detail { template <class...> class ComposePlugin; }
-    struct PluginInfo;
 
     /// \brief Declaration of the variadic template for SpecializedPlugin.
     /// This class definition is a C++ syntax formality.

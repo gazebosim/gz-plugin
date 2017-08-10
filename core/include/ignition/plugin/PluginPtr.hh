@@ -168,7 +168,8 @@ namespace ignition
       /// \brief Private constructor. Creates a plugin instance based on the
       /// PluginInfo provided. This should only be called by PluginLoader to
       /// ensure that the PluginInfo is well-formed, so we keep it private.
-      private: explicit TemplatePluginPtr(const PluginInfo *info);
+      private: explicit TemplatePluginPtr(
+          const PluginInfo *_info, const std::shared_ptr<void> &_dlHandlePtr);
     };
 
     /// \brief Typical usage for TemplatePluginPtr is to just hold a generic

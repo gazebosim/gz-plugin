@@ -82,9 +82,36 @@ namespace ignition
               PluginPtrType Instantiate(
                   const std::string &_pluginName) const;
 
+      /// \brief This loader will forget about the library with the given name.
+      /// If you want to instantiate a plugin from this library using this
+      /// loader, you will first need to call LoadLibrary again.
+      ///
+      /// After this function has been called, once all plugin instances that
+      /// are tied to the library have been deleted, the library will
+      /// automatically be unloaded from the executable. Note that when this
+      /// PluginLoader leaves scope (or gets deleted), it will have the same
+      /// effect as calling ForgetLibrary on all of the libraries that it
+      /// loaded, so there is no need to call this function.
+      ///
+      /// Returns true if the library was actively loaded and is now
+      /// successfully forgotten. If the library was not actively loaded, it
+      /// returns false.
+      public: bool ForgetLibrary(const std::string &_pathToLibrary);
+
+      /// \brief Forget the library that provides the plugin with the given
+      /// name.
+      ///
+      /// See ForgetLibrary(const std::string&) for more explanation.
+      public: bool ForgetLibraryOfPlugin(const std::string &_pluginName);
+
       /// \brief Get a pointer to the PluginInfo corresponding to _pluginName.
       /// Returns nullptr if there is no info for the requested _pluginName.
       private: const PluginInfo *PrivateGetPluginInfo(
+                  const std::string &_pluginName) const;
+
+      /// \brief Get a std::shared_ptr that manages the lifecycle of the shared
+      /// library handle which provides the specified plugin.
+      private: std::shared_ptr<void> PrivateGetPluginDlHandlePtr(
                   const std::string &_pluginName) const;
 
       /// \brief PIMPL pointer to class implementation

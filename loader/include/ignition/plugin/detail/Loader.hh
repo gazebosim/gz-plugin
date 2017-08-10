@@ -29,7 +29,8 @@ namespace ignition
     PluginPtrType PluginLoader::Instantiate(
         const std::string &_pluginName) const
     {
-      return PluginPtrType(this->PrivateGetPluginInfo(_pluginName));
+      return PluginPtrType(this->PrivateGetPluginInfo(_pluginName),
+                           this->PrivateGetPluginDlHandlePtr(_pluginName));
     }
   }
 }

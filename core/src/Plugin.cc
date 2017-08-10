@@ -25,6 +25,80 @@ namespace ignition
 {
   namespace common
   {
+    /// \brief Struct which wraps a plugin instance together with a
+    /// std::shared_ptr to its shared library handle. Instantiating plugin
+    /// instances into this struct ensures that the shared library will remain
+    /// loaded for as long as the plugin instance continues to exist.
+    struct PluginWithDlHandle
+    {
+      /// \brief A reference counting handle for the shared library that this
+      /// plugin depends on.
+      ///
+      /// CRUCIAL DEV NOTE (MXG): `dlHandlePtr` MUST come BEFORE `deleter` in
+      /// this class definition to ensure that `deleter` gets deleted first
+      /// (member variables get destructed in the reverse order of their
+      /// appearance in the class definition). The destructor of `deleter`
+      /// depends on the shared library still being available, so this reference
+      /// counting handle must be destroyed after `deleter` to ensure that the
+      /// library is still loaded when `deleter` needs it.
+      ///
+      /// If you change this class definition for ANY reason, be sure to
+      /// maintain the ordering of these member variables.
+      public: std::shared_ptr<void> dlHandlePtr;
+
+      /// \brief Pointer to the plugin instance
+      public: void *pluginInstance;
+
+      /// \brief Deleter function for the plugin instance
+      ///
+      /// CRUCIAL DEV NOTE (MXG): `deleter` MUST come AFTER `dlHandlePtr` in
+      /// this class definition. See the comment on `dlHandlePtr` for an
+      /// explanation.
+      ///
+      /// If you change this class definition for ANY reason, be sure to
+      /// maintain the ordering of these member variables.
+      public: std::function<void(void*)> deleter;
+
+      /// \brief Constructor
+      public: PluginWithDlHandle(
+        void *_pluginInstance,
+        const std::function<void(void*)> &_deleter,
+        const std::shared_ptr<void> &_dlHandlePtr)
+        : dlHandlePtr(_dlHandlePtr),
+          pluginInstance(_pluginInstance),
+          deleter(_deleter)
+      {
+        // Do nothing
+      }
+
+      /// \brief Destructor. We call the deleter on the pluginInstance while the
+      /// deleter and dlHandlePtr are still valid and available.
+      public: ~PluginWithDlHandle()
+      {
+        if (pluginInstance)
+        {
+          if (!deleter)
+          {
+            ignerr << "This plugin instance (" << pluginInstance
+                   << ") was not given a deleter. This should never happen! "
+                   << "Please report this bug!\n";
+            assert(false);
+            return;
+          }
+
+          deleter(pluginInstance);
+        }
+        else
+        {
+          ignerr << "We have a nullptr plugin instance inside of a "
+                 << "PluginWithDlHandle. This should not be possible! Please "
+                 << "report this bug!\n";
+          assert(false);
+          return;
+        }
+      }
+    };
+
     class PluginPrivate
     {
       /// \brief Map from interface names to their locations within the plugin
@@ -46,7 +120,7 @@ namespace ignition
       public: Plugin::InterfaceMap interfaces;
 
       /// \brief shared_ptr which manages the lifecycle of the plugin instance.
-      std::shared_ptr<void> pluginInstancePtr;
+      public: std::shared_ptr<void> pluginInstancePtr;
 
       /// \brief Clear this PluginPtrPrivate without invaliding any map entry
       /// iterators.
@@ -65,27 +139,49 @@ namespace ignition
               }
 
       /// \brief Initialize this PluginPtrPrivate using some PluginInfo instance
-      public: void Initialize(const PluginInfo *_info)
+      public: void Initialize(const PluginInfo *_info,
+                              const std::shared_ptr<void> &_dlHandlePtr)
               {
                 Clear();
 
                 if (!_info)
                   return;
 
-                this->pluginInstancePtr =
-                    std::shared_ptr<void>(_info->factory(), _info->deleter);
-
-                if (this->pluginInstancePtr)
+                if (!_dlHandlePtr)
                 {
-                  for (const auto &entry : _info->interfaces)
-                  {
-                    // entry.first:  name of the interface
-                    // entry.second: function which casts the pluginInstance
-                    //               pointer to the correct location of the
-                    //               interface within the plugin
-                    this->interfaces[entry.first] =
-                        entry.second(this->pluginInstancePtr.get());
-                  }
+                  ignerr << "Received PluginInfo for [" << _info->name << "], "
+                         << "but we were not provided a shared library handle. "
+                         << "This should never happen! Please report this "
+                         << "bug!\n";
+                  assert(false);
+                  return;
+                }
+
+                // Create a std::shared_ptr to a struct which ensures that the
+                // _dlHandlePtr will remain alive for as long as this plugin
+                // instance exists.
+                std::shared_ptr<PluginWithDlHandle> pluginWithDlHandle =
+                    std::make_shared<PluginWithDlHandle>(
+                      _info->factory(), _info->deleter, _dlHandlePtr);
+
+                // Use the aliasing constructor of std::shared_ptr to disguise
+                // pluginWithDlHandle as just a simple std::shared_ptr<void>
+                // which points at the plugin instance, so we have the benefit
+                // of automatically managing the lifecycle of the dlHandlePtr
+                // without needing to actually keep track of it.
+                this->pluginInstancePtr =
+                    std::shared_ptr<void>(
+                      pluginWithDlHandle,
+                      pluginWithDlHandle->pluginInstance);
+
+                for (const auto &entry : _info->interfaces)
+                {
+                  // entry.first:  name of the interface
+                  // entry.second: function which casts the pluginInstance
+                  //               pointer to the correct location of the
+                  //               interface within the plugin
+                  this->interfaces[entry.first] =
+                      entry.second(this->pluginInstancePtr.get());
                 }
               }
 
@@ -153,9 +249,11 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
-    void Plugin::PrivateSetPluginInstance(const PluginInfo *_info) const
+    void Plugin::PrivateSetPluginInstance(
+        const PluginInfo *_info,
+        const std::shared_ptr<void> &_dlHandlePtr) const
     {
-      this->dataPtr->Initialize(_info);
+      this->dataPtr->Initialize(_info, _dlHandlePtr);
     }
 
     //////////////////////////////////////////////////
