@@ -20,6 +20,7 @@
 #define IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
 
 #include "ignition/common/PluginLoader.hh"
+#include <string>
 
 namespace ignition
 {

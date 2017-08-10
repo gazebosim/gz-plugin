@@ -20,6 +20,7 @@
 #define IGNITION_COMMON_DETAIL_PLUGIN_HH_
 
 #include "ignition/common/Plugin.hh"
+#include <string>
 
 namespace ignition
 {
@@ -78,7 +79,7 @@ namespace ignition
         const std::string &_interfaceName)
     {
       Interface *ptr = this->GetInterface<Interface>(_interfaceName);
-      if(ptr)
+      if (ptr)
         return std::shared_ptr<Interface>(this->PrivateGetInstancePtr(), ptr);
 
       return nullptr;
@@ -90,7 +91,7 @@ namespace ignition
         const std::string &_interfaceName) const
     {
       const Interface *ptr = this->GetInterface<Interface>(_interfaceName);
-      if(ptr)
+      if (ptr)
         return std::shared_ptr<Interface>(this->PrivateGetInstancePtr(), ptr);
 
       return nullptr;
