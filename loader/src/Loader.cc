@@ -71,7 +71,7 @@ namespace ignition
         const PluginInfo& plugin = pair.second;
         const size_t i_size = plugin.interfaces.size();
         pretty << "\t\t[" << plugin.name << "] which implements "
-               << i_size << PluralCast(" interface", i_size) << ":\n";;
+               << i_size << PluralCast(" interface", i_size) << ":\n";
         for (const auto& interface : plugin.interfaces)
           pretty << "\t\t\t" << interface.first << "\n";
       }
@@ -247,8 +247,9 @@ namespace ignition
       if (sizeof(PluginInfo) == size)
       {
         std::size_t (*Info)(void * const, std::size_t, std::size_t) =
-          reinterpret_cast<std::size_t(*)(void * const, std::size_t, std::size_t)>(
-              multiInfoPtr);
+          reinterpret_cast<std::size_t(*)(
+              void * const, std::size_t, std::size_t)>(
+                multiInfoPtr);
 
         PluginInfo plugin;
         void *vPlugin = static_cast<void *>(&plugin);

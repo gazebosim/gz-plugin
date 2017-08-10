@@ -19,8 +19,8 @@
 #ifndef IGNITION_COMMON_DETAIL_PLUGIN_HH_
 #define IGNITION_COMMON_DETAIL_PLUGIN_HH_
 
-#include "ignition/common/Plugin.hh"
 #include <string>
+#include "ignition/common/Plugin.hh"
 
 namespace ignition
 {

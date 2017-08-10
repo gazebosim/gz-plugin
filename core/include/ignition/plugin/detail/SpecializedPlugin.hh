@@ -276,7 +276,8 @@ DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
         /// \brief Virtual destructor
         public: virtual ~ComposePlugin() = default;
 
-        using Base = ComposePlugin<Base1, ComposePlugin<Base2, OtherBases...>>;
+        using Base =
+            ComposePlugin< Base1, ComposePlugin<Base2, OtherBases...> >;
 
         /// \brief Default constructor
         private: ComposePlugin() = default;
