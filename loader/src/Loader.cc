@@ -218,23 +218,31 @@ namespace ignition
 
       const std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
       const std::string sizeSymbol = "IGNCOMMONSinglePluginInfoSize";
+      const std::string alignSymbol = "IGNCOMMONPluginInfoAlignment";
       const std::string multiInfoSymbol = "IGNCOMMONMultiPluginInfo";
       void *versionPtr = dlsym(_dlHandle, versionSymbol.c_str());
       void *sizePtr = dlsym(_dlHandle, sizeSymbol.c_str());
+      void *alignPtr = dlsym(_dlHandle, alignSymbol.c_str());
       void *multiInfoPtr = dlsym(_dlHandle, multiInfoSymbol.c_str());
 
       // Does the library have the right symbols?
       if (nullptr == versionPtr || nullptr == sizePtr
-          || nullptr == multiInfoPtr)
+          || nullptr == multiInfoPtr || nullptr == alignPtr)
       {
         ignerr << "Library [" << _pathToLibrary
-               << "] doesn't have the right symbols.\n";
+               << "] doesn't have the right symbols: \n"
+               << " -- version symbol: " << versionPtr
+               << "\n -- size symbol: " << sizePtr
+               << "\n -- alignment symbol: " << alignPtr
+               << "\n -- info symbol: " << multiInfoPtr << "\n";
+
         return loadedPlugins;
       }
 
       // Check abi version, and also check size because bugs happen
       int version = *(static_cast<int*>(versionPtr));
-      std::size_t size = *(static_cast<std::size_t*>(sizePtr));
+      const std::size_t size = *(static_cast<std::size_t*>(sizePtr));
+      const std::size_t alignment = *(static_cast<std::size_t*>(alignPtr));
 
       if (version < PLUGIN_API_VERSION)
       {
@@ -244,7 +252,7 @@ namespace ignition
                 << "].\n";
       }
 
-      if (sizeof(PluginInfo) == size)
+      if (sizeof(PluginInfo) == size && alignof(PluginInfo) == alignment)
       {
         using PluginLoadFunctionSignature =
             std::size_t(*)(void * const, std::size_t, std::size_t);
@@ -264,11 +272,13 @@ namespace ignition
       else
       {
         const size_t expectedSize = sizeof(PluginInfo);
+        const size_t expectedAlignment = alignof(PluginInfo);
 
         ignerr << "The library [" << _pathToLibrary << "] has the wrong plugin "
-               << "size for API version [" << PLUGIN_API_VERSION
-               << "]. Expected [" << expectedSize << "], got ["
-               << size << "]\n";
+               << "size or alignment for API version [" << PLUGIN_API_VERSION
+               << "]. Expected size [" << expectedSize << "], got ["
+               << size << "]. Expected alignment [" << expectedAlignment
+               << "], got [" << alignment << "].\n";
 
         return loadedPlugins;
       }
