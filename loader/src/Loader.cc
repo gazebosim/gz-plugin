@@ -214,7 +214,7 @@ namespace ignition
       }
 
       const std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
-      const std::string sizeSymbol = "IGNCOMMONSinglePluginInfoSize";
+      const std::string sizeSymbol = "IGNCOMMONPluginInfoSize";
       const std::string alignSymbol = "IGNCOMMONPluginInfoAlignment";
       const std::string multiInfoSymbol = "IGNCOMMONMultiPluginInfo";
       void *versionPtr = dlsym(_dlHandle, versionSymbol.c_str());
