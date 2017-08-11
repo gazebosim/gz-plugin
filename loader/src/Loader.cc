@@ -39,10 +39,7 @@ namespace ignition
     /// \brief PIMPL Implementation of the PluginLoader class
     class PluginLoaderPrivate
     {
-      /// \brief Directories that should be searched for plugins
-      public: std::vector<std::string> searchPaths;
-
-      using PluginMap = std::unordered_map<std::string, PluginInfo>;
+      public: using PluginMap = std::unordered_map<std::string, PluginInfo>;
 
       /// \brief A map from known plugin names to their PluginInfo
       public: PluginMap plugins;
