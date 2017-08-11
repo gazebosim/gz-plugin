@@ -53,25 +53,25 @@ namespace ignition
     class TemplatePluginPtr final
     {
       /// \brief Destructor. Deletes this PluginPtr's reference to the plugin
-      /// instance. Once all PluginPtrs that refer to the plugin instances are
+      /// instance. Once all PluginPtrs that refer to a plugin instance are
       /// deleted, the plugin will also be deleted.
       public: ~TemplatePluginPtr() = default;
 
       /// \brief Default constructor. Creates a PluginPtr object that does not
-      /// point to any plugin instance. IsValid() will return false until a
+      /// point to any plugin instance. IsEmpty() will return true until a
       /// plugin instance is provided.
       public: TemplatePluginPtr();
 
       /// \brief Copy constructor. This PluginPtr will now point at the same
-      /// plugin instance as _other, and they will share ownership. If this
-      /// PluginPtr was holding an instance to another plugin, that instance
-      /// will be deleted if no other PluginPtr is referencing it.
+      /// plugin instance as _other, and they will share ownership.
       public: TemplatePluginPtr(const TemplatePluginPtr &_other);
 
       /// \brief Casting constructor. This PluginPtr will now point at the same
       /// plugin instance as _other, and they will share ownership. This
       /// essentially allows casting between PluginPtrs that are holding
-      /// different types of plugin wrappers.
+      /// different types of plugin wrappers (for example, you can cast a
+      /// generic PluginPtr to any SpecializedPluginPtr type, or you can cast
+      /// between different types of specializations).
       public: template <typename OtherPluginType>
               TemplatePluginPtr(
                   const TemplatePluginPtr<OtherPluginType> &_other);
@@ -153,8 +153,8 @@ namespace ignition
       /// opposite value of IsEmpty().
       public: operator bool() const;
 
-      /// \brief Clears the Plugin instance from this PluginPtr. IsValid() will
-      /// return false after this is used, and none of the interfaces will be
+      /// \brief Clears the Plugin instance from this PluginPtr. IsEmpty() will
+      /// return true after this is used, and none of the interfaces will be
       /// available any longer.
       public: void Clear();
 
