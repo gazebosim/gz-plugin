@@ -263,8 +263,7 @@ namespace ignition
         using PluginLoadFunctionSignature =
             std::size_t(*)(void * const, std::size_t, std::size_t);
 
-        std::size_t (*Info)(void * const, std::size_t, std::size_t) =
-          reinterpret_cast<PluginLoadFunctionSignature>(multiInfoPtr);
+        auto Info = reinterpret_cast<PluginLoadFunctionSignature>(multiInfoPtr);
 
         PluginInfo plugin;
         void *vPlugin = static_cast<void *>(&plugin);
