@@ -31,7 +31,7 @@ namespace ignition
   {
     // Forward declarations
     struct PluginInfo;
-    namespace detail { template<class...> class ComposePlugin; }
+    namespace detail { template<class, class> class ComposePlugin; }
 
     /// \brief This class manages the lifecycle of a plugin instance. It can
     /// receive a plugin instance from the ignition::common::PluginLoader class

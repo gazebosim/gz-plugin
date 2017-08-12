@@ -30,7 +30,7 @@ namespace ignition
     // Forward declarations
     struct PluginInfo;
     class PluginPrivate;
-    namespace detail { template <class...> class ComposePlugin; }
+    namespace detail { template <class, class> class ComposePlugin; }
 
     class Plugin
     {

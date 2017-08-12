@@ -180,34 +180,12 @@ namespace ignition
 
     namespace detail
     {
-      template <class... OtherBases>
-      class ComposePlugin
-      {
-        public: virtual ~ComposePlugin() = default;
-      };
-
-      template <class Base1>
-      class ComposePlugin<Base1> : public virtual Base1
-      {
-        // Declare friendship
-        template <class...> friend class SpecializedPlugin;
-        template <class...> friend class ComposePlugin;
-
-        /// \brief Default destructor
-        public: virtual ~ComposePlugin() = default;
-
-        public: ComposePlugin() = default;
-      };
-
-
       template <class Base1, class Base2>
-      class ComposePlugin<Base1, Base2> :
-          public virtual Base1,
-          public virtual Base2
+      class ComposePlugin : public virtual Base1, public virtual Base2
       {
         // Declare friendship
         template <class...> friend class SpecializedPlugin;
-        template <class...> friend class ComposePlugin;
+        template <class, class> friend class ComposePlugin;
 
         /// \brief Default destructor
         public: virtual ~ComposePlugin() = default;
@@ -234,20 +212,20 @@ namespace ignition
           }
 
 
-DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
-    T*, GetInterface, (), ())
+        DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
+            T*, GetInterface, (), ())
 
-DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
-    const T*, GetInterface, () const, ())
+        DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
+            const T*, GetInterface, () const, ())
 
-DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
-    std::shared_ptr<T>, as_shared_ptr, (), ())
+        DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
+            std::shared_ptr<T>, as_shared_ptr, (), ())
 
-DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
-    std::shared_ptr<const T>, as_shared_ptr, () const, ())
+        DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
+            std::shared_ptr<const T>, as_shared_ptr, () const, ())
 
-DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
-    bool, HasInterface, () const, ())
+        DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
+            bool, HasInterface, () const, ())
 
 
         public: template<class T>
@@ -259,27 +237,7 @@ DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
 
         // Declare friendship
         template <class...> friend class SpecializedPlugin;
-        template <class...> friend class ComposePlugin;
 
-        private: ComposePlugin() = default;
-      };
-
-      template <class Base1, class Base2, class... OtherBases>
-      class ComposePlugin<Base1, Base2, OtherBases...> :
-          public virtual ComposePlugin<
-            Base1, ComposePlugin<Base2, OtherBases...> >
-      {
-        // Declare friendship
-        template <class...> friend class SpecializedPlugin;
-        template <class...> friend class ComposePlugin;
-
-        /// \brief Virtual destructor
-        public: virtual ~ComposePlugin() = default;
-
-        using Base =
-            ComposePlugin< Base1, ComposePlugin<Base2, OtherBases...> >;
-
-        /// \brief Default constructor
         private: ComposePlugin() = default;
       };
     }
@@ -292,7 +250,7 @@ DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
     {
       // Declare friendship
       template <class...> friend class SpecializedPlugin;
-      template <class...> friend class detail::ComposePlugin;
+      template <class, class> friend class detail::ComposePlugin;
       template <class> friend class TemplatePluginPtr;
 
       /// \brief Default constructor
