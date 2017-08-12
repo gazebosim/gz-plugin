@@ -184,10 +184,6 @@ namespace ignition
       template <class Base1, class Base2>
       class ComposePlugin : public virtual Base1, public virtual Base2
       {
-        // Declare friendship
-        template <class...> friend class SpecializedPlugin;
-        template <class, class> friend class ComposePlugin;
-
         /// \brief Default destructor
         public: virtual ~ComposePlugin() = default;
 
