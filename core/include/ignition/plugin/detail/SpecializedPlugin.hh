@@ -181,6 +181,13 @@ namespace ignition
 
     namespace detail
     {
+      /// \brief ComposePlugin provides a way for a multi-specialized Plugin
+      /// type to find its specializations within itself each time an
+      /// interface-querying function is called. The macro
+      /// DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH accomplishes this for each
+      /// of the different functions by doing a compile-time check on whether
+      /// Base2 contains the specialization, and then picks Base1 if it does
+      /// not.
       template <class Base1, class Base2>
       class ComposePlugin : public virtual Base1, public virtual Base2
       {
@@ -202,10 +209,10 @@ namespace ignition
           template <class T>\
           ReturnType Function Suffix\
           {\
-            if (Base1::template IsSpecializedFor<T>())\
-              return Base1::template Function <T> Args ;\
+            if (Base2::template IsSpecializedFor<T>())\
+              return Base2::template Function <T> Args ;\
           \
-            return Base2::template Function <T> Args ;\
+            return Base1::template Function <T> Args ;\
           }
 
 
@@ -234,6 +241,7 @@ namespace ignition
 
         // Declare friendship
         template <class...> friend class SpecializedPlugin;
+        template <class, class> friend class ComposePlugin;
 
         private: ComposePlugin() = default;
       };
