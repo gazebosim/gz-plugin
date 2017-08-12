@@ -31,7 +31,7 @@ namespace ignition
     Interface *Plugin::GetInterface()
     {
       return static_cast<Interface*>(
-            this->PrivateGetInterface(Interface::InterfaceName));
+            this->PrivateGetInterface(Interface::IGNCOMMONInterfaceName));
     }
 
     //////////////////////////////////////////////////
@@ -39,7 +39,7 @@ namespace ignition
     const Interface *Plugin::GetInterface() const
     {
       return static_cast<const Interface*>(
-            this->PrivateGetInterface(Interface::InterfaceName));
+            this->PrivateGetInterface(Interface::IGNCOMMONInterfaceName));
     }
 
     //////////////////////////////////////////////////
@@ -63,14 +63,14 @@ namespace ignition
     template <class Interface>
     std::shared_ptr<Interface> Plugin::as_shared_ptr()
     {
-      return this->as_shared_ptr<Interface>(Interface::InterfaceName);
+      return this->as_shared_ptr<Interface>(Interface::IGNCOMMONInterfaceName);
     }
 
     //////////////////////////////////////////////////
     template <class Interface>
     std::shared_ptr<const Interface> Plugin::as_shared_ptr() const
     {
-      return this->as_shared_ptr<Interface>(Interface::InterfaceName);
+      return this->as_shared_ptr<Interface>(Interface::IGNCOMMONInterfaceName);
     }
 
     //////////////////////////////////////////////////
@@ -101,7 +101,7 @@ namespace ignition
     template <class Interface>
     bool Plugin::HasInterface() const
     {
-      return this->HasInterface(Interface::InterfaceName);
+      return this->HasInterface(Interface::IGNCOMMONInterfaceName);
     }
 
     //////////////////////////////////////////////////

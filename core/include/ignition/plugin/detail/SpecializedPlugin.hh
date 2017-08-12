@@ -172,7 +172,8 @@ namespace ignition
     template <class SpecInterface>
     SpecializedPlugin<SpecInterface>::SpecializedPlugin()
       : privateSpecInterfaceIterator(
-          this->PrivateGetOrCreateIterator(SpecInterface::InterfaceName))
+          this->PrivateGetOrCreateIterator(
+            SpecInterface::IGNCOMMONInterfaceName))
     {
       // Do nothing
     }
