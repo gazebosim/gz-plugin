@@ -142,7 +142,7 @@ namespace ignition
       public: void Initialize(const PluginInfo *_info,
                               const std::shared_ptr<void> &_dlHandlePtr)
               {
-                Clear();
+                this->Clear();
 
                 if (!_info)
                   return;
@@ -188,7 +188,7 @@ namespace ignition
       /// \brief Initialize this PluginPtrPrivate using another instance
       public: void Initialize(const PluginPrivate *_other)
               {
-                Clear();
+                this->Clear();
 
                 if (!_other)
                 {

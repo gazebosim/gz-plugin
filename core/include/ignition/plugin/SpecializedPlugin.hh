@@ -26,7 +26,7 @@ namespace ignition
   namespace common
   {
     // Forward declarations
-    namespace detail { template <class...> class ComposePlugin; }
+    namespace detail { template <class, class> class ComposePlugin; }
 
     /// \brief Declaration of the variadic template for SpecializedPlugin.
     /// This class definition is a C++ syntax formality.
@@ -105,7 +105,7 @@ namespace ignition
 
       // Declare friendship
       template <class...> friend class SpecializedPlugin;
-      template <class...> friend class detail::ComposePlugin;
+      template <class, class> friend class detail::ComposePlugin;
       template <class> friend class TemplatePluginPtr;
 
       private: template <class T> struct type { };

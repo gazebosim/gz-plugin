@@ -55,7 +55,7 @@ namespace ignition
     std::shared_ptr<Interface> SpecializedPlugin<SpecInterface>::as_shared_ptr()
     {
       Interface *ptr = this->GetInterface<Interface>();
-      if(ptr)
+      if (ptr)
         return std::shared_ptr<Interface>(this->PrivateGetInstancePtr(), ptr);
 
       return nullptr;
@@ -68,7 +68,7 @@ namespace ignition
     SpecializedPlugin<SpecInterface>::as_shared_ptr() const
     {
       const Interface *ptr = this->GetInterface<Interface>();
-      if(ptr)
+      if (ptr)
         return std::shared_ptr<Interface>(this->PrivateGetInstancePtr(), ptr);
 
       return nullptr;
@@ -172,7 +172,8 @@ namespace ignition
     template <class SpecInterface>
     SpecializedPlugin<SpecInterface>::SpecializedPlugin()
       : privateSpecInterfaceIterator(
-          this->PrivateGetOrCreateIterator(SpecInterface::InterfaceName))
+          this->PrivateGetOrCreateIterator(
+            SpecInterface::IGNCOMMONInterfaceName))
     {
       // Do nothing
     }
@@ -180,35 +181,16 @@ namespace ignition
 
     namespace detail
     {
-      template <class... OtherBases>
-      class ComposePlugin
-      {
-        public: virtual ~ComposePlugin() = default;
-      };
-
-      template <class Base1>
-      class ComposePlugin<Base1> : public virtual Base1
-      {
-        // Declare friendship
-        template <class...> friend class SpecializedPlugin;
-        template <class...> friend class ComposePlugin;
-
-        /// \brief Default destructor
-        public: virtual ~ComposePlugin() = default;
-
-        public: ComposePlugin() = default;
-      };
-
-
+      /// \brief ComposePlugin provides a way for a multi-specialized Plugin
+      /// type to find its specializations within itself each time an
+      /// interface-querying function is called. The macro
+      /// DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH accomplishes this for each
+      /// of the different functions by doing a compile-time check on whether
+      /// Base2 contains the specialization, and then picks Base1 if it does
+      /// not.
       template <class Base1, class Base2>
-      class ComposePlugin<Base1, Base2> :
-          public virtual Base1,
-          public virtual Base2
+      class ComposePlugin : public virtual Base1, public virtual Base2
       {
-        // Declare friendship
-        template <class...> friend class SpecializedPlugin;
-        template <class...> friend class ComposePlugin;
-
         /// \brief Default destructor
         public: virtual ~ComposePlugin() = default;
 
@@ -217,26 +199,38 @@ namespace ignition
         using Plugin::as_shared_ptr;
         using Plugin::HasInterface;
 
-        /// \brief Implement functions whose only role is to dispatch its functionality
-        /// between two base classes, depending on which base is specialized for the
-        /// template type. This must only be called within the ComposePlugin class.
+        /// \brief Implement functions whose only role is to dispatch its
+        /// functionality between two base classes, depending on which base is
+        /// specialized for the template type. This must only be called within
+        /// the ComposePlugin class.
         #define DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(\
                       ReturnType, Function, Suffix, Args)\
           public:\
           template <class T>\
           ReturnType Function Suffix\
           {\
-            if (Base1::template IsSpecializedFor<T>())\
-              return Base1::template Function <T> Args ;\
+            if (Base2::template IsSpecializedFor<T>())\
+              return Base2::template Function <T> Args ;\
           \
-            return Base2::template Function <T> Args ;\
+            return Base1::template Function <T> Args ;\
           }
 
-DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(T*, GetInterface, (), ())
-DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(const T*, GetInterface, () const, ())
-DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(std::shared_ptr<T>, as_shared_ptr, (), ())
-DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(std::shared_ptr<const T>, as_shared_ptr, () const, ())
-DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(bool, HasInterface, () const, ())
+
+        DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
+            T*, GetInterface, (), ())
+
+        DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
+            const T*, GetInterface, () const, ())
+
+        DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
+            std::shared_ptr<T>, as_shared_ptr, (), ())
+
+        DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
+            std::shared_ptr<const T>, as_shared_ptr, () const, ())
+
+        DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
+            bool, HasInterface, () const, ())
+
 
         public: template<class T>
                 static constexpr bool IsSpecializedFor()
@@ -247,26 +241,8 @@ DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(bool, HasInterface, () const, ())
 
         // Declare friendship
         template <class...> friend class SpecializedPlugin;
-        template <class...> friend class ComposePlugin;
+        template <class, class> friend class ComposePlugin;
 
-        private: ComposePlugin() = default;
-      };
-
-      template <class Base1, class Base2, class... OtherBases>
-      class ComposePlugin<Base1, Base2, OtherBases...> :
-          public virtual ComposePlugin<
-            Base1, ComposePlugin<Base2, OtherBases...> >
-      {
-        // Declare friendship
-        template <class...> friend class SpecializedPlugin;
-        template <class...> friend class ComposePlugin;
-
-        /// \brief Virtual destructor
-        public: virtual ~ComposePlugin() = default;
-
-        using Base = ComposePlugin<Base1, ComposePlugin<Base2, OtherBases...>>;
-
-        /// \brief Default constructor
         private: ComposePlugin() = default;
       };
     }
@@ -279,7 +255,7 @@ DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(bool, HasInterface, () const, ())
     {
       // Declare friendship
       template <class...> friend class SpecializedPlugin;
-      template <class...> friend class detail::ComposePlugin;
+      template <class, class> friend class detail::ComposePlugin;
       template <class> friend class TemplatePluginPtr;
 
       /// \brief Default constructor
