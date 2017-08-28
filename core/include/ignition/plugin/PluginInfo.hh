@@ -32,23 +32,25 @@ namespace ignition
     /// This must be incremented when the PluginInfo struct changes
     const int PLUGIN_API_VERSION = 2;
 
-
     /// \brief Holds info required to construct a plugin
-    struct PluginInfo
+    class PluginInfo
     {
+      /// \brief Default constructor
+      public: PluginInfo() = default;
+
       /// \brief the name of the plugin
-      std::string name;
+      public: std::string name;
 
       /// \brief the name of the type of plugin this implements
-      std::string interface;
+      public: std::string interface;
 
       /// \brief returns a hash that can be used to compare the base class type
       ///
       /// This is only used to make the PluginLoader::Instantiate API simpler
-      std::size_t baseClassHash;
+      public: std::size_t baseClassHash;
 
       /// \brief a method that instantiates a new instance of a plugin
-      std::function<void*()> factory;
+      public: std::function<void*()> factory;
     };
   }
 }
