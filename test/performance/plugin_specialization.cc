@@ -209,6 +209,14 @@ TEST(PluginSpecialization, AccessTime)
   EXPECT_LT(std::abs(tests[5].avg - baseline), baseline);
   EXPECT_LT(std::abs(tests[6].avg - baseline), baseline);
 
+  // Test that the specialized results are always better than the generic result
+  EXPECT_LT(tests[0].avg, tests.back().avg);
+  EXPECT_LT(tests[1].avg, tests.back().avg);
+  EXPECT_LT(tests[2].avg, tests.back().avg);
+  EXPECT_LT(tests[3].avg, tests.back().avg);
+  EXPECT_LT(tests[4].avg, tests.back().avg);
+  EXPECT_LT(tests[5].avg, tests.back().avg);
+  EXPECT_LT(tests[6].avg, tests.back().avg);
 
   for (const TestData &test : tests)
   {
