@@ -178,9 +178,41 @@ namespace ignition
       // Do nothing
     }
 
-
     namespace detail
     {
+      /// \brief This template provides an implementation of
+      /// SelectSpecializerIfAvailable by having two template specializations
+      /// to choose between at compile time.
+      ///
+      /// If specialized is true, then this will provide the specializer for
+      /// Interface as `Specializer`.
+      template <typename Interface, bool specialized>
+      struct SelectSpecalizerIfAvailableImpl
+      {
+        using Specializer = SpecializedPlugin<Interface>;
+      };
+
+      /// \brief This template specialization will be invoked when
+      /// Specialization is not specialized for Interface, and therefore return
+      /// the generic Plugin type.
+      template <typename Interface>
+      struct SelectSpecalizerIfAvailableImpl<Interface, false>
+      {
+        using Specializer = Plugin;
+      };
+
+      /// \brief If Specialization contains a leaf specializer for Interface,
+      /// i.e. SpecializedPlugin<Interface>, then this will provide that type
+      /// under the name `Specializer`. Otherwise, this will simply provide the
+      /// generic Plugin type.
+      template <typename Interface, typename Specialization>
+      struct SelectSpecalizerIfAvailable
+      {
+        using Specializer = typename SelectSpecalizerIfAvailableImpl<Interface,
+            std::is_base_of<SpecializedPlugin<Interface>, Specialization>::value
+            >::Specializer;
+      };
+
       /// \brief ComposePlugin provides a way for a multi-specialized Plugin
       /// type to find its specializations within itself each time an
       /// interface-querying function is called. The macro
@@ -199,37 +231,45 @@ namespace ignition
         using Plugin::as_shared_ptr;
         using Plugin::HasInterface;
 
-        /// \brief Implement functions whose only role is to dispatch its
-        /// functionality between two base classes, depending on which base is
+        // Used for template metaprogramming
+        using Specialization = ComposePlugin<Base1, Base2>;
+
+        /// \brief Implement functions whose only roles are to dispatch their
+        /// functionalities between two base classes, depending on which base is
         /// specialized for the template type. This must only be called within
         /// the ComposePlugin class.
-        #define DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(\
-                      ReturnType, Function, Suffix, Args)\
-          public:\
-          template <class T>\
-          ReturnType Function Suffix\
-          {\
-            if (Base2::template IsSpecializedFor<T>())\
-              return Base2::template Function <T> Args ;\
-          \
-            return Base1::template Function <T> Args ;\
+        ///
+        /// The dispatch is performed by casting this object to the type that
+        /// specializes for the requested Interface, if such a type is availabe
+        /// within its inheritance structure. Otherwise, we cast to the generic
+        /// Plugin type.
+        #define DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH( \
+                      ReturnType, Function, Suffix, CastTo, Args) \
+          public: \
+          template <class T> \
+          ReturnType Function Suffix \
+          { \
+            using Specializer = typename detail::SelectSpecalizerIfAvailable< \
+                    T, Specialization>::Specializer; \
+            return static_cast<CastTo*>(this)->template Function <T> Args; \
           }
 
 
         DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
-            T*, GetInterface, (), ())
+            T*, GetInterface, (), Specializer, ())
 
         DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
-            const T*, GetInterface, () const, ())
+            const T*, GetInterface, () const, const Specializer, ())
 
         DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
-            std::shared_ptr<T>, as_shared_ptr, (), ())
+            std::shared_ptr<T>, as_shared_ptr, (), Specializer, ())
 
         DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
-            std::shared_ptr<const T>, as_shared_ptr, () const, ())
+            std::shared_ptr<const T>, as_shared_ptr,
+            () const, const Specializer, ())
 
         DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
-            bool, HasInterface, () const, ())
+            bool, HasInterface, () const, const Specializer, ())
 
 
         public: template<class T>
@@ -247,6 +287,8 @@ namespace ignition
       };
     }
 
+    /// \brief Construct an unbalanced binary tree of specializations by
+    /// convoluting SpecializedPlugin types using ComposePlugin.
     template <class SpecInterface1, class... OtherSpecInterfaces>
     class SpecializedPlugin<SpecInterface1, OtherSpecInterfaces...> :
         public virtual detail::ComposePlugin<
