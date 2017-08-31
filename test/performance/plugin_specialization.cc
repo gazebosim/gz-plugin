@@ -158,7 +158,7 @@ TEST(PluginSpecialization, AccessTime)
     std::string label;
     double avg;
 
-    TestData(const std::string &_label)
+    explicit TestData(const std::string &_label)
       : label(_label), avg(0.0) { }
   };
 
