@@ -30,12 +30,16 @@ namespace ignition
     {
       //////////////////////////////////////////////////
       template <typename To, typename From>
-      struct ConstCompatible : std::true_type { };
+      struct ConstCompatible : std::true_type
+      {
+      };
 
       //////////////////////////////////////////////////
       template <typename To, typename From>
       struct ConstCompatible<To, const From>
-          : std::integral_constant<bool, std::is_const<To>::value> { };
+          : std::integral_constant<bool, std::is_const<To>::value>
+      {
+      };
     }
   }
 }
