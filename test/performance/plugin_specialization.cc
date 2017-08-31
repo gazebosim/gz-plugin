@@ -193,9 +193,9 @@ TEST(PluginSpecialization, AccessTime)
     // effect is still noticeable, so we run a warmup phase that does not get
     // recorded. This seems to be helping to make the results fair, but
     // inconsistencies are still possible.
-    if(i < Warmup)
+    if (i < Warmup)
     {
-      for(TestData &test : tests)
+      for (TestData &test : tests)
         test.avg = 0.0;
     }
   }
