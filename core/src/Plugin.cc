@@ -122,7 +122,7 @@ namespace ignition
       /// \brief shared_ptr which manages the lifecycle of the plugin instance.
       public: std::shared_ptr<void> pluginInstancePtr;
 
-      /// \brief Clear this PluginPtrPrivate without invaliding any map entry
+      /// \brief Clear this PluginPrivate without invaliding any map entry
       /// iterators.
       public: void Clear()
               {
@@ -138,7 +138,7 @@ namespace ignition
                   entry.second = nullptr;
               }
 
-      /// \brief Initialize this PluginPtrPrivate using some PluginInfo instance
+      /// \brief Initialize this PluginPrivate using some PluginInfo instance
       public: void Initialize(const PluginInfo *_info,
                               const std::shared_ptr<void> &_dlHandlePtr)
               {
@@ -185,7 +185,7 @@ namespace ignition
                 }
               }
 
-      /// \brief Initialize this PluginPtrPrivate using another instance
+      /// \brief Initialize this PluginPrivate using another instance
       public: void Initialize(const PluginPrivate *_other)
               {
                 this->Clear();
@@ -193,7 +193,7 @@ namespace ignition
                 if (!_other)
                 {
                   ignerr << "Received a nullptr _other in the constructor "
-                         << "which uses `const PluginPtrPrivate*`. This should "
+                         << "which uses `const PluginPrivate*`. This should "
                          << "not be possible! Please report this bug."
                          << std::endl;
                   assert(false);
