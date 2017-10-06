@@ -21,6 +21,7 @@
 
 #include <functional>
 #include <string>
+#include <unordered_map>
 
 namespace ignition
 {
@@ -30,27 +31,29 @@ namespace ignition
     ///     version of the PluginInfo struct
     //
     /// This must be incremented when the PluginInfo struct changes
-    const int PLUGIN_API_VERSION = 2;
+    const int PLUGIN_API_VERSION = 1;
+
 
     /// \brief Holds info required to construct a plugin
-    class PluginInfo
+    struct PluginInfo
     {
-      /// \brief Default constructor
-      public: PluginInfo() = default;
+      /// \brief The name of the plugin
+      std::string name;
 
-      /// \brief the name of the plugin
-      public: std::string name;
+      /// \brief The keys are the names of the types of interfaces that this
+      /// plugin provides. The values are functions that convert a void pointer
+      /// (which actually points to the plugin instance) to another void pointer
+      /// (which actually points to the location of the interface within the
+      /// plugin instance).
+      using InterfaceCastingMap =
+          std::unordered_map< std::string, std::function<void*(void*)> >;
+      InterfaceCastingMap interfaces;
 
-      /// \brief the name of the type of plugin this implements
-      public: std::string interface;
+      /// \brief A method that instantiates a new instance of a plugin
+      std::function<void*()> factory;
 
-      /// \brief returns a hash that can be used to compare the base class type
-      ///
-      /// This is only used to make the PluginLoader::Instantiate API simpler
-      public: std::size_t baseClassHash;
-
-      /// \brief a method that instantiates a new instance of a plugin
-      public: std::function<void*()> factory;
+      /// \brief A method that safely deletes an instance of the plugin
+      std::function<void(void*)> deleter;
     };
   }
 }
