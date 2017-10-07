@@ -23,6 +23,8 @@
 #include <map>
 #include <string>
 
+#include <ignition/common/System.hh>
+
 namespace ignition
 {
   namespace common
@@ -32,7 +34,7 @@ namespace ignition
     class PluginPrivate;
     class PluginLoader;
 
-    class Plugin
+    class IGNITION_COMMON_VISIBLE Plugin
     {
       // -------------------- Public API ---------------------
 
