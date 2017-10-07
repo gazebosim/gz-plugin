@@ -127,7 +127,10 @@ namespace ignition
       /// wrapper
       private: const std::shared_ptr<void>& PrivateGetInstancePtr() const;
 
-
+      /// \brief The InterfaceMap type needs to get used in several places, like
+      /// PluginPrivate and SpecializedPlugin<T>. We make the typedef public so
+      /// that those other classes can use it without needing to be friends of
+      /// Plugin.
       public: using InterfaceMap = std::map<std::string, void*>;
 
       /// \brief Get or create an iterator to the std::map that holds pointers
