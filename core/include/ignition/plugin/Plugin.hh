@@ -23,6 +23,8 @@
 #include <map>
 #include <string>
 
+#include <ignition/common/System.hh>
+
 namespace ignition
 {
   namespace common
@@ -32,7 +34,7 @@ namespace ignition
     class PluginPrivate;
     namespace detail { template <class, class> class ComposePlugin; }
 
-    class Plugin
+    class IGNITION_COMMON_VISIBLE Plugin
     {
       // -------------------- Public API ---------------------
 
@@ -92,15 +94,6 @@ namespace ignition
       /// \brief Returns true if this Plugin has the specified type of
       /// interface.
       public: bool HasInterface(const std::string &_interfaceName) const;
-
-      /// \brief This function always returns false if it is called on this
-      /// basic Plugin class type. The SpecializedPlugin can shadow this
-      /// to return true when it is specialized for this Interface type, however
-      /// the function must be called on the SpecializedPlugin type and not
-      /// this base class type, because this is a shadowed function, not a
-      /// virtual function.
-      public: template <class Interface>
-              static constexpr bool IsSpecializedFor();
 
 
       // -------------------- Private API -----------------------

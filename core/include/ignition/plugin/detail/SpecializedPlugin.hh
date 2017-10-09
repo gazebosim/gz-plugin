@@ -85,14 +85,6 @@ namespace ignition
     /////////////////////////////////////////////////
     template <class SpecInterface>
     template <class Interface>
-    constexpr bool SpecializedPlugin<SpecInterface>::IsSpecializedFor()
-    {
-      return PrivateIsSpecializedFor(type<Interface>());
-    }
-
-    /////////////////////////////////////////////////
-    template <class SpecInterface>
-    template <class Interface>
     Interface *SpecializedPlugin<SpecInterface>::PrivateGetSpecInterface(
         type<Interface>)
     {
@@ -150,22 +142,6 @@ namespace ignition
       usedSpecializedInterfaceAccess = true;
       #endif
       return (nullptr != this->privateSpecInterfaceIterator->second);
-    }
-
-    /////////////////////////////////////////////////
-    template <class SpecInterface>
-    template <class Interface>
-    constexpr bool SpecializedPlugin<SpecInterface>::PrivateIsSpecializedFor(
-        type<Interface>)
-    {
-      return false;
-    }
-
-    template <class SpecInterface>
-    constexpr bool SpecializedPlugin<SpecInterface>::PrivateIsSpecializedFor(
-        type<SpecInterface>)
-    {
-      return true;
     }
 
     /////////////////////////////////////////////////
@@ -271,13 +247,6 @@ namespace ignition
         DETAIL_IGN_COMMON_COMPOSEPLUGIN_DISPATCH(
             bool, HasInterface, () const, const Specializer, ())
 
-
-        public: template<class T>
-                static constexpr bool IsSpecializedFor()
-        {
-          return (Base1::template IsSpecializedFor<T>()
-                  || Base2::template IsSpecializedFor<T>());
-        }
 
         // Declare friendship
         template <class...> friend class SpecializedPlugin;

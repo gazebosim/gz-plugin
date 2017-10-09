@@ -96,11 +96,6 @@ namespace ignition
       public: template <class Interface>
               bool HasInterface() const;
 
-      /// \brief Returns true if this SpecializedPlugin has been specialized
-      /// for Interface, otherwise returns false.
-      public: template <class Interface>
-              static constexpr bool IsSpecializedFor();
-
 
       // -------------------- Private API ---------------------
 
@@ -132,14 +127,6 @@ namespace ignition
 
       /// \brief Use a low-cost accessor to check on this specialized interface
       private: bool PrivateHasSpecInterface(type<SpecInterface>) const;
-
-      /// \brief Return false because Interface does not match SpecInterface
-      private: template <class Interface>
-               static constexpr bool PrivateIsSpecializedFor(type<Interface>);
-
-      /// \brief Return true
-      private: static constexpr bool PrivateIsSpecializedFor(
-                   type<SpecInterface>);
 
       /// \brief Iterator that points to the entry of the specialized interface
       private:
