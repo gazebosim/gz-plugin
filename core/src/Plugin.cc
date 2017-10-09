@@ -47,7 +47,7 @@ namespace ignition
       public: std::shared_ptr<void> dlHandlePtr;
 
       /// \brief Pointer to the plugin instance
-      public: void *pluginInstance;
+      public: void *loadedInstance;
 
       /// \brief Deleter function for the plugin instance
       ///
@@ -61,32 +61,32 @@ namespace ignition
 
       /// \brief Constructor
       public: PluginWithDlHandle(
-        void *_pluginInstance,
+        void *_loadedInstance,
         const std::function<void(void*)> &_deleter,
         const std::shared_ptr<void> &_dlHandlePtr)
         : dlHandlePtr(_dlHandlePtr),
-          pluginInstance(_pluginInstance),
+          loadedInstance(_loadedInstance),
           deleter(_deleter)
       {
         // Do nothing
       }
 
-      /// \brief Destructor. We call the deleter on the pluginInstance while the
+      /// \brief Destructor. We call the deleter on the loadedInstance while the
       /// deleter and dlHandlePtr are still valid and available.
       public: ~PluginWithDlHandle()
       {
-        if (pluginInstance)
+        if (loadedInstance)
         {
           if (!deleter)
           {
-            ignerr << "This plugin instance (" << pluginInstance
+            ignerr << "This plugin instance (" << loadedInstance
                    << ") was not given a deleter. This should never happen! "
                    << "Please report this bug!\n";
             assert(false);
             return;
           }
 
-          deleter(pluginInstance);
+          deleter(loadedInstance);
         }
         else
         {
@@ -120,13 +120,13 @@ namespace ignition
       public: Plugin::InterfaceMap interfaces;
 
       /// \brief shared_ptr which manages the lifecycle of the plugin instance.
-      public: std::shared_ptr<void> pluginInstancePtr;
+      public: std::shared_ptr<void> loadedInstancePtr;
 
       /// \brief Clear this PluginPrivate without invaliding any map entry
       /// iterators.
       public: void Clear()
               {
-                this->pluginInstancePtr.reset();
+                this->loadedInstancePtr.reset();
 
                 // Dev note (MXG): We must NOT call clear() on the InterfaceMap
                 // or remove ANY of the map entries, because that would
@@ -169,19 +169,19 @@ namespace ignition
                 // which points at the plugin instance, so we have the benefit
                 // of automatically managing the lifecycle of the dlHandlePtr
                 // without needing to actually keep track of it.
-                this->pluginInstancePtr =
+                this->loadedInstancePtr =
                     std::shared_ptr<void>(
                       pluginWithDlHandle,
-                      pluginWithDlHandle->pluginInstance);
+                      pluginWithDlHandle->loadedInstance);
 
                 for (const auto &entry : _info->interfaces)
                 {
                   // entry.first:  name of the interface
-                  // entry.second: function which casts the pluginInstance
+                  // entry.second: function which casts the loadedInstance
                   //               pointer to the correct location of the
                   //               interface within the plugin
                   this->interfaces[entry.first] =
-                      entry.second(this->pluginInstancePtr.get());
+                      entry.second(this->loadedInstancePtr.get());
                 }
               }
 
@@ -200,9 +200,9 @@ namespace ignition
                   return;
                 }
 
-                this->pluginInstancePtr = _other->pluginInstancePtr;
+                this->loadedInstancePtr = _other->loadedInstancePtr;
 
-                if (this->pluginInstancePtr)
+                if (this->loadedInstancePtr)
                 {
                   for (const auto &entry : _other->interfaces)
                   {
@@ -259,7 +259,7 @@ namespace ignition
     //////////////////////////////////////////////////
     const std::shared_ptr<void> &Plugin::PrivateGetInstancePtr() const
     {
-      return this->dataPtr->pluginInstancePtr;
+      return this->dataPtr->loadedInstancePtr;
     }
 
     //////////////////////////////////////////////////
