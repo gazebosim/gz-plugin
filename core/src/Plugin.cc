@@ -46,13 +46,13 @@ namespace ignition
       public: Plugin::InterfaceMap interfaces;
 
       /// \brief shared_ptr which manages the lifecycle of the plugin instance.
-      std::shared_ptr<void> pluginInstancePtr;
+      std::shared_ptr<void> loadedInstancePtr;
 
       /// \brief Clear this PluginPrivate without invaliding any map entry
       /// iterators.
       public: void Clear()
               {
-                this->pluginInstancePtr.reset();
+                this->loadedInstancePtr.reset();
 
                 // Dev note (MXG): We must NOT call clear() on the InterfaceMap
                 // or remove ANY of the map entries, because that would
@@ -72,10 +72,10 @@ namespace ignition
                 if (!_info)
                   return;
 
-                this->pluginInstancePtr =
+                this->loadedInstancePtr =
                     std::shared_ptr<void>(_info->factory(), _info->deleter);
 
-                if (this->pluginInstancePtr)
+                if (this->loadedInstancePtr)
                 {
                   for (const auto &entry : _info->interfaces)
                   {
@@ -84,7 +84,7 @@ namespace ignition
                     //               pointer to the correct location of the
                     //               interface within the plugin
                     this->interfaces[entry.first] =
-                        entry.second(this->pluginInstancePtr.get());
+                        entry.second(this->loadedInstancePtr.get());
                   }
                 }
               }
@@ -104,9 +104,9 @@ namespace ignition
                   return;
                 }
 
-                this->pluginInstancePtr = _other->pluginInstancePtr;
+                this->loadedInstancePtr = _other->loadedInstancePtr;
 
-                if (this->pluginInstancePtr)
+                if (this->loadedInstancePtr)
                 {
                   for (const auto &entry : _other->interfaces)
                   {
@@ -161,7 +161,7 @@ namespace ignition
     //////////////////////////////////////////////////
     const std::shared_ptr<void> &Plugin::PrivateGetInstancePtr() const
     {
-      return this->dataPtr->pluginInstancePtr;
+      return this->dataPtr->loadedInstancePtr;
     }
 
     //////////////////////////////////////////////////
