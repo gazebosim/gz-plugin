@@ -103,13 +103,6 @@ namespace ignition
     {
       return this->HasInterface(Interface::IGNCOMMONInterfaceName);
     }
-
-    //////////////////////////////////////////////////
-    template <class Interface>
-    constexpr bool Plugin::IsSpecializedFor()
-    {
-      return false;
-    }
   }
 }
 
