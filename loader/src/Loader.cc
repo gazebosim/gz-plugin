@@ -35,7 +35,7 @@ namespace ignition
 {
   namespace common
   {
-  /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
     /// \brief PIMPL Implementation of the PluginLoader class
     class PluginLoaderPrivate
     {
