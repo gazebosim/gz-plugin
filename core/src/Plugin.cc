@@ -119,7 +119,6 @@ namespace ignition
 
       /// \brief shared_ptr which manages the lifecycle of the plugin instance.
       std::shared_ptr<void> loadedInstancePtr;
-
     };
 
     //////////////////////////////////////////////////
