@@ -182,13 +182,6 @@ namespace ignition
 
         dataPtr->dlHandleToPluginMap[dlHandle.get()] = newPlugins;
       }
-      else
-      {
-        ignerr << "Library[" << _pathToLibrary << "] error: " << dlerror()
-               << std::endl;
-        // TODO (MXG): I think we should consider putting this closer to the
-        // call to dlopen.
-      }
 
       return newPlugins;
     }
@@ -296,10 +289,23 @@ namespace ignition
     {
       std::shared_ptr<void> dlHandlePtr;
 
-      // Somehow this works on windows builds?
-      void *dlHandle = dlopen(_full_path.c_str(), RTLD_LAZY|RTLD_GLOBAL);
-      // TODO(MXG): Consider checking for errors here using dlerror()
+      // Call dlerrer() before dlopen(~) to ensure that we get accurate error
+      // reporting afterwards. The function dlerror() is stateful, and that
+      // state gets cleared each time it is called.
+      dlerror();
 
+      void *dlHandle = dlopen(_full_path.c_str(), RTLD_LAZY|RTLD_GLOBAL);
+
+      const char *loadError = dlerror();
+      if(nullptr == dlHandle || nullptr != loadError)
+      {
+        ignerr << "Error while loading the library [" << _full_path << "]: "
+               << loadError << std::endl;
+
+        // Just return a nullptr if the library could not be loaded. The
+        // PluginLoader::LoadLibrary(~) function will handle this gracefully.
+        return nullptr;
+      }
 
       // The idea here is to first check if the library has already been loaded
       // by this PluginLoader. If it has been, then we will see it in the
@@ -309,7 +315,6 @@ namespace ignition
       // from this PluginLoader. When the instances spawned by this PluginLoader
       // are gone, we will call dlclose on the library handle, which will be
       // done by the destructor of the std::shared_ptr<void>.
-
 
       bool inserted;
       DlHandleMap::iterator it;
