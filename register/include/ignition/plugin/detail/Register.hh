@@ -26,7 +26,6 @@
 #include "ignition/common/PluginInfo.hh"
 #include "ignition/common/SuppressWarning.hh"
 
-
 #if defined _WIN32 || defined __CYGWIN__
   #ifdef __GNUC__
     #define DETAIL_IGN_PLUGIN_VISIBLE __attribute__ ((dllexport))
@@ -40,6 +39,105 @@
     #define DETAIL_IGN_PLUGIN_VISIBLE
   #endif
 #endif
+
+namespace ignition
+{
+  namespace common
+  {
+    namespace detail
+    {
+      //////////////////////////////////////////////////
+      class PluginRegistrar
+      {
+        public: template<typename Plugin, typename Interface>
+        void Register(const std::string &_derivedName,
+                      const std::string &_interfaceName)
+        {
+          PluginRegister::iterator plugin_it;
+          bool inserted;
+
+          std::tie(plugin_it, inserted) =
+              pluginRegister.insert(std::make_pair(_derivedName, PluginInfo()));
+
+          PluginInfo &info = plugin_it->second;
+
+          if(inserted)
+          {
+            // This Plugin has not been seen by the registrar before, so we need
+            // to fill in the plugin-wide info members.
+            info.name = _derivedName;
+
+            // Create a factory for generating new plugin instances
+            info.factory = []() {
+              return static_cast<void*>(new Plugin);
+            };
+
+            IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
+            // Create a deleter to clean up destroyed instances
+            info.deleter = [](void *ptr) {
+              delete static_cast<Plugin*>(ptr);
+            };
+            IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
+          }
+
+          // Provide a map from the plugin to its interface
+          info.interfaces.insert(std::make_pair(
+                _interfaceName,
+                [=](void* v_ptr) {
+                    Plugin *d_ptr = static_cast<Plugin*>(v_ptr);
+                    return static_cast<Interface*>(d_ptr);
+                }));
+        }
+
+        using Map = std::unordered_map<std::string, PluginInfo>;
+
+        inline const Map &GetPlugins()
+        {
+          return pluginRegister;
+        }
+
+        private: Map pluginRegister;
+      };
+
+      extern PluginRegistrar libraryPluginRegistrar;
+    }
+  }
+}
+
+extern "C"
+{
+  extern std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONMultiPluginInfo(
+      void *_outputInfo, const std::size_t _pluginId, const std::size_t _size)
+  {
+    if(_size != sizeof(ignition::common::PluginInfo))
+    {
+      return 0u;
+    }
+
+    const ignition::common::detail::PluginRegistrar::Map &plugins =
+        ignition::common::detail::libraryPluginRegistrar.GetPlugins();
+
+    ignition::common::PluginInfo *plugin =
+        static_cast<ignition::common::PluginInfo*>(_outputInfo);
+
+    // Probably not the most efficient way to grab plugins, but it is effective
+    ignition::common::detail::PluginRegistrar::Map::iterator it =
+        plugins.begin();
+    for(std::size_t i=0; i < _pluginId; ++i)
+    {
+      ++it;
+      if(it == plugins.end())
+        break;
+    }
+
+    if(it == plugins.end())
+      return plugins.size();
+
+    *plugin = it->second;
+
+    return plugins.size();
+  }
+}
 
 #define DETAIL_IGN_COMMON_SPECIALIZE_INTERFACE(interfaceName) \
   static_assert(std::is_same<interfaceName, ::interfaceName>::value, \
@@ -62,7 +160,6 @@
 
 #define DETAIL_IGN_COMMON_BEGIN_ADDING_PLUGINS \
   DETAIL_IGN_COMMON_REGISTER_PLUGININFO_META_DATA \
-IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR) \
   struct IGN_macro_must_be_used_in_global_namespace;\
   static_assert(std::is_same < IGN_macro_must_be_used_in_global_namespace, \
       ::IGN_macro_must_be_used_in_global_namespace>::value, \
@@ -127,7 +224,6 @@ IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR) \
       return 0u; \
     return pluginCount - _pluginId; \
   } \
-IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
 
 
 #endif
