@@ -71,7 +71,7 @@ namespace ignition
       /// this function only works when the Interface type is specialized using
       /// the macro IGN_COMMON_SPECIALIZE_INTERFACE. For more general interfaces
       /// which do not meet this condition, use
-      /// as_shared_ptr<Interface>(_interfaceName).
+      /// as_shared_ptr<Interface>(const std::string&).
       public: template <class Interface>
               std::shared_ptr<Interface> as_shared_ptr();
 
@@ -80,12 +80,13 @@ namespace ignition
       public: template <class Interface>
               std::shared_ptr<const Interface> as_shared_ptr() const;
 
-      /// \brief Get the requested interface as a std::shared_ptr.
+      /// \brief Get the requested interface as a std::shared_ptr. The template
+      /// argument Interface must exactly match the underlying type associated
+      /// with _interfaceName, or else the behavior of this function is
+      /// undefined.
       ///
       /// \param[in] _interfaceName The name of the desired interface, as a
-      /// string. The template argument Interface must exactly match the
-      /// underlying type associated with _interfaceName, or else the behavior
-      /// of this function is undefined.
+      /// string.
       public: template <class Interface>
               std::shared_ptr<Interface> as_shared_ptr(
                   const std::string &_interfaceName);
