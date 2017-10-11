@@ -39,7 +39,7 @@ namespace ignition
         // This would break any specialized plugins that provide instant access
         // to specialized interfaces. Instead, we simply overwrite the map
         // entries with a nullptr.
-        for (auto& entry : this->interfaces)
+        for (auto &entry : this->interfaces)
           entry.second = nullptr;
       }
 
