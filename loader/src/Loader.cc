@@ -147,41 +147,43 @@ namespace ignition
       const std::shared_ptr<void> &dlHandle =
           this->dataPtr->LoadLibrary(_pathToLibrary);
 
-      if (nullptr != dlHandle)
+      // Quit early and return an empty set of plugin names if we did not
+      // actually get a valid dlHandle.
+      if (nullptr == dlHandle)
+        return newPlugins;
+
+      // Found a shared library, does it have the symbols we're looking for?
+      std::vector<PluginInfo> loadedPlugins = this->dataPtr->LoadPlugins(
+            dlHandle, _pathToLibrary);
+
+      for (PluginInfo &plugin : loadedPlugins)
       {
-        // Found a shared library, does it have the symbols we're looking for?
-        std::vector<PluginInfo> loadedPlugins = this->dataPtr->LoadPlugins(
-              dlHandle, _pathToLibrary);
+        if (plugin.name.empty())
+          continue;
 
-        for (PluginInfo &plugin : loadedPlugins)
-        {
-          if (plugin.name.empty())
-            continue;
+        plugin.name = NormalizeName(plugin.name);
 
-          plugin.name = NormalizeName(plugin.name);
+        PluginInfo::InterfaceCastingMap normalizedMap;
+        normalizedMap.reserve(plugin.interfaces.size());
+        for (const auto &interface : plugin.interfaces)
+          normalizedMap.insert(std::make_pair(
+                   NormalizeName(interface.first),
+                   interface.second));
+        plugin.interfaces = normalizedMap;
 
-          PluginInfo::InterfaceCastingMap normalizedMap;
-          normalizedMap.reserve(plugin.interfaces.size());
-          for (const auto &interface : plugin.interfaces)
-            normalizedMap.insert(std::make_pair(
-                     NormalizeName(interface.first),
-                     interface.second));
-          plugin.interfaces = normalizedMap;
+        this->dataPtr->plugins[plugin.name] = plugin;
+        newPlugins.insert(plugin.name);
 
-          this->dataPtr->plugins[plugin.name] = plugin;
-          newPlugins.insert(plugin.name);
-
-          this->dataPtr->pluginToDlHandlePtrs[plugin.name] = dlHandle;
-        }
-
-        if (loadedPlugins.empty())
-        {
-          ignerr << "Failed to load plugins from library [" << _pathToLibrary <<
-                    "].\n";
-        }
-
-        dataPtr->dlHandleToPluginMap[dlHandle.get()] = newPlugins;
+        this->dataPtr->pluginToDlHandlePtrs[plugin.name] = dlHandle;
       }
+
+      if (loadedPlugins.empty())
+      {
+        ignerr << "Failed to load any plugins from library ["
+               << _pathToLibrary << "].\n";
+      }
+
+      dataPtr->dlHandleToPluginMap[dlHandle.get()] = newPlugins;
 
       return newPlugins;
     }
@@ -289,7 +291,7 @@ namespace ignition
     {
       std::shared_ptr<void> dlHandlePtr;
 
-      // Call dlerrer() before dlopen(~) to ensure that we get accurate error
+      // Call dlerror() before dlopen(~) to ensure that we get accurate error
       // reporting afterwards. The function dlerror() is stateful, and that
       // state gets cleared each time it is called.
       dlerror();
@@ -297,7 +299,7 @@ namespace ignition
       void *dlHandle = dlopen(_full_path.c_str(), RTLD_LAZY|RTLD_GLOBAL);
 
       const char *loadError = dlerror();
-      if(nullptr == dlHandle || nullptr != loadError)
+      if (nullptr == dlHandle || nullptr != loadError)
       {
         ignerr << "Error while loading the library [" << _full_path << "]: "
                << loadError << std::endl;
@@ -307,21 +309,29 @@ namespace ignition
         return nullptr;
       }
 
-      // The idea here is to first check if the library has already been loaded
-      // by this PluginLoader. If it has been, then we will see it in the
-      // dlHandlePtrMap, and we'll be able to get a shared reference to its
-      // handle. The advantage here is this allows us to keep track of how many
-      // places the shared library is being used by plugins that were generated
-      // from this PluginLoader. When the instances spawned by this PluginLoader
-      // are gone, we will call dlclose on the library handle, which will be
-      // done by the destructor of the std::shared_ptr<void>.
+      // The dl library maintains a reference count of how many times dlopen(~)
+      // or dlclose(~) has been called on each loaded library. dlopen(~)
+      // increments the reference count while dlclose(~) decrements the count.
+      // When the count reaches zero, the operating system is free to unload
+      // the library (which it might or might not choose to do; we do not seem
+      // to have control over that, probably for the best).
+
+      // The idea in our implementation here is to first check if the library
+      // has already been loaded by this PluginLoader. If it has been, then we
+      // will see it in the dlHandlePtrMap, and we'll be able to get a shared
+      // reference to its handle. The advantage of this is it allows us to keep
+      // track of how many places the shared library is being used by plugins
+      // that were generated from this PluginLoader. When all of the instances
+      // spawned by this PluginLoader are gone, the destructor of the
+      // std::shared_ptr will call dlclose on the library handle, bringing down
+      // its dl library reference count.
 
       bool inserted;
       DlHandleMap::iterator it;
       std::tie(it, inserted) = dlHandlePtrMap.insert(
             std::make_pair(dlHandle, std::weak_ptr<void>()));
 
-      if(!inserted)
+      if (!inserted)
       {
         // This shared library has already been loaded by this PluginLoader in
         // the past, so we should use the reference counter that already
@@ -339,15 +349,16 @@ namespace ignition
           //
           // At this line of code, we know that dlopen had been called by this
           // PluginLoader instance prior to this run of LoadLibrary. Therefore,
-          // we should undo the dlopen that we did earlier in this function so
-          // that only one dlclose must be performed to finally close the shared
-          // library. That final dlclose will be performed in the destructor of
-          // the std::shared_ptr<void> which stores the library handle.
+          // we should undo the dlopen that we did just a moment ago in this
+          // function so that only one dlclose must be performed to finally
+          // close the shared library. That final dlclose will be performed in
+          // the destructor of the std::shared_ptr<void> which stores the
+          // library handle.
           dlclose(dlHandle);
         }
       }
 
-      if(!dlHandlePtr)
+      if (!dlHandlePtr)
       {
         // The library was not already loaded (or if it was loaded in the past,
         // it is no longer active), so we should create a reference counting
