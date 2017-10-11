@@ -39,17 +39,25 @@ namespace ignition
     /// \brief PIMPL Implementation of the PluginLoader class
     class PluginLoaderPrivate
     {
+      /// \brief Attempt to load a library at the given path.
+      /// \param[in] _pathToLibrary The full path to the desired library
+      /// \return If a library exists at the given path, get a point to its dl
+      /// handle. If the library does not exist, get a nullptr.
+      public: void *LoadLibrary(const std::string &_pathToLibrary) const;
+
+      /// \brief Using a dl handle produced by LoadLibrary, extract the
+      /// PluginInfo from the loaded library.
+      /// \param[in] _dlHandle A handle produced by LoadLibrary
+      /// \param[in] _pathToLibrary The path that the library was loaded from
+      /// (used for debug purposes)
+      /// \return All the PluginInfo provided by the loaded library.
+      public: std::vector<PluginInfo> LoadPlugins(
+        void *_dlHandle, const std::string& _pathToLibrary) const;
+
       public: using PluginMap = std::unordered_map<std::string, PluginInfo>;
 
       /// \brief A map from known plugin names to their PluginInfo
       public: PluginMap plugins;
-
-      /// \brief attempt to load a library at the given path
-      public: void *LoadLibrary(const std::string &_pathToLibrary) const;
-
-      /// \brief get all the plugin info for a library
-      public: std::vector<PluginInfo> LoadPlugins(
-        void *_dlHandle, const std::string& _pathToLibrary) const;
     };
 
     /////////////////////////////////////////////////
@@ -63,13 +71,13 @@ namespace ignition
         pretty << "\t\t" << interface << std::endl;
 
       pretty << "\tKnown Plugins: " << dataPtr->plugins.size() << std::endl;
-      for (const auto& pair : dataPtr->plugins)
+      for (const auto &pair : dataPtr->plugins)
       {
-        const PluginInfo& plugin = pair.second;
-        const size_t i_size = plugin.interfaces.size();
+        const PluginInfo &plugin = pair.second;
+        const size_t iSize = plugin.interfaces.size();
         pretty << "\t\t[" << plugin.name << "] which implements "
-               << i_size << PluralCast(" interface", i_size) << ":\n";
-        for (const auto& interface : plugin.interfaces)
+               << iSize << PluralCast(" interface", iSize) << ":\n";
+        for (const auto &interface : plugin.interfaces)
           pretty << "\t\t\t" << interface.first << "\n";
       }
       pretty << std::endl;
@@ -120,9 +128,11 @@ namespace ignition
           PluginInfo::InterfaceCastingMap normalizedMap;
           normalizedMap.reserve(plugin.interfaces.size());
           for (const auto &interface : plugin.interfaces)
+          {
             normalizedMap.insert(std::make_pair(
                      NormalizeName(interface.first),
                      interface.second));
+          }
           plugin.interfaces = normalizedMap;
 
           this->dataPtr->plugins.insert(std::make_pair(plugin.name, plugin));
@@ -205,7 +215,7 @@ namespace ignition
 
     /////////////////////////////////////////////////
     std::vector<PluginInfo> PluginLoaderPrivate::LoadPlugins(
-        void *_dlHandle, const std::string& _pathToLibrary) const
+        void *_dlHandle, const std::string &_pathToLibrary) const
     {
       std::vector<PluginInfo> loadedPlugins;
 
