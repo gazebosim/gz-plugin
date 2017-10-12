@@ -215,44 +215,38 @@ namespace ignition
         return loadedPlugins;
       }
 
-      const std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
-      const std::string sizeSymbol = "IGNCOMMONPluginInfoSize";
-      const std::string alignSymbol = "IGNCOMMONPluginInfoAlignment";
-      const std::string multiInfoSymbol = "IGNCOMMONMultiPluginInfo";
-      void *versionPtr = dlsym(_dlHandle, versionSymbol.c_str());
-      void *sizePtr = dlsym(_dlHandle, sizeSymbol.c_str());
-      void *alignPtr = dlsym(_dlHandle, alignSymbol.c_str());
-      void *multiInfoPtr = dlsym(_dlHandle, multiInfoSymbol.c_str());
+      const std::string infoSymbol = "IGNCOMMONInputOrOutputPluginInfo";
+      void *infoFuncPtr = dlsym(_dlHandle, infoSymbol.c_str());
 
-      // Does the library have the right symbols?
-      if (nullptr == versionPtr || nullptr == sizePtr
-          || nullptr == multiInfoPtr || nullptr == alignPtr)
+      // Does the library have the right symbol?
+      if (nullptr == infoFuncPtr)
       {
-        ignerr << "Library [" << _pathToLibrary
-               << "] doesn't have the right symbols: \n"
-               << " -- version symbol: " << versionPtr
-               << "\n -- size symbol: " << sizePtr
-               << "\n -- alignment symbol: " << alignPtr
-               << "\n -- info symbol: " << multiInfoPtr << "\n";
+        ignerr << "Library [" << _pathToLibrary << "] does not export any "
+               << "plugins. The symbol [" << infoSymbol << "] is missing, or "
+               << "it is not externally visible.\n";
 
         return loadedPlugins;
       }
 
-      // Check abi version, and also check size because bugs happen
-      int version = *(static_cast<int*>(versionPtr));
-      const std::size_t size = *(static_cast<std::size_t*>(sizePtr));
-      const std::size_t alignment = *(static_cast<std::size_t*>(alignPtr));
+      using PluginLoadFunctionSignature =
+          void(*)(void * const, void *, int *, std::size_t *, std::size_t *);
 
-      if (version < PLUGIN_API_VERSION)
-      {
-        ignwarn << "The library [" << _pathToLibrary <<"] is using an outdated "
-                << "version [" << version << "] of the ignition::common Plugin "
-                << "API. The version in this library is [" << PLUGIN_API_VERSION
-                << "].\n";
-      }
+      auto Info = reinterpret_cast<PluginLoadFunctionSignature>(infoFuncPtr);
 
-      if (version > PLUGIN_API_VERSION)
+      int version = PLUGIN_API_VERSION;
+      std::size_t size = sizeof(PluginInfo);
+      std::size_t alignment = alignof(PluginInfo);
+      PluginInfoMap allInfo;
+
+      void *vAllInfo = static_cast<void *>(&allInfo);
+      Info(nullptr, vAllInfo, &version, &size, &alignment);
+
+      if (ignition::common::PLUGIN_API_VERSION != version)
       {
+        // TODO: When we need to support multiple API versions, put the logic
+        // for it into here. We can call Info(~) again with the API version that
+        // it expects.
+
         ignerr << "The library [" << _pathToLibrary << "] is using a newer "
                << "version [" << version << "] of the ignition::common Plugin "
                << "API. The version in this library is [" << PLUGIN_API_VERSION
@@ -260,34 +254,22 @@ namespace ignition
         return loadedPlugins;
       }
 
-      if (sizeof(PluginInfo) == size && alignof(PluginInfo) == alignment)
+      if (sizeof(PluginInfo) != size || alignof(PluginInfo) != alignment)
       {
-        using PluginLoadFunctionSignature =
-            std::size_t(*)(void * const, std::size_t, std::size_t);
-
-        auto Info = reinterpret_cast<PluginLoadFunctionSignature>(multiInfoPtr);
-
-        PluginInfo plugin;
-        void *vPlugin = static_cast<void *>(&plugin);
-        size_t id = 0;
-        while (Info(vPlugin, id, sizeof(PluginInfo)) > 0)
-        {
-          loadedPlugins.push_back(plugin);
-          ++id;
-        }
-      }
-      else
-      {
-        const size_t expectedSize = sizeof(PluginInfo);
-        const size_t expectedAlignment = alignof(PluginInfo);
-
-        ignerr << "The library [" << _pathToLibrary << "] has the wrong plugin "
-               << "size or alignment for API version [" << PLUGIN_API_VERSION
-               << "]. Expected size [" << expectedSize << "], got ["
-               << size << "]. Expected alignment [" << expectedAlignment
-               << "], got [" << alignment << "].\n";
+        ignerr << "The PluginInfo size or alignment are not consistent with "
+               << "the expected values for the library [" << _pathToLibrary
+               << "]:\n -- size: expected " << sizeof(PluginInfo)
+               << " | received " << size << "\n -- alignment: expected "
+               << alignof(PluginInfo) << " | received " << alignment << "\n"
+               << " -- We will not be able to safely load plugins from that "
+               << "library.\n";
 
         return loadedPlugins;
+      }
+
+      for(const PluginInfoMap::value_type &info : allInfo)
+      {
+        loadedPlugins.push_back(info.second);
       }
 
       return loadedPlugins;

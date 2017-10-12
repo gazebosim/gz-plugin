@@ -40,102 +40,133 @@
   #endif
 #endif
 
+extern "C"
+{
+  inline void DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONInputOrOutputPluginInfo(
+      const void *_inputSingleInfo, void *_outputAllInfo,
+      int *_inputAndOutputAPIVersion,
+      std::size_t *_inputAndOutputPluginInfoSize,
+      std::size_t *_inputAndOutputPluginInfoAlign)
+  {
+    using PluginInfoMap = ignition::common::PluginInfoMap;
+    static PluginInfoMap pluginMap;
+
+    if (_inputSingleInfo)
+    {
+      const ignition::common::PluginInfo *input =
+          static_cast<const ignition::common::PluginInfo*>(_inputSingleInfo);
+
+      PluginInfoMap::iterator it;
+      bool inserted;
+      std::tie(it, inserted) =
+          pluginMap.insert(std::make_pair(input->name, *input));
+
+      if (!inserted)
+      {
+        // If the object was not inserted, then an entry already existed for
+        // this plugin type. We should still insert each of the interface map
+        // entries provided by the input info, just in case any of them are
+        // missing from the currently existing entry. This allows the user to
+        // specify different interfaces for the same plugin type using different
+        // macros in different locations or different translation units.
+        ignition::common::PluginInfo &entry = it->second;
+        for(const auto &interfaceMapEntry : input->interfaces)
+          entry.interfaces.insert(interfaceMapEntry);
+      }
+    }
+
+    if (_outputAllInfo)
+    {
+      if (nullptr == _inputAndOutputAPIVersion ||
+          nullptr == _inputAndOutputPluginInfoSize ||
+          nullptr == _inputAndOutputPluginInfoAlign)
+      {
+        // This should never happen, or else the function is being misused.
+        return;
+      }
+
+      bool agreement = true;
+
+      if (ignition::common::PLUGIN_API_VERSION
+          != *_inputAndOutputAPIVersion)
+      {
+        agreement = false;
+      }
+
+      if (sizeof(ignition::common::PluginInfo)
+          != *_inputAndOutputPluginInfoSize)
+      {
+        agreement = false;
+      }
+
+      if (alignof(ignition::common::PluginInfo)
+          != *_inputAndOutputPluginInfoAlign)
+      {
+        agreement = false;
+      }
+
+      *_inputAndOutputAPIVersion = ignition::common::PLUGIN_API_VERSION;
+      *_inputAndOutputPluginInfoSize = sizeof(ignition::common::PluginInfo);
+      *_inputAndOutputPluginInfoAlign = alignof(ignition::common::PluginInfo);
+
+      // If the size, alignment, or API do not agree, we should return without
+      // outputting any of the plugin info; otherwise, we could get a
+      // segmentation fault.
+      //
+      // We will return the current API version to the PluginLoader, and it may
+      // then decide to attempt the call to this function again with the correct
+      // API version if it supports backwards/forwards compatibility.
+      if(!agreement)
+        return;
+
+      PluginInfoMap *output = static_cast<PluginInfoMap*>(_outputAllInfo);
+      *output = pluginMap;
+    }
+  }
+}
+
 namespace ignition
 {
   namespace common
   {
     namespace detail
     {
-      //////////////////////////////////////////////////
-      class PluginRegistrar
+
+      template <typename PluginClass, typename Interface>
+      void RegisterPlugin(const std::string &_pluginName,
+                          const std::string &_interfaceName)
       {
-        public: template<typename Plugin, typename Interface>
-        void Register(const std::string &_derivedName,
-                      const std::string &_interfaceName)
-        {
-          PluginRegister::iterator plugin_it;
-          bool inserted;
+        PluginInfo info;
 
-          std::tie(plugin_it, inserted) =
-              pluginRegister.insert(std::make_pair(_derivedName, PluginInfo()));
+        // Set the name of the plugin
+        info.name = _pluginName;
 
-          PluginInfo &info = plugin_it->second;
+        // Create a factory for generating new plugin instances
+        info.factory = []() {
+          return static_cast<void*>(new PluginClass);
+        };
 
-          if(inserted)
-          {
-            // This Plugin has not been seen by the registrar before, so we need
-            // to fill in the plugin-wide info members.
-            info.name = _derivedName;
+        IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
+        // Create a deleter to clean up destroyed instances
+        info.deleter = [](void *ptr) {
+          delete static_cast<PluginClass*>(ptr);
+        };
+        IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
 
-            // Create a factory for generating new plugin instances
-            info.factory = []() {
-              return static_cast<void*>(new Plugin);
-            };
+        // Provide a map from the plugin to its interface
+        info.interfaces.insert(std::make_pair(
+              _interfaceName,
+              [=](void* v_ptr) {
+                  PluginClass *d_ptr = static_cast<PluginClass*>(v_ptr);
+                  return static_cast<Interface*>(d_ptr);
+              }));
 
-            IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
-            // Create a deleter to clean up destroyed instances
-            info.deleter = [](void *ptr) {
-              delete static_cast<Plugin*>(ptr);
-            };
-            IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
-          }
-
-          // Provide a map from the plugin to its interface
-          info.interfaces.insert(std::make_pair(
-                _interfaceName,
-                [=](void* v_ptr) {
-                    Plugin *d_ptr = static_cast<Plugin*>(v_ptr);
-                    return static_cast<Interface*>(d_ptr);
-                }));
-        }
-
-        using Map = std::unordered_map<std::string, PluginInfo>;
-
-        inline const Map &GetPlugins()
-        {
-          return pluginRegister;
-        }
-
-        private: Map pluginRegister;
-      };
-
-      extern PluginRegistrar libraryPluginRegistrar;
+        // Send this information as input to this library's global repository
+        // of plugins.
+        IGNCOMMONInputOrOutputPluginInfo(
+              &info, nullptr, nullptr, nullptr, nullptr);
+      }
     }
-  }
-}
-
-extern "C"
-{
-  extern std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONMultiPluginInfo(
-      void *_outputInfo, const std::size_t _pluginId, const std::size_t _size)
-  {
-    if(_size != sizeof(ignition::common::PluginInfo))
-    {
-      return 0u;
-    }
-
-    const ignition::common::detail::PluginRegistrar::Map &plugins =
-        ignition::common::detail::libraryPluginRegistrar.GetPlugins();
-
-    ignition::common::PluginInfo *plugin =
-        static_cast<ignition::common::PluginInfo*>(_outputInfo);
-
-    // Probably not the most efficient way to grab plugins, but it is effective
-    ignition::common::detail::PluginRegistrar::Map::iterator it =
-        plugins.begin();
-    for(std::size_t i=0; i < _pluginId; ++i)
-    {
-      ++it;
-      if(it == plugins.end())
-        break;
-    }
-
-    if(it == plugins.end())
-      return plugins.size();
-
-    *plugin = it->second;
-
-    return plugins.size();
   }
 }
 
@@ -144,86 +175,66 @@ extern "C"
       #interfaceName " must be fully qualified like ::ns::MyClass"); \
   static constexpr const char* IGNCOMMONInterfaceName = #interfaceName;
 
-/// \brief Register the PluginInfo meta data
-#define DETAIL_IGN_COMMON_REGISTER_PLUGININFO_META_DATA \
-  extern "C" { \
-    std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONPluginInfoSize = \
-      sizeof(ignition::common::PluginInfo); \
-    \
-    std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONPluginInfoAlignment = \
-      alignof(ignition::common::PluginInfo); \
-    \
-    int DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONPluginAPIVersion = \
-      ignition::common::PLUGIN_API_VERSION; \
-  }
 
-
-#define DETAIL_IGN_COMMON_BEGIN_ADDING_PLUGINS \
-  DETAIL_IGN_COMMON_REGISTER_PLUGININFO_META_DATA \
-  struct IGN_macro_must_be_used_in_global_namespace;\
-  static_assert(std::is_same < IGN_macro_must_be_used_in_global_namespace, \
-      ::IGN_macro_must_be_used_in_global_namespace>::value, \
+#define DETAIL_IGN_COMMON_ADD_PLUGIN_HELPER(UniqueID, pluginName, interface) \
+  /* This struct attempts to make sure that the macro is being called from */ \
+  /* a global namespace */ \
+  struct IGN_macro_must_be_used_in_global_namespace##UniqueID; \
+  static_assert(std::is_same < IGN_macro_must_be_used_in_global_namespace##UniqueID, \
+      ::IGN_macro_must_be_used_in_global_namespace##UniqueID>::value, \
       "Macro for registering plugins must be used in global namespace"); \
-  extern "C" std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONMultiPluginInfo( \
-      void *_outputInfo, const std::size_t _pluginId, const std::size_t _size) \
-  { \
-    if (_size != sizeof(ignition::common::PluginInfo)) \
-    { \
-      return 0u; \
-    } \
-    std::size_t pluginCount = 0; \
-    std::unordered_set<std::string> visitedPlugins; \
-    ignition::common::PluginInfo *plugin = \
-        static_cast<ignition::common::PluginInfo*>(_outputInfo); \
-    plugin->name.clear();
-
-
-#define DETAIL_IGN_COMMON_ADD_PLUGIN(pluginName, interface) \
-  /* cppcheck-suppress */ \
-  static_assert(std::is_same<pluginName, ::pluginName>::value, \
-      #pluginName " must be fully qualified like ::ns::MyClass"); \
-  static_assert(std::is_same<interface, ::interface>::value, \
-      #interface " must be fully qualified like ::ns::MyClass"); \
   \
+  /* Attempt to ensure that the user provides fully-qualified class names */ \
+  static_assert(std::is_same<pluginName, ::pluginName>::value, \
+                #pluginName " must be fully qualified like ::ns::MyClass"); \
+  static_assert(std::is_same<interface, ::interface>::value, \
+                #interface " must be fully qualified like ::ns::MyClass"); \
+  \
+  /* Print out a clear error when the plugin class is pure abstract (which */ \
+  /* would make it impossible to load as a plugin). The compiler prevents */ \
+  /* this from being an issue, but its printout might be difficult for */ \
+  /* users to interpret, so we provide a very explicit explanation here. */ \
   static_assert(!std::is_abstract<pluginName>::value, \
       "[" #pluginName "] must not be an abstract class. It contains at least " \
       "one pure virtual function!"); \
+  \
+  /* Print out a clear error when the plugin does not actually provide the */ \
+  /* specified interface. */ \
   static_assert(std::is_base_of<interface, pluginName>::value, \
       "[" #interface "] is not a base class of [" #pluginName "], so it " \
       "cannot be used as a plugin interface for [" #pluginName "]!"); \
-  { \
-    const bool insertion = visitedPlugins.insert(#pluginName).second; \
-    if (insertion) \
-    { \
-      ++pluginCount; \
-      if (_pluginId == pluginCount - 1) \
-      { \
-        plugin->name = #pluginName; \
-        plugin->factory = []() { \
-          return static_cast<void*>(new pluginName()); \
-        }; \
-        plugin->deleter = [](void* ptr) { \
-          delete static_cast< pluginName* >(ptr); \
-        }; \
-      } \
-    } \
   \
-    if ( #pluginName == plugin->name ) \
+  namespace ignition \
+  { \
+    namespace common \
     { \
-      plugin->interfaces.insert(std::make_pair( \
-          #interface , [=](void* v_ptr) { \
-              pluginName * d_ptr = static_cast< pluginName *>(v_ptr); \
-              return static_cast< interface *>(d_ptr); \
-          })); \
+      namespace \
+      { \
+        struct ExecuteWhenLoadingLibrary##UniqueID \
+        { \
+          ExecuteWhenLoadingLibrary##UniqueID() \
+          { \
+            ignition::common::detail::RegisterPlugin<pluginName, interface>( \
+              #pluginName, #interface); \
+          } \
+        }; \
+  \
+        static ExecuteWhenLoadingLibrary##UniqueID execute##UniqueID;\
+      } \
     } \
   }
 
 
-#define DETAIL_IGN_COMMON_FINISH_ADDING_PLUGINS \
-    if (_pluginId > pluginCount) \
-      return 0u; \
-    return pluginCount - _pluginId; \
-  } \
+/// This macro is needed to force the __COUNTER__ macro to expand to a value
+/// before being passed to the *_HELPER macro.
+#define DETAIL_IGN_COMMON_ADD_PLUGIN_WITH_COUNTER(UniqueID, pluginName, interface) \
+  DETAIL_IGN_COMMON_ADD_PLUGIN_HELPER(UniqueID, pluginName, interface)
+
+
+/// We use the __COUNTER__ here to give each plugin instantiation its own unique
+/// name, which is required in order to statically initialize each one.
+#define DETAIL_IGN_COMMON_ADD_PLUGIN(pluginName, interface) \
+  DETAIL_IGN_COMMON_ADD_PLUGIN_WITH_COUNTER(__COUNTER__, pluginName, interface)
 
 
 #endif

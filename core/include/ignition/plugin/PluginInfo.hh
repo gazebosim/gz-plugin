@@ -55,6 +55,11 @@ namespace ignition
       /// \brief A method that safely deletes an instance of the plugin
       std::function<void(void*)> deleter;
     };
+
+    /// This typedef is used simultaneously by detail/RegisterPlugin.hh and
+    /// PluginLoader.cc, so we store it in a location that is visible to both
+    /// of them.
+    using PluginInfoMap = std::unordered_map<std::string, ignition::common::PluginInfo>;
   }
 }
 
