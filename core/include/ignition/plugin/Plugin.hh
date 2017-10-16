@@ -50,7 +50,15 @@ namespace ignition
               const Interface *GetInterface() const;
 
       /// \brief Get an interface with the given name, casted to the specified
-      /// class type.
+      /// class type. The template argument Interface must exactly match the
+      /// underlying type associated with _interfaceName, or else the behavior
+      /// of this function is undefined.
+      ///
+      /// \param[in] _interfaceName The name of the desired interface, as a
+      /// string.
+      /// \return A reference to the interface cased to the specified Interface
+      /// type. If the requested _interfaceName is not provided by this Plugin,
+      /// this returns a nullptr.
       public: template <class Interface>
               Interface *GetInterface(const std::string &_interfaceName);
 
@@ -63,7 +71,7 @@ namespace ignition
       /// this function only works when the Interface type is specialized using
       /// the macro IGN_COMMON_SPECIALIZE_INTERFACE. For more general interfaces
       /// which do not meet this condition, use
-      /// as_shared_ptr<Interface>(_interfaceName).
+      /// as_shared_ptr<Interface>(const std::string&).
       public: template <class Interface>
               std::shared_ptr<Interface> as_shared_ptr();
 
@@ -72,7 +80,13 @@ namespace ignition
       public: template <class Interface>
               std::shared_ptr<const Interface> as_shared_ptr() const;
 
-      /// \brief Get the requested interface as a std::shared_ptr.
+      /// \brief Get the requested interface as a std::shared_ptr. The template
+      /// argument Interface must exactly match the underlying type associated
+      /// with _interfaceName, or else the behavior of this function is
+      /// undefined.
+      ///
+      /// \param[in] _interfaceName The name of the desired interface, as a
+      /// string.
       public: template <class Interface>
               std::shared_ptr<Interface> as_shared_ptr(
                   const std::string &_interfaceName);
@@ -92,7 +106,10 @@ namespace ignition
               bool HasInterface() const;
 
       /// \brief Returns true if this Plugin has the specified type of
-      /// interface.
+      /// interface, otherwise returns false.
+      ///
+      /// \param[in] _interfaceName The name of the desired interface, as a
+      /// string.
       public: bool HasInterface(const std::string &_interfaceName) const;
 
 
@@ -123,7 +140,7 @@ namespace ignition
       /// \brief The InterfaceMap type needs to get used in several places, like
       /// PluginPrivate and SpecializedPlugin<T>. We make the typedef public so
       /// that those other classes can use it without needing to be friends of
-      /// Plugin.
+      /// Plugin. End-users should not have any need for this typedef.
       public: using InterfaceMap = std::map<std::string, void*>;
 
       /// \brief Get or create an iterator to the std::map that holds pointers
