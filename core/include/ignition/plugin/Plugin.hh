@@ -100,7 +100,7 @@ namespace ignition
 
       template <class> friend class TemplatePluginPtr;
       template <class...> friend class SpecializedPlugin;
-      template <class...> friend class detail::ComposePlugin;
+      template <class, class> friend class detail::ComposePlugin;
 
       /// \brief Default constructor. This is kept private to ensure that
       /// Plugins are always managed by a PluginPtr object.
