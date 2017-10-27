@@ -104,6 +104,10 @@ namespace ignition
       template <class, class> friend class detail::ComposePlugin;
       template <class> friend class TemplatePluginPtr;
 
+      /// \brief type is an empty placeholder class which is used by the private
+      /// member functions to provide two overloads: a high-performance one for
+      /// SpecInterface, and a normal-performance one for all other Interface
+      /// types.
       private: template <class T> struct type { };
 
       /// \brief Delegate the function to the standard Plugin method
