@@ -198,7 +198,13 @@ namespace ignition
           this->dataPtr->plugins.find(plugin);
 
       if (this->dataPtr->plugins.end() == it)
+      {
+        ignerr << "Failed to get info for plugin ["
+               << plugin
+               << "] since it has not been loaded."
+               << std::endl;
         return nullptr;
+      }
 
       return &(it->second);
     }
