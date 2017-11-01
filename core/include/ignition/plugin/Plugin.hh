@@ -41,13 +41,13 @@ namespace ignition
       /// \brief Get an interface of the specified type. Note that this function
       /// only works when the Interface type is specialized using the macro
       /// IGN_COMMON_SPECIALIZE_INTERFACE. For more general  interfaces which do
-      /// not meet this condition, use GetInterface<Interface>(_interfaceName).
+      /// not meet this condition, use QueryInterface<Interface>(_interfaceName).
       public: template <class Interface>
-              Interface *GetInterface();
+              Interface *QueryInterface();
 
-      /// \brief const-qualified version of GetInterface<Interface>()
+      /// \brief const-qualified version of QueryInterface<Interface>()
       public: template <class Interface>
-              const Interface *GetInterface() const;
+              const Interface *QueryInterface() const;
 
       /// \brief Get an interface with the given name, casted to the specified
       /// class type. The template argument Interface must exactly match the
@@ -60,11 +60,11 @@ namespace ignition
       /// type. If the requested _interfaceName is not provided by this Plugin,
       /// this returns a nullptr.
       public: template <class Interface>
-              Interface *GetInterface(const std::string &_interfaceName);
+              Interface *QueryInterface(const std::string &_interfaceName);
 
-      /// \brief const-qualified version of GetInterface<Interface>(std::string)
+      /// \brief const-qualified version of QueryInterface<Interface>(std::string)
       public: template <class Interface>
-              const Interface *GetInterface(
+              const Interface *QueryInterface(
                   const std::string &_interfaceName) const;
 
       /// \brief Get the requested interface as a std::shared_ptr. Note that
@@ -101,7 +101,7 @@ namespace ignition
       /// interface. Note that this function only works when the Interface type
       /// is specialized using the macro IGN_COMMON_SPECIALIZE_INTERFACE. For
       /// more general interfaces which do not meet this condition, use
-      /// GetInterface<Interface>(_interfaceName).
+      /// QueryInterface<Interface>(_interfaceName).
       public: template <class Interface>
               bool HasInterface() const;
 
