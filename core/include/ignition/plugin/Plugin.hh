@@ -23,7 +23,7 @@
 #include <map>
 #include <string>
 
-#include <ignition/common/System.hh>
+#include <ignition/common/Export.hh>
 
 namespace ignition
 {
