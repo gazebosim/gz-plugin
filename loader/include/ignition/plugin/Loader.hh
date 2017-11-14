@@ -24,7 +24,7 @@
 #include <typeinfo>
 #include <unordered_set>
 
-#include "ignition/common/System.hh"
+#include <ignition/common/Export.hh>
 
 namespace ignition
 {
