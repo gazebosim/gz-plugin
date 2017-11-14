@@ -273,7 +273,10 @@ namespace ignition
       if (sizeof(PluginInfo) == size && alignof(PluginInfo) == alignment)
       {
         using PluginLoadFunctionSignature =
-            std::size_t(*)(void * const, std::size_t, std::size_t);
+            std::size_t(*)(void * const,
+                           const void * const,
+                           const std::size_t,
+                           const std::size_t);
 
         // Info here is a function which matches the function signature defined
         // by PluginLoadFunctionSignature. Info(~) will be used to extract the
@@ -281,9 +284,11 @@ namespace ignition
         auto Info = reinterpret_cast<PluginLoadFunctionSignature>(multiInfoPtr);
 
         PluginInfo plugin;
+        std::allocator<char> allocator;
         void *vPlugin = static_cast<void *>(&plugin);
+        void *vAllocator = static_cast<void *>(&allocator);
         size_t id = 0;
-        while (Info(vPlugin, id, sizeof(PluginInfo)) > 0)
+        while (Info(vPlugin, vAllocator, id, sizeof(PluginInfo)) > 0)
         {
           loadedPlugins.push_back(plugin);
           ++id;
