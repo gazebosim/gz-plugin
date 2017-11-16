@@ -28,7 +28,7 @@ namespace ignition
   {
     //////////////////////////////////////////////////
     template <class Interface>
-    Interface *Plugin::GetInterface()
+    Interface *Plugin::QueryInterface()
     {
       return static_cast<Interface*>(
             this->PrivateGetInterface(Interface::IGNCOMMONInterfaceName));
@@ -36,7 +36,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <class Interface>
-    const Interface *Plugin::GetInterface() const
+    const Interface *Plugin::QueryInterface() const
     {
       return static_cast<const Interface*>(
             this->PrivateGetInterface(Interface::IGNCOMMONInterfaceName));
@@ -44,7 +44,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <class Interface>
-    Interface *Plugin::GetInterface(const std::string &_interfaceName)
+    Interface *Plugin::QueryInterface(const std::string &_interfaceName)
     {
       return static_cast<Interface*>(
             this->PrivateGetInterface(_interfaceName));
@@ -52,7 +52,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <class Interface>
-    const Interface *Plugin::GetInterface(
+    const Interface *Plugin::QueryInterface(
         const std::string &_interfaceName) const
     {
       return static_cast<const Interface*>(
@@ -78,7 +78,7 @@ namespace ignition
     std::shared_ptr<Interface> Plugin::as_shared_ptr(
         const std::string &_interfaceName)
     {
-      Interface *ptr = this->GetInterface<Interface>(_interfaceName);
+      Interface *ptr = this->QueryInterface<Interface>(_interfaceName);
       if (ptr)
         return std::shared_ptr<Interface>(this->PrivateGetInstancePtr(), ptr);
 
@@ -90,7 +90,7 @@ namespace ignition
     std::shared_ptr<const Interface> Plugin::as_shared_ptr(
         const std::string &_interfaceName) const
     {
-      const Interface *ptr = this->GetInterface<Interface>(_interfaceName);
+      const Interface *ptr = this->QueryInterface<Interface>(_interfaceName);
       if (ptr)
         return std::shared_ptr<Interface>(this->PrivateGetInstancePtr(), ptr);
 
