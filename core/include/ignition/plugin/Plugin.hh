@@ -41,7 +41,16 @@ namespace ignition
       /// \brief Get an interface of the specified type. Note that this function
       /// only works when the Interface type is specialized using the macro
       /// IGN_COMMON_SPECIALIZE_INTERFACE. For more general  interfaces which do
-      /// not meet this condition, use QueryInterface<Interface>(_interfaceName).
+      /// not meet this condition, use
+      /// QueryInterface<Interface>(_interfaceName).
+      ///
+      /// Note that the interface pointer you receive is owned by the Plugin
+      /// object. You MUST NOT ever try to deallocate it yourself. Moreover, the
+      /// pointer will be invalidated once all Plugin objects that refer to the
+      /// same Plugin instance are destructed. Use the QueryInterfaceSharedPtr
+      /// function in order to get a reference-counting pointer to an interface
+      /// of this Plugin object. The pointer will remain valid as long as the
+      /// std::shared_ptr provided by QueryInterfaceSharedPtr is alive.
       public: template <class Interface>
               Interface *QueryInterface();
 
@@ -54,15 +63,25 @@ namespace ignition
       /// underlying type associated with _interfaceName, or else the behavior
       /// of this function is undefined.
       ///
+      /// Note that the interface pointer you receive is owned by the Plugin
+      /// object. You MUST NOT ever try to deallocate it yourself. Moreover, the
+      /// pointer will be invalidated once all Plugin objects that refer to the
+      /// same Plugin instance are destructed. Use the QueryInterfaceSharedPtr
+      /// function in order to get a reference-counting pointer to an interface
+      /// of this Plugin object. The pointer will remain valid as long as the
+      /// std::shared_ptr provided by QueryInterfaceSharedPtr is alive.
+      ///
       /// \param[in] _interfaceName The name of the desired interface, as a
       /// string.
-      /// \return A reference to the interface cased to the specified Interface
-      /// type. If the requested _interfaceName is not provided by this Plugin,
-      /// this returns a nullptr.
+      /// \return A raw pointer to the specified interface. If the requested
+      /// _interfaceName is not provided by this Plugin, this returns a nullptr.
+      /// This pointer is invalidated when the reference count of the plugin
+      /// instance drops to zero.
       public: template <class Interface>
               Interface *QueryInterface(const std::string &_interfaceName);
 
-      /// \brief const-qualified version of QueryInterface<Interface>(std::string)
+      /// \brief const-qualified version of
+      /// QueryInterface<Interface>(std::string)
       public: template <class Interface>
               const Interface *QueryInterface(
                   const std::string &_interfaceName) const;
@@ -71,30 +90,42 @@ namespace ignition
       /// this function only works when the Interface type is specialized using
       /// the macro IGN_COMMON_SPECIALIZE_INTERFACE. For more general interfaces
       /// which do not meet this condition, use
-      /// as_shared_ptr<Interface>(const std::string&).
+      /// QueryInterfaceSharedPtr<Interface>(const std::string&).
       public: template <class Interface>
-              std::shared_ptr<Interface> as_shared_ptr();
+              std::shared_ptr<Interface> QueryInterfaceSharedPtr();
 
-      /// \brief Same as as_shared_ptr<Interface>(), but it returns a
+      /// \brief Same as QueryInterfaceSharedPtr<Interface>(), but it returns a
       /// std::shared_ptr to a const-qualified Interface.
       public: template <class Interface>
-              std::shared_ptr<const Interface> as_shared_ptr() const;
+              std::shared_ptr<const Interface> QueryInterfaceSharedPtr() const;
 
       /// \brief Get the requested interface as a std::shared_ptr. The template
       /// argument Interface must exactly match the underlying type associated
       /// with _interfaceName, or else the behavior of this function is
       /// undefined.
       ///
+      /// This std::shared_ptr and the interface+plugin that it refers to will
+      /// remain valid, even if all Plugin objects which refer to the plugin
+      /// instance are destructed.
+      ///
+      /// You MUST NOT attempt to pass a QueryInterface pointer into a
+      /// std::shared_ptr yourself; that will result in double-delete memory
+      /// errors. You must always call QueryInterfaceSharedPtr for a reference-
+      /// counting pointer to an interface.
+      ///
       /// \param[in] _interfaceName The name of the desired interface, as a
       /// string.
+      /// \return A reference-counting pointer to the specified interface. This
+      /// will keep the interface valid and the plugin instance alive, even if
+      /// all Plugin objects that refer to this plugin instance are destructed.
       public: template <class Interface>
-              std::shared_ptr<Interface> as_shared_ptr(
+              std::shared_ptr<Interface> QueryInterfaceSharedPtr(
                   const std::string &_interfaceName);
 
-      /// \brief Same as as_shared_ptr<Interface>(std::string), but it returns a
-      /// std::shared_ptr to a const-qualified Interface.
+      /// \brief Same as QueryInterfaceSharedPtr<Interface>(std::string), but
+      /// it returns a std::shared_ptr to a const-qualified Interface.
       public: template <class Interface>
-              std::shared_ptr<const Interface> as_shared_ptr(
+              std::shared_ptr<const Interface> QueryInterfaceSharedPtr(
                   const std::string &_interfaceName) const;
 
       /// \brief Returns true if this Plugin has the specified type of
