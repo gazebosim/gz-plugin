@@ -273,8 +273,7 @@ namespace ignition
       if (sizeof(PluginInfo) == size && alignof(PluginInfo) == alignment)
       {
         using PluginLoadFunctionSignature =
-            std::size_t(*)(void * const,
-                           const void * const,
+            std::size_t(*)(void * * const,
                            const std::size_t,
                            const std::size_t);
 
@@ -283,14 +282,13 @@ namespace ignition
         // information about each plugin from the loaded library.
         auto Info = reinterpret_cast<PluginLoadFunctionSignature>(multiInfoPtr);
 
-        PluginInfo plugin;
-        std::allocator<char> allocator;
-        void *vPlugin = static_cast<void *>(&plugin);
-        void *vAllocator = static_cast<void *>(&allocator);
+        PluginInfo * ptrToPlugin = nullptr;
+        void ** vPlugin = reinterpret_cast<void **>(&ptrToPlugin);
+        
         size_t id = 0;
-        while (Info(vPlugin, vAllocator, id, sizeof(PluginInfo)) > 0)
+        while (Info(vPlugin, id, sizeof(PluginInfo)) > 0)
         {
-          loadedPlugins.push_back(plugin);
+          loadedPlugins.push_back(*ptrToPlugin);
           ++id;
         }
       }
