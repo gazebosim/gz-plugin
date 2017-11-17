@@ -284,7 +284,7 @@ namespace ignition
 
         PluginInfo * ptrToPlugin = nullptr;
         void ** vPlugin = reinterpret_cast<void **>(&ptrToPlugin);
-        
+
         size_t id = 0;
         while (Info(vPlugin, id, sizeof(PluginInfo)) > 0)
         {
