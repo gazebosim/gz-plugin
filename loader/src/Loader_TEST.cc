@@ -18,7 +18,10 @@
 #include <algorithm>
 #include <gtest/gtest.h>
 #include "ignition/common/PluginLoader.hh"
+#include "ignition/common/SystemPaths.hh"
 
+#include "ignition/common/config.hh"
+#include "test_config.h"
 
 /////////////////////////////////////////////////
 TEST(PluginLoader, InitialNoInterfacesImplemented)
@@ -31,7 +34,31 @@ TEST(PluginLoader, InitialNoInterfacesImplemented)
 TEST(PluginLoader, LoadNonexistantLibrary)
 {
   ignition::common::PluginLoader pm;
-  EXPECT_EQ(std::string(""), pm.LoadLibrary("/path/to/libDoesNotExist.so"));
+  EXPECT_TRUE(pm.LoadLibrary("/path/to/libDoesNotExist.so").empty());
+}
+
+/////////////////////////////////////////////////
+TEST(PluginLoader, LoadNonLibrary)
+{
+  std::string projectPath(PROJECT_BINARY_PATH);
+  ignition::common::PluginLoader pm;
+  EXPECT_TRUE(pm.LoadLibrary(projectPath + "/test_config.h").empty());
+}
+
+/////////////////////////////////////////////////
+TEST(PluginLoader, LoadNonPluginLibrary)
+{
+  std::string projectPath(PROJECT_BINARY_PATH);
+  std::string libraryName("ignition-common");
+  libraryName += std::to_string(IGNITION_COMMON_MAJOR_VERSION);
+
+  ignition::common::SystemPaths sp;
+  sp.AddPluginPaths(projectPath + "/src");
+  std::string path = sp.FindSharedLibrary(libraryName);
+  ASSERT_FALSE(path.empty());
+
+  ignition::common::PluginLoader pm;
+  EXPECT_TRUE(pm.LoadLibrary(path).empty());
 }
 
 /////////////////////////////////////////////////
