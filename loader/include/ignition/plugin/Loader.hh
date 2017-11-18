@@ -77,8 +77,10 @@ namespace ignition
       private: const PluginInfo *PrivateGetPluginInfo(
                   const std::string &_pluginName) const;
 
+      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to class implementation
       private: std::unique_ptr<PluginLoaderPrivate> dataPtr;
+      IGN_COMMON_WARN_RESTORE(DLL_INTERFACE_MISSING)
     };
   }
 }
