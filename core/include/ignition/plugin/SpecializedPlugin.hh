@@ -54,7 +54,7 @@ namespace ignition
     ///
     /// Then, calling the function
     ///
-    ///     plugin->GetInterface<FooInterface>();
+    ///     plugin->QueryInterface<FooInterface>();
     ///
     /// will have extremely low cost associated with it. It will provide direct
     /// access to the the `FooInterface*` of `plugin`. If `plugin` does not
@@ -72,25 +72,25 @@ namespace ignition
       // -------------------- Public API ---------------------
 
       // Inherit function overloads
-      public: using Plugin::GetInterface;
-      public: using Plugin::as_shared_ptr;
+      public: using Plugin::QueryInterface;
+      public: using Plugin::QueryInterfaceSharedPtr;
       public: using Plugin::HasInterface;
 
       // Documentation inherited
       public: template <class Interface>
-              Interface *GetInterface();
+              Interface *QueryInterface();
 
       // Documentation inherited
       public: template <class Interface>
-              const Interface *GetInterface() const;
+              const Interface *QueryInterface() const;
 
       // Documentation inherited
       public: template <class Interface>
-              std::shared_ptr<Interface> as_shared_ptr();
+              std::shared_ptr<Interface> QueryInterfaceSharedPtr();
 
       // Documentation inherited
       public: template <class Interface>
-              std::shared_ptr<const Interface> as_shared_ptr() const;
+              std::shared_ptr<const Interface> QueryInterfaceSharedPtr() const;
 
       // Documentation inherited
       public: template <class Interface>
