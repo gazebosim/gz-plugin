@@ -52,7 +52,8 @@ namespace ignition
     /////////////////////////////////////////////////
     template <class SpecInterface>
     template <class Interface>
-    std::shared_ptr<Interface> SpecializedPlugin<SpecInterface>::QueryInterfaceSharedPtr()
+    std::shared_ptr<Interface>
+    SpecializedPlugin<SpecInterface>::QueryInterfaceSharedPtr()
     {
       Interface *ptr = this->QueryInterface<Interface>();
       if (ptr)
