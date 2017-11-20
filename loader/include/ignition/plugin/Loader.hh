@@ -81,7 +81,7 @@ namespace ignition
       IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to class implementation
       private: std::unique_ptr<PluginLoaderPrivate> dataPtr;
-      IGN_COMMON_WARN_RESTORE(DLL_INTERFACE_MISSING)
+      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }
