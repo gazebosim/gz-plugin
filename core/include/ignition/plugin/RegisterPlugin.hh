@@ -21,35 +21,6 @@
 
 #include "ignition/common/detail/RegisterPlugin.hh"
 
-// --------------- Specialize a plugin interface (optional) -------------------
-
-/// \brief Call this macro inside a public scope of an interface in order to get
-/// performance benefits for that interface in a SpecializedPlugin. Pass in
-/// the fully qualified name of the interface class (i.e. explicitly include the
-/// namespaces of the class).
-///
-/// Usage example:
-///
-///     namespace mylibrary {
-///       namespace ns {
-///         class SomeInterface
-///         {
-///           public:
-///             IGN_COMMON_SPECIALIZE_INTERFACE(mylibrary::ns::SomeInterface)
-///           // ... declarations of interface functions ...
-///         };
-///       } // namespace ns
-///     } // namespace mylibrary
-///
-/// Interfaces with this macro can be utilized by SpecializedPlugin to get
-/// low cost access to this type of interface. Note that this performance
-/// benefit is available even if the plugin that gets loaded does not offer this
-/// interface; you just get low cost access to a nullptr instead. Always be sure
-/// to verify the existence of an interface that you query from a plugin by
-/// checking whether it's a nullptr!
-#define IGN_COMMON_SPECIALIZE_INTERFACE(interfaceName)\
-  DETAIL_IGN_COMMON_SPECIALIZE_INTERFACE(interfaceName)
-
 
 // ------------- Add a set of plugins or a set of interfaces ------------------
 
@@ -61,8 +32,8 @@
 
 // -------------- Add a single plugin with a single interface -----------------
 
-/// \brief Same as IGN_COMMON_ADD_PLUGIN(~,~), currently exists for backwards
-/// compatibility.
+/// \brief Same as IGN_COMMON_ADD_PLUGIN(~,~). This macro currently exists for
+/// backwards API compatibility.
 #define IGN_COMMON_REGISTER_SINGLE_PLUGIN(plugin, interface) \
     IGN_COMMON_ADD_PLUGIN(plugin, interface)
 

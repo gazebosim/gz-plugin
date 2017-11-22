@@ -15,7 +15,6 @@
  *
  */
 
-
 #ifndef IGNITION_COMMON_PLUGINLOADER_HH_
 #define IGNITION_COMMON_PLUGINLOADER_HH_
 
@@ -54,7 +53,15 @@ namespace ignition
       /// \returns interfaces that are implemented
       public: std::unordered_set<std::string> InterfacesImplemented() const;
 
-      /// \brief get plugin names that implement the interface
+      /// \brief Get plugin names that implement the specified interface
+      /// \return names of plugins that implement the interface.
+      public: template <typename Interface>
+      std::unordered_set<std::string> PluginsImplementing() const;
+
+      /// \brief Get plugin names that implement the specified interface string.
+      /// Note that the templated version of this function is recommended
+      /// instead of this version, because the string of an interface name will
+      /// be mangled based on compiler-dependent implementation details.
       /// \param[in] _interface name of an interface
       /// \returns names of plugins that implement the interface
       public: std::unordered_set<std::string> PluginsImplementing(
@@ -82,5 +89,7 @@ namespace ignition
     };
   }
 }
+
+#include <ignition/common/detail/PluginLoader.hh>
 
 #endif

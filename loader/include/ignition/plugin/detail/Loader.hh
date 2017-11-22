@@ -15,28 +15,21 @@
  *
  */
 
-#ifndef IGNITION_COMMON_PLUGINUTILS_HH_
-#define IGNITION_COMMON_PLUGINUTILS_HH_
+#ifndef IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
+#define IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
 
-#include <string>
-#include "ignition/common/StringUtils.hh"
+#include <ignition/common/PluginLoader.hh>
 
 namespace ignition
 {
   namespace common
   {
-    /// \brief format the name to start with "::"
-    inline std::string NormalizeName(const std::string &_name)
+    template <typename Interface>
+    std::unordered_set<std::string> PluginLoader::PluginsImplementing() const
     {
-      std::string name = _name;
-      if (!StartsWith(_name, "::"))
-      {
-        name = std::string("::") + _name;
-      }
-      return name;
+      return this->PluginsImplementing(typeid(Interface).name());
     }
   }
 }
-
 
 #endif

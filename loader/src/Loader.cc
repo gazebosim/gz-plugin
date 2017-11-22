@@ -29,27 +29,33 @@
 #include "ignition/common/Util.hh"
 #include "ignition/common/Plugin.hh"
 
-#include "PluginUtils.hh"
-
 namespace ignition
 {
   namespace common
   {
-  /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
     /// \brief PIMPL Implementation of the PluginLoader class
     class PluginLoaderPrivate
     {
+      /// \brief Attempt to load a library at the given path.
+      /// \param[in] _pathToLibrary The full path to the desired library
+      /// \return If a library exists at the given path, get a point to its dl
+      /// handle. If the library does not exist, get a nullptr.
+      public: void *LoadLibrary(const std::string &_pathToLibrary) const;
+
+      /// \brief Using a dl handle produced by LoadLibrary, extract the
+      /// PluginInfo from the loaded library.
+      /// \param[in] _dlHandle A handle produced by LoadLibrary
+      /// \param[in] _pathToLibrary The path that the library was loaded from
+      /// (used for debug purposes)
+      /// \return All the PluginInfo provided by the loaded library.
+      public: std::vector<PluginInfo> LoadPlugins(
+        void *_dlHandle, const std::string& _pathToLibrary) const;
+
       public: using PluginMap = std::unordered_map<std::string, PluginInfo>;
 
       /// \brief A map from known plugin names to their PluginInfo
       public: PluginMap plugins;
-
-      /// \brief attempt to load a library at the given path
-      public: void *LoadLibrary(const std::string &_pathToLibrary) const;
-
-      /// \brief get all the plugin info for a library
-      public: std::vector<PluginInfo> LoadPlugins(
-        void *_dlHandle, const std::string& _pathToLibrary) const;
     };
 
     /////////////////////////////////////////////////
@@ -63,13 +69,13 @@ namespace ignition
         pretty << "\t\t" << interface << std::endl;
 
       pretty << "\tKnown Plugins: " << dataPtr->plugins.size() << std::endl;
-      for (const auto& pair : dataPtr->plugins)
+      for (const auto &pair : dataPtr->plugins)
       {
-        const PluginInfo& plugin = pair.second;
-        const size_t i_size = plugin.interfaces.size();
+        const PluginInfo &plugin = pair.second;
+        const size_t iSize = plugin.interfaces.size();
         pretty << "\t\t[" << plugin.name << "] which implements "
-               << i_size << PluralCast(" interface", i_size) << ":\n";
-        for (const auto& interface : plugin.interfaces)
+               << iSize << PluralCast(" interface", iSize) << ":\n";
+        for (const auto &interface : plugin.interfaces)
           pretty << "\t\t\t" << interface.first << "\n";
       }
       pretty << std::endl;
@@ -110,21 +116,8 @@ namespace ignition
         std::vector<PluginInfo> loadedPlugins = this->dataPtr->LoadPlugins(
               dlHandle, _pathToLibrary);
 
-        for (PluginInfo &plugin : loadedPlugins)
+        for (const PluginInfo &plugin : loadedPlugins)
         {
-          if (plugin.name.empty())
-            continue;
-
-          plugin.name = NormalizeName(plugin.name);
-
-          PluginInfo::InterfaceCastingMap normalizedMap;
-          normalizedMap.reserve(plugin.interfaces.size());
-          for (const auto &interface : plugin.interfaces)
-            normalizedMap.insert(std::make_pair(
-                     NormalizeName(interface.first),
-                     interface.second));
-          plugin.interfaces = normalizedMap;
-
           this->dataPtr->plugins.insert(std::make_pair(plugin.name, plugin));
           newPlugins.insert(plugin.name);
         }
@@ -159,11 +152,10 @@ namespace ignition
     std::unordered_set<std::string> PluginLoader::PluginsImplementing(
         const std::string &_interface) const
     {
-      const std::string interface = NormalizeName(_interface);
       std::unordered_set<std::string> plugins;
       for (auto const &plugin : this->dataPtr->plugins)
       {
-        if (plugin.second.interfaces.find(interface) !=
+        if (plugin.second.interfaces.find(_interface) !=
            plugin.second.interfaces.end())
           plugins.insert(plugin.second.name);
       }
@@ -184,10 +176,8 @@ namespace ignition
     const PluginInfo *PluginLoader::PrivateGetPluginInfo(
         const std::string &_pluginName) const
     {
-      const std::string plugin = NormalizeName(_pluginName);
-
       PluginLoaderPrivate::PluginMap::const_iterator it =
-          this->dataPtr->plugins.find(plugin);
+          this->dataPtr->plugins.find(_pluginName);
 
       if (this->dataPtr->plugins.end() == it)
         return nullptr;
@@ -205,7 +195,7 @@ namespace ignition
 
     /////////////////////////////////////////////////
     std::vector<PluginInfo> PluginLoaderPrivate::LoadPlugins(
-        void *_dlHandle, const std::string& _pathToLibrary) const
+        void *_dlHandle, const std::string &_pathToLibrary) const
     {
       std::vector<PluginInfo> loadedPlugins;
 
@@ -229,17 +219,43 @@ namespace ignition
       }
 
       using PluginLoadFunctionSignature =
-          void(*)(void * const, void *, int *, std::size_t *, std::size_t *);
+          void(*)(void * const, const void ** const,
+                  int *, std::size_t *, std::size_t *);
 
+      // Note: Info (below) is a function with a signature that matches
+      // PluginLoadFunctionSignature.
       auto Info = reinterpret_cast<PluginLoadFunctionSignature>(infoFuncPtr);
 
       int version = PLUGIN_API_VERSION;
       std::size_t size = sizeof(PluginInfo);
       std::size_t alignment = alignof(PluginInfo);
-      PluginInfoMap allInfo;
+      const PluginInfoMap *allInfo = nullptr;
 
-      void *vAllInfo = static_cast<void *>(&allInfo);
-      Info(nullptr, vAllInfo, &version, &size, &alignment);
+      // Note: static_cast cannot be used to convert from a T** to a void**
+      // because of the possibility of breaking the type system by assigning a
+      // Non-T pointer to the T* memory location. However, we need to retrieve
+      // a reference to an STL-type using a C-compatible function signature, so
+      // we resort to a reinterpret_cast to achieve this.
+      //
+      // Despite its many dangers, reinterpret_cast is well-defined for casting
+      // between pointer types as of C++11, as explained in bullet point 1 of
+      // the "Explanation" section in this reference:
+      // http://en.cppreference.com/w/cpp/language/reinterpret_cast
+      //
+      // We have a tight grip over the implementation of how the `allInfo`
+      // pointer gets used, so we do not need to worry about its memory address
+      // being filled with a non-compatible type. The only risk would be if a
+      // user decides to implement their own version of
+      // IGNCOMMONInputOrOutputPluginInfo, but they surely would have no
+      // incentive in doing that.
+      //
+      // Also note that the main reason we jump through these hoops is in order
+      // to safely support plugin libraries on Windows that choose to compile
+      // against the static runtime. Using this pointer-to-a-pointer approach is
+      // the cleanest way to ensure that all dynamically allocated objects are
+      // deleted in the same heap that they were allocated from.
+      Info(nullptr, reinterpret_cast<const void** const>(&allInfo),
+           &version, &size, &alignment);
 
       if (ignition::common::PLUGIN_API_VERSION != version)
       {
@@ -267,7 +283,17 @@ namespace ignition
         return loadedPlugins;
       }
 
-      for(const PluginInfoMap::value_type &info : allInfo)
+      if (!allInfo)
+      {
+        ignerr << "The library [" << _pathToLibrary << "] failed to provide "
+               << "PluginInfo for unknown reasons. Please report this error as "
+               << "a bug!\n";
+        assert(false);
+
+        return loadedPlugins;
+      }
+
+      for(const PluginInfoMap::value_type &info : *allInfo)
       {
         loadedPlugins.push_back(info.second);
       }

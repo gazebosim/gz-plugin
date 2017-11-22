@@ -23,8 +23,9 @@
 #include <typeinfo>
 #include <type_traits>
 #include <unordered_set>
-#include "ignition/common/PluginInfo.hh"
-#include "ignition/common/SuppressWarning.hh"
+#include <ignition/common/PluginInfo.hh>
+#include <ignition/common/SuppressWarning.hh>
+
 
 #if defined _WIN32 || defined __CYGWIN__
   #ifdef __GNUC__
@@ -43,7 +44,7 @@
 extern "C"
 {
   inline void DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONInputOrOutputPluginInfo(
-      const void *_inputSingleInfo, void *_outputAllInfo,
+      const void *_inputSingleInfo, const void ** const _outputAllInfo,
       int *_inputAndOutputAPIVersion,
       std::size_t *_inputAndOutputPluginInfoSize,
       std::size_t *_inputAndOutputPluginInfoAlign)
@@ -119,8 +120,7 @@ extern "C"
       if(!agreement)
         return;
 
-      PluginInfoMap *output = static_cast<PluginInfoMap*>(_outputAllInfo);
-      *output = pluginMap;
+      *_outputAllInfo = &pluginMap;
     }
   }
 }
@@ -133,8 +133,7 @@ namespace ignition
     {
 
       template <typename PluginClass, typename Interface>
-      void RegisterPlugin(const std::string &_pluginName,
-                          const std::string &_interfaceName)
+      void RegisterPlugin(const std::string &_pluginName)
       {
         PluginInfo info;
 
@@ -155,7 +154,7 @@ namespace ignition
 
         // Provide a map from the plugin to its interface
         info.interfaces.insert(std::make_pair(
-              _interfaceName,
+              typeid(Interface).name(),
               [=](void* v_ptr) {
                   PluginClass *d_ptr = static_cast<PluginClass*>(v_ptr);
                   return static_cast<Interface*>(d_ptr);
@@ -170,25 +169,8 @@ namespace ignition
   }
 }
 
-#define DETAIL_IGN_COMMON_SPECIALIZE_INTERFACE(interfaceName) \
-  static_assert(std::is_same<interfaceName, ::interfaceName>::value, \
-      #interfaceName " must be fully qualified like ::ns::MyClass"); \
-  static constexpr const char* IGNCOMMONInterfaceName = #interfaceName;
-
 
 #define DETAIL_IGN_COMMON_ADD_PLUGIN_HELPER(UniqueID, pluginName, interface) \
-  /* This struct attempts to make sure that the macro is being called from */ \
-  /* a global namespace */ \
-  struct IGN_macro_must_be_used_in_global_namespace##UniqueID; \
-  static_assert(std::is_same < IGN_macro_must_be_used_in_global_namespace##UniqueID, \
-      ::IGN_macro_must_be_used_in_global_namespace##UniqueID>::value, \
-      "Macro for registering plugins must be used in global namespace"); \
-  \
-  /* Attempt to ensure that the user provides fully-qualified class names */ \
-  static_assert(std::is_same<pluginName, ::pluginName>::value, \
-                #pluginName " must be fully qualified like ::ns::MyClass"); \
-  static_assert(std::is_same<interface, ::interface>::value, \
-                #interface " must be fully qualified like ::ns::MyClass"); \
   \
   /* Print out a clear error when the plugin class is pure abstract (which */ \
   /* would make it impossible to load as a plugin). The compiler prevents */ \
@@ -215,11 +197,11 @@ namespace ignition
           ExecuteWhenLoadingLibrary##UniqueID() \
           { \
             ignition::common::detail::RegisterPlugin<pluginName, interface>( \
-              #pluginName, #interface); \
+              #pluginName); \
           } \
         }; \
   \
-        static ExecuteWhenLoadingLibrary##UniqueID execute##UniqueID;\
+        static ExecuteWhenLoadingLibrary##UniqueID execute##UniqueID; \
       } \
     } \
   }
