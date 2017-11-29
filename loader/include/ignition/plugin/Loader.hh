@@ -49,9 +49,15 @@ namespace ignition
       /// \returns a pretty string
       public: std::string PrettyStr() const;
 
-      /// \brief get names of interfaces that the loader has plugins for
-      /// \returns interfaces that are implemented
+      /// \brief Get demangled names of interfaces that the loader has plugins
+      /// for.
+      /// \returns Demangled names of the interfaces that are implemented
       public: std::unordered_set<std::string> InterfacesImplemented() const;
+
+      enum MangleMode {
+        DEMANGLED = 0,
+        MANGLED
+      };
 
       /// \brief Get plugin names that implement the specified interface
       /// \return names of plugins that implement the interface.
@@ -60,12 +66,21 @@ namespace ignition
 
       /// \brief Get plugin names that implement the specified interface string.
       /// Note that the templated version of this function is recommended
-      /// instead of this version, because the string of an interface name will
-      /// be mangled based on compiler-dependent implementation details.
-      /// \param[in] _interface name of an interface
+      /// instead of this version to avoid confusion about whether a mangled or
+      /// demangled version of a string is being used. Note that the function
+      /// InterfacesImplemented() returns demangled versions of the interface
+      /// names.
+      ///
+      /// If you want to pass in a mangled version of an interface name, e.g.
+      /// the result that would be produced by typeid(T).name(), then set `mode`
+      /// to PluginLoader::MANGLED.
+      /// \param[in] _interface Name of an interface
+      /// \param[in] _mode Specify whether the _interface string is demangled
+      /// (default) or mangled.
       /// \returns names of plugins that implement the interface
       public: std::unordered_set<std::string> PluginsImplementing(
-                  const std::string &_interface) const;
+          const std::string &_interface,
+          const MangleMode _mode = DEMANGLED) const;
 
       /// \brief Load a library at the given path
       /// \param[in] _pathToLibrary is the path to a libaray

@@ -25,8 +25,8 @@
 // ------------- Add a set of plugins or a set of interfaces ------------------
 
 /// \brief Add a plugin and interface from this shared library.
-#define IGN_COMMON_ADD_PLUGIN(plugin, interface)\
-  DETAIL_IGN_COMMON_ADD_PLUGIN(plugin, interface)
+#define IGN_COMMON_ADD_PLUGIN(...)\
+  DETAIL_IGN_COMMON_ADD_PLUGIN(__VA_ARGS__)
 
 
 

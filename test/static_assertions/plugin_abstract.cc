@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */
+*/
 
-#ifndef IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
-#define IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
+#include "ignition/common/RegisterPlugin.hh"
 
-#include <ignition/common/PluginLoader.hh>
-
-namespace ignition
+class A
 {
-  namespace common
-  {
-    template <typename Interface>
-    std::unordered_set<std::string> PluginLoader::PluginsImplementing() const
-    {
-      return this->PluginsImplementing(typeid(Interface).name(), MANGLED);
-    }
-  }
-}
+  // This pure virtual function makes A an abstract class
+  public: virtual void SomeFunction() = 0;
 
-#endif
+  public: virtual ~A();
+};
+
+class B : public A
+{
+  // B is abstract because it does not implement SomeFunction
+};
+
+IGN_COMMON_ADD_PLUGIN(B, A)

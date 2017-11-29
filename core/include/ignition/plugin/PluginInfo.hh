@@ -22,6 +22,7 @@
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include <set>
 
 namespace ignition
 {
@@ -40,6 +41,9 @@ namespace ignition
       /// \brief The name of the plugin
       std::string name;
 
+      /// \brief Alternative names that may be used to instantiate the plugin
+      std::set<std::string> aliases;
+
       /// \brief The keys are the names of the types of interfaces that this
       /// plugin provides. The values are functions that convert a void pointer
       /// (which actually points to the plugin instance) to another void pointer
@@ -48,6 +52,13 @@ namespace ignition
       using InterfaceCastingMap =
           std::unordered_map< std::string, std::function<void*(void*)> >;
       InterfaceCastingMap interfaces;
+
+      /// \brief This is a set containing the demangled versions of the names of
+      /// the interfaces provided by this plugin. This gets filled in by the
+      /// PluginLoader after receiving the PluginInfo. It is only used by the
+      /// user-facing API. Internally, when looking up Interfaces, the mangled
+      /// `interfaces` map will still be used.
+      std::set<std::string> demangledInterfaces;
 
       /// \brief A method that instantiates a new instance of a plugin
       std::function<void*()> factory;
@@ -59,7 +70,7 @@ namespace ignition
     /// This typedef is used simultaneously by detail/RegisterPlugin.hh and
     /// PluginLoader.cc, so we store it in a location that is visible to both
     /// of them.
-    using PluginInfoMap = std::unordered_map<std::string, ignition::common::PluginInfo>;
+    using PluginInfoMap = std::unordered_map<std::string, PluginInfo>;
   }
 }
 

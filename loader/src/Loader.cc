@@ -22,6 +22,11 @@
 #include <sstream>
 #include <unordered_map>
 
+#if defined __GNUC__ or defined __clang__
+// This header is used for name demangling on GCC and Clang
+#include <cxxabi.h>
+#endif
+
 #include "ignition/common/Console.hh"
 #include "ignition/common/PluginInfo.hh"
 #include "ignition/common/PluginLoader.hh"
@@ -33,6 +38,33 @@ namespace ignition
 {
   namespace common
   {
+    /////////////////////////////////////////////////
+    std::string Demangle(const std::string &_name)
+    {
+#if defined __GNUC__ or defined __clang__
+      int status;
+      char *demangled_cstr = abi::__cxa_demangle(
+            _name.c_str(), nullptr, nullptr, &status);
+
+      if (0 != status)
+      {
+        ignerr << "[Demangle] Failed to demangle the symbol name [" << _name
+               << "]. Error code: " << status << "\n";
+        return _name;
+      }
+
+      const std::string demangled(demangled_cstr);
+      free(demangled_cstr);
+
+      return demangled;
+#else
+      // MSVC does not require any demangling. Any other compilers besides GCC
+      // or clang may be using an unknown ABI, so we won't be able to demangle
+      // them anyway.
+      return _name;
+#endif
+    }
+
     /////////////////////////////////////////////////
     /// \brief PIMPL Implementation of the PluginLoader class
     class PluginLoaderPrivate
@@ -75,8 +107,8 @@ namespace ignition
         const size_t iSize = plugin.interfaces.size();
         pretty << "\t\t[" << plugin.name << "] which implements "
                << iSize << PluralCast(" interface", iSize) << ":\n";
-        for (const auto &interface : plugin.interfaces)
-          pretty << "\t\t\t" << interface.first << "\n";
+        for (const auto &interface : plugin.demangledInterfaces)
+          pretty << "\t\t\t" << interface << "\n";
       }
       pretty << std::endl;
 
@@ -116,8 +148,15 @@ namespace ignition
         std::vector<PluginInfo> loadedPlugins = this->dataPtr->LoadPlugins(
               dlHandle, _pathToLibrary);
 
-        for (const PluginInfo &plugin : loadedPlugins)
+        for (PluginInfo &plugin : loadedPlugins)
         {
+          // Demangle the plugin name before creating an entry for it.
+          plugin.name = Demangle(plugin.name);
+
+          // Make a list of the demangled interface names for later convenience.
+          for (auto const &interface : plugin.interfaces)
+            plugin.demangledInterfaces.insert(Demangle(interface.first));
+
           this->dataPtr->plugins.insert(std::make_pair(plugin.name, plugin));
           newPlugins.insert(plugin.name);
         }
@@ -142,22 +181,36 @@ namespace ignition
       std::unordered_set<std::string> interfaces;
       for (auto const &plugin : this->dataPtr->plugins)
       {
-        for (auto const &interface : plugin.second.interfaces)
-          interfaces.insert(interface.first);
+        for (auto const &interface : plugin.second.demangledInterfaces)
+          interfaces.insert(interface);
       }
       return interfaces;
     }
 
     /////////////////////////////////////////////////
     std::unordered_set<std::string> PluginLoader::PluginsImplementing(
-        const std::string &_interface) const
+        const std::string &_interface,
+        const MangleMode mode) const
     {
       std::unordered_set<std::string> plugins;
-      for (auto const &plugin : this->dataPtr->plugins)
+
+      if (MANGLED == mode)
       {
-        if (plugin.second.interfaces.find(_interface) !=
-           plugin.second.interfaces.end())
-          plugins.insert(plugin.second.name);
+        for (auto const &plugin : this->dataPtr->plugins)
+        {
+          if (plugin.second.interfaces.find(_interface) !=
+              plugin.second.interfaces.end())
+            plugins.insert(plugin.second.name);
+        }
+      }
+      else
+      {
+        for (auto const &plugin : this->dataPtr->plugins)
+        {
+          if (plugin.second.demangledInterfaces.find(_interface) !=
+              plugin.second.demangledInterfaces.end())
+            plugins.insert(plugin.second.name);
+        }
       }
 
       return plugins;

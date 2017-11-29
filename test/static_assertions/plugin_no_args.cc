@@ -13,23 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */
+*/
 
-#ifndef IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
-#define IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
+#include "ignition/common/RegisterPlugin.hh"
 
-#include <ignition/common/PluginLoader.hh>
-
-namespace ignition
-{
-  namespace common
-  {
-    template <typename Interface>
-    std::unordered_set<std::string> PluginLoader::PluginsImplementing() const
-    {
-      return this->PluginsImplementing(typeid(Interface).name(), MANGLED);
-    }
-  }
-}
-
-#endif
+IGN_COMMON_ADD_PLUGIN()

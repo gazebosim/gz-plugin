@@ -66,13 +66,18 @@ extern "C"
       {
         // If the object was not inserted, then an entry already existed for
         // this plugin type. We should still insert each of the interface map
-        // entries provided by the input info, just in case any of them are
-        // missing from the currently existing entry. This allows the user to
-        // specify different interfaces for the same plugin type using different
-        // macros in different locations or different translation units.
+        // entries and aliases provided by the input info, just in case any of
+        // them are missing from the currently existing entry. This allows the
+        // user to specify different interfaces and aliases for the same plugin
+        // type using different macros in different locations or different
+        // translation units.
         ignition::common::PluginInfo &entry = it->second;
+
         for(const auto &interfaceMapEntry : input->interfaces)
           entry.interfaces.insert(interfaceMapEntry);
+
+        for(const auto &aliasSetEntry : input->aliases)
+          entry.aliases.insert(aliasSetEntry);
       }
     }
 
@@ -131,61 +136,202 @@ namespace ignition
   {
     namespace detail
     {
-
-      template <typename PluginClass, typename Interface>
-      void RegisterPlugin(const std::string &_pluginName)
+      //////////////////////////////////////////////////
+      /// \brief This default will be called when NoMoreInterfaces is an empty
+      /// parameter pack. When one or more Interfaces are provided, the other
+      /// template specialization of this class will be called.
+      template <typename PluginClass, typename... NoMoreInterfaces>
+      struct InterfaceHelper
       {
-        PluginInfo info;
+        public: static void InsertInterfaces(PluginInfo::InterfaceCastingMap &)
+        {
+          // Do nothing. This is the terminal specialization of the variadic
+          // template class member function.
+        }
+      };
 
-        // Set the name of the plugin
-        info.name = _pluginName;
+      //////////////////////////////////////////////////
+      /// \brief This specialization will be called when one or more Interfaces
+      /// are specified.
+      template <typename PluginClass, typename Interface,
+                typename... RemainingInterfaces>
+      struct InterfaceHelper<PluginClass, Interface, RemainingInterfaces...>
+      {
+        public: static void InsertInterfaces(
+          PluginInfo::InterfaceCastingMap &interfaces)
+        {
+          // READ ME: If you get a compilation error here, then one of the
+          // interfaces that you tried to register for your plugin is not
+          // actually a base class of the plugin class. This is not allowed. A
+          // plugin class must inherit every interface class that you want it to
+          // provide.
+          static_assert(std::is_base_of<Interface, PluginClass>::value,
+                        "YOU ARE ATTEMPTING TO REGISTER AN INTERFACE FOR A "
+                        "PLUGIN, BUT THE INTERFACE IS NOT A BASE CLASS OF THE "
+                        "PLUGIN.");
 
-        // Create a factory for generating new plugin instances
-        info.factory = []() {
-          return static_cast<void*>(new PluginClass);
-        };
+          interfaces.insert(std::make_pair(
+                typeid(Interface).name(),
+                [=](void* v_ptr) {
+                    PluginClass *d_ptr = static_cast<PluginClass*>(v_ptr);
+                    return static_cast<Interface*>(d_ptr);
+                }));
 
-        IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
-        // Create a deleter to clean up destroyed instances
-        info.deleter = [](void *ptr) {
-          delete static_cast<PluginClass*>(ptr);
-        };
-        IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
+          InterfaceHelper<PluginClass, RemainingInterfaces...>
+              ::InsertInterfaces(interfaces);
+        }
+      };
 
-        // Provide a map from the plugin to its interface
-        info.interfaces.insert(std::make_pair(
-              typeid(Interface).name(),
-              [=](void* v_ptr) {
-                  PluginClass *d_ptr = static_cast<PluginClass*>(v_ptr);
-                  return static_cast<Interface*>(d_ptr);
-              }));
-
-        // Send this information as input to this library's global repository
-        // of plugins.
-        IGNCOMMONInputOrOutputPluginInfo(
-              &info, nullptr, nullptr, nullptr, nullptr);
+      //////////////////////////////////////////////////
+      /// \brief This overload will be called when no more aliases remain to be
+      /// inserted. If one or more aliases still need to be inserted, then the
+      /// overload below this one will be called instead.
+      inline void InsertAlias(std::set<std::string> &/*aliases*/)
+      {
+        // Do nothing. This is the terminal overload of the variadic template
+        // function.
       }
+
+      template <typename... Aliases>
+      void InsertAlias(std::set<std::string> &aliases,
+                       const std::string &nextAlias,
+                       Aliases&&... remainingAliases)
+      {
+        aliases.insert(nextAlias);
+        InsertAlias(aliases, std::forward<Aliases>(remainingAliases)...);
+      }
+
+      //////////////////////////////////////////////////
+      /// \brief This default specialization of the Registrar class will be
+      /// called when no arguments are provided to the IGN_COMMON_ADD_PLUGIN()
+      /// macro. This is not allowed and will result in a compilation error.
+      template <typename... NoArguments>
+      struct Registrar
+      {
+        public: static void RegisterPlugin()
+        {
+          // READ ME: If you get a compilation error here, then you have
+          // attempted to call IGN_COMMON_ADD_PLUGIN() with no arguments. This
+          // is both pointless and not permitted. Either specify a plugin class
+          // to register, or else do not call the macro.
+          static_assert(sizeof...(NoArguments) > 0,
+                        "YOU ARE ATTEMPTING TO CALL IGN_COMMON_ADD_PLUGIN "
+                        "WITHOUT SPECIFYING A PLUGIN CLASS");
+
+
+
+          // --------------------------------------------------------------- //
+          // Dev Note (MXG): The following static assert should never fail, or
+          // else there is a bug in our variadic template implementation. If a
+          // compilation failure occurs in this function, it should happen at
+          // the previous static_assert. If the parameter pack `NoArguments`
+          // contains one or more types, then the other template specialization
+          // of the Registrar class should be chosen, instead of this default
+          // one. This static_assert is only here as reassurance that the
+          // implementation is correct.
+          static_assert(sizeof...(NoArguments) == 0,
+                        "THERE IS A BUG IN THE PLUGIN REGISTRATION "
+                        "IMPLEMENTATION! PLEASE REPORT THIS!");
+          // --------------------------------------------------------------- //
+        }
+      };
+
+      //////////////////////////////////////////////////
+      /// \brief This specialization of the Register class will be called when
+      /// one or more arguments are provided to the IGN_COMMON_ADD_PLUGIN(~)
+      /// macro. This is the only version of the Registrar class that is allowed
+      /// to compile.
+      template <typename PluginClass, typename... Interfaces>
+      struct Registrar<PluginClass, Interfaces...>
+      {
+        // READ ME: For a plugin to be registered and loadable, it must be a
+        // concrete class (as opposed to an abstract class). This means the
+        // plugin class must provide an implementation (or inherit an
+        // implementation) for each pure virtual function that it inherits from
+        // its parent classes, and it must not declare any pure virtual
+        // functions itself. Abstract classes can never be instantiated, per the
+        // rules of the C++ language.
+        static_assert(!std::is_abstract<PluginClass>::value,
+                      "YOU ARE ATTEMPTING TO REGISTER A PURE ABSTRACT CLASS "
+                      "AS A PLUGIN. THIS IS NOT ALLOWED.");
+
+        public: static PluginInfo MakePluginInfo()
+        {
+          PluginInfo info;
+
+          // Set the name of the plugin
+          info.name = typeid(PluginClass).name();
+
+          // Create a factory for generating new plugin instances
+          info.factory = []() {
+            return static_cast<void*>(new PluginClass);
+          };
+
+IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
+          // Create a deleter to clean up destroyed instances
+          info.deleter = [](void *ptr) {
+            delete static_cast<PluginClass*>(ptr);
+          };
+IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
+
+          // Construct a map from the plugin to its interfaces
+          InterfaceHelper<PluginClass, Interfaces...>
+              ::InsertInterfaces(info.interfaces);
+
+          return info;
+        }
+
+        /// \brief This function registers a plugin along with a set of
+        /// interfaces that it provides.
+        public: static void RegisterPlugin()
+        {
+          PluginInfo info = MakePluginInfo();
+
+          // Send this information as input to this library's global repository
+          // of plugins.
+          IGNCOMMONInputOrOutputPluginInfo(
+                &info, nullptr, nullptr, nullptr, nullptr);
+        }
+
+
+        public: template <typename... Aliases>
+        static void RegisterAlias(Aliases&&... aliases)
+        {
+          // Dev note (MXG): We expect the RegisterAlias function to be called
+          // using the IGN_COMMON_ADD_ALIAS(~) macro, which should never contain
+          // any interfaces. Therefore, this parameter pack should be empty.
+          //
+          // In the future, we could allow Interfaces and Aliases to be
+          // specified simultaneously, but that would be very tricky to do with
+          // macros, so for now we will enforce this assumption to make sure
+          // that the implementation is working as expected.
+          static_assert(sizeof...(Interfaces) == 0,
+                        "THERE IS A BUG IN THE ALIAS REGISTRATION "
+                        "IMPLEMENTATION! PLEASE REPORT THIS!");
+
+          PluginInfo info = MakePluginInfo();
+
+          // Gather up all the aliases that have been specified for this plugin.
+          InsertAlias(info.aliases, std::forward<Aliases>(aliases)...);
+
+          // Send this information as input to this library's global repository
+          // of plugins.
+          IGNCOMMONInputOrOutputPluginInfo(
+                &info, nullptr, nullptr, nullptr, nullptr);
+        }
+      };
     }
   }
 }
 
-
-#define DETAIL_IGN_COMMON_ADD_PLUGIN_HELPER(UniqueID, pluginName, interface) \
-  \
-  /* Print out a clear error when the plugin class is pure abstract (which */ \
-  /* would make it impossible to load as a plugin). The compiler prevents */ \
-  /* this from being an issue, but its printout might be difficult for */ \
-  /* users to interpret, so we provide a very explicit explanation here. */ \
-  static_assert(!std::is_abstract<pluginName>::value, \
-      "[" #pluginName "] must not be an abstract class. It contains at least " \
-      "one pure virtual function!"); \
-  \
-  /* Print out a clear error when the plugin does not actually provide the */ \
-  /* specified interface. */ \
-  static_assert(std::is_base_of<interface, pluginName>::value, \
-      "[" #interface "] is not a base class of [" #pluginName "], so it " \
-      "cannot be used as a plugin interface for [" #pluginName "]!"); \
-  \
+//////////////////////////////////////////////////
+/// This macro creates a uniquely-named class whose constructor calls the
+/// ignition::common::detail::RegisterPlugin function. It then declares a
+/// uniquely-named instance of the class with static lifetime. Since the class
+/// instance has a static lifetime, it will be constructed when the shared
+/// library is loaded. When it is constructed, the RegisterPlugin function will
+/// be called
+#define DETAIL_IGN_COMMON_ADD_PLUGIN_HELPER(UniqueID, ...) \
   namespace ignition \
   { \
     namespace common \
@@ -196,8 +342,7 @@ namespace ignition
         { \
           ExecuteWhenLoadingLibrary##UniqueID() \
           { \
-            ignition::common::detail::RegisterPlugin<pluginName, interface>( \
-              #pluginName); \
+            ignition::common::detail::Registrar<__VA_ARGS__>::RegisterPlugin(); \
           } \
         }; \
   \
@@ -207,16 +352,18 @@ namespace ignition
   }
 
 
+//////////////////////////////////////////////////
 /// This macro is needed to force the __COUNTER__ macro to expand to a value
 /// before being passed to the *_HELPER macro.
-#define DETAIL_IGN_COMMON_ADD_PLUGIN_WITH_COUNTER(UniqueID, pluginName, interface) \
-  DETAIL_IGN_COMMON_ADD_PLUGIN_HELPER(UniqueID, pluginName, interface)
+#define DETAIL_IGN_COMMON_ADD_PLUGIN_WITH_COUNTER(UniqueID, ...) \
+  DETAIL_IGN_COMMON_ADD_PLUGIN_HELPER(UniqueID, __VA_ARGS__)
 
 
+//////////////////////////////////////////////////
 /// We use the __COUNTER__ here to give each plugin instantiation its own unique
 /// name, which is required in order to statically initialize each one.
-#define DETAIL_IGN_COMMON_ADD_PLUGIN(pluginName, interface) \
-  DETAIL_IGN_COMMON_ADD_PLUGIN_WITH_COUNTER(__COUNTER__, pluginName, interface)
+#define DETAIL_IGN_COMMON_ADD_PLUGIN(...) \
+  DETAIL_IGN_COMMON_ADD_PLUGIN_WITH_COUNTER(__COUNTER__, __VA_ARGS__)
 
 
 #endif
