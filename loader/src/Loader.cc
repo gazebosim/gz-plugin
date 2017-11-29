@@ -190,16 +190,16 @@ namespace ignition
     /////////////////////////////////////////////////
     std::unordered_set<std::string> PluginLoader::PluginsImplementing(
         const std::string &_interface,
-        const MangleMode mode) const
+        const bool demangled) const
     {
       std::unordered_set<std::string> plugins;
 
-      if (MANGLED == mode)
+      if (demangled)
       {
         for (auto const &plugin : this->dataPtr->plugins)
         {
-          if (plugin.second.interfaces.find(_interface) !=
-              plugin.second.interfaces.end())
+          if (plugin.second.demangledInterfaces.find(_interface) !=
+              plugin.second.demangledInterfaces.end())
             plugins.insert(plugin.second.name);
         }
       }
@@ -207,8 +207,8 @@ namespace ignition
       {
         for (auto const &plugin : this->dataPtr->plugins)
         {
-          if (plugin.second.demangledInterfaces.find(_interface) !=
-              plugin.second.demangledInterfaces.end())
+          if (plugin.second.interfaces.find(_interface) !=
+              plugin.second.interfaces.end())
             plugins.insert(plugin.second.name);
         }
       }

@@ -27,7 +27,7 @@ namespace ignition
     template <typename Interface>
     std::unordered_set<std::string> PluginLoader::PluginsImplementing() const
     {
-      return this->PluginsImplementing(typeid(Interface).name(), MANGLED);
+      return this->PluginsImplementing(typeid(Interface).name(), false);
     }
   }
 }

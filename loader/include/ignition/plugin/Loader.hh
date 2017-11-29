@@ -54,11 +54,6 @@ namespace ignition
       /// \returns Demangled names of the interfaces that are implemented
       public: std::unordered_set<std::string> InterfacesImplemented() const;
 
-      enum MangleMode {
-        DEMANGLED = 0,
-        MANGLED
-      };
-
       /// \brief Get plugin names that implement the specified interface
       /// \return names of plugins that implement the interface.
       public: template <typename Interface>
@@ -72,15 +67,15 @@ namespace ignition
       /// names.
       ///
       /// If you want to pass in a mangled version of an interface name, e.g.
-      /// the result that would be produced by typeid(T).name(), then set `mode`
-      /// to PluginLoader::MANGLED.
+      /// the result that would be produced by typeid(T).name(), then set
+      /// `demangled` to false.
       /// \param[in] _interface Name of an interface
-      /// \param[in] _mode Specify whether the _interface string is demangled
-      /// (default) or mangled.
+      /// \param[in] _demangled Specify whether the _interface string is
+      /// demangled (default, true) or mangled (false).
       /// \returns names of plugins that implement the interface
       public: std::unordered_set<std::string> PluginsImplementing(
           const std::string &_interface,
-          const MangleMode _mode = DEMANGLED) const;
+          const bool demangled = true) const;
 
       /// \brief Load a library at the given path
       /// \param[in] _pathToLibrary is the path to a libaray
