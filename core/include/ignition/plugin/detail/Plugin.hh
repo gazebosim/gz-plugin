@@ -31,7 +31,7 @@ namespace ignition
     Interface *Plugin::QueryInterface()
     {
       return static_cast<Interface*>(
-            this->PrivateGetInterface(typeid(Interface).name()));
+            this->PrivateQueryInterface(typeid(Interface).name()));
     }
 
     //////////////////////////////////////////////////
@@ -39,7 +39,7 @@ namespace ignition
     const Interface *Plugin::QueryInterface() const
     {
       return static_cast<const Interface*>(
-            this->PrivateGetInterface(typeid(Interface).name()));
+            this->PrivateQueryInterface(typeid(Interface).name()));
     }
 
     //////////////////////////////////////////////////
@@ -102,7 +102,7 @@ namespace ignition
     template <class Interface>
     bool Plugin::HasInterface() const
     {
-      return this->HasInterface(typeid(Interface).name());
+      return this->HasInterface(typeid(Interface).name(), false);
     }
   }
 }

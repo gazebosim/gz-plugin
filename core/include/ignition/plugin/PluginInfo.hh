@@ -38,6 +38,9 @@ namespace ignition
     /// \brief Holds info required to construct a plugin
     struct PluginInfo
     {
+      /// \brief Clear out all information contained in this PluginInfo object
+      void Clear();
+
       /// \brief The name of the plugin
       std::string name;
 

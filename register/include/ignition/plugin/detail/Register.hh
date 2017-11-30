@@ -43,14 +43,20 @@
 
 extern "C"
 {
-  inline void DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONInputOrOutputPluginInfo(
+  DETAIL_IGN_PLUGIN_VISIBLE inline void IGNCOMMONInputOrOutputPluginInfo(
       const void *_inputSingleInfo, const void ** const _outputAllInfo,
       int *_inputAndOutputAPIVersion,
       std::size_t *_inputAndOutputPluginInfoSize,
       std::size_t *_inputAndOutputPluginInfoAlign)
   {
     using PluginInfoMap = ignition::common::PluginInfoMap;
+
     static PluginInfoMap pluginMap;
+
+//    // Dev Note (MXG): This is an intentional memory "leak".
+//    static PluginInfoMap *pluginMap = nullptr;
+//    if (!pluginMap)
+//      pluginMap = new PluginInfoMap;
 
     if (_inputSingleInfo)
     {
@@ -61,6 +67,7 @@ extern "C"
       bool inserted;
       std::tie(it, inserted) =
           pluginMap.insert(std::make_pair(input->name, *input));
+//          pluginMap->insert(std::make_pair(input->name, *input));
 
       if (!inserted)
       {
@@ -263,13 +270,13 @@ namespace ignition
           info.name = typeid(PluginClass).name();
 
           // Create a factory for generating new plugin instances
-          info.factory = []() {
+          info.factory = [=]() {
             return static_cast<void*>(new PluginClass);
           };
 
 IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
           // Create a deleter to clean up destroyed instances
-          info.deleter = [](void *ptr) {
+          info.deleter = [=](void *ptr) {
             delete static_cast<PluginClass*>(ptr);
           };
 IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)

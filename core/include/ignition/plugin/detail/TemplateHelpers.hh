@@ -15,28 +15,31 @@
  *
  */
 
-#ifndef IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
-#define IGNITION_COMMON_DETAIL_PLUGINLOADER_HH_
 
-#include <string>
-#include <ignition/common/PluginLoader.hh>
+#ifndef IGNITION_COMMON_DETAIL_TEMPLATEHELPERS_HH_
+#define IGNITION_COMMON_DETAIL_TEMPLATEHELPERS_HH_
+
+
+#include <type_traits>
 
 namespace ignition
 {
   namespace common
   {
-    template <typename Interface>
-    std::unordered_set<std::string> PluginLoader::PluginsImplementing() const
+    namespace detail
     {
-      return this->PluginsImplementing(typeid(Interface).name(), false);
-    }
+      //////////////////////////////////////////////////
+      template <typename To, typename From>
+      struct ConstCompatible : std::true_type
+      {
+      };
 
-    template <typename PluginPtrType>
-    PluginPtrType PluginLoader::Instantiate(
-        const std::string &_pluginName) const
-    {
-      return PluginPtrType(this->PrivateGetPluginInfo(_pluginName),
-                           this->PrivateGetPluginDlHandlePtr(_pluginName));
+      //////////////////////////////////////////////////
+      template <typename To, typename From>
+      struct ConstCompatible<To, const From>
+          : std::integral_constant<bool, std::is_const<To>::value>
+      {
+      };
     }
   }
 }

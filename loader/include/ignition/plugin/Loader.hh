@@ -24,6 +24,7 @@
 #include <unordered_set>
 
 #include "ignition/common/System.hh"
+#include "ignition/common/PluginPtr.hh"
 
 namespace ignition
 {
@@ -32,9 +33,6 @@ namespace ignition
     /// \brief Forward declaration
     class PluginLoaderPrivate;
     struct PluginInfo;
-    class Plugin;
-
-    using PluginPtr = std::shared_ptr<Plugin>;
 
     /// \brief Class for loading plugins
     class IGNITION_COMMON_VISIBLE PluginLoader
@@ -89,9 +87,48 @@ namespace ignition
       /// \returns ptr to instantiated plugin
       public: PluginPtr Instantiate(const std::string &_pluginName) const;
 
+      /// \brief Instantiates a plugin of PluginType for the given plugin name.
+      /// This can be used to create a specialized PluginPtr.
+      ///
+      /// \param[in] PluginType The specialized type of PluginPtrPtr that you
+      /// want to construct.
+      /// \param[in] _pluginName The name of the plugin that you want to
+      /// instantiate
+      /// \returns pointer for the instantiated PluginPtr
+      public: template <typename PluginPtrType>
+              PluginPtrType Instantiate(
+                  const std::string &_pluginName) const;
+
+      /// \brief This loader will forget about the library with the given name.
+      /// If you want to instantiate a plugin from this library using this
+      /// loader, you will first need to call LoadLibrary again.
+      ///
+      /// After this function has been called, once all plugin instances that
+      /// are tied to the library have been deleted, the library will
+      /// automatically be unloaded from the executable. Note that when this
+      /// PluginLoader leaves scope (or gets deleted), it will have the same
+      /// effect as calling ForgetLibrary on all of the libraries that it
+      /// loaded, so there is no need to call this function.
+      ///
+      /// Returns true if the library was actively loaded and is now
+      /// successfully forgotten. If the library was not actively loaded, it
+      /// returns false.
+      public: bool ForgetLibrary(const std::string &_pathToLibrary);
+
+      /// \brief Forget the library that provides the plugin with the given
+      /// name.
+      ///
+      /// See ForgetLibrary(const std::string&) for more explanation.
+      public: bool ForgetLibraryOfPlugin(const std::string &_pluginName);
+
       /// \brief Get a pointer to the PluginInfo corresponding to _pluginName.
       /// Returns nullptr if there is no info for the requested _pluginName.
       private: const PluginInfo *PrivateGetPluginInfo(
+                  const std::string &_pluginName) const;
+
+      /// \brief Get a std::shared_ptr that manages the lifecycle of the shared
+      /// library handle which provides the specified plugin.
+      private: std::shared_ptr<void> PrivateGetPluginDlHandlePtr(
                   const std::string &_pluginName) const;
 
       /// \brief PIMPL pointer to class implementation
