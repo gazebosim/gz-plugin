@@ -23,7 +23,8 @@
 #include <map>
 #include <string>
 
-#include <ignition/common/System.hh>
+#include <ignition/common/Export.hh>
+#include <ignition/common/SuppressWarning.hh>
 
 namespace ignition
 {
@@ -177,8 +178,10 @@ namespace ignition
       private: InterfaceMap::iterator PrivateGetOrCreateIterator(
           const std::string &_interfaceName);
 
+      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to the implementation of this class.
       private: const std::unique_ptr<PluginPrivate> dataPtr;
+      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
 
       /// \brief Virtual destructor
       public: virtual ~Plugin();
