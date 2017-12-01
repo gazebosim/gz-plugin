@@ -24,13 +24,13 @@
 #include <string>
 
 #include <ignition/common/System.hh>
+#include <ignition/common/PluginInfo.hh>
 
 namespace ignition
 {
   namespace common
   {
     // Forward declarations
-    struct PluginInfo;
     class PluginPrivate;
     namespace detail { template <class, class> class ComposePlugin; }
 

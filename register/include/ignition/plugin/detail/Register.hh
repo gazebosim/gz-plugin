@@ -41,33 +41,80 @@
   #endif
 #endif
 
+// extern "C" ensures that the symbol name of IGNCOMMONInputOrOutputPluginInfo
+// does not get mangled by the compiler, so we can easily use dlsym(~) to
+// retrieve it.
 extern "C"
 {
+  /// \brief IGNCOMMONInputOrOutputPluginInfo is the hook that's used by the
+  /// PluginLoader to retrieve PluginInfo from a shared library that provides
+  /// plugins.
+  ///
+  /// It is declared inline so that the plugin registration macros can
+  /// be used in arbitrarily many translation units without violating the one-
+  /// definition rule.
+  ///
+  /// The symbol is explicitly exported (visibility is turned on) using
+  /// DETAIL_IGN_PLUGIN_VISIBLE to ensure that dlsym(~) is able to find it.
   DETAIL_IGN_PLUGIN_VISIBLE inline void IGNCOMMONInputOrOutputPluginInfo(
-      const void *_inputSingleInfo, const void ** const _outputAllInfo,
+      const void *_inputSingleInfo,
+      const void ** const _outputAllInfo,
       int *_inputAndOutputAPIVersion,
       std::size_t *_inputAndOutputPluginInfoSize,
       std::size_t *_inputAndOutputPluginInfoAlign)
   {
     using PluginInfoMap = ignition::common::PluginInfoMap;
-
+    // We use a static variable here so that we can accumulate multiple
+    // PluginInfo objects from multiple plugin registration calls within one
+    // shared library, and then provide it all to the PluginLoader through this
+    // single hook. We store this static variable inside of an inlined function
+    // in order to satisfy two requirements:
+    //
+    // 1. Each shared library that provides one or more plugins must have its
+    //    own unique pluginMap object. That object will be initialized when the
+    //    library is loaded and then destructed when the library is unloaded.
+    //
+    // 2. The pluginMap object can only be defined once per shared library (to
+    //    satisfy the One-Definition Rule), but for user convenience we want its
+    //    declaration and definition to all be provided in a header so that a
+    //    simple macro call is enough to ensure that it works as intended.
+    //
+    // Due to some controversial idiosyncracies of GCC, this implementation
+    // means that shared libraries which provide plugins should compile with the
+    // flags -fkeep-inline-functions and -fno-gnu-unique.
+    //
+    //   -fkeep-inline-functions: Modern versions of GCC are supposed to have
+    //       this option turned on by default, but explicitly specifying it
+    //       seems to be more reliable.
+    //
+    //   -fno-gnu-unique: GCC has some irritating and controversial behavior
+    //       where static variables in inline functions will use STB_GNU_UNIQUE
+    //       binding. This binding tends to be problematic for plugin framework
+    //       implementations, including ours. The most noticeable impact is that
+    //       any library containing an object with STB_GNU_UNIQUE binding can
+    //       never be unloaded until the program that's using it is terminated.
+    //       In even worse cases, this binding could result in confusion between
+    //       object symbols when multiple plugin libraries are loaded at once.
+    //       Passing the -fno-gnu-unique flag tells the linker to never use the
+    //       problematic STB_GNU_UNIQUE binding. Note that clang does not have
+    //       this issue.
+    //
     static PluginInfoMap pluginMap;
-
-//    // Dev Note (MXG): This is an intentional memory "leak".
-//    static PluginInfoMap *pluginMap = nullptr;
-//    if (!pluginMap)
-//      pluginMap = new PluginInfoMap;
 
     if (_inputSingleInfo)
     {
+      // When _inputSingleInfo is not a nullptr, it means that one of the plugin
+      // registration macros is providing us with some PluginInfo.
       const ignition::common::PluginInfo *input =
           static_cast<const ignition::common::PluginInfo*>(_inputSingleInfo);
 
       PluginInfoMap::iterator it;
       bool inserted;
+
+      // We use insert(~) to ensure that we do not accidentally overwrite some
+      // existing information for the plugin that has this name.
       std::tie(it, inserted) =
           pluginMap.insert(std::make_pair(input->name, *input));
-//          pluginMap->insert(std::make_pair(input->name, *input));
 
       if (!inserted)
       {
@@ -76,7 +123,7 @@ extern "C"
         // entries and aliases provided by the input info, just in case any of
         // them are missing from the currently existing entry. This allows the
         // user to specify different interfaces and aliases for the same plugin
-        // type using different macros in different locations or different
+        // type using different macros in different locations or across multiple
         // translation units.
         ignition::common::PluginInfo &entry = it->second;
 
@@ -90,6 +137,11 @@ extern "C"
 
     if (_outputAllInfo)
     {
+      // When _outputAllInfo is not a nullptr, it means that a PluginLoader is
+      // trying to retrieve PluginInfo from us.
+
+      // The PluginLoader should provide valid pointers to these fields as part
+      // of a handshake procedure.
       if (nullptr == _inputAndOutputAPIVersion ||
           nullptr == _inputAndOutputPluginInfoSize ||
           nullptr == _inputAndOutputPluginInfoAlign)
@@ -118,6 +170,11 @@ extern "C"
         agreement = false;
       }
 
+      // The handshake parameters that were passed into us are overwritten with
+      // the values that we have on our end. That way, if our PluginInfo API is
+      // lower than that of the PluginLoader, then the PluginLoader will know
+      // to call this function using an older version of PluginInfo, and then
+      // convert it to the newer version on the loader side.
       *_inputAndOutputAPIVersion = ignition::common::PLUGIN_API_VERSION;
       *_inputAndOutputPluginInfoSize = sizeof(ignition::common::PluginInfo);
       *_inputAndOutputPluginInfoAlign = alignof(ignition::common::PluginInfo);
@@ -129,7 +186,7 @@ extern "C"
       // We will return the current API version to the PluginLoader, and it may
       // then decide to attempt the call to this function again with the correct
       // API version if it supports backwards/forwards compatibility.
-      if(!agreement)
+      if (!agreement)
         return;
 
       *_outputAllInfo = &pluginMap;
