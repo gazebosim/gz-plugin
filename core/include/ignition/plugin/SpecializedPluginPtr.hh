@@ -41,7 +41,7 @@ namespace ignition
     ///
     /// Then, calling the function
     ///
-    ///     plugin->GetInterface<FooInterface>();
+    ///     plugin->QueryInterface<FooInterface>();
     ///
     /// will have extremely low cost associated with it. It will provide direct
     /// access to the the `FooInterface*` of `plugin`. If `plugin` does not

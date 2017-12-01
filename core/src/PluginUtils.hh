@@ -25,7 +25,9 @@ namespace ignition
 {
   namespace common
   {
-    /// \brief format the name to start with "::"
+    /// \brief Format the name to start with "::"
+    /// \param[in] _name The name of a plugin or interface
+    /// \return The input, but with "::" prepended if it was not there already.
     inline std::string NormalizeName(const std::string &_name)
     {
       std::string name = _name;

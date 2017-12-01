@@ -24,8 +24,9 @@
 #include <typeinfo>
 #include <unordered_set>
 
-#include "ignition/common/System.hh"
-#include "ignition/common/PluginPtr.hh"
+#include <ignition/common/Export.hh>
+#include <ignition/common/SuppressWarning.hh>
+#include <ignition/common/PluginPtr.hh>
 
 namespace ignition
 {
@@ -113,9 +114,10 @@ namespace ignition
       /// library handle which provides the specified plugin.
       private: std::shared_ptr<void> PrivateGetPluginDlHandlePtr(
                   const std::string &_pluginName) const;
-
+      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to class implementation
       private: std::unique_ptr<PluginLoaderPrivate> dataPtr;
+      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }
