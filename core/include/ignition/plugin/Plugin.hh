@@ -163,6 +163,13 @@ namespace ignition
       private: void PrivateCopyPluginInstance(const Plugin &_other) const;
 
       /// \brief Create a new plugin instance based on the info provided
+      ///
+      /// \param[in] _info Pointer to the PluginInfo that this Plugin should
+      /// base itself on. If this is a nullptr, then we will generate an empty
+      /// Plugin object.
+      /// \param[in] _dlHandlePtr A reference-counting pointer to the library
+      /// that provided the PluginInfo. This smart pointer ensures that the
+      /// library remains loaded.
       private: void PrivateSetPluginInstance(
                   const PluginInfo *_info,
                   const std::shared_ptr<void> &_dlHandlePtr) const;

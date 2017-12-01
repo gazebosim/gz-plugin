@@ -92,28 +92,49 @@ namespace ignition
       /// automatically be unloaded from the executable. Note that when this
       /// PluginLoader leaves scope (or gets deleted), it will have the same
       /// effect as calling ForgetLibrary on all of the libraries that it
-      /// loaded, so there is no need to call this function.
+      /// loaded, so there is generally no need to call this function. However,
+      /// it may be useful if you want to reduce clutter in the PluginLoader
+      /// instance or let go of library resources that are no longer being used.
       ///
-      /// Returns true if the library was actively loaded and is now
-      /// successfully forgotten. If the library was not actively loaded, it
+      /// Note that even if you have released all references to a library, it is
+      /// still up to the discretion of your operating system whether (or when)
+      /// that library will be unloaded. In some cases, the operating system
+      /// might not choose to unload it until the program exits completely.
+      ///
+      /// \param[in] _pathToLibrary Path to the library that you want to forget
+      /// \return True if the library was actively loaded and is now
+      /// successfully forgotten. If the library was not actively loaded, this
       /// returns false.
       public: bool ForgetLibrary(const std::string &_pathToLibrary);
 
       /// \brief Forget the library that provides the plugin with the given
-      /// name.
+      /// name. Note that this will also forget all other plugin types which
+      /// are provided by that library.
       ///
-      /// See ForgetLibrary(const std::string&) for more explanation.
+      /// \param[in] _pluginName Name of the plugin whose library you want to
+      /// forget.
+      ///
+      /// \sa bool ForgetLibrary(const std::string &_pathToLibrary)
       public: bool ForgetLibraryOfPlugin(const std::string &_pluginName);
 
       /// \brief Get a pointer to the PluginInfo corresponding to _pluginName.
       /// Returns nullptr if there is no info for the requested _pluginName.
+      ///
+      /// \param[in] _pluginName Name of the plugin that is being loaded.
+      /// \return Pointer to the corresponding PluginInfo, or nullptr if the
+      /// PluginInfo was unavailable.
       private: const PluginInfo *PrivateGetPluginInfo(
                   const std::string &_pluginName) const;
 
       /// \brief Get a std::shared_ptr that manages the lifecycle of the shared
       /// library handle which provides the specified plugin.
+      ///
+      /// \param[in] _pluginName Name of the plugin that is being loaded.
+      /// \return Reference-counting pointer to a library handle, or else a
+      /// nullptr if the plugin is not available.
       private: std::shared_ptr<void> PrivateGetPluginDlHandlePtr(
                   const std::string &_pluginName) const;
+
       IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to class implementation
       private: std::unique_ptr<PluginLoaderPrivate> dataPtr;
