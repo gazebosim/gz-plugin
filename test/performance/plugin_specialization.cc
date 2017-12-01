@@ -115,7 +115,7 @@ double RunPerformanceTest(const PluginType &plugin)
   const auto start = std::chrono::high_resolution_clock::now();
   for (std::size_t i = 0; i < NumTests; ++i)
   {
-    plugin->template GetInterface<test::util::DummySetterBase>();
+    plugin->template QueryInterface<test::util::DummySetterBase>();
   }
   const auto finish = std::chrono::high_resolution_clock::now();
 
