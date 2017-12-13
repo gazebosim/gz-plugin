@@ -22,9 +22,10 @@
 #include <memory>
 #include <string>
 #include <typeinfo>
-#include <vector>
+#include <unordered_set>
 
-#include <ignition/common/System.hh>
+#include <ignition/common/Export.hh>
+#include <ignition/common/SuppressWarning.hh>
 
 namespace ignition
 {
@@ -32,6 +33,10 @@ namespace ignition
   {
     /// \brief Forward declaration
     class PluginLoaderPrivate;
+    struct PluginInfo;
+    class Plugin;
+
+    using PluginPtr = std::shared_ptr<Plugin>;
 
     /// \brief Class for loading plugins
     class IGNITION_COMMON_VISIBLE PluginLoader
@@ -48,42 +53,35 @@ namespace ignition
 
       /// \brief get names of interfaces that the loader has plugins for
       /// \returns interfaces that are implemented
-      public: std::vector<std::string> InterfacesImplemented() const;
+      public: std::unordered_set<std::string> InterfacesImplemented() const;
 
       /// \brief get plugin names that implement the interface
       /// \param[in] _interface name of an interface
       /// \returns names of plugins that implement the interface
-      public: std::vector<std::string> PluginsImplementing(
+      public: std::unordered_set<std::string> PluginsImplementing(
                   const std::string &_interface) const;
 
       /// \brief Load a library at the given path
       /// \param[in] _pathToLibrary is the path to a libaray
-      /// \returns name of plugin if library exists and contains a plugin
-      public: std::string LoadLibrary(const std::string &_pathToLibrary);
+      /// \returns the set of plugins that have been loaded from the library
+      public: std::unordered_set<std::string> LoadLibrary(
+                  const std::string &_pathToLibrary);
 
-      /// \brief Instantiates a plugin of the name and base class
+      /// \brief Instantiates a plugin for the given plugin name
       ///
-      /// ex: pl.Instantiate<animals::AnimalBase>("animals::farm::Donkey")
-      /// \param[in] _name name of a plugin
+      /// \param[in] _plugin name of the plugin to instantiate
       /// \returns ptr to instantiated plugin
-      public: template <typename T>
-              std::unique_ptr<T> Instantiate(const std::string &_name) const
-              {
-                // type hash used to simplify this API
-                std::unique_ptr<T> ptr;
-                ptr.reset(static_cast<T*>(
-                      this->Instantiate(_name, typeid(T).hash_code())));
-                return ptr;
-              }
+      public: PluginPtr Instantiate(const std::string &_pluginName) const;
 
-      /// \brief Instantiates a plugin of the name and base class hash
-      /// \param[in] _name name of a plugin
-      /// \param[in] _baseId typeid() hash_code() of base class type
-      /// \returns pointer to instantiated plugin
-      private: void *Instantiate(
-                   const std::string &_name, std::size_t _baseId) const;
+      /// \brief Get a pointer to the PluginInfo corresponding to _pluginName.
+      /// Returns nullptr if there is no info for the requested _pluginName.
+      private: const PluginInfo *PrivateGetPluginInfo(
+                  const std::string &_pluginName) const;
 
-      private: std::shared_ptr<PluginLoaderPrivate> dataPtr;
+      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
+      /// \brief PIMPL pointer to class implementation
+      private: std::unique_ptr<PluginLoaderPrivate> dataPtr;
+      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }
