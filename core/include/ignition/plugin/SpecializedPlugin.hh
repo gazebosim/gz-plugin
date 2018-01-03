@@ -78,24 +78,23 @@ namespace ignition
 
       // Documentation inherited
       public: template <class Interface>
-              Interface *QueryInterface() override;
+              Interface *QueryInterface();
 
       // Documentation inherited
       public: template <class Interface>
-              const Interface *QueryInterface() const override;
+              const Interface *QueryInterface() const;
 
       // Documentation inherited
       public: template <class Interface>
-              std::shared_ptr<Interface> QueryInterfaceSharedPtr() override;
+              std::shared_ptr<Interface> QueryInterfaceSharedPtr();
 
       // Documentation inherited
       public: template <class Interface>
-              std::shared_ptr<const Interface> QueryInterfaceSharedPtr() const
-              override;
+              std::shared_ptr<const Interface> QueryInterfaceSharedPtr() const;
 
       // Documentation inherited
       public: template <class Interface>
-              bool HasInterface() const override;
+              bool HasInterface() const;
 
 
       // -------------------- Private API ---------------------
