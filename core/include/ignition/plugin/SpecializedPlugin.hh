@@ -122,8 +122,8 @@ namespace ignition
       /// \brief Use a low-cost accessor to provide this specialized interface
       /// \param[in] _type Specialized interface type
       /// \return Pointer to the specialized intergace
-      private: SpecInterface *PrivateGetSpecInterface(type<SpecInterface>
-          _type);
+      private: SpecInterface *PrivateGetSpecInterface(
+                   type<SpecInterface> _type);
 
       /// \brief Delegate the function to the standard Plugin method
       /// \param[in] _type Specialized interface type
