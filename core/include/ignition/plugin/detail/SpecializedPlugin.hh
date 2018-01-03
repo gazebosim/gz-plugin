@@ -270,11 +270,11 @@ namespace ignition
       template <class, class> friend class detail::ComposePlugin;
       template <class> friend class TemplatePluginPtr;
 
-      /// \brief Default constructor
-      private: SpecializedPlugin() = default;
-
       /// \brief Virtual destructor
       public: virtual ~SpecializedPlugin() = default;
+
+      /// \brief Default constructor
+      private: SpecializedPlugin() = default;
     };
   }
 }

@@ -64,7 +64,15 @@ namespace ignition
 
       /// \brief Copy constructor. This PluginPtr will now point at the same
       /// plugin instance as _other, and they will share ownership.
+      /// \param[in] _other Pointer to plugin being copied.
       public: TemplatePluginPtr(const TemplatePluginPtr &_other);
+
+      /// \brief Move constructor. This PluginPtr will take ownership of the
+      /// plugin instance held by _other. If this PluginPtr was holding an
+      /// instance to another plugin, that instance will be deleted if no other
+      /// PluginPtr is referencing which is being moved.
+      /// \param[in] _other Plugin being moved.
+      public: TemplatePluginPtr(TemplatePluginPtr &&_other);
 
       /// \brief Casting constructor. This PluginPtr will now point at the same
       /// plugin instance as _other, and they will share ownership. This
@@ -72,6 +80,8 @@ namespace ignition
       /// different types of plugin wrappers (for example, you can cast a
       /// generic PluginPtr to any SpecializedPluginPtr type, or you can cast
       /// between different types of specializations).
+      /// \param[in] _other Pointer to plugin being casted, which is of a
+      /// different type.
       public: template <typename OtherPluginType>
               TemplatePluginPtr(
                   const TemplatePluginPtr<OtherPluginType> &_other);
@@ -80,77 +90,89 @@ namespace ignition
       /// same plugin instance as _other, and they will share ownership. If this
       /// PluginPtr was holding an instance to another plugin, that instance
       /// will be deleted if no other PluginPtr is referencing it.
-      public: TemplatePluginPtr& operator =(const TemplatePluginPtr &_other);
+      /// \param[in] _other Pointer to plugin being copied.
+      public: TemplatePluginPtr &operator =(const TemplatePluginPtr &_other);
 
       /// \brief Casting operator. This PluginPtr will now point at the same
       /// plugin instance as _other, and they will share ownership. This
       /// essentially allows casting between PluginPtrs that are holding
       /// different types of plugin wrappers.
+      /// \param[in] _other Pointer to plugin being casted, which is of a
+      /// different type.
       public: template <typename OtherPluginType>
-              TemplatePluginPtr& operator =(
+              TemplatePluginPtr &operator =(
                   const TemplatePluginPtr<OtherPluginType> &_other);
 
-      /// \brief Move constructor. This PluginPtr will take ownership of the
-      /// plugin instance held by _other. If this PluginPtr was holding an
-      /// instance to another plugin, that instance will be deleted if no other
-      /// PluginPtr is referencing it.
-      public: TemplatePluginPtr(TemplatePluginPtr &&_other);
-
       /// \brief Move assignment operator. This PluginPtr will take ownership
-      /// of the plugin instance held by _other.  If this PluginPtr was holding
+      /// of the plugin instance held by _other. If this PluginPtr was holding
       /// an instance to another plugin, that instance will be deleted if no
       /// other PluginPtr is referencing it.
-      public: TemplatePluginPtr& operator=(TemplatePluginPtr &&_other);
+      /// \param[in] _other Plugin being moved.
+      public: TemplatePluginPtr &operator=(TemplatePluginPtr &&_other);
 
       /// \brief nullptr assignment operator. Same as calling Clear()
-      public: TemplatePluginPtr& operator=(std::nullptr_t);
+      public: TemplatePluginPtr &operator=(std::nullptr_t);
 
       /// \brief Access the wrapper for the plugin instance and call one of its
       /// member functions.
-      public: PluginType* operator->() const;
+      public: PluginType *operator->() const;
 
       /// \brief Get a reference to the wrapper for the plugin instance that is
       /// being managed by this PluginPtr.
-      public: PluginType& operator*() const;
+      public: PluginType &operator*() const;
 
-      /// \brief Comparison operator. Returns true if this Plugin is holding the
-      /// same plugin instance as _other, otherwise returns false.
+      /// \brief Comparison operator.
+      /// \param[in] _other Plugin to compare to.
+      /// \returns True if this Plugin is holding the same plugin
+      /// instance as _other, otherwise returns false.
       public: bool operator ==(const TemplatePluginPtr &_other) const;
 
-      /// \brief Returns true if the pointer value of the plugin instance held
+      /// \brief Comparison operator.
+      /// \param[in] _other Plugin to compare to.
+      /// \returns True if the pointer value of the plugin instance held
       /// by this PluginPtr is less than the pointer value of the instance held
       /// by _other.
       public: bool operator <(const TemplatePluginPtr &_other) const;
 
-      /// \brief Returns true if the pointer value of the plugin instance held
+      /// \brief Comparison operator.
+      /// \param[in] _other Plugin to compare to.
+      /// \returns True if the pointer value of the plugin instance held
       /// by this PluginPtr is greater than the pointer value of the instance
       /// held by _other.
       public: bool operator >(const TemplatePluginPtr &_other) const;
 
-      /// \brief Returns true if the pointer instance held by this PluginPtr is
+      /// \brief Comparison operator.
+      /// \param[in] _other Plugin to compare to.
+      /// \returns True if the pointer instance held by this PluginPtr is
       /// different from the pointer instance held by _other.
       public: bool operator !=(const TemplatePluginPtr &_other) const;
 
-      /// \brief Returns true if the value of the pointer instance held by this
+      /// \brief Comparison operator.
+      /// \param[in] _other Plugin to compare to.
+      /// \returns True if the value of the pointer instance held by this
       /// PluginPtr is less than or equal to the value of the pointer instance
       /// held by _other.
       public: bool operator <=(const TemplatePluginPtr &_other) const;
 
-      /// \brief Returns true if the value of the pointer instance held by this
+      /// \brief Comparison operator.
+      /// \param[in] _other Plugin to compare to.
+      /// \returns True if the value of the pointer instance held by this
       /// PluginPtr is greater than or equal to the value of the pointer
       /// instance held by _other.
       public: bool operator >=(const TemplatePluginPtr &_other) const;
 
       /// \brief Produces a hash for the plugin instance that this PluginPtr is
       /// holding.
+      /// \returns The instance's hash.
       public: std::size_t Hash() const;
 
-      /// \brief Returns false if this PluginPtr is pointing at a valid plugin
+      /// \brief Check whether this is pointing at a valid plugin.
+      /// \returns False if this PluginPtr is pointing at a valid plugin
       /// instance. If it is instead pointing at a nullptr, this returns true.
       public: bool IsEmpty() const;
 
-      /// \brief Implicitly convert this PluginPtr to a boolean. Returns the
-      /// opposite value of IsEmpty().
+      /// \brief Implicitly convert this PluginPtr to a boolean.
+      /// \returns The opposite value of IsEmpty().
       public: operator bool() const;
 
       /// \brief Clears the Plugin instance from this PluginPtr. IsEmpty() will
@@ -158,17 +180,18 @@ namespace ignition
       /// available any longer.
       public: void Clear();
 
+      /// \brief Private constructor. Creates a plugin instance based on the
+      /// PluginInfo provided. This should only be called by PluginLoader to
+      /// ensure that the PluginInfo is well-formed, so we keep it private.
+      /// \param[in] _info Pointer to information used to construct the plugin.
+      private: explicit TemplatePluginPtr(const PluginInfo *_info);
+
       /// \brief Pointer to the plugin wrapper that this PluginPtr is managing.
       private: std::unique_ptr<PluginType> dataPtr;
 
       // Declare friendship
       friend class PluginLoader;
       template <class> friend class TemplatePluginPtr;
-
-      /// \brief Private constructor. Creates a plugin instance based on the
-      /// PluginInfo provided. This should only be called by PluginLoader to
-      /// ensure that the PluginInfo is well-formed, so we keep it private.
-      private: explicit TemplatePluginPtr(const PluginInfo *info);
     };
 
     /// \brief Typical usage for TemplatePluginPtr is to just hold a generic

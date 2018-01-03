@@ -23,9 +23,9 @@
 #include <unordered_map>
 
 #include "ignition/common/Console.hh"
-#include "ignition/common/PluginPtr.hh"
 #include "ignition/common/PluginInfo.hh"
 #include "ignition/common/PluginLoader.hh"
+#include "ignition/common/PluginPtr.hh"
 #include "ignition/common/StringUtils.hh"
 #include "ignition/common/Util.hh"
 
@@ -52,7 +52,7 @@ namespace ignition
       /// (used for debug purposes)
       /// \return All the PluginInfo provided by the loaded library.
       public: std::vector<PluginInfo> LoadPlugins(
-        void *_dlHandle, const std::string& _pathToLibrary) const;
+        void *_dlHandle, const std::string &_pathToLibrary) const;
 
       public: using PluginMap = std::unordered_map<std::string, PluginInfo>;
 

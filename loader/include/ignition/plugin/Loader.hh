@@ -46,35 +46,35 @@ namespace ignition
       public: ~PluginLoader();
 
       /// \brief Makes a printable string with info about plugins
-      /// \returns a pretty string
+      /// \returns A pretty string
       public: std::string PrettyStr() const;
 
-      /// \brief get names of interfaces that the loader has plugins for
-      /// \returns interfaces that are implemented
+      /// \brief Get names of interfaces that the loader has plugins for
+      /// \returns Interfaces that are implemented
       public: std::unordered_set<std::string> InterfacesImplemented() const;
 
-      /// \brief get plugin names that implement the interface
-      /// \param[in] _interface name of an interface
-      /// \returns names of plugins that implement the interface
+      /// \brief Get plugin names that implement the interface
+      /// \param[in] _interface Name of an interface
+      /// \returns Names of plugins that implement the interface
       public: std::unordered_set<std::string> PluginsImplementing(
                   const std::string &_interface) const;
 
       /// \brief Load a library at the given path
       /// \param[in] _pathToLibrary is the path to a libaray
-      /// \returns the set of plugins that have been loaded from the library
+      /// \returns The set of plugins that have been loaded from the library
       public: std::unordered_set<std::string> LoadLibrary(
                   const std::string &_pathToLibrary);
 
       /// \brief Instantiates a plugin for the given plugin name
       ///
       /// \param[in] _plugin name of the plugin to instantiate
-      /// \returns ptr to instantiated plugin
+      /// \returns Pointer to instantiated plugin
       public: PluginPtr Instantiate(const std::string &_pluginName) const;
 
       /// \brief Instantiates a plugin of PluginType for the given plugin name.
       /// This can be used to create a specialized PluginPtr.
       ///
-      /// \param[in] PluginType The specialized type of PluginPtrPtr that you
+      /// \tparam PluginPtrType The specialized type of PluginPtrPtr that you
       /// want to construct.
       /// \param[in] _pluginName The name of the plugin that you want to
       /// instantiate
@@ -84,7 +84,10 @@ namespace ignition
                   const std::string &_pluginName) const;
 
       /// \brief Get a pointer to the PluginInfo corresponding to _pluginName.
-      /// Returns nullptr if there is no info for the requested _pluginName.
+      /// \param[in] _pluginName The name of the plugin that you want to
+      /// instantiate
+      /// \return Pointer to PluginInfo or nullptr if there is no info for the
+      /// requested _pluginName.
       private: const PluginInfo *PrivateGetPluginInfo(
                   const std::string &_pluginName) const;
 
