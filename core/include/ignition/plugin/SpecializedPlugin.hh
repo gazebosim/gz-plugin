@@ -123,7 +123,7 @@ namespace ignition
       /// \param[in] _type Specialized interface type
       /// \return Pointer to the specialized intergace
       private: SpecInterface *PrivateGetSpecInterface(
-                   type<SpecInterface> _type);
+          type<SpecInterface> _type);
 
       /// \brief Delegate the function to the standard Plugin method
       /// \param[in] _type Specialized interface type
