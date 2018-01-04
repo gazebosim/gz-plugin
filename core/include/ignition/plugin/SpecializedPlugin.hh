@@ -114,38 +114,44 @@ namespace ignition
       private: template <class T> struct type { };
 
       /// \brief Delegate the function to the standard Plugin method
-      /// \param[in] _type Interface type
+      /// \param[in] _type Empty object meant to guide the compiler to pick the
+      /// desired implementation.
       /// \return Pointer to the intergace
       private: template <class Interface>
                Interface *PrivateGetSpecInterface(type<Interface> _type);
 
       /// \brief Use a low-cost accessor to provide this specialized interface
-      /// \param[in] _type Specialized interface type
+      /// \param[in] _type Empty object meant to guide the compiler to pick the
+      /// desired implementation.
       /// \return Pointer to the specialized intergace
       private: SpecInterface *PrivateGetSpecInterface(
           type<SpecInterface> _type);
 
       /// \brief Delegate the function to the standard Plugin method
-      /// \param[in] _type Specialized interface type
+      /// \param[in] _type Empty object meant to guide the compiler to pick the
+      /// desired implementation.
       /// \return Pointer to the specialized intergace
       private: template <class Interface>
                const Interface *PrivateGetSpecInterface(type<Interface> _type)
                const;
 
       /// \brief Use a low-cost accessor to provide this specialized interface
-      /// \param[in] _type Specialized interface type
+      /// \param[in] _type Empty object meant to guide the compiler to pick the
+      /// desired implementation.
       /// \return Pointer to the specialized intergace
       private: const SpecInterface *PrivateGetSpecInterface(
                    type<SpecInterface> _type) const;
 
       /// \brief Delegate the function to the standard PluginPtr method
-      /// \param[in] _type Specialized interface type
+      /// \param[in] _type Empty object meant to guide the compiler to pick the
+      /// desired implementation.
       /// \return True if the interface is present.
       private: template <class Interface>
                bool PrivateHasSpecInterface(type<Interface> _type) const;
 
       /// \brief Use a low-cost accessor to check on this specialized interface
-      /// \param[in] _type Specialized interface type
+      /// \param[in] _type Empty object meant to guide the compiler to pick the
+      /// desired implementation.
       /// \return True if the interface is present.
       private: bool PrivateHasSpecInterface(type<SpecInterface> _type) const;
 
@@ -154,8 +160,8 @@ namespace ignition
       // using PIMPL. The iterator is const because it must always point to the
       // same entry throughout its entire lifecycle.
       /// \brief Iterator that points to the entry of the specialized interface
-      private: const Plugin::InterfaceMap::iterator
-          privateSpecInterfaceIterator;
+      private:
+          const Plugin::InterfaceMap::iterator privateSpecInterfaceIterator;
     };
   }
 }
