@@ -29,15 +29,9 @@ namespace ignition
     namespace detail { template <class, class> class ComposePlugin; }
     struct PluginInfo;
 
-    /// \brief Declaration of the variadic template for SpecializedPlugin.
-    /// This class definition is a C++ syntax formality.
-    ///
-    /// Look at the definition of SpecializedPlugin<SpecInterface> instead.
+    // Forward declaration of the variadic template SpecializedPlugin class.
     template <class... OtherSpecInterfaces>
-    class SpecializedPlugin
-    {
-      public: ~SpecializedPlugin() = default;
-    };
+    class SpecializedPlugin;
 
     /// \brief This class allows Plugin instances to have high-speed access to
     /// interfaces that can be anticipated at compile time. The plugin does
