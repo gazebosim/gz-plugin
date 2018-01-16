@@ -34,6 +34,11 @@ namespace ignition
     ///
     /// Usage example:
     ///
+    /// Suppose you want to instantiate a plugin that might (or might not) have
+    /// some combination of four interfaces which are known at compile time:
+    /// `MyInterface1`, `FooInterface`, `MyInterface2`, and `BarInterface`. You
+    /// can use SpecializedPluginPtr as shown here:
+    ///
     /// \code
     ///     using MySpecialPluginPtr = SpecializedPluginPtr<
     ///         MyInterface1, FooInterface, MyInterface2, BarInterface>;
@@ -51,6 +56,10 @@ namespace ignition
     /// direct access to the the `FooInterface*` of `plugin`. If `plugin` does
     /// not actually offer `FooInterface`, then it will return a nullptr, still
     /// at extremely high speed.
+    ///
+    /// This same rule also applies to `MyInterface1`, `MyInterface2`, and
+    /// `BarInterface`, because those interfaces were also provided to
+    /// SpecializedPluginPtr<...> at compile time.
     ///
     /// Only interfaces that have been "specialized" can be passed as arguments
     /// to the SpecializedPluginPtr template. To specialize an interface, simply
