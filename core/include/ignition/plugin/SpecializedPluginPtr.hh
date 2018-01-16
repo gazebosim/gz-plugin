@@ -26,8 +26,8 @@ namespace ignition
 {
   namespace common
   {
-    /// \brief This alias allows PluginPtr instances to have low-cost access to
-    /// interfaces that can be anticipated at compile time. The plugin does
+    /// \brief This alias allows PluginPtr instances to have high-speed access
+    /// to interfaces that can be anticipated at compile time. The plugin does
     /// not have to actually offer the specialized interface in order to get
     /// this performance improvement. This template is variadic, so it can
     /// support arbitrarily many interfaces.
@@ -43,10 +43,10 @@ namespace ignition
     ///
     ///     plugin->QueryInterface<FooInterface>();
     ///
-    /// will have extremely low cost associated with it. It will provide direct
-    /// access to the the `FooInterface*` of `plugin`. If `plugin` does not
-    /// actually offer `FooInterface`, then it will return a nullptr, still at
-    /// extremely low cost.
+    /// will have extremely high speed associated with it. It will provide
+    /// direct access to the the `FooInterface*` of `plugin`. If `plugin` does
+    /// not actually offer `FooInterface`, then it will return a nullptr, still
+    /// at extremely high speed.
     ///
     /// Only interfaces that have been "specialized" can be passed as arguments
     /// to the SpecializedPluginPtr template. To specialize an interface, simply
