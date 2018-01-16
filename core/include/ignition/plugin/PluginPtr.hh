@@ -145,8 +145,8 @@ namespace ignition
       /// holding.
       public: std::size_t Hash() const;
 
-      /// \brief Returns false if this PluginPtr is pointing at a valid plugin
-      /// instance. If it is instead pointing at a nullptr, this returns true.
+      /// \brief Returns false if this PluginPtr contains a plugin instance. If
+      /// it instead contains a nullptr, this returns true.
       public: bool IsEmpty() const;
 
       /// \brief Implicitly convert this PluginPtr to a boolean. Returns the
