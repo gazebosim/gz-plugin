@@ -27,7 +27,8 @@
 #include "ignition/common/Console.hh"
 
 #include "test_config.h"
-#include "util/DummyPlugins.hh"
+#include "DummyPluginsPath.h"
+#include "plugins/DummyPlugins.hh"
 
 
 #define IGN_CREATE_SPEC_INTERFACE(name)\
@@ -130,10 +131,8 @@ double RunPerformanceTest(const PluginType &plugin)
 /////////////////////////////////////////////////
 TEST(PluginSpecialization, AccessTime)
 {
-  std::string projectPath(PROJECT_BINARY_PATH);
-
   ignition::common::SystemPaths sp;
-  sp.AddPluginPaths(projectPath + "/test/util");
+  sp.AddPluginPaths(IGN_DUMMY_PLUGIN_PATH);
   std::string path = sp.FindSharedLibrary("IGNDummyPlugins");
   ASSERT_FALSE(path.empty());
 
