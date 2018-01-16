@@ -84,6 +84,7 @@ namespace ignition
       /// PluginPtr was holding an instance to another plugin, that instance
       /// will be deleted if no other PluginPtr is referencing it.
       /// \param[in] _other Another PluginPtr object.
+      /// \return A reference to this object.
       public: TemplatePluginPtr& operator =(const TemplatePluginPtr &_other);
 
       /// \brief Casting operator. This PluginPtr will now point at the same
@@ -92,6 +93,7 @@ namespace ignition
       /// different types of plugin wrappers.
       /// \param[in] _other Another PluginPtr object. It may have a different
       /// kind of specialization.
+      /// \return A reference to this object.
       public: template <typename OtherPluginType>
               TemplatePluginPtr& operator =(
                   const TemplatePluginPtr<OtherPluginType> &_other);
@@ -108,10 +110,12 @@ namespace ignition
       /// an instance to another plugin, that instance will be deleted if no
       /// other PluginPtr is referencing it.
       /// \param[in] _other Another PluginPtr object.
+      /// \return A reference to this object.
       public: TemplatePluginPtr& operator=(TemplatePluginPtr &&_other);
 
       /// \brief nullptr assignment operator. Same as calling Clear()
       /// \param[in] A nullptr object.
+      /// \return A reference to this object.
       public: TemplatePluginPtr& operator=(std::nullptr_t);
 
       /// \brief Access the wrapper for the plugin instance and call one of its
