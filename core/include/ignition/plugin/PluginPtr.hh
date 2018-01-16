@@ -142,15 +142,19 @@ namespace ignition
       public: bool operator >=(const TemplatePluginPtr &_other) const;
 
       /// \brief Produces a hash for the plugin instance that this PluginPtr is
-      /// holding.
+      /// holding. This function allows PluginPtr instances to be used as values
+      /// in a std::unordered_set<PluginPtr> or keys in a
+      /// std::unordered_map<PluginPtr, T>. Using this function directly should
+      /// not normally be necessary.
+      /// \return A hash of the underlying pointer object.
       public: std::size_t Hash() const;
 
       /// \brief Returns false if this PluginPtr contains a plugin instance. If
       /// it instead contains a nullptr, this returns true.
       public: bool IsEmpty() const;
 
-      /// \brief Implicitly convert this PluginPtr to a boolean. Returns the
-      /// opposite value of IsEmpty().
+      /// \brief Implicitly convert this PluginPtr to a boolean.
+      /// \return The opposite value of IsEmpty().
       public: operator bool() const;
 
       /// \brief Clears the Plugin instance from this PluginPtr. IsEmpty() will
