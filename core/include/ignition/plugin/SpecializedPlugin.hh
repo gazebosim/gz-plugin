@@ -41,14 +41,18 @@ namespace ignition
     ///
     /// Usage example:
     ///
+    /// \code
     ///     using MySpecialPluginPtr = SpecializedPluginPtr<
     ///         MyInterface1, FooInterface, MyInterface2, BarInterface>;
     ///
     ///     MySpecialPluginPtr plugin = loader->Instantiate(pluginName);
+    /// \endcode
     ///
     /// Then, calling the function
     ///
+    /// \code
     ///     plugin->QueryInterface<FooInterface>();
+    /// \endcode
     ///
     /// will have extremely high-speed associated with it. It will provide
     /// direct access to the the `FooInterface*` of `plugin`. If `plugin` does

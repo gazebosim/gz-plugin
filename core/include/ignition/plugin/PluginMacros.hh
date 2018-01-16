@@ -30,6 +30,7 @@
 ///
 /// Usage example:
 ///
+/// \code
 ///     namespace mylibrary {
 ///       namespace ns {
 ///         class SomeInterface
@@ -40,6 +41,7 @@
 ///         };
 ///       } // namespace ns
 ///     } // namespace mylibrary
+/// \endcode
 ///
 /// Interfaces with this macro can be utilized by SpecializedPlugin to get
 /// high-speed access to this type of interface. Note that this performance
