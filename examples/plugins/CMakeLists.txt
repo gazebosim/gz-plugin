@@ -9,7 +9,7 @@ foreach(plugin_file ${plugin_files})
 
   get_filename_component(plugin ${plugin_file} NAME_WE)
 
-  add_library(${plugin} ${plugin_file})
+  add_library(${plugin} SHARED ${plugin_file})
 
   target_link_libraries(${plugin} PRIVATE ignition-common0::ignition-common0)
 
