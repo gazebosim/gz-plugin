@@ -19,7 +19,7 @@
 
 #include <ignition/common/PluginMacros.hh>
 
-#include "Interfaces.hh"
+#include "integrators.hh"
 
 namespace ignition {
 namespace common {
