@@ -331,12 +331,12 @@ namespace ignition
             return static_cast<void*>(new PluginClass);
           };
 
-IGN_COMMON_BEGIN_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
+IGN_COMMON_WARN_IGNORE__DELETE_NON_VIRTUAL_DESTRUCTOR
           // Create a deleter to clean up destroyed instances
           info.deleter = [=](void *ptr) {
             delete static_cast<PluginClass*>(ptr);
           };
-IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
+IGN_COMMON_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
 
           // Construct a map from the plugin to its interfaces
           InterfaceHelper<PluginClass, Interfaces...>
@@ -406,7 +406,8 @@ IGN_COMMON_FINISH_WARNING_SUPPRESSION(IGN_COMMON_DELETE_NON_VIRTUAL_DESTRUCTOR)
         { \
           ExecuteWhenLoadingLibrary##UniqueID() \
           { \
-            ignition::common::detail::Registrar<__VA_ARGS__>::RegisterPlugin(); \
+            ::ignition::common::detail::Registrar<__VA_ARGS__>:: \
+                RegisterPlugin(); \
           } \
         }; \
   \

@@ -32,12 +32,16 @@ namespace ignition
     ///
     /// The following expressions will return true:
     ///
+    /// \code
     ///     ConstCompatible<T, T>::value
     ///     ConstCompatible<const T, T>::value
+    /// \endcode
     ///
     /// The following expression will return false:
     ///
+    /// \code
     ///     ConstCompatible<T, const T>::value
+    /// \endcode
     ///
     template <typename To, typename From>
     using ConstCompatible = detail::ConstCompatible<To, From>;

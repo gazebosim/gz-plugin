@@ -63,6 +63,7 @@ namespace ignition
 
       /// \brief Copy constructor. This PluginPtr will now point at the same
       /// plugin instance as _other, and they will share ownership.
+      /// \param[in] _other Another PluginPtr object.
       public: TemplatePluginPtr(const TemplatePluginPtr &_other);
 
       /// \brief Casting constructor. This PluginPtr will now point at the same
@@ -71,6 +72,8 @@ namespace ignition
       /// different types of plugin wrappers (for example, you can cast a
       /// generic PluginPtr to any SpecializedPluginPtr type, or you can cast
       /// between different types of specializations).
+      /// \param[in] _other Another PluginPtr object. It may have a different
+      /// kind of specialization.
       public: template <typename OtherPluginType>
               TemplatePluginPtr(
                   const TemplatePluginPtr<OtherPluginType> &_other);
@@ -79,12 +82,17 @@ namespace ignition
       /// same plugin instance as _other, and they will share ownership. If this
       /// PluginPtr was holding an instance to another plugin, that instance
       /// will be deleted if no other PluginPtr is referencing it.
+      /// \param[in] _other Another PluginPtr object.
+      /// \return A reference to this object.
       public: TemplatePluginPtr& operator =(const TemplatePluginPtr &_other);
 
       /// \brief Casting operator. This PluginPtr will now point at the same
       /// plugin instance as _other, and they will share ownership. This
       /// essentially allows casting between PluginPtrs that are holding
       /// different types of plugin wrappers.
+      /// \param[in] _other Another PluginPtr object. It may have a different
+      /// kind of specialization.
+      /// \return A reference to this object.
       public: template <typename OtherPluginType>
               TemplatePluginPtr& operator =(
                   const TemplatePluginPtr<OtherPluginType> &_other);
@@ -93,63 +101,88 @@ namespace ignition
       /// plugin instance held by _other. If this PluginPtr was holding an
       /// instance to another plugin, that instance will be deleted if no other
       /// PluginPtr is referencing it.
+      /// \param[in] _other Another PluginPtr object
       public: TemplatePluginPtr(TemplatePluginPtr &&_other);
 
       /// \brief Move assignment operator. This PluginPtr will take ownership
       /// of the plugin instance held by _other.  If this PluginPtr was holding
       /// an instance to another plugin, that instance will be deleted if no
       /// other PluginPtr is referencing it.
+      /// \param[in] _other Another PluginPtr object.
+      /// \return A reference to this object.
       public: TemplatePluginPtr& operator=(TemplatePluginPtr &&_other);
 
       /// \brief nullptr assignment operator. Same as calling Clear()
+      /// \param[in] A nullptr object.
+      /// \return A reference to this object.
       public: TemplatePluginPtr& operator=(std::nullptr_t);
 
       /// \brief Access the wrapper for the plugin instance and call one of its
       /// member functions.
+      /// \return The ability to call a member function on the underlying Plugin
+      /// object.
       public: PluginType* operator->() const;
 
       /// \brief Get a reference to the wrapper for the plugin instance that is
       /// being managed by this PluginPtr.
+      /// \return A reference to the underlying Plugin object.
       public: PluginType& operator*() const;
 
       /// \brief Comparison operator. Returns true if this Plugin is holding the
       /// same plugin instance as _other, otherwise returns false.
+      /// \param[in] _other Another PluginPtr object.
+      /// \return True if the value of this pointer is == _other.
       public: bool operator ==(const TemplatePluginPtr &_other) const;
 
       /// \brief Returns true if the pointer value of the plugin instance held
       /// by this PluginPtr is less than the pointer value of the instance held
       /// by _other.
+      /// \param[in] _other Another PluginPtr object.
+      /// \return True if the value of this pointer is < _other.
       public: bool operator <(const TemplatePluginPtr &_other) const;
 
       /// \brief Returns true if the pointer value of the plugin instance held
       /// by this PluginPtr is greater than the pointer value of the instance
       /// held by _other.
+      /// \param[in] _other Another PluginPtr object.
+      /// \return True if the value of this pointer is > _other.
       public: bool operator >(const TemplatePluginPtr &_other) const;
 
       /// \brief Returns true if the pointer instance held by this PluginPtr is
       /// different from the pointer instance held by _other.
+      /// \param[in] _other Another PluginPtr object.
+      /// \return True if the value of this pointer is != _other.
       public: bool operator !=(const TemplatePluginPtr &_other) const;
 
       /// \brief Returns true if the value of the pointer instance held by this
       /// PluginPtr is less than or equal to the value of the pointer instance
       /// held by _other.
+      /// \param[in] _other Another PluginPtr object.
+      /// \return True if the value of this pointer is <= _other.
       public: bool operator <=(const TemplatePluginPtr &_other) const;
 
       /// \brief Returns true if the value of the pointer instance held by this
       /// PluginPtr is greater than or equal to the value of the pointer
       /// instance held by _other.
+      /// \param[in] _other Another PluginPtr object.
+      /// \return True if the value of this pointer is >= _other.
       public: bool operator >=(const TemplatePluginPtr &_other) const;
 
       /// \brief Produces a hash for the plugin instance that this PluginPtr is
-      /// holding.
+      /// holding. This function allows PluginPtr instances to be used as values
+      /// in a std::unordered_set<PluginPtr> or keys in a
+      /// std::unordered_map<PluginPtr, T>. Using this function directly should
+      /// not normally be necessary.
+      /// \return A hash of the underlying pointer object.
       public: std::size_t Hash() const;
 
-      /// \brief Returns false if this PluginPtr is pointing at a valid plugin
-      /// instance. If it is instead pointing at a nullptr, this returns true.
+      /// \brief Check if this PluginPtr is holding a plugin instance.
+      /// \return False if this PluginPtr contains a plugin instance. If it
+      /// instead contains a nullptr, this returns true.
       public: bool IsEmpty() const;
 
-      /// \brief Implicitly convert this PluginPtr to a boolean. Returns the
-      /// opposite value of IsEmpty().
+      /// \brief Implicitly convert this PluginPtr to a boolean.
+      /// \return The opposite value of IsEmpty().
       public: operator bool() const;
 
       /// \brief Clears the Plugin instance from this PluginPtr. IsEmpty() will
@@ -167,6 +200,10 @@ namespace ignition
       /// \brief Private constructor. Creates a plugin instance based on the
       /// PluginInfo provided. This should only be called by PluginLoader to
       /// ensure that the PluginInfo is well-formed, so we keep it private.
+      /// \param[in] _info A PluginInfo instance that was generated by
+      /// PluginLoader. Alternatively, this can take a nullptr to create an
+      /// empty PluginPtr.
+      /// \param[in] _dlHandlePtr A reference count for the DL handle.
       private: explicit TemplatePluginPtr(
           const PluginInfo *_info, const std::shared_ptr<void> &_dlHandlePtr);
     };

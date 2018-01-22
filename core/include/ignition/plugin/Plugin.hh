@@ -23,7 +23,8 @@
 #include <map>
 #include <string>
 
-#include <ignition/common/System.hh>
+#include <ignition/common/Export.hh>
+#include <ignition/common/SuppressWarning.hh>
 #include <ignition/common/PluginInfo.hh>
 
 namespace ignition
@@ -38,10 +39,8 @@ namespace ignition
     {
       // -------------------- Public API ---------------------
 
-    /// \brief Get an interface with the given name, casted to the specified
-    /// class type. The template argument Interface must exactly match the
-    /// underlying type associated with _interfaceName, or else the behavior
-    /// of this function is undefined.
+    /// \brief Get an interface of the specified type, if it is provided by
+    /// this plugin.
     ///
     /// Note that the interface pointer you receive is owned by the Plugin
     /// object. You MUST NOT ever try to deallocate it yourself. Moreover, the
@@ -51,8 +50,6 @@ namespace ignition
     /// of this Plugin object. The pointer will remain valid as long as the
     /// std::shared_ptr provided by QueryInterfaceSharedPtr is alive.
     ///
-    /// \param[in] _interfaceName The name of the desired interface, as a
-    /// string.
     /// \return A raw pointer to the specified interface. If the requested
     /// _interfaceName is not provided by this Plugin, this returns a nullptr.
     /// This pointer is invalidated when the reference count of the plugin
@@ -67,13 +64,13 @@ namespace ignition
       /// \brief This function has been deprecated in favor of the version of
       /// QueryInterface which does not take a std::string argument.
       public: template <class Interface>
-              IGNITION_COMMON_DEPRECATED(0.6)
+              IGN_DEPRECATED(2.0)
               Interface *QueryInterface(const std::string &/*_interfaceName*/);
 
       /// \brief const-qualified version of
       /// QueryInterface<Interface>(std::string)
       public: template <class Interface>
-              IGNITION_COMMON_DEPRECATED(0.6)
+              IGN_DEPRECATED(2.0)
               const Interface *QueryInterface(
                   const std::string &/*_interfaceName*/) const;
 
@@ -107,14 +104,14 @@ namespace ignition
       /// \brief This version of QueryInterfaceSharedPtr has been deprecated in
       /// favor of the version that does not take a std::string argument.
       public: template <class Interface>
-              IGNITION_COMMON_DEPRECATED(0.6)
+              IGN_DEPRECATED(2.0)
               std::shared_ptr<Interface> QueryInterfaceSharedPtr(
                   const std::string &/*_interfaceName*/);
 
       /// \brief Same as QueryInterfaceSharedPtr<Interface>(std::string), but
       /// it returns a std::shared_ptr to a const-qualified Interface.
       public: template <class Interface>
-              IGNITION_COMMON_DEPRECATED(0.6)
+              IGN_DEPRECATED(2.0)
               std::shared_ptr<const Interface> QueryInterfaceSharedPtr(
                   const std::string &/*_interfaceName*/) const;
 
@@ -176,8 +173,10 @@ namespace ignition
       private: InterfaceMap::iterator PrivateGetOrCreateIterator(
           const std::string &_interfaceName);
 
+      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to the implementation of this class.
       private: const std::unique_ptr<PluginPrivate> dataPtr;
+      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
 
       /// \brief Virtual destructor
       public: virtual ~Plugin();

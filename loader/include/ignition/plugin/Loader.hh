@@ -15,6 +15,7 @@
  *
  */
 
+
 #ifndef IGNITION_COMMON_PLUGINLOADER_HH_
 #define IGNITION_COMMON_PLUGINLOADER_HH_
 
@@ -23,9 +24,9 @@
 #include <typeinfo>
 #include <unordered_set>
 
-#include "ignition/common/System.hh"
+#include <ignition/common/Export.hh>
+#include <ignition/common/SuppressWarning.hh>
 #include <ignition/common/PluginPtr.hh>
-#include <ignition/common/PluginInfo.hh>
 
 namespace ignition
 {
@@ -132,7 +133,9 @@ namespace ignition
                   const std::string &_pluginName) const;
 
       /// \brief PIMPL pointer to class implementation
+      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
       private: std::unique_ptr<PluginLoaderPrivate> dataPtr;
+      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }
