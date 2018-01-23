@@ -245,7 +245,7 @@ namespace ignition
         const std::string &_interfaceName,
         const bool _demangled) const
     {
-      if(_demangled)
+      if (_demangled)
       {
         return (this->dataPtr->info.demangledInterfaces
                 .count(_interfaceName) != 0);

@@ -19,10 +19,10 @@
 #ifndef IGNITION_COMMON_DETAIL_REGISTERPLUGIN_HH_
 #define IGNITION_COMMON_DETAIL_REGISTERPLUGIN_HH_
 
+#include <set>
 #include <string>
 #include <typeinfo>
 #include <type_traits>
-#include <unordered_set>
 #include <ignition/common/PluginInfo.hh>
 #include <ignition/common/SuppressWarning.hh>
 
@@ -127,10 +127,10 @@ extern "C"
         // translation units.
         ignition::common::PluginInfo &entry = it->second;
 
-        for(const auto &interfaceMapEntry : input->interfaces)
+        for (const auto &interfaceMapEntry : input->interfaces)
           entry.interfaces.insert(interfaceMapEntry);
 
-        for(const auto &aliasSetEntry : input->aliases)
+        for (const auto &aliasSetEntry : input->aliases)
           entry.aliases.insert(aliasSetEntry);
       }
     }
@@ -236,7 +236,8 @@ namespace ignition
 
           interfaces.insert(std::make_pair(
                 typeid(Interface).name(),
-                [=](void* v_ptr) {
+                [=](void* v_ptr)
+                {
                     PluginClass *d_ptr = static_cast<PluginClass*>(v_ptr);
                     return static_cast<Interface*>(d_ptr);
                 }));
@@ -327,13 +328,15 @@ namespace ignition
           info.name = typeid(PluginClass).name();
 
           // Create a factory for generating new plugin instances
-          info.factory = [=]() {
+          info.factory = [=]()
+          {
             return static_cast<void*>(new PluginClass);
           };
 
 IGN_COMMON_WARN_IGNORE__DELETE_NON_VIRTUAL_DESTRUCTOR
           // Create a deleter to clean up destroyed instances
-          info.deleter = [=](void *ptr) {
+          info.deleter = [=](void *ptr)
+          {
             delete static_cast<PluginClass*>(ptr);
           };
 IGN_COMMON_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR

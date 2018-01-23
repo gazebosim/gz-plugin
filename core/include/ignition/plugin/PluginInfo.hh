@@ -55,19 +55,19 @@ namespace ignition
         std::set<std::string> aliases;
 
         /// \brief The keys are the names of the types of interfaces that this
-        /// plugin provides. The values are functions that convert a void pointer
-        /// (which actually points to the plugin instance) to another void pointer
-        /// (which actually points to the location of the interface within the
-        /// plugin instance).
+        /// plugin provides. The values are functions that convert a void
+        /// pointer (which actually points to the plugin instance) to another
+        /// void pointer (which actually points to the location of the interface
+        /// within the plugin instance).
         using InterfaceCastingMap =
             std::unordered_map< std::string, std::function<void*(void*)> >;
         InterfaceCastingMap interfaces;
 
-        /// \brief This is a set containing the demangled versions of the names of
-        /// the interfaces provided by this plugin. This gets filled in by the
-        /// PluginLoader after receiving the PluginInfo. It is only used by the
-        /// user-facing API. Internally, when looking up Interfaces, the mangled
-        /// `interfaces` map will still be used.
+        /// \brief This is a set containing the demangled versions of the names
+        /// of the interfaces provided by this plugin. This gets filled in by
+        /// the PluginLoader after receiving the PluginInfo. It is only used by
+        /// the user-facing API. Internally, when looking up Interfaces, the
+        /// mangled `interfaces` map will still be used.
         std::set<std::string> demangledInterfaces;
 
         /// \brief A method that instantiates a new instance of a plugin

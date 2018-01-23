@@ -63,7 +63,7 @@ namespace ignition
       assert(_name.substr(0, 6) == "class ");
 
       // Visual Studio's typeid(~).name() does not mangle the name, except that
-      // it prefixes the normal name of the class with the character sequence 
+      // it prefixes the normal name of the class with the character sequence
       // "class ". So to get the "demangled" name, all we have to do is remove
       // the first six characters. The plugin framework does not handle any
       // non-class types, so we do not lose anything by removing the "class "
@@ -94,7 +94,7 @@ namespace ignition
       public: bool ForgetLibrary(void *_dlHandle);
 
       public: using PluginToDlHandleMap =
-          std::unordered_map<std::string, std::shared_ptr<void>>;
+          std::unordered_map< std::string, std::shared_ptr<void> >;
       /// \brief A map from known plugin names to the handle of the library that
       /// provides it.
       ///
@@ -121,13 +121,13 @@ namespace ignition
       /// maintain the ordering of these member variables.
       public: PluginMap plugins;
 
-      using DlHandleMap = std::unordered_map<void*, std::weak_ptr<void>>;
+      using DlHandleMap = std::unordered_map< void*, std::weak_ptr<void> >;
       /// \brief A map which keeps track of which shared libraries have been
       /// loaded by this PluginLoader.
       public: DlHandleMap dlHandlePtrMap;
 
       public: using DlHandleToPluginMap =
-          std::unordered_map<void*, std::unordered_set<std::string>>;
+          std::unordered_map< void*, std::unordered_set<std::string> >;
       /// \brief A map from the shared library handle to the names of the
       /// plugins that it provides.
       public: DlHandleToPluginMap dlHandleToPluginMap;
@@ -398,7 +398,7 @@ namespace ignition
         // exists for it.
         dlHandlePtr = it->second.lock();
 
-        if(dlHandlePtr)
+        if (dlHandlePtr)
         {
           // The reference counter of this library is still active.
 
@@ -424,7 +424,7 @@ namespace ignition
         // it is no longer active), so we should create a reference counting
         // handle for it.
         dlHandlePtr = std::shared_ptr<void>(
-              dlHandle, [](void *ptr) { dlclose(ptr); });
+              dlHandle, [](void *ptr) { dlclose(ptr); }); // NOLINT
 
         it->second = dlHandlePtr;
       }
@@ -533,7 +533,7 @@ namespace ignition
         return loadedPlugins;
       }
 
-      for(const PluginInfoMap::value_type &info : *allInfo)
+      for (const PluginInfoMap::value_type &info : *allInfo)
       {
         loadedPlugins.push_back(info.second);
       }
@@ -545,12 +545,12 @@ namespace ignition
     bool PluginLoaderPrivate::ForgetLibrary(void *_dlHandle)
     {
       DlHandleToPluginMap::iterator it = dlHandleToPluginMap.find(_dlHandle);
-      if(dlHandleToPluginMap.end() == it)
+      if (dlHandleToPluginMap.end() == it)
         return false;
 
       const std::unordered_set<std::string> &forgottenPlugins = it->second;
 
-      for(const std::string &forget : forgottenPlugins)
+      for (const std::string &forget : forgottenPlugins)
       {
         // CRUCIAL DEV NOTE (MXG): Be sure to erase the PluginInfo from
         // `plugins` BEFORE erasing the plugin entry in `pluginToDlHandlePtrs`,
