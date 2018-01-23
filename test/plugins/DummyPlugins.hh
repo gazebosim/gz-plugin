@@ -23,7 +23,7 @@
 #include <memory>
 
 #include <ignition/common/Export.hh>
-#include <ignition/common/PluginMacros.hh>
+#include <ignition/common/RegisterPlugin.hh>
 
 namespace test
 {
@@ -50,7 +50,6 @@ class DummyDoubleBase
 class DummyIntBase
 {
   public: virtual int MyIntegerValueIs() const = 0;
-  IGN_COMMON_SPECIALIZE_INTERFACE(test::util::DummyIntBase)
 };
 
 class DummySetterBase
@@ -58,7 +57,6 @@ class DummySetterBase
   public: virtual void SetName(const std::string &_name) = 0;
   public: virtual void SetDoubleValue(const double _val) = 0;
   public: virtual void SetIntegerValue(const int _val) = 0;
-  IGN_COMMON_SPECIALIZE_INTERFACE(test::util::DummySetterBase)
 };
 
 struct SomeObject
@@ -70,7 +68,6 @@ struct SomeObject
 class DummyGetSomeObjectBase
 {
   public: virtual std::unique_ptr<SomeObject> GetSomeObject() const = 0;
-  IGN_COMMON_SPECIALIZE_INTERFACE(test::util::DummyGetSomeObjectBase)
 };
 
 class DummyMultiPlugin

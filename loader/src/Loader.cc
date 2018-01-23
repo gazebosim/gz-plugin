@@ -22,9 +22,14 @@
 #include <sstream>
 #include <unordered_map>
 
-#if defined __GNUC__ or defined __clang__
+#if defined(__GNUC__) or defined(__clang__)
 // This header is used for name demangling on GCC and Clang
 #include <cxxabi.h>
+#endif
+
+#ifdef __GNUC__
+// This is used to check the version of glibc when compiling with GCC
+#include <features.h>
 #endif
 
 #include "ignition/common/Console.hh"
@@ -42,7 +47,7 @@ namespace ignition
     /////////////////////////////////////////////////
     std::string Demangle(const std::string &_name)
     {
-#if defined __GNUC__ or defined __clang__
+#if defined(__GNUC__) or defined(__clang__)
       int status;
       char *demangled_cstr = abi::__cxa_demangle(
             _name.c_str(), nullptr, nullptr, &status);
@@ -58,10 +63,22 @@ namespace ignition
       free(demangled_cstr);
 
       return demangled;
+#elif _MSC_VER
+
+      assert(_name.substr(0, 6) == "class ");
+
+      // Visual Studio's typeid(~).name() does not mangle the name, except that
+      // it prefixes the normal name of the class with the character sequence 
+      // "class ". So to get the "demangled" name, all we have to do is remove
+      // the first six characters. The plugin framework does not handle any
+      // non-class types, so we do not lose anything by removing the "class "
+      // designator.
+      return _name.substr(6);
 #else
-      // MSVC does not require any demangling. Any other compilers besides GCC
-      // or clang may be using an unknown ABI, so we won't be able to demangle
-      // them anyway.
+      // If we don't know the compiler, then we can't perform name demangling.
+      // The tests will probably fail in this situation, and the class names
+      // will probably look gross to users. Plugin name aliasing can be used
+      // to make plugins robust to this situation.
       return _name;
 #endif
     }
@@ -262,6 +279,19 @@ namespace ignition
     {
       if (!exists(_pathToLibrary))
         return false;
+
+#ifndef __GLIBC__
+// This macro is not part of the POSIX standard, and is a custom addition to
+// glibc-2.2, so we need create a no-op stand-in flag for it if we are not
+// using glibc-2.2.
+#define RTLD_NOLOAD 0
+#else
+#  if __GLIBC__ < 2
+#    define RTLD_NOLOAD 0
+#  elif __GLIBC__ == 2 and __GLIBC_MINOR__ < 2
+#    define RTLD_NOLOAD 0
+#  endif
+#endif
 
       void *dlHandle = dlopen(_pathToLibrary.c_str(),
                               RTLD_NOLOAD | RTLD_LAZY | RTLD_LOCAL);
