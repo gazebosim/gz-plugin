@@ -21,4 +21,9 @@
 // This header is for backwards compatibility. Please use RegisterPlugin instead
 #include <ignition/common/RegisterPlugin.hh>
 
+// These macros are defined for backwards compatibility. They are no longer
+// needed and can simply be removed.
+#define IGN_COMMON_BEGIN_ADDING_PLUGINS
+#define IGN_COMMON_FINISH_ADDING_PLUGINS
+
 #endif
