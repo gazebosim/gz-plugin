@@ -27,11 +27,6 @@
 #include <cxxabi.h>
 #endif
 
-#ifdef __GNUC__
-// This is used to check the version of glibc when compiling with GCC
-#include <features.h>
-#endif
-
 #include "ignition/common/Console.hh"
 #include "ignition/common/PluginPtr.hh"
 #include "ignition/common/PluginInfo.hh"
@@ -280,17 +275,11 @@ namespace ignition
       if (!exists(_pathToLibrary))
         return false;
 
-#ifndef __GLIBC__
+#ifndef RTLD_NOLOAD
 // This macro is not part of the POSIX standard, and is a custom addition to
 // glibc-2.2, so we need create a no-op stand-in flag for it if we are not
 // using glibc-2.2.
 #define RTLD_NOLOAD 0
-#else
-#  if __GLIBC__ < 2
-#    define RTLD_NOLOAD 0
-#  elif __GLIBC__ == 2 and __GLIBC_MINOR__ < 2
-#    define RTLD_NOLOAD 0
-#  endif
 #endif
 
       void *dlHandle = dlopen(_pathToLibrary.c_str(),
