@@ -1,0 +1,69 @@
+/*
+ * Copyright (C) 2018 Open Source Robotics Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+*/
+
+#include "robot.hh"
+
+using namespace ignition::common::examples;
+
+namespace CautiousBotLibrary {
+
+class CautiousBot
+    : public virtual Drive,
+      public virtual ProximitySensor
+{
+  // Documentation inherited
+  public: double Frequency() const override
+  {
+    return 100.0;
+  }
+
+  // Documentation inherited
+  public: ignition::math::Vector3d Velocity() const override
+  {
+    const double MaxDist = 10.0;
+
+    // Try to stay 0.1 meters away from any obstacle
+    const double d = (std::min(distance, MaxDist) - 0.1);
+
+    return ignition::math::Vector3d(0.1*d, 0.0, 0.0);
+  }
+
+  // Documentation inherited
+  public: double MaxRange() const override
+  {
+    return 5.0;
+  }
+
+  // Documentation inherited
+  public: void ReadProximity(const double _distance) override
+  {
+    this->distance = _distance;
+  }
+
+  public: double distance = std::numeric_limits<double>::infinity();
+};
+
+}
+
+IGN_COMMON_BEGIN_ADDING_PLUGINS
+IGN_COMMON_ADD_PLUGIN(
+    CautiousBotLibrary::CautiousBot,
+    ignition::common::examples::Drive)
+IGN_COMMON_ADD_PLUGIN(
+    CautiousBotLibrary::CautiousBot,
+    ignition::common::examples::ProximitySensor)
+IGN_COMMON_FINISH_ADDING_PLUGINS
