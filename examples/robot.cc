@@ -178,12 +178,9 @@ void Simulate(const EnvironmentPluginPtr &_environment,
 
     // We integrate the position components with a half-step taken in the angle,
     // which should smooth out the behavior of sharp turns.
-    const double dx =
-          vel[0]*cos(theta + 0.5*vel[2]*dt)*dt
-        + vel[1]*sin(theta + 0.5*vel[2]*dt)*dt;
-    const double dy =
-        - vel[0]*sin(theta + 0.5*vel[2]*dt)*dt
-        + vel[1]*cos(theta + 0.5*vel[2]*dt)*dt;
+    const double halfAngle = theta + 0.5*vel[2]*dt;
+    const double dx = vel[0]*cos(halfAngle)*dt + vel[1]*sin(halfAngle)*dt;
+    const double dy = - vel[0]*sin(halfAngle)*dt + vel[1]*cos(halfAngle)*dt;
 
     x[0] += dx;
     x[1] += dy;
