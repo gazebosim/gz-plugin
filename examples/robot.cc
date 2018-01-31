@@ -302,8 +302,8 @@ int main(int argc, char *argv[])
 
   std::cout << "boost::program_options was not found when this example was\n"
             << "compiled, so we will default to:\n"
-            << " -- Robot:       " << robot <<"\n"
-            << " -- Environment: " << env << "\n"
+            << " -- Robot:       " << robotLib <<"\n"
+            << " -- Environment: " << envLib << "\n"
             << " -- Duration:    " << duration << "\n"
             << std::endl;
 
