@@ -30,6 +30,7 @@
 ///
 /// Usage example:
 ///
+/// \code
 ///     namespace mylibrary {
 ///       namespace ns {
 ///         class SomeInterface
@@ -40,12 +41,13 @@
 ///         };
 ///       } // namespace ns
 ///     } // namespace mylibrary
+/// \endcode
 ///
 /// Interfaces with this macro can be utilized by SpecializedPlugin to get
-/// low cost access to this type of interface. Note that this performance
+/// high-speed access to this type of interface. Note that this performance
 /// benefit is available even if the plugin that gets loaded does not offer this
-/// interface; you just get low cost access to a nullptr instead. Always be sure
-/// to verify the existence of an interface that you query from a plugin by
+/// interface; you just get high-speed access to a nullptr instead. Always be
+/// sure to verify the existence of an interface that you query from a plugin by
 /// checking whether it's a nullptr!
 #define IGN_COMMON_SPECIALIZE_INTERFACE(interfaceName)\
   DETAIL_IGN_COMMON_SPECIALIZE_INTERFACE(interfaceName)

@@ -28,17 +28,11 @@ namespace ignition
     // Forward declarations
     namespace detail { template <class, class> class ComposePlugin; }
 
-    /// \brief Declaration of the variadic template for SpecializedPlugin.
-    /// This class definition is a C++ syntax formality.
-    ///
-    /// Look at the definition of SpecializedPlugin<SpecInterface> instead.
+    // Forward declaration of the variadic template SpecializedPlugin class.
     template <class... OtherSpecInterfaces>
-    class SpecializedPlugin
-    {
-      public: ~SpecializedPlugin() = default;
-    };
+    class SpecializedPlugin;
 
-    /// \brief This class allows Plugin instances to have low-cost access to
+    /// \brief This class allows Plugin instances to have high-speed access to
     /// interfaces that can be anticipated at compile time. The plugin does
     /// not have to actually offer the specialized interface in order to get
     /// this performance improvement. This template is variadic, so it can
@@ -46,19 +40,23 @@ namespace ignition
     ///
     /// Usage example:
     ///
+    /// \code
     ///     using MySpecialPluginPtr = SpecializedPluginPtr<
     ///         MyInterface1, FooInterface, MyInterface2, BarInterface>;
     ///
     ///     MySpecialPluginPtr plugin = loader->Instantiate(pluginName);
+    /// \endcode
     ///
     /// Then, calling the function
     ///
+    /// \code
     ///     plugin->QueryInterface<FooInterface>();
+    /// \endcode
     ///
-    /// will have extremely low cost associated with it. It will provide direct
-    /// access to the the `FooInterface*` of `plugin`. If `plugin` does not
-    /// actually offer `FooInterface`, then it will return a nullptr, still at
-    /// extremely low cost.
+    /// will have extremely high-speed associated with it. It will provide
+    /// direct access to the the `FooInterface*` of `plugin`. If `plugin` does
+    /// not actually offer `FooInterface`, then it will return a nullptr, still
+    /// at extremely high speed.
     ///
     /// Only interfaces that have been "specialized" can be passed as arguments
     /// to the SpecializedPlugin template. To specialize an interface, simply
@@ -113,14 +111,14 @@ namespace ignition
       private: template <class Interface>
                Interface *PrivateGetSpecInterface(type<Interface>);
 
-      /// \brief Use a low-cost accessor to provide this specialized interface
+      /// \brief Use a high-speed accessor to provide this specialized interface
       private: SpecInterface *PrivateGetSpecInterface(type<SpecInterface>);
 
       /// \brief Delegate the function to the standard Plugin method
       private: template <class Interface>
                const Interface *PrivateGetSpecInterface(type<Interface>) const;
 
-      /// \brief Use a low-cost accessor to provide this specialized interface
+      /// \brief Use a high-speed accessor to provide this specialized interface
       private: const SpecInterface *PrivateGetSpecInterface(
                    type<SpecInterface>) const;
 
@@ -128,7 +126,7 @@ namespace ignition
       private: template <class Interface>
                bool PrivateHasSpecInterface(type<Interface>) const;
 
-      /// \brief Use a low-cost accessor to check on this specialized interface
+      /// \brief Use a high-speed accessor to check this specialized interface
       private: bool PrivateHasSpecInterface(type<SpecInterface>) const;
 
       /// \brief Iterator that points to the entry of the specialized interface
