@@ -239,6 +239,15 @@ int main(int argc, char *argv[])
 
 #ifdef HAVE_BOOST_PROGRAM_OPTIONS
 
+  std::string knownRobotString;
+  for (const std::string &r : knownRobotPlugins)
+    knownRobotString += r + "  ";
+
+  std::string knownEnvString;
+  for (const std::string &e : knownEnvPlugins)
+    knownEnvString += e + "  ";
+
+
   std::string usage;
   usage +=
       "The 'robot' example creates a very simple 2D kinematic simulation of a\n"
@@ -246,8 +255,12 @@ int main(int argc, char *argv[])
       "plugin. The robot may have any combination of several sensors, defined\n"
       "in plugins/robot.hh.\n\n"
 
+      "Known robot plugin libraries include:  " + knownRobotString + "\n\n"
+
+      "Known environment plugin libraries include:  " + knownEnvString + "\n\n"
+
       "Custom plugins can be used by passing in the custom plugin library\n"
-      "directory to the -I flag.";
+      "directory to the -I flag";
 
   bpo::options_description desc(usage);
   desc.add_options()
