@@ -388,7 +388,7 @@ namespace ignition
 
       bool inserted;
       DlHandleMap::iterator it;
-      std::tie(it, inserted) = dlHandlePtrMap.insert(
+      std::tie(it, inserted) = this->dlHandlePtrMap.insert(
             std::make_pair(dlHandle, std::weak_ptr<void>()));
 
       if (!inserted)
