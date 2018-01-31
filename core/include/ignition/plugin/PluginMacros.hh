@@ -25,5 +25,6 @@
 // needed and can simply be removed.
 #define IGN_COMMON_BEGIN_ADDING_PLUGINS
 #define IGN_COMMON_FINISH_ADDING_PLUGINS
+#define IGN_COMMON_SPECIALIZE_INTERFACE
 
 #endif
