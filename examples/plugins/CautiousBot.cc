@@ -57,13 +57,8 @@ class CautiousBot
   public: double distance = std::numeric_limits<double>::infinity();
 };
 
-}
+IGN_COMMON_ADD_PLUGIN(CautiousBot,
+    CautiousBot::Drive,
+    CautiousBot::ProximitySensor)
 
-IGN_COMMON_BEGIN_ADDING_PLUGINS
-IGN_COMMON_ADD_PLUGIN(
-    CautiousBotLibrary::CautiousBot,
-    ignition::common::examples::Drive)
-IGN_COMMON_ADD_PLUGIN(
-    CautiousBotLibrary::CautiousBot,
-    ignition::common::examples::ProximitySensor)
-IGN_COMMON_FINISH_ADDING_PLUGINS
+}

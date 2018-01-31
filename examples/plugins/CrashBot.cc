@@ -60,13 +60,6 @@ class CrashBot
   public: bool detectedWall;
 };
 
-}
+IGN_COMMON_ADD_PLUGIN(CrashBot, CrashBot::Drive, CrashBot::ProximitySensor)
 
-IGN_COMMON_BEGIN_ADDING_PLUGINS
-IGN_COMMON_ADD_PLUGIN(
-    CrashBotLib::CrashBot,
-    ignition::common::examples::Drive)
-IGN_COMMON_ADD_PLUGIN(
-    CrashBotLib::CrashBot,
-    ignition::common::examples::ProximitySensor)
-IGN_COMMON_FINISH_ADDING_PLUGINS
+}
