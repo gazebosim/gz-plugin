@@ -47,27 +47,27 @@ TEST(TemplatedPlugins, InterfaceCount)
   pl.LoadLibrary(path);
 
   const std::size_t getIntCount =
-       pl.PluginsImplementing<TemplatedGetInterface<int>>().size();
+       pl.PluginsImplementing< TemplatedGetInterface<int> >().size();
   EXPECT_EQ(2u, getIntCount);
 
   const std::size_t setIntCount =
-      pl.PluginsImplementing<TemplatedSetInterface<int>>().size();
+      pl.PluginsImplementing< TemplatedSetInterface<int> >().size();
   EXPECT_EQ(2u, setIntCount);
 
   const std::size_t getStringCount =
-      pl.PluginsImplementing<TemplatedGetInterface<std::string>>().size();
+      pl.PluginsImplementing< TemplatedGetInterface<std::string> >().size();
   EXPECT_EQ(2u, getStringCount);
 
   const std::size_t setStringCount =
-      pl.PluginsImplementing<TemplatedSetInterface<std::string>>().size();
+      pl.PluginsImplementing< TemplatedSetInterface<std::string> >().size();
   EXPECT_EQ(2u, setStringCount);
 
   const std::size_t getDoubleCount =
-      pl.PluginsImplementing<TemplatedGetInterface<double>>().size();
+      pl.PluginsImplementing< TemplatedGetInterface<double> >().size();
   EXPECT_EQ(0u, getDoubleCount);
 
   const std::size_t setDoubleCount =
-      pl.PluginsImplementing<TemplatedSetInterface<double>>().size();
+      pl.PluginsImplementing< TemplatedSetInterface<double> >().size();
   EXPECT_EQ(0u, setDoubleCount);
 }
 
