@@ -49,8 +49,6 @@ namespace ignition
 
         /// \brief Virtual destructor
         public: virtual ~Drive() = default;
-
-        IGN_COMMON_SPECIALIZE_INTERFACE(ignition::common::examples::Drive)
       };
 
       /////////////////////////////////////////////////
@@ -71,9 +69,6 @@ namespace ignition
 
         /// \brief Virtual destructor
         public: virtual ~ProximitySensor() = default;
-
-        IGN_COMMON_SPECIALIZE_INTERFACE(
-            ignition::common::examples::ProximitySensor)
       };
 
       /////////////////////////////////////////////////
@@ -87,8 +82,6 @@ namespace ignition
 
         /// \brief Virtual destructor
         public: virtual ~GPSSensor() = default;
-
-        IGN_COMMON_SPECIALIZE_INTERFACE(ignition::common::examples::GPSSensor)
       };
 
       /////////////////////////////////////////////////
@@ -101,8 +94,6 @@ namespace ignition
 
         /// \brief Virtual destructor
         public: virtual ~Compass() = default;
-
-        IGN_COMMON_SPECIALIZE_INTERFACE(ignition::common::examples::Compass)
       };
 
       /////////////////////////////////////////////////
@@ -126,8 +117,6 @@ namespace ignition
 
         /// \brief Virtual destructor
         public: virtual ~MapDatabase() = default;
-
-        IGN_COMMON_SPECIALIZE_INTERFACE(ignition::common::examples::MapDatabase)
       };
 
       /////////////////////////////////////////////////
@@ -140,8 +129,6 @@ namespace ignition
 
         /// \brief Virtual destructor
         public: virtual ~Environment() = default;
-
-        IGN_COMMON_SPECIALIZE_INTERFACE(ignition::common::examples::Environment)
       };
     }
   }
