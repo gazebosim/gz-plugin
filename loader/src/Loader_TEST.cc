@@ -48,11 +48,11 @@ TEST(PluginLoader, LoadNonLibrary)
 /////////////////////////////////////////////////
 TEST(PluginLoader, LoadNonPluginLibrary)
 {
+#ifndef _MSC_VER
   std::string projectPath(PROJECT_BINARY_PATH);
   std::string libraryName("ignition-common");
   libraryName += std::to_string(IGNITION_COMMON_MAJOR_VERSION);
 
-#ifndef _MSC_VER
   // This test fails on MSVC because MSVC uses a multi-configuration
   // generator-type build system. That makes it harder to predict
   // where this library will be located after it is built. It may
