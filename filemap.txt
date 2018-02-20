@@ -15,6 +15,9 @@ rename "src/PluginUtils.hh" "core/src/PluginUtils.hh"
 include "src/PluginUtils_TEST.cc"
 rename "src/PluginUtils.hh" "core/src/PluginUtils.hh"
 
+include "src/PluginInfo.cc"
+rename "src/PluginInfo.cc" "core/src/PluginInfo.cc"
+
 include "include/ignition/common/PluginPtr.hh"
 include "include/ignition/common/Plugin.hh"
 include "include/ignition/common/PluginInfo.hh"
@@ -42,4 +45,38 @@ rename "incude/ignition/common/RegisterPlugin.hh" "register/include/ignition/plu
 
 include "include/ignition/common/detail/RegisterPlugin.hh"
 rename "include/ignition/common/detail/RegisterPlugin.hh" "register/include/ignition/plugin/detail/Register.hh"
+
+include "test/integration/plugin.cc"
+include "test/integration/templated_plugins.cc"
+include "test/performance/plugin_specialization.cc"
+include "test/plugins/BadPluginAPIVersionNew.cc"
+include "test/plugins/BadPluginAPIVersionOld.cc"
+include "test/plugins/BadPluginAlign.cc"
+include "test/plugins/BadPluginSize.cc"
+include "test/plugins/DummyPlugins.cc"
+include "test/plugins/DummyPlugins.hh"
+include "test/plugins/DummyPluginsOtherTranslationUnit.cc"
+include "test/plugins/TemplatePlugin.hh"
+include "test/plugins/TemplatedPlugins.cc"
+include "test/static_assertions/CMakeLists.txt"
+include "test/static_assertions/plugin_bad_const_assignment.cc"
+include "test/static_assertions/plugin_bad_const_construct.cc"
+include "test/static_assertions/plugin_abstract.cc"
+include "test/static_assertions/plugin_no_args.cc"
+
+
+include "examples/CMakeLists.txt"
+include "examples/integrators.cc"
+include "examples/plugins/BoxEnvironment.cc"
+include "examples/plugins/CMakeLists.txt"
+include "examples/plugins/CautiousBot.cc"
+include "examples/plugins/CrashBot.cc"
+include "examples/plugins/ExponentialODE.cc"
+include "examples/plugins/ForwardEuler.cc"
+include "examples/plugins/PolynomialODE.cc"
+include "examples/plugins/RungeKutta4.cc"
+include "examples/plugins/integrators.hh"
+include "examples/plugins/robot.hh"
+include "examples/robot.cc"
+
 
