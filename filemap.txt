@@ -1,0 +1,45 @@
+include "src/PluginLoader.cc"
+rename "src/PluginLoader.cc" "loader/src/Loader.cc"
+
+include "src/Plugin.cc"
+rename "src/Plugin.cc" "core/src/Plugin.cc"
+
+include "src/TemplateHelpers_TEST.cc"
+rename "src/TemplateHelpers_TEST.cc" "core/src/TemplateHelpers_TEST.cc"
+
+include "src/PluginLoader_TEST.cc"
+rename "src/PluginLoader_TEST.cc" "loader/src/Loader_TEST.cc"
+
+include "src/PluginUtils.hh"
+rename "src/PluginUtils.hh" "core/src/PluginUtils.hh"
+include "src/PluginUtils_TEST.cc"
+rename "src/PluginUtils.hh" "core/src/PluginUtils.hh"
+
+include "include/ignition/common/PluginPtr.hh"
+include "include/ignition/common/Plugin.hh"
+include "include/ignition/common/PluginInfo.hh"
+include "include/ignition/common/PluginMacros.hh"
+include "include/ignition/common/SpecializedPlugin.hh"
+include "include/ignition/common/SpecializedPluginPtr.hh"
+include "include/ignition/common/TemplateHelpers.hh"
+
+include "include/ignition/common/detail/Plugin.hh"
+include "include/ignition/common/detail/PluginPtr.hh"
+include "include/ignition/common/detail/TemplateHelpers.hh"
+include "include/ignition/common/detail/SpecializedPlugin.hh"
+
+rename "include/ignition/common" "core/include/ignition/plugin"
+
+
+include "include/ignition/common/PluginLoader.hh"
+rename "include/ignition/common/PluginLoader.hh" "loader/include/ignition/plugin/Loader.hh"
+
+include "include/ignition/common/detail/PluginLoader.hh"
+rename "include/ignition/common/detail/PluginLoader.hh" "loader/include/ignition/plugin/detail/Loader.hh"
+
+include "include/ignition/common/RegisterPlugin.hh"
+rename "incude/ignition/common/RegisterPlugin.hh" "register/include/ignition/plugin/Register.hh"
+
+include "include/ignition/common/detail/RegisterPlugin.hh"
+rename "include/ignition/common/detail/RegisterPlugin.hh" "register/include/ignition/plugin/detail/Register.hh"
+
