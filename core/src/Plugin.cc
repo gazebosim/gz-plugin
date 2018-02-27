@@ -15,10 +15,11 @@
  *
  */
 
+#include <iostream>
+#include <cassert>
 
-#include "ignition/common/Plugin.hh"
-#include "ignition/common/PluginInfo.hh"
-#include "ignition/common/Console.hh"
+#include "ignition/plugin/Plugin.hh"
+#include "ignition/plugin/PluginInfo.hh"
 #include "PluginUtils.hh"
 
 namespace ignition
@@ -77,10 +78,10 @@ namespace ignition
 
         if (!_other)
         {
-          ignerr << "Received a nullptr _other in the constructor "
-                 << "which uses `const PluginPrivate*`. This should "
-                 << "not be possible! Please report this bug."
-                 << std::endl;
+          std::cerr << "Received a nullptr _other in the constructor "
+                    << "which uses `const PluginPrivate*`. This should "
+                    << "not be possible! Please report this bug."
+                    << std::endl;
           assert(false);
           return;
         }
