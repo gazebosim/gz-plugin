@@ -31,7 +31,7 @@ namespace ignition
     ///     version of the PluginInfo struct
     //
     /// This must be incremented when the PluginInfo struct changes
-    const int IGN_PLUGIN_API_VERSION = 1;
+    const int IGN_PLUGIN_INFO_API_VERSION = 1;
 
 
     /// \brief Holds info required to construct a plugin

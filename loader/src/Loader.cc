@@ -244,19 +244,19 @@ namespace ignition
       const std::size_t size = *(static_cast<std::size_t*>(sizePtr));
       const std::size_t alignment = *(static_cast<std::size_t*>(alignPtr));
 
-      if (version < IGN_PLUGIN_API_VERSION)
+      if (version < IGN_PLUGIN_INFO_API_VERSION)
       {
         std::cerr << "The library [" << _pathToLibrary <<"] is using an outdated "
                 << "version [" << version << "] of the ignition::plugin Plugin "
-                << "API. The version in this library is [" << IGN_PLUGIN_API_VERSION
+                << "API. The version in this library is [" << IGN_PLUGIN_INFO_API_VERSION
                 << "].\n";
       }
 
-      if (version > IGN_PLUGIN_API_VERSION)
+      if (version > IGN_PLUGIN_INFO_API_VERSION)
       {
         std::cerr << "The library [" << _pathToLibrary << "] is using a newer "
                << "version [" << version << "] of the ignition::plugin Plugin "
-               << "API. The version in this library is [" << IGN_PLUGIN_API_VERSION
+               << "API. The version in this library is [" << IGN_PLUGIN_INFO_API_VERSION
                << "].\n";
         return loadedPlugins;
       }
@@ -289,7 +289,7 @@ namespace ignition
         const size_t expectedAlignment = alignof(Info);
 
         std::cerr << "The library [" << _pathToLibrary << "] has the wrong plugin "
-               << "size or alignment for API version [" << IGN_PLUGIN_API_VERSION
+               << "size or alignment for API version [" << IGN_PLUGIN_INFO_API_VERSION
                << "]. Expected size [" << expectedSize << "], got ["
                << size << "]. Expected alignment [" << expectedAlignment
                << "], got [" << alignment << "].\n";
