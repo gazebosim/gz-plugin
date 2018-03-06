@@ -20,11 +20,11 @@
 #define IGNITION_COMMON_DETAIL_PLUGIN_HH_
 
 #include <string>
-#include "ignition/common/Plugin.hh"
+#include <ignition/plugin/Plugin.hh>
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     //////////////////////////////////////////////////
     template <class Interface>

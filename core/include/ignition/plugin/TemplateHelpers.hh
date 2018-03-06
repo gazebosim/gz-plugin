@@ -20,11 +20,11 @@
 #define IGNITION_COMMON_TEMPLATEHELPERS_HH_
 
 
-#include "ignition/common/detail/TemplateHelpers.hh"
+#include "ignition/plugin/detail/TemplateHelpers.hh"
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     /// \brief Contains a static constexpr field named `value` which will be
     /// true if the type `From` has a const-quality less than or equal to the

@@ -18,7 +18,7 @@
 #include <gtest/gtest.h>
 #include <string>
 
-#include "ignition/common/TemplateHelpers.hh"
+#include <ignition/plugin/TemplateHelpers.hh>
 
 struct SomeType { };
 
@@ -37,7 +37,7 @@ TEST(TemplateHelpers, ConstCompatible)
 
   // The extra pair of parentheses are so the comma between the template
   // arguments don't confuse the macro.
-  using namespace ignition::common;
+  using namespace ignition::plugin;
   EXPECT_TRUE((ConstCompatible<const int, const double>::value));
   EXPECT_FALSE((ConstCompatible<double, const int>::value));
   EXPECT_TRUE((ConstCompatible<const float, std::string>::value));

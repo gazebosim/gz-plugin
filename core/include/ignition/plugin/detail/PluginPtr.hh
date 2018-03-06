@@ -19,12 +19,12 @@
 #ifndef IGNITION_COMMON_DETAIL_PLUGINPTR_HH_
 #define IGNITION_COMMON_DETAIL_PLUGINPTR_HH_
 
-#include "ignition/common/PluginPtr.hh"
-#include "ignition/common/TemplateHelpers.hh"
+#include <ignition/plugin/PluginPtr.hh>
+#include <ignition/plugin/TemplateHelpers.hh>
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     //////////////////////////////////////////////////
     template <typename PluginType>
@@ -165,7 +165,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <typename PluginType>
-    TemplatePluginPtr<PluginType>::TemplatePluginPtr(const PluginInfo *info)
+    TemplatePluginPtr<PluginType>::TemplatePluginPtr(const Info *info)
       : dataPtr(new PluginType)
     {
       dataPtr->PrivateSetPluginInstance(info);
@@ -181,10 +181,10 @@ namespace std
   /// so that it can easily be used in STL objects like std::unordered_set and
   /// std::unordered_map
   template <typename PluginType>
-  struct hash<ignition::common::TemplatePluginPtr<PluginType>>
+  struct hash<ignition::plugin::TemplatePluginPtr<PluginType>>
   {
     size_t operator()(
-        const ignition::common::TemplatePluginPtr<PluginType> &ptr) const
+        const ignition::plugin::TemplatePluginPtr<PluginType> &ptr) const
     {
       return ptr.Hash();
     }

@@ -250,7 +250,7 @@ namespace ignition
 
 
         // Declare friendship
-        template <class...> friend class ignition::common::SpecializedPlugin;
+        template <class...> friend class ignition::plugin::SpecializedPlugin;
         template <class, class> friend class ComposePlugin;
 
         private: ComposePlugin() = default;

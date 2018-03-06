@@ -17,63 +17,59 @@
 
 #include <algorithm>
 #include <gtest/gtest.h>
-#include "ignition/common/PluginLoader.hh"
-#include "ignition/common/SystemPaths.hh"
+#include <ignition/plugin/Loader.hh>
 
-#include "ignition/common/config.hh"
-#include "test_config.h"
+const std::string projectPath = PROJECT_LIBRARY_DIR;
 
 /////////////////////////////////////////////////
-TEST(PluginLoader, InitialNoInterfacesImplemented)
+TEST(Loader, InitialNoInterfacesImplemented)
 {
-  ignition::common::PluginLoader pm;
+  ignition::plugin::Loader pm;
   EXPECT_EQ(0u, pm.InterfacesImplemented().size());
 }
 
 /////////////////////////////////////////////////
-TEST(PluginLoader, LoadNonexistantLibrary)
+TEST(Loader, LoadNonexistantLibrary)
 {
-  ignition::common::PluginLoader pm;
+  ignition::plugin::Loader pm;
   EXPECT_TRUE(pm.LoadLibrary("/path/to/libDoesNotExist.so").empty());
 }
 
 /////////////////////////////////////////////////
-TEST(PluginLoader, LoadNonLibrary)
+TEST(Loader, LoadNonLibrary)
 {
-  std::string projectPath(PROJECT_BINARY_PATH);
-  ignition::common::PluginLoader pm;
+  ignition::plugin::Loader pm;
   EXPECT_TRUE(pm.LoadLibrary(projectPath + "/test_config.h").empty());
 }
 
 /////////////////////////////////////////////////
-TEST(PluginLoader, LoadNonPluginLibrary)
+TEST(Loader, LoadNonPluginLibrary)
 {
-  std::string projectPath(PROJECT_BINARY_PATH);
-  std::string libraryName("ignition-common");
+#ifndef _MSC_VER
+  std::string libraryName("ignition-plugin");
   libraryName += std::to_string(IGNITION_COMMON_MAJOR_VERSION);
 
-#ifndef _MSC_VER
   // This test fails on MSVC because MSVC uses a multi-configuration
   // generator-type build system. That makes it harder to predict
   // where this library will be located after it is built. It may
   // be in one of several possible directories, and we would have
   // to jump through some hoops with generator expressions to make
   // this test work. For now, we'll just skip it on Windows.
-  ignition::common::SystemPaths sp;
+  ignition::plugin::SystemPaths sp;
   sp.AddPluginPaths(projectPath + "/src");
   std::string path = sp.FindSharedLibrary(libraryName);
   ASSERT_FALSE(path.empty());
 
-  ignition::common::PluginLoader pm;
+  ignition::plugin::Loader pm;
   EXPECT_TRUE(pm.LoadLibrary(path).empty());
 #endif
 }
 
 /////////////////////////////////////////////////
-TEST(PluginLoader, InstantiateUnloadedPlugin)
+TEST(Loader, InstantiateUnloadedPlugin)
 {
-  ignition::common::PluginLoader pm;
-  ignition::common::PluginPtr plugin =
+  ignition::plugin::Loader pm;
+  ignition::plugin::PluginPtr plugin =
       pm.Instantiate("plugin::that::is::not::loaded");
   EXPECT_FALSE(plugin);
 }

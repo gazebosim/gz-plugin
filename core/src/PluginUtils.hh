@@ -19,11 +19,10 @@
 #define IGNITION_COMMON_PLUGINUTILS_HH_
 
 #include <string>
-#include "ignition/common/StringUtils.hh"
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     /// \brief Format the name to start with "::"
     /// \param[in] _name The name of a plugin or interface
@@ -31,7 +30,7 @@ namespace ignition
     inline std::string NormalizeName(const std::string &_name)
     {
       std::string name = _name;
-      if (!StartsWith(_name, "::"))
+      if (_name.substr(0, 2) != "::")
       {
         name = std::string("::") + _name;
       }

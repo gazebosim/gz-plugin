@@ -23,19 +23,19 @@
 #include <map>
 #include <string>
 
-#include <ignition/common/Export.hh>
-#include <ignition/common/SuppressWarning.hh>
+#include <ignition/plugin/Export.hh>
+//#include <ignition/plugin/SuppressWarning.hh>
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     // Forward declarations
-    struct PluginInfo;
+    struct Info;
     class PluginPrivate;
     namespace detail { template <class, class> class ComposePlugin; }
 
-    class IGNITION_COMMON_VISIBLE Plugin
+    class IGNITION_PLUGIN_VISIBLE Plugin
     {
       // -------------------- Public API ---------------------
 
@@ -163,7 +163,7 @@ namespace ignition
       private: void PrivateCopyPluginInstance(const Plugin &_other) const;
 
       /// \brief Create a new plugin instance based on the info provided
-      private: void PrivateSetPluginInstance(const PluginInfo *_info) const;
+      private: void PrivateSetPluginInstance(const Info *_info) const;
 
       /// \brief Get a reference to the std::shared_ptr being managed by this
       /// wrapper
@@ -180,10 +180,10 @@ namespace ignition
       private: InterfaceMap::iterator PrivateGetOrCreateIterator(
           const std::string &_interfaceName);
 
-      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
+//      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to the implementation of this class.
       private: const std::unique_ptr<PluginPrivate> dataPtr;
-      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
+//      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
 
       /// \brief Virtual destructor
       public: virtual ~Plugin();
@@ -191,6 +191,6 @@ namespace ignition
   }
 }
 
-#include "ignition/common/detail/Plugin.hh"
+#include "ignition/plugin/detail/Plugin.hh"
 
 #endif

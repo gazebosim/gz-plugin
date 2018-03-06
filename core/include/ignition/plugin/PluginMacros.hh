@@ -19,7 +19,7 @@
 #ifndef IGNITION_COMMON_REGISTERMACROS_HH_
 #define IGNITION_COMMON_REGISTERMACROS_HH_
 
-#include "ignition/common/detail/PluginMacros.hh"
+#include "ignition/plugin/detail/PluginMacros.hh"
 
 // --------------- Specialize a plugin interface (optional) -------------------
 

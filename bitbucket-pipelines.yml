@@ -1,0 +1,37 @@
+# This is a sample build configuration for C++.
+# Check our guides at https://confluence.atlassian.com/x/VYk8Lw for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: ubuntu:16.04
+
+pipelines:
+  default:
+    - step:
+        script:
+          - echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable xenial main" > /etc/apt/sources.list.d/gazebo-stable.list
+          - apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys D2486D2DD83DB69272AFE98867170598AF249743
+          - apt-get update
+          - apt-get -y install
+            cmake pkg-config python ruby-ronn
+            libignition-cmake-dev
+            lcov curl mercurial cppcheck
+          # Code checker
+          - sh tools/code_check.sh
+          # Build
+          - mkdir build
+          - cd build
+          - cmake .. -DCMAKE_BUILD_TYPE=coverage
+          - make
+          # Tests
+          - make test
+          - make install
+          # Coverage
+          - make coverage
+          - bash <(curl -s https://codecov.io/bash)
+          # Examples
+          - cd ../examples
+          - mkdir build
+          - cd build
+          - cmake ..
+          - make
