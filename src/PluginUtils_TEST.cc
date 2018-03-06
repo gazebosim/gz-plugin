@@ -24,14 +24,14 @@ using namespace ignition;
 /////////////////////////////////////////////////
 TEST(PluginUtils, NormalizeName)
 {
-  EXPECT_EQ("::", common::NormalizeName(""));
-  EXPECT_EQ("::", common::NormalizeName("::"));
+  EXPECT_EQ("::", plugin::NormalizeName(""));
+  EXPECT_EQ("::", plugin::NormalizeName("::"));
 
-  EXPECT_EQ("::ignition", common::NormalizeName("ignition"));
-  EXPECT_EQ("::ignition", common::NormalizeName("::ignition"));
+  EXPECT_EQ("::ignition", plugin::NormalizeName("ignition"));
+  EXPECT_EQ("::ignition", plugin::NormalizeName("::ignition"));
 
-  EXPECT_EQ("::ignition::math", common::NormalizeName("ignition::math"));
-  EXPECT_EQ("::ignition::math", common::NormalizeName("::ignition::math"));
+  EXPECT_EQ("::ignition::math", plugin::NormalizeName("ignition::math"));
+  EXPECT_EQ("::ignition::math", plugin::NormalizeName("::ignition::math"));
 }
 
 /////////////////////////////////////////////////

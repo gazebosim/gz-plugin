@@ -28,12 +28,12 @@
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     // Forward declarations
-    struct PluginInfo;
+    struct Info;
     class PluginPrivate;
-    class PluginLoader;
+    class Loader;
 
     class IGNITION_PLUGIN_VISIBLE Plugin
     {
@@ -147,7 +147,7 @@ namespace ignition
 
       // -------------------- Private API -----------------------
 
-      friend class PluginLoader;
+      friend class Loader;
 
       /// \brief Default constructor. This is kept private to ensure that
       /// Plugins are always managed by a PluginPtr object.
@@ -161,7 +161,7 @@ namespace ignition
       private: void PrivateCopyPluginInstance(const Plugin &_other) const;
 
       /// \brief Create a new plugin instance based on the info provided
-      private: void PrivateSetPluginInstance(const PluginInfo *_info) const;
+      private: void PrivateSetPluginInstance(const Info *_info) const;
 
       /// \brief Get a reference to the std::shared_ptr being managed by this
       /// wrapper

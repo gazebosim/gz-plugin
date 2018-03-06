@@ -25,17 +25,17 @@
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     /// \brief sentinel value to check if a plugin was built with the same
     ///     version of the PluginInfo struct
     //
     /// This must be incremented when the PluginInfo struct changes
-    const int PLUGIN_API_VERSION = 1;
+    const int IGN_PLUGIN_API_VERSION = 1;
 
 
     /// \brief Holds info required to construct a plugin
-    struct PluginInfo
+    struct Info
     {
       /// \brief The name of the plugin
       std::string name;

@@ -22,7 +22,7 @@
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     /// \brief Format the name to start with "::"
     /// \param[in] _name The name of a plugin or interface

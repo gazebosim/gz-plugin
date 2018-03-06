@@ -24,7 +24,7 @@
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     class PluginPrivate
     {
@@ -46,7 +46,7 @@ namespace ignition
 
       /// \brief Initialize this PluginPrivate using some PluginInfo instance
       /// \param[in] _info Information describing the plugin to initialize
-      public: void Initialize(const PluginInfo *_info)
+      public: void Initialize(const Info *_info)
       {
         this->Clear();
 
@@ -156,7 +156,7 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
-    void Plugin::PrivateSetPluginInstance(const PluginInfo *_info) const
+    void Plugin::PrivateSetPluginInstance(const Info *_info) const
     {
       this->dataPtr->Initialize(_info);
     }
