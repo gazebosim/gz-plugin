@@ -104,36 +104,36 @@ namespace ignition
 
       /// \brief type is an empty placeholder class which is used by the private
       /// member functions to provide two overloads: a high-performance one for
-      /// SpecInterface, and a normal-performance one for all other Interface
-      /// types.
+      /// the specialized interface, and a normal-performance one for all other
+      /// Interface types.
       private: template <class T> struct type { };
 
       /// \brief Delegate the function to the standard Plugin method
       private: template <class Interface>
-               Interface *PrivateGetSpecInterface(type<Interface>);
+               Interface *PrivateQueryInterface(type<Interface>);
 
       /// \brief Use a high-speed accessor to provide this specialized interface
-      private: SpecInterface *PrivateGetSpecInterface(type<SpecInterface>);
+      private: SpecInterface *PrivateQueryInterface(type<SpecInterface>);
 
       /// \brief Delegate the function to the standard Plugin method
       private: template <class Interface>
-               const Interface *PrivateGetSpecInterface(type<Interface>) const;
+               const Interface *PrivateQueryInterface(type<Interface>) const;
 
       /// \brief Use a high-speed accessor to provide this specialized interface
-      private: const SpecInterface *PrivateGetSpecInterface(
+      private: const SpecInterface *PrivateQueryInterface(
                    type<SpecInterface>) const;
 
       /// \brief Delegate the function to the standard PluginPtr method
       private: template <class Interface>
-               bool PrivateHasSpecInterface(type<Interface>) const;
+               bool PrivateHasInterface(type<Interface>) const;
 
       /// \brief Use a high-speed accessor to check this specialized interface
-      private: bool PrivateHasSpecInterface(type<SpecInterface>) const;
+      private: bool PrivateHasInterface(type<SpecInterface>) const;
 
       /// \brief Iterator that points to the entry of the specialized interface
       private:
-      const Plugin::InterfaceMap::iterator privateSpecInterfaceIterator;
-      // Dev note (MXG): The privateSpecInterfaceIterator object must be
+      const Plugin::InterfaceMap::iterator privateSpecializedInterfaceIterator;
+      // Dev note (MXG): The privateSpecializedInterfaceIterator object must be
       // available to the user during their compile time, so it cannot be hidden
       // using PIMPL. The iterator is const because it must always point to the
       // same entry throughout its entire lifecycle.

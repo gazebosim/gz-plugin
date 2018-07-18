@@ -38,7 +38,7 @@ namespace ignition
     template <class Interface>
     Interface *SpecializedPlugin<SpecInterface>::QueryInterface()
     {
-      return this->PrivateGetSpecInterface(type<Interface>());
+      return this->PrivateQueryInterface(type<Interface>());
     }
 
     /////////////////////////////////////////////////
@@ -46,7 +46,7 @@ namespace ignition
     template <class Interface>
     const Interface *SpecializedPlugin<SpecInterface>::QueryInterface() const
     {
-      return this->PrivateGetSpecInterface(type<Interface>());
+      return this->PrivateQueryInterface(type<Interface>());
     }
 
     /////////////////////////////////////////////////
@@ -80,13 +80,13 @@ namespace ignition
     template <class Interface>
     bool SpecializedPlugin<SpecInterface>::HasInterface() const
     {
-      return this->PrivateHasSpecInterface(type<Interface>());
+      return this->PrivateHasInterface(type<Interface>());
     }
 
     /////////////////////////////////////////////////
     template <class SpecInterface>
     template <class Interface>
-    Interface *SpecializedPlugin<SpecInterface>::PrivateGetSpecInterface(
+    Interface *SpecializedPlugin<SpecInterface>::PrivateQueryInterface(
         type<Interface>)
     {
       return this->Plugin::QueryInterface<Interface>();
@@ -94,21 +94,21 @@ namespace ignition
 
     /////////////////////////////////////////////////
     template <class SpecInterface>
-    SpecInterface *SpecializedPlugin<SpecInterface>::PrivateGetSpecInterface(
+    SpecInterface *SpecializedPlugin<SpecInterface>::PrivateQueryInterface(
         type<SpecInterface>)
     {
       #ifdef IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
       usedSpecializedInterfaceAccess = true;
       #endif
       return static_cast<SpecInterface*>(
-            this->privateSpecInterfaceIterator->second);
+            this->privateSpecializedInterfaceIterator->second);
     }
 
     /////////////////////////////////////////////////
     template <class SpecInterface>
     template <class Interface>
     const Interface *SpecializedPlugin<SpecInterface>::
-    PrivateGetSpecInterface(type<Interface>) const
+    PrivateQueryInterface(type<Interface>) const
     {
       return this->Plugin::QueryInterface<Interface>();
     }
@@ -116,19 +116,19 @@ namespace ignition
     /////////////////////////////////////////////////
     template <class SpecInterface>
     const SpecInterface *SpecializedPlugin<SpecInterface>::
-    PrivateGetSpecInterface(type<SpecInterface>) const
+    PrivateQueryInterface(type<SpecInterface>) const
     {
       #ifdef IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
       usedSpecializedInterfaceAccess = true;
       #endif
       return static_cast<SpecInterface*>(
-            this->privateSpecInterfaceIterator->second);
+            this->privateSpecializedInterfaceIterator->second);
     }
 
     /////////////////////////////////////////////////
     template <class SpecInterface>
     template <class Interface>
-    bool SpecializedPlugin<SpecInterface>::PrivateHasSpecInterface(
+    bool SpecializedPlugin<SpecInterface>::PrivateHasInterface(
         type<Interface>) const
     {
       return this->Plugin::HasInterface<Interface>();
@@ -136,19 +136,19 @@ namespace ignition
 
     /////////////////////////////////////////////////
     template <class SpecInterface>
-    bool SpecializedPlugin<SpecInterface>::PrivateHasSpecInterface(
+    bool SpecializedPlugin<SpecInterface>::PrivateHasInterface(
         type<SpecInterface>) const
     {
       #ifdef IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
       usedSpecializedInterfaceAccess = true;
       #endif
-      return (nullptr != this->privateSpecInterfaceIterator->second);
+      return (nullptr != this->privateSpecializedInterfaceIterator->second);
     }
 
     /////////////////////////////////////////////////
     template <class SpecInterface>
     SpecializedPlugin<SpecInterface>::SpecializedPlugin()
-      : privateSpecInterfaceIterator(
+      : privateSpecializedInterfaceIterator(
           this->PrivateGetOrCreateIterator(
             SpecInterface::IGNPLUGINInterfaceName))
     {

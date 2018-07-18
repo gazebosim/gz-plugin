@@ -16,13 +16,12 @@
 */
 
 
-#ifndef IGNITION_PLUGIN_TEST_UTIL_DUMMY_PLUGINS_HH_
-#define IGNITION_PLUGIN_TEST_UTIL_DUMMY_PLUGINS_HH_
+#ifndef IGNITION_PLUGIN_TEST_PLUGINS_DUMMYPLUGINS_HH_
+#define IGNITION_PLUGIN_TEST_PLUGINS_DUMMYPLUGINS_HH_
 
 #include <string>
 #include <memory>
 
-#include <ignition/plugin/Export.hh>
 #include <ignition/plugin/PluginMacros.hh>
 
 namespace test
