@@ -24,22 +24,22 @@
 /////////////////////////////////////////////////
 TEST(Loader, InitialNoInterfacesImplemented)
 {
-  ignition::plugin::Loader pm;
-  EXPECT_EQ(0u, pm.InterfacesImplemented().size());
+  ignition::plugin::Loader loader;
+  EXPECT_EQ(0u, loader.InterfacesImplemented().size());
 }
 
 /////////////////////////////////////////////////
 TEST(Loader, LoadNonexistantLibrary)
 {
-  ignition::plugin::Loader pm;
-  EXPECT_TRUE(pm.LoadLibrary("/path/to/libDoesNotExist.so").empty());
+  ignition::plugin::Loader loader;
+  EXPECT_TRUE(loader.LoadLibrary("/path/to/libDoesNotExist.so").empty());
 }
 
 /////////////////////////////////////////////////
 TEST(Loader, LoadNonLibrary)
 {
-  ignition::plugin::Loader pm;
-  EXPECT_TRUE(pm.LoadLibrary(std::string(IGN_PLUGIN_SOURCE_DIR)
+  ignition::plugin::Loader loader;
+  EXPECT_TRUE(loader.LoadLibrary(std::string(IGN_PLUGIN_SOURCE_DIR)
                              + "/core/src/Plugin.cc").empty());
 }
 
