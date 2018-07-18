@@ -27,7 +27,6 @@ namespace ignition
   {
     // Forward declarations
     namespace detail { template <class, class> class ComposePlugin; }
-    struct PluginInfo;
 
     // Forward declaration of the variadic template SpecializedPlugin class.
     template <class... OtherSpecInterfaces>

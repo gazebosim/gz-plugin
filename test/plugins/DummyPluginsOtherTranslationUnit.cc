@@ -15,16 +15,16 @@
  *
 */
 
-#ifndef IGNITION_COMMON_PLUGINMACROS_HH_
-#define IGNITION_COMMON_PLUGINMACROS_HH_
+#include "ignition/common/RegisterPlugin.hh"
+#include "plugins/DummyPlugins.hh"
 
-// This header is for backwards compatibility. Please use RegisterPlugin instead
-#include <ignition/common/RegisterPlugin.hh>
+// We use this file to test that the IGN_COMMON_ADD_PLUGIN macro can be used in
+// multiple translation units for the same plugin without any issues.
 
-// These macros are defined for backwards compatibility. They are no longer
-// needed and can simply be removed.
-#define IGN_COMMON_BEGIN_ADDING_PLUGINS
-#define IGN_COMMON_FINISH_ADDING_PLUGINS
-#define IGN_COMMON_SPECIALIZE_INTERFACE(x)
+// This also tests that we can add multiple interfaces for a plugin with one
+// macro call.
 
-#endif
+IGN_COMMON_ADD_PLUGIN(test::util::DummyMultiPlugin,
+                      test::util::DummyDoubleBase,
+                      test::util::DummyIntBase,
+                      test::util::DummySetterBase)

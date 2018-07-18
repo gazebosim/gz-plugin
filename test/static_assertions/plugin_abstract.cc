@@ -15,16 +15,19 @@
  *
 */
 
-#ifndef IGNITION_COMMON_PLUGINMACROS_HH_
-#define IGNITION_COMMON_PLUGINMACROS_HH_
+#include "ignition/common/RegisterPlugin.hh"
 
-// This header is for backwards compatibility. Please use RegisterPlugin instead
-#include <ignition/common/RegisterPlugin.hh>
+class A
+{
+  // This pure virtual function makes A an abstract class
+  public: virtual void SomeFunction() = 0;
 
-// These macros are defined for backwards compatibility. They are no longer
-// needed and can simply be removed.
-#define IGN_COMMON_BEGIN_ADDING_PLUGINS
-#define IGN_COMMON_FINISH_ADDING_PLUGINS
-#define IGN_COMMON_SPECIALIZE_INTERFACE(x)
+  public: virtual ~A();
+};
 
-#endif
+class B : public A
+{
+  // B is abstract because it does not implement SomeFunction
+};
+
+IGN_COMMON_ADD_PLUGIN(B, A)

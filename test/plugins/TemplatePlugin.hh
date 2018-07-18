@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Open Source Robotics Foundation
+ * Copyright (C) 2018 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,29 @@
  *
 */
 
-#ifndef IGNITION_COMMON_PLUGINMACROS_HH_
-#define IGNITION_COMMON_PLUGINMACROS_HH_
+#ifndef IGNITION_COMMON_TEST_PLUGINS_TEMPLATEPLUGIN_HH_
+#define IGNITION_COMMON_TEST_PLUGINS_TEMPLATEPLUGIN_HH_
 
-// This header is for backwards compatibility. Please use RegisterPlugin instead
-#include <ignition/common/RegisterPlugin.hh>
+namespace test
+{
+namespace plugins
+{
 
-// These macros are defined for backwards compatibility. They are no longer
-// needed and can simply be removed.
-#define IGN_COMMON_BEGIN_ADDING_PLUGINS
-#define IGN_COMMON_FINISH_ADDING_PLUGINS
-#define IGN_COMMON_SPECIALIZE_INTERFACE(x)
+// Interface class to test output from templated interfaces
+template <typename T>
+class TemplatedGetInterface
+{
+  public: virtual T Get() const = 0;
+};
+
+// Interface class to test input to templated interfaces
+template <typename T>
+class TemplatedSetInterface
+{
+  public: virtual void Set(const T &_value) = 0;
+};
+
+}
+}
 
 #endif

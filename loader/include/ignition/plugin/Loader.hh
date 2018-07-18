@@ -24,6 +24,8 @@
 #include <typeinfo>
 #include <unordered_set>
 
+#include <ignition/utilities/SuppressWarning.hh>
+
 #include <ignition/plugin/loader/Export.hh>
 #include <ignition/plugin/PluginPtr.hh>
 
@@ -48,15 +50,33 @@ namespace ignition
       /// \returns a pretty string
       public: std::string PrettyStr() const;
 
-      /// \brief get names of interfaces that the loader has plugins for
-      /// \returns interfaces that are implemented
+      /// \brief Get demangled names of interfaces that the loader has plugins
+      /// for.
+      /// \returns Demangled names of the interfaces that are implemented
       public: std::unordered_set<std::string> InterfacesImplemented() const;
 
-      /// \brief get plugin names that implement the interface
-      /// \param[in] _interface name of an interface
+      /// \brief Get plugin names that implement the specified interface
+      /// \return names of plugins that implement the interface.
+      public: template <typename Interface>
+      std::unordered_set<std::string> PluginsImplementing() const;
+
+      /// \brief Get plugin names that implement the specified interface string.
+      /// Note that the templated version of this function is recommended
+      /// instead of this version to avoid confusion about whether a mangled or
+      /// demangled version of a string is being used. Note that the function
+      /// InterfacesImplemented() returns demangled versions of the interface
+      /// names.
+      ///
+      /// If you want to pass in a mangled version of an interface name, e.g.
+      /// the result that would be produced by typeid(T).name(), then set
+      /// `demangled` to false.
+      /// \param[in] _interface Name of an interface
+      /// \param[in] _demangled Specify whether the _interface string is
+      /// demangled (default, true) or mangled (false).
       /// \returns names of plugins that implement the interface
       public: std::unordered_set<std::string> PluginsImplementing(
-                  const std::string &_interface) const;
+          const std::string &_interface,
+          const bool demangled = true) const;
 
       /// \brief Load a library at the given path
       /// \param[in] _pathToLibrary is the path to a libaray
@@ -82,15 +102,62 @@ namespace ignition
               PluginPtrType Instantiate(
                   const std::string &_pluginName) const;
 
+      /// \brief This loader will forget about the library with the given name.
+      /// If you want to instantiate a plugin from this library using this
+      /// loader, you will first need to call LoadLibrary again.
+      ///
+      /// After this function has been called, once all plugin instances that
+      /// are tied to the library have been deleted, the library will
+      /// automatically be unloaded from the executable. Note that when this
+      /// PluginLoader leaves scope (or gets deleted), it will have the same
+      /// effect as calling ForgetLibrary on all of the libraries that it
+      /// loaded, so there is generally no need to call this function. However,
+      /// it may be useful if you want to reduce clutter in the PluginLoader
+      /// instance or let go of library resources that are no longer being used.
+      ///
+      /// Note that even if you have released all references to a library, it is
+      /// still up to the discretion of your operating system whether (or when)
+      /// that library will be unloaded. In some cases, the operating system
+      /// might not choose to unload it until the program exits completely.
+      ///
+      /// \param[in] _pathToLibrary Path to the library that you want to forget
+      /// \return True if the library was actively loaded and is now
+      /// successfully forgotten. If the library was not actively loaded, this
+      /// returns false.
+      public: bool ForgetLibrary(const std::string &_pathToLibrary);
+
+      /// \brief Forget the library that provides the plugin with the given
+      /// name. Note that this will also forget all other plugin types which
+      /// are provided by that library.
+      ///
+      /// \param[in] _pluginName Name of the plugin whose library you want to
+      /// forget.
+      ///
+      /// \sa bool ForgetLibrary(const std::string &_pathToLibrary)
+      public: bool ForgetLibraryOfPlugin(const std::string &_pluginName);
+
       /// \brief Get a pointer to the PluginInfo corresponding to _pluginName.
       /// Returns nullptr if there is no info for the requested _pluginName.
-      private: const Info *PrivateGetPluginInfo(
+      ///
+      /// \param[in] _pluginName Name of the plugin that is being loaded.
+      /// \return Pointer to the corresponding PluginInfo, or nullptr if the
+      /// PluginInfo was unavailable.
+      private: const PluginInfo *PrivateGetPluginInfo(
                   const std::string &_pluginName) const;
 
-//      IGN_PLUGIN_WARN_IGNORE__DLL_INTERFACE_MISSING
+      /// \brief Get a std::shared_ptr that manages the lifecycle of the shared
+      /// library handle which provides the specified plugin.
+      ///
+      /// \param[in] _pluginName Name of the plugin that is being loaded.
+      /// \return Reference-counting pointer to a library handle, or else a
+      /// nullptr if the plugin is not available.
+      private: std::shared_ptr<void> PrivateGetPluginDlHandlePtr(
+                  const std::string &_pluginName) const;
+
+      IGN_PLUGIN_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to class implementation
-      private: std::unique_ptr<LoaderPrivate> dataPtr;
-//      IGN_PLUGIN_WARN_RESUME__DLL_INTERFACE_MISSING
+      private: std::unique_ptr<PluginLoaderPrivate> dataPtr;
+      IGN_PLUGIN_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }
