@@ -16,20 +16,20 @@
 */
 
 #include <limits>
-#include "ignition/common/PluginMacros.hh"
+#include "ignition/plugin/PluginMacros.hh"
 
 extern "C" {
-  std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONPluginInfoSize =
-    sizeof(ignition::common::PluginInfo);
+  std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginInfoSize =
+    sizeof(ignition::plugin::Info);
 
-  std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONPluginInfoAlignment =
-    alignof(ignition::common::PluginInfo);
+  std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginInfoAlignment =
+    alignof(ignition::plugin::Info);
 
-  int DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONPluginAPIVersion =
+  int DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginAPIVersion =
     std::numeric_limits<int>::max();
 }
 
-extern "C" std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNCOMMONMultiPluginInfo(
+extern "C" std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINMultiPluginInfo(
     void *, const std::size_t, const std::size_t)
 {
   return 0u;

@@ -3,17 +3,13 @@
 # "tests" variable
 ign_get_libsources_and_unittests(sources tests)
 
-message(STATUS "loader sources:${sources}")
-
 # Create the library target
 ign_add_component(loader
   SOURCES ${sources}
-  CXX_STANDARD 11
   GET_TARGET_NAME loader)
 
 target_link_libraries(${loader} PRIVATE ${DL_TARGET})
 
-# Build the unit tests
 ign_build_tests(
   TYPE UNIT
   SOURCES ${tests}
@@ -22,7 +18,10 @@ ign_build_tests(
 
 foreach(test ${test_targets})
 
-  target_compile_definitions(${test}
-    PRIVATE "PROJECT_LIBRARY_DIR=\"$<TARGET_FILE_DIR:${loader}>\"")
+  target_compile_definitions(${test} PRIVATE
+    "IGN_PLUGIN_LIB=\"$<TARGET_FILE:${PROJECT_LIBRARY_TARGET_NAME}>\"")
+
+  target_compile_definitions(${test} PRIVATE
+    "IGN_PLUGIN_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\"")
 
 endforeach()

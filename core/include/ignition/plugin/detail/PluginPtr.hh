@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_COMMON_DETAIL_PLUGINPTR_HH_
-#define IGNITION_COMMON_DETAIL_PLUGINPTR_HH_
+#ifndef IGNITION_PLUGIN_DETAIL_PLUGINPTR_HH_
+#define IGNITION_PLUGIN_DETAIL_PLUGINPTR_HH_
 
 #include <ignition/plugin/PluginPtr.hh>
 #include <ignition/plugin/TemplateHelpers.hh>
@@ -118,7 +118,7 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
-    #define DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR(op)\
+    #define DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR(op)\
       template <typename PluginType>\
       bool TemplatePluginPtr<PluginType>::operator op (\
             const TemplatePluginPtr &_other) const\
@@ -127,12 +127,12 @@ namespace ignition
                 _other.dataPtr->PrivateGetInstancePtr() );\
       }
 
-    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( == )  // NOLINT
-    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( < )   // NOLINT
-    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( > )   // NOLINT
-    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( != )  // NOLINT
-    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( <= )  // NOLINT
-    DETAIL_IGN_COMMON_PLUGINPTR_IMPLEMENT_OPERATOR( >= )  // NOLINT
+    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( == )  // NOLINT
+    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( < )   // NOLINT
+    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( > )   // NOLINT
+    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( != )  // NOLINT
+    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( <= )  // NOLINT
+    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( >= )  // NOLINT
 
     //////////////////////////////////////////////////
     template <typename PluginType>

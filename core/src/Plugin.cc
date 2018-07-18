@@ -20,7 +20,7 @@
 
 #include "ignition/plugin/Plugin.hh"
 #include "ignition/plugin/PluginInfo.hh"
-#include "PluginUtils.hh"
+#include "ignition/plugin/PluginUtils.hh"
 
 namespace ignition
 {

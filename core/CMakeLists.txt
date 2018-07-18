@@ -8,7 +8,8 @@ ign_create_core_library(
   SOURCES ${sources}
   CXX_STANDARD 11)
 
-# No libraries to link
+target_link_libraries(${PROJECT_LIBRARY_TARGET_NAME}
+  PUBLIC ignition-cmake1::utilities)
 
 # Build the unit tests
 ign_build_tests(
@@ -16,11 +17,4 @@ ign_build_tests(
   SOURCES ${tests})
 
 
-if(TARGET UNIT_PluginLoader_TEST)
-  # Tell the PluginLoader unit test about the location of the library directory
-  # so that it can find the library file for testing purposes.
-  target_compile_definitions(UNIT_PluginLoader_TEST PRIVATE
-    "IGN_COMMON_LIB_PATH=\"$<TARGET_FILE_DIR:${PROJECT_LIBRARY_TARGET_NAME}>\"")
-endif()
-
-add_subdirectory(test)
+add_subdirectory(include/ignition/plugin)

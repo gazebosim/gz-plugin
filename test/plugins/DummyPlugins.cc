@@ -15,7 +15,7 @@
  *
 */
 
-#include "ignition/common/PluginMacros.hh"
+#include "ignition/plugin/PluginMacros.hh"
 #include "DummyPlugins.hh"
 
 
@@ -79,11 +79,11 @@ DummyMultiPlugin::DummyMultiPlugin()
 }
 }
 
-IGN_COMMON_BEGIN_ADDING_PLUGINS
-  IGN_COMMON_ADD_PLUGIN(test::util::DummySinglePlugin, test::util::DummyNameBase)
-  IGN_COMMON_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyNameBase)
-  IGN_COMMON_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyDoubleBase)
-  IGN_COMMON_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyIntBase)
-  IGN_COMMON_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummySetterBase)
-  IGN_COMMON_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyGetSomeObjectBase)
-IGN_COMMON_FINISH_ADDING_PLUGINS
+IGN_PLUGIN_BEGIN_ADDING_PLUGINS
+  IGN_PLUGIN_ADD_PLUGIN(test::util::DummySinglePlugin, test::util::DummyNameBase)
+  IGN_PLUGIN_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyNameBase)
+  IGN_PLUGIN_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyDoubleBase)
+  IGN_PLUGIN_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyIntBase)
+  IGN_PLUGIN_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummySetterBase)
+  IGN_PLUGIN_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyGetSomeObjectBase)
+IGN_PLUGIN_FINISH_ADDING_PLUGINS

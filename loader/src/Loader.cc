@@ -26,6 +26,7 @@
 #include "ignition/plugin/PluginInfo.hh"
 #include "ignition/plugin/Loader.hh"
 #include "ignition/plugin/Plugin.hh"
+#include "ignition/plugin/PluginUtils.hh"
 
 namespace ignition
 {
@@ -113,15 +114,14 @@ namespace ignition
           if (plugin.name.empty())
             continue;
 
-//          plugin.name = NormalizeName(plugin.name);
+          plugin.name = NormalizeName(plugin.name);
 
           Info::InterfaceCastingMap normalizedMap;
           normalizedMap.reserve(plugin.interfaces.size());
           for (const auto &interface : plugin.interfaces)
           {
             normalizedMap.insert(std::make_pair(
-//                     NormalizeName(interface.first),
-                     interface.first,
+                     NormalizeName(interface.first),
                      interface.second));
           }
           plugin.interfaces = normalizedMap;
@@ -176,7 +176,7 @@ namespace ignition
     PluginPtr Loader::Instantiate(
         const std::string &_plugin) const
     {
-      return PluginPtr(this->PrivateGetPluginInfo(_plugin));
+      return PluginPtr(this->PrivateGetPluginInfo(NormalizeName(_plugin)));
     }
 
     /////////////////////////////////////////////////
@@ -220,10 +220,10 @@ namespace ignition
         return loadedPlugins;
       }
 
-      const std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
-      const std::string sizeSymbol = "IGNCOMMONPluginInfoSize";
-      const std::string alignSymbol = "IGNCOMMONPluginInfoAlignment";
-      const std::string multiInfoSymbol = "IGNCOMMONMultiPluginInfo";
+      const std::string versionSymbol = "IGNPLUGINPluginAPIVersion";
+      const std::string sizeSymbol = "IGNPLUGINPluginInfoSize";
+      const std::string alignSymbol = "IGNPLUGINPluginInfoAlignment";
+      const std::string multiInfoSymbol = "IGNPLUGINMultiPluginInfo";
       void *versionPtr = dlsym(_dlHandle, versionSymbol.c_str());
       void *sizePtr = dlsym(_dlHandle, sizeSymbol.c_str());
       void *alignPtr = dlsym(_dlHandle, alignSymbol.c_str());

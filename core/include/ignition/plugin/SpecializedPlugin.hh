@@ -16,14 +16,14 @@
  */
 
 
-#ifndef IGNITION_COMMON_SPECIALIZEDPLUGIN_HH_
-#define IGNITION_COMMON_SPECIALIZEDPLUGIN_HH_
+#ifndef IGNITION_PLUGIN_SPECIALIZEDPLUGIN_HH_
+#define IGNITION_PLUGIN_SPECIALIZEDPLUGIN_HH_
 
-#include "ignition/common/Plugin.hh"
+#include "ignition/plugin/Plugin.hh"
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     // Forward declarations
     namespace detail { template <class, class> class ComposePlugin; }
@@ -61,8 +61,8 @@ namespace ignition
     ///
     /// Only interfaces that have been "specialized" can be passed as arguments
     /// to the SpecializedPlugin template. To specialize an interface, simply
-    /// put the macro IGN_COMMON_SPECIALIZE_INTERFACE(~) from
-    /// ignition/common/PluginMacros.hh into a public location of its class
+    /// put the macro IGN_PLUGIN_SPECIALIZE_INTERFACE(~) from
+    /// ignition/plugin/PluginMacros.hh into a public location of its class
     /// definition.
     template <class SpecInterface>
     class SpecializedPlugin<SpecInterface> : public virtual Plugin
@@ -144,6 +144,6 @@ namespace ignition
   }
 }
 
-#include "ignition/common/detail/SpecializedPlugin.hh"
+#include "ignition/plugin/detail/SpecializedPlugin.hh"
 
 #endif

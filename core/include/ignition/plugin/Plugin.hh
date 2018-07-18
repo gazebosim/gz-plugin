@@ -16,15 +16,16 @@
  */
 
 
-#ifndef IGNITION_COMMON_PLUGIN_HH_
-#define IGNITION_COMMON_PLUGIN_HH_
+#ifndef IGNITION_PLUGIN_PLUGIN_HH_
+#define IGNITION_PLUGIN_PLUGIN_HH_
 
 #include <memory>
 #include <map>
 #include <string>
 
+#include <ignition/utilities/SuppressWarning.hh>
+
 #include <ignition/plugin/Export.hh>
-//#include <ignition/plugin/SuppressWarning.hh>
 
 namespace ignition
 {
@@ -41,7 +42,7 @@ namespace ignition
 
       /// \brief Get an interface of the specified type. Note that this function
       /// only works when the Interface type is specialized using the macro
-      /// IGN_COMMON_SPECIALIZE_INTERFACE. For more general  interfaces which do
+      /// IGN_PLUGIN_SPECIALIZE_INTERFACE. For more general  interfaces which do
       /// not meet this condition, use
       /// QueryInterface<Interface>(_interfaceName).
       ///
@@ -89,7 +90,7 @@ namespace ignition
 
       /// \brief Get the requested interface as a std::shared_ptr. Note that
       /// this function only works when the Interface type is specialized using
-      /// the macro IGN_COMMON_SPECIALIZE_INTERFACE. For more general interfaces
+      /// the macro IGN_PLUGIN_SPECIALIZE_INTERFACE. For more general interfaces
       /// which do not meet this condition, use
       /// QueryInterfaceSharedPtr<Interface>(const std::string&).
       public: template <class Interface>
@@ -131,7 +132,7 @@ namespace ignition
 
       /// \brief Returns true if this Plugin has the specified type of
       /// interface. Note that this function only works when the Interface type
-      /// is specialized using the macro IGN_COMMON_SPECIALIZE_INTERFACE. For
+      /// is specialized using the macro IGN_PLUGIN_SPECIALIZE_INTERFACE. For
       /// more general interfaces which do not meet this condition, use
       /// QueryInterface<Interface>(_interfaceName).
       public: template <class Interface>
@@ -180,10 +181,10 @@ namespace ignition
       private: InterfaceMap::iterator PrivateGetOrCreateIterator(
           const std::string &_interfaceName);
 
-//      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
+      IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to the implementation of this class.
       private: const std::unique_ptr<PluginPrivate> dataPtr;
-//      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
+      IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
 
       /// \brief Virtual destructor
       public: virtual ~Plugin();

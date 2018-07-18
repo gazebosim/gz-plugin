@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_COMMON_TEMPLATEHELPERS_HH_
-#define IGNITION_COMMON_TEMPLATEHELPERS_HH_
+#ifndef IGNITION_PLUGIN_TEMPLATEHELPERS_HH_
+#define IGNITION_PLUGIN_TEMPLATEHELPERS_HH_
 
 
 #include "ignition/plugin/detail/TemplateHelpers.hh"

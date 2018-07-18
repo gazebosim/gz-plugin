@@ -16,15 +16,15 @@
  */
 
 
-#ifndef IGNITION_COMMON_SPECIALIZEDPLUGINPTR_HH_
-#define IGNITION_COMMON_SPECIALIZEDPLUGINPTR_HH_
+#ifndef IGNITION_PLUGIN_SPECIALIZEDPLUGINPTR_HH_
+#define IGNITION_PLUGIN_SPECIALIZEDPLUGINPTR_HH_
 
-#include "ignition/common/PluginPtr.hh"
-#include "ignition/common/SpecializedPlugin.hh"
+#include "ignition/plugin/PluginPtr.hh"
+#include "ignition/plugin/SpecializedPlugin.hh"
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     /// \brief This alias allows PluginPtr instances to have high-speed access
     /// to interfaces that can be anticipated at compile time. The plugin does
@@ -63,8 +63,8 @@ namespace ignition
     ///
     /// Only interfaces that have been "specialized" can be passed as arguments
     /// to the SpecializedPluginPtr template. To specialize an interface, simply
-    /// put the macro IGN_COMMON_SPECIALIZE_INTERFACE(~) from
-    /// ignition/common/PluginMacros.hh into a public location of its class
+    /// put the macro IGN_PLUGIN_SPECIALIZE_INTERFACE(~) from
+    /// ignition/plugin/PluginMacros.hh into a public location of its class
     /// definition.
     template <typename... SpecInterfaces>
     using SpecializedPluginPtr =

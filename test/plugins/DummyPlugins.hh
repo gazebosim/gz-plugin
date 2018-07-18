@@ -16,14 +16,14 @@
 */
 
 
-#ifndef IGNITION_COMMON_TEST_UTIL_DUMMY_PLUGINS_HH_
-#define IGNITION_COMMON_TEST_UTIL_DUMMY_PLUGINS_HH_
+#ifndef IGNITION_PLUGIN_TEST_UTIL_DUMMY_PLUGINS_HH_
+#define IGNITION_PLUGIN_TEST_UTIL_DUMMY_PLUGINS_HH_
 
 #include <string>
 #include <memory>
 
-#include <ignition/common/Export.hh>
-#include <ignition/common/PluginMacros.hh>
+#include <ignition/plugin/Export.hh>
+#include <ignition/plugin/PluginMacros.hh>
 
 namespace test
 {
@@ -50,7 +50,7 @@ class DummyDoubleBase
 class DummyIntBase
 {
   public: virtual int MyIntegerValueIs() const = 0;
-  IGN_COMMON_SPECIALIZE_INTERFACE(test::util::DummyIntBase)
+  IGN_PLUGIN_SPECIALIZE_INTERFACE(test::util::DummyIntBase)
 };
 
 class DummySetterBase
@@ -58,7 +58,7 @@ class DummySetterBase
   public: virtual void SetName(const std::string &_name) = 0;
   public: virtual void SetDoubleValue(const double _val) = 0;
   public: virtual void SetIntegerValue(const int _val) = 0;
-  IGN_COMMON_SPECIALIZE_INTERFACE(test::util::DummySetterBase)
+  IGN_PLUGIN_SPECIALIZE_INTERFACE(test::util::DummySetterBase)
 };
 
 struct SomeObject
@@ -70,7 +70,7 @@ struct SomeObject
 class DummyGetSomeObjectBase
 {
   public: virtual std::unique_ptr<SomeObject> GetSomeObject() const = 0;
-  IGN_COMMON_SPECIALIZE_INTERFACE(test::util::DummyGetSomeObjectBase)
+  IGN_PLUGIN_SPECIALIZE_INTERFACE(test::util::DummyGetSomeObjectBase)
 };
 
 class DummyMultiPlugin

@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_COMMON_PLUGINLOADER_HH_
-#define IGNITION_COMMON_PLUGINLOADER_HH_
+#ifndef IGNITION_PLUGIN_PLUGINLOADER_HH_
+#define IGNITION_PLUGIN_PLUGINLOADER_HH_
 
 #include <memory>
 #include <string>
@@ -87,10 +87,10 @@ namespace ignition
       private: const Info *PrivateGetPluginInfo(
                   const std::string &_pluginName) const;
 
-//      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
+//      IGN_PLUGIN_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to class implementation
       private: std::unique_ptr<LoaderPrivate> dataPtr;
-//      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
+//      IGN_PLUGIN_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }
