@@ -15,7 +15,7 @@
  *
 */
 
-#include <ignition/plugin/Register.hh>
+#include <ignition/plugin/RegisterMore.hh>
 #include "DummyPlugins.hh"
 
 // We use this file to test that the IGNITION_ADD_PLUGIN macro can be used in

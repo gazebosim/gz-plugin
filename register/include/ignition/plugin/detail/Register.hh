@@ -48,59 +48,37 @@
 // retrieve it.
 extern "C"
 {
-  /// \brief IgnitionPluginHook is the hook that's used by the
-  /// PluginLoader to retrieve Info from a shared library that provides
-  /// plugins.
-  ///
-  /// It is declared inline so that the plugin registration macros can
-  /// be used in arbitrarily many translation units without violating the one-
-  /// definition rule.
+  /// \brief IgnitionPluginHook is the hook that's used by the Loader to
+  /// retrieve Info from a shared library that provides plugins.
   ///
   /// The symbol is explicitly exported (visibility is turned on) using
   /// DETAIL_IGN_PLUGIN_VISIBLE to ensure that dlsym(~) is able to find it.
-  DETAIL_IGN_PLUGIN_VISIBLE inline void IgnitionPluginHook(
+  DETAIL_IGN_PLUGIN_VISIBLE void IgnitionPluginHook(
       const void *_inputSingleInfo,
       const void ** const _outputAllInfo,
       int *_inputAndOutputAPIVersion,
       std::size_t *_inputAndOutputInfoSize,
       std::size_t *_inputAndOutputInfoAlign)
+#ifdef IGN_PLUGIN_REGISTER_MORE_TRANS_UNITS
+  ;
+#else
+  // ATTENTION: If you get a linking error complaining about multiple
+  // definitions of IgnitionPluginHook, then make sure that all but one of your
+  // library's translation units (.cpp files) includes the
+  // <ignition/plugin/RegisterMore.hh> header instead of
+  // <ignition/plugin/Register.hh>.
+  //
+  // Only ONE and exactly ONE .cpp file in your library should include
+  // Register.hh. All the rest should include RegisterMore.hh. It does not
+  // matter which .cpp file you choose, as long as it gets compiled into your
+  // plugin library.
+  // ^^^^^^^^^^^^^^^^^^^^^ READ ABOVE FOR LINKING ERRORS ^^^^^^^^^^^^^^^^^^^^^
   {
     using InfoMap = ignition::plugin::InfoMap;
     // We use a static variable here so that we can accumulate multiple
     // Info objects from multiple plugin registration calls within one
     // shared library, and then provide it all to the PluginLoader through this
-    // single hook. We store this static variable inside of an inlined function
-    // in order to satisfy two requirements:
-    //
-    // 1. Each shared library that provides one or more plugins must have its
-    //    own unique pluginMap object. That object will be initialized when the
-    //    library is loaded and then destructed when the library is unloaded.
-    //
-    // 2. The pluginMap object can only be defined once per shared library (to
-    //    satisfy the One-Definition Rule), but for user convenience we want its
-    //    declaration and definition to all be provided in a header so that a
-    //    simple macro call is enough to ensure that it works as intended.
-    //
-    // Due to some controversial idiosyncracies of GCC, this implementation
-    // means that shared libraries which provide plugins should compile with the
-    // flags -fkeep-inline-functions and -fno-gnu-unique.
-    //
-    //   -fkeep-inline-functions: Modern versions of GCC are supposed to have
-    //       this option turned on by default, but explicitly specifying it
-    //       seems to be more reliable.
-    //
-    //   -fno-gnu-unique: GCC has some irritating and controversial behavior
-    //       where static variables in inline functions will use STB_GNU_UNIQUE
-    //       binding. This binding tends to be problematic for plugin framework
-    //       implementations, including ours. The most noticeable impact is that
-    //       any library containing an object with STB_GNU_UNIQUE binding can
-    //       never be unloaded until the program that's using it is terminated.
-    //       In even worse cases, this binding could result in confusion between
-    //       object symbols when multiple plugin libraries are loaded at once.
-    //       Passing the -fno-gnu-unique flag tells the linker to never use the
-    //       problematic STB_GNU_UNIQUE binding. Note that clang does not have
-    //       this issue.
-    //
+    // single hook.
     static InfoMap pluginMap;
 
     if (_inputSingleInfo)
@@ -192,6 +170,7 @@ extern "C"
       *_outputAllInfo = &pluginMap;
     }
   }
+#endif
 }
 
 namespace ignition
