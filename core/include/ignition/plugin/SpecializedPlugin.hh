@@ -57,12 +57,6 @@ namespace ignition
     /// direct access to the the `FooInterface*` of `plugin`. If `plugin` does
     /// not actually offer `FooInterface`, then it will return a nullptr, still
     /// at extremely high speed.
-    ///
-    /// Only interfaces that have been "specialized" can be passed as arguments
-    /// to the SpecializedPlugin template. To specialize an interface, simply
-    /// put the macro IGN_PLUGIN_SPECIALIZE_INTERFACE(~) from
-    /// ignition/plugin/PluginMacros.hh into a public location of its class
-    /// definition.
     template <class SpecInterface>
     class SpecializedPlugin<SpecInterface> : public virtual Plugin
     {

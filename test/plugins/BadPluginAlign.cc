@@ -15,7 +15,7 @@
  *
 */
 
-#include "ignition/plugin/PluginMacros.hh"
+#include <ignition/plugin/Register.hh>
 
 extern "C" {
   std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginInfoSize =
@@ -33,4 +33,3 @@ extern "C" std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINMultiPluginInfo(
 {
   return 0u;
 }
-

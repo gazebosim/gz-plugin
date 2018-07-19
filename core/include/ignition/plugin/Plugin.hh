@@ -40,21 +40,21 @@ namespace ignition
     {
       // -------------------- Public API ---------------------
 
-    /// \brief Get an interface of the specified type, if it is provided by
-    /// this plugin.
-    ///
-    /// Note that the interface pointer you receive is owned by the Plugin
-    /// object. You MUST NOT ever try to deallocate it yourself. Moreover, the
-    /// pointer will be invalidated once all Plugin objects that refer to the
-    /// same Plugin instance are destructed. Use the QueryInterfaceSharedPtr
-    /// function in order to get a reference-counting pointer to an interface
-    /// of this Plugin object. The pointer will remain valid as long as the
-    /// std::shared_ptr provided by QueryInterfaceSharedPtr is alive.
-    ///
-    /// \return A raw pointer to the specified interface. If the requested
-    /// _interfaceName is not provided by this Plugin, this returns a nullptr.
-    /// This pointer is invalidated when the reference count of the plugin
-    /// instance drops to zero.
+      /// \brief Get an interface of the specified type, if it is provided by
+      /// this plugin.
+      ///
+      /// Note that the interface pointer you receive is owned by the Plugin
+      /// object. You MUST NOT ever try to deallocate it yourself. Moreover, the
+      /// pointer will be invalidated once all Plugin objects that refer to the
+      /// same Plugin instance are destructed. Use the QueryInterfaceSharedPtr
+      /// function in order to get a reference-counting pointer to an interface
+      /// of this Plugin object. The pointer will remain valid as long as the
+      /// std::shared_ptr provided by QueryInterfaceSharedPtr is alive.
+      ///
+      /// \return A raw pointer to the specified interface. If the requested
+      /// _interfaceName is not provided by this Plugin, this returns a nullptr.
+      /// This pointer is invalidated when the reference count of the plugin
+      /// instance drops to zero.
       public: template <class Interface>
               Interface *QueryInterface();
 

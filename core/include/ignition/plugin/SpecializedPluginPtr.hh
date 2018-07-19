@@ -60,12 +60,6 @@ namespace ignition
     /// This same rule also applies to `MyInterface1`, `MyInterface2`, and
     /// `BarInterface`, because those interfaces were also provided to
     /// SpecializedPluginPtr<...> at compile time.
-    ///
-    /// Only interfaces that have been "specialized" can be passed as arguments
-    /// to the SpecializedPluginPtr template. To specialize an interface, simply
-    /// put the macro IGN_PLUGIN_SPECIALIZE_INTERFACE(~) from
-    /// ignition/plugin/PluginMacros.hh into a public location of its class
-    /// definition.
     template <typename... SpecInterfaces>
     using SpecializedPluginPtr =
               TemplatePluginPtr< SpecializedPlugin<SpecInterfaces...> >;

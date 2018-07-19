@@ -15,16 +15,27 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_PLUGINMACROS_HH_
-#define IGNITION_PLUGIN_PLUGINMACROS_HH_
-
-// This header is for backwards compatibility. Please use Register.hh instead
 #include <ignition/plugin/Register.hh>
 
-// These macros are defined for backwards compatibility. They are no longer
-// needed and can simply be removed.
-#define IGN_PLUGIN_BEGIN_ADDING_PLUGINS
-#define IGN_PLUGIN_FINISH_ADDING_PLUGINS
-#define IGN_PLUGIN_SPECIALIZE_INTERFACE(x)
+namespace ns
+{
 
-#endif
+class Base
+{
+  int test3;
+};
+
+class WrongBase
+{
+  int test3;
+};
+
+class A : public Base
+{
+  float test1;
+  double test2;
+};
+
+}
+
+IGNITION_ADD_PLUGIN(ns::A, ns::WrongBase)

@@ -13,31 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */
+*/
 
-#ifndef IGNITION_PLUGIN_PLUGINUTILS_HH_
-#define IGNITION_PLUGIN_PLUGINUTILS_HH_
+#include <ignition/plugin/Register.hh>
 
-#include <string>
-
-namespace ignition
+class A
 {
-  namespace plugin
-  {
-    /// \brief Format the name to start with "::"
-    /// \param[in] _name The name of a plugin or interface
-    /// \return The input, but with "::" prepended if it was not there already.
-    inline std::string NormalizeName(const std::string &_name)
-    {
-      std::string name = _name;
-      if (_name.substr(0, 2) != "::")
-      {
-        name = std::string("::") + _name;
-      }
-      return name;
-    }
-  }
-}
+  float test1;
+  double test2;
+};
 
+class NotBase
+{
+  int test3;
+};
 
-#endif
+IGNITION_ADD_PLUGIN(A, NotBase)

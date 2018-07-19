@@ -26,3 +26,9 @@ foreach(test ${test_targets})
   endforeach()
 
 endforeach()
+
+if(TARGET INTEGRATION_plugin)
+
+  target_link_libraries(INTEGRATION_plugin ${DL_TARGET})
+
+endif()

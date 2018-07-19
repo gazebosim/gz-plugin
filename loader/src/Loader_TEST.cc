@@ -21,6 +21,8 @@
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/config.hh>
 
+#include <ignition/plugin/SpecializedPluginPtr.hh>
+
 /////////////////////////////////////////////////
 TEST(Loader, InitialNoInterfacesImplemented)
 {
@@ -56,6 +58,19 @@ TEST(Loader, InstantiateUnloadedPlugin)
   ignition::plugin::Loader loader;
   ignition::plugin::PluginPtr plugin =
       loader.Instantiate("plugin::that::is::not::loaded");
+  EXPECT_FALSE(plugin);
+}
+
+class SomeInterface { };
+
+/////////////////////////////////////////////////
+TEST(Loader, InstantiateSpecializedPlugin)
+{
+  ignition::plugin::Loader loader;
+
+  // This makes sure that Loader::Instantiate can compile
+  auto plugin = loader.Instantiate<
+      ignition::plugin::SpecializedPluginPtr<SomeInterface>>("fake::plugin");
   EXPECT_FALSE(plugin);
 }
 
