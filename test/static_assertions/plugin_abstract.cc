@@ -15,7 +15,7 @@
  *
 */
 
-#include "ignition/common/RegisterPlugin.hh"
+#include "ignition/plugin/RegisterPlugin.hh"
 
 class A
 {
@@ -30,4 +30,4 @@ class B : public A
   // B is abstract because it does not implement SomeFunction
 };
 
-IGN_COMMON_ADD_PLUGIN(B, A)
+IGNITION_ADD_PLUGIN(B, A)

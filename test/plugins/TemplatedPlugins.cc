@@ -19,7 +19,7 @@
 
 #include "TemplatePlugin.hh"
 
-#include <ignition/common/RegisterPlugin.hh>
+#include <ignition/plugin/RegisterPlugin.hh>
 
 namespace test
 {
@@ -46,12 +46,12 @@ class GenericTemplatePlugin
 };
 
 /////////////////////////////////////////////////
-IGN_COMMON_ADD_PLUGIN(
+IGNITION_ADD_PLUGIN(
     GenericTemplatePlugin<int>,
     TemplatedGetInterface<int>,
     TemplatedSetInterface<int>)
 
-IGN_COMMON_ADD_PLUGIN(
+IGNITION_ADD_PLUGIN(
     GenericTemplatePlugin<std::string>,
     TemplatedGetInterface<std::string>,
     TemplatedSetInterface<std::string>)
@@ -75,7 +75,7 @@ class DoubleTemplatePlugin
 };
 
 /////////////////////////////////////////////////
-IGN_COMMON_ADD_PLUGIN(
+IGNITION_ADD_PLUGIN(
     DoubleTemplatePlugin,
     TemplatedGetInterface<int>,
     TemplatedSetInterface<int>)
@@ -100,7 +100,7 @@ class StringTemplatePlugin
 };
 
 /////////////////////////////////////////////////
-IGN_COMMON_ADD_PLUGIN(
+IGNITION_ADD_PLUGIN(
     StringTemplatePlugin,
     TemplatedGetInterface<std::string>,
     TemplatedSetInterface<std::string>)

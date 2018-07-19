@@ -58,7 +58,7 @@
       alignof(ignition::plugin::Info); \
     \
     int DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginAPIVersion = \
-      ignition::plugin::IGN_PLUGIN_INFO_API_VERSION; \
+      ignition::plugin::IGN_INFO_API_VERSION; \
   }
 
 

@@ -17,12 +17,12 @@
 
 #include <cmath>
 
-#include <ignition/common/PluginMacros.hh>
+#include <ignition/plugin/RegisterPlugin.hh>
 
 #include "integrators.hh"
 
 namespace ignition {
-namespace common {
+namespace plugin {
 namespace examples {
 namespace PolynomialODE {
 
@@ -203,11 +203,11 @@ class CubicFactory : public ODESystemFactory
 }
 
 // Register multiple plugins for this library
-IGN_COMMON_BEGIN_ADDING_PLUGINS
-  IGN_COMMON_ADD_PLUGIN(
-      ignition::common::examples::PolynomialODE::ParabolicFactory,
-      ignition::common::examples::ODESystemFactory)
-  IGN_COMMON_ADD_PLUGIN(
-      ignition::common::examples::PolynomialODE::CubicFactory,
-      ignition::common::examples::ODESystemFactory)
-IGN_COMMON_FINISH_ADDING_PLUGINS
+IGNITION_ADD_PLUGIN(
+    ignition::plugin::examples::PolynomialODE::ParabolicFactory,
+    ignition::plugin::examples::ODESystemFactory)
+
+IGNITION_ADD_PLUGIN(
+    ignition::plugin::examples::PolynomialODE::CubicFactory,
+    ignition::plugin::examples::ODESystemFactory)
+

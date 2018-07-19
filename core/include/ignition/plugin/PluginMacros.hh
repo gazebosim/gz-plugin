@@ -15,16 +15,16 @@
  *
 */
 
-#ifndef IGNITION_COMMON_PLUGINMACROS_HH_
-#define IGNITION_COMMON_PLUGINMACROS_HH_
+#ifndef IGNITION_PLUGIN_PLUGINMACROS_HH_
+#define IGNITION_PLUGIN_PLUGINMACROS_HH_
 
 // This header is for backwards compatibility. Please use RegisterPlugin instead
-#include <ignition/common/RegisterPlugin.hh>
+#include <ignition/plugin/RegisterPlugin.hh>
 
 // These macros are defined for backwards compatibility. They are no longer
 // needed and can simply be removed.
-#define IGN_COMMON_BEGIN_ADDING_PLUGINS
-#define IGN_COMMON_FINISH_ADDING_PLUGINS
-#define IGN_COMMON_SPECIALIZE_INTERFACE(x)
+#define IGN_PLUGIN_BEGIN_ADDING_PLUGINS
+#define IGN_PLUGIN_FINISH_ADDING_PLUGINS
+#define IGN_PLUGIN_SPECIALIZE_INTERFACE(x)
 
 #endif

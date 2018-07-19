@@ -15,15 +15,15 @@
  *
 */
 
-#ifndef IGNITION_COMMON_EXAMPLES_PLUGINS_INTEGRATORS_HH_
-#define IGNITION_COMMON_EXAMPLES_PLUGINS_INTEGRATORS_HH_
+#ifndef IGNITION_PLUGIN_EXAMPLES_PLUGINS_INTEGRATORS_HH_
+#define IGNITION_PLUGIN_EXAMPLES_PLUGINS_INTEGRATORS_HH_
 
 #include <vector>
 #include <functional>
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     namespace examples
     {

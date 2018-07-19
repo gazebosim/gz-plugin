@@ -17,7 +17,7 @@
 
 #include "robot.hh"
 
-using namespace ignition::common::examples;
+using namespace ignition::plugin::examples;
 
 namespace CautiousBotLibrary {
 
@@ -57,7 +57,7 @@ class CautiousBot
   public: double distance = std::numeric_limits<double>::infinity();
 };
 
-IGN_COMMON_ADD_PLUGIN(CautiousBot,
+IGNITION_ADD_PLUGIN(CautiousBot,
     CautiousBot::Drive,
     CautiousBot::ProximitySensor)
 

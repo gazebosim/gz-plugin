@@ -17,7 +17,7 @@
 
 #include "robot.hh"
 
-using namespace ignition::common::examples;
+using namespace ignition::plugin::examples;
 
 namespace CrashBotLib {
 
@@ -60,6 +60,6 @@ class CrashBot
   public: bool detectedWall;
 };
 
-IGN_COMMON_ADD_PLUGIN(CrashBot, CrashBot::Drive, CrashBot::ProximitySensor)
+IGNITION_ADD_PLUGIN(CrashBot, CrashBot::Drive, CrashBot::ProximitySensor)
 
 }

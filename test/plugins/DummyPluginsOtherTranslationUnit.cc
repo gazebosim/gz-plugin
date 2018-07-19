@@ -15,16 +15,16 @@
  *
 */
 
-#include "ignition/common/RegisterPlugin.hh"
+#include "ignition/plugin/RegisterPlugin.hh"
 #include "plugins/DummyPlugins.hh"
 
-// We use this file to test that the IGN_COMMON_ADD_PLUGIN macro can be used in
+// We use this file to test that the IGNITION_ADD_PLUGIN macro can be used in
 // multiple translation units for the same plugin without any issues.
 
 // This also tests that we can add multiple interfaces for a plugin with one
 // macro call.
 
-IGN_COMMON_ADD_PLUGIN(test::util::DummyMultiPlugin,
+IGNITION_ADD_PLUGIN(test::util::DummyMultiPlugin,
                       test::util::DummyDoubleBase,
                       test::util::DummyIntBase,
                       test::util::DummySetterBase)

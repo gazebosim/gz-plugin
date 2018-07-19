@@ -15,16 +15,16 @@
  *
 */
 
-// Defining this macro before including ignition/common/SpecializedPluginPtr.hh
+// Defining this macro before including ignition/plugin/SpecializedPluginPtr.hh
 // allows us to test that the high-speed routines are being used to access the
 // specialized plugin interfaces.
 #define IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
 
 #include <gtest/gtest.h>
 
-#include <ignition/common/PluginLoader.hh>
-#include <ignition/common/SystemPaths.hh>
-#include <ignition/common/SpecializedPluginPtr.hh>
+#include <ignition/plugin/PluginLoader.hh>
+#include <ignition/plugin/SystemPaths.hh>
+#include <ignition/plugin/SpecializedPluginPtr.hh>
 
 #include "test_config.h"
 #include "plugins/TemplatePlugin.hh"
@@ -39,11 +39,11 @@ using namespace test::plugins;
 /////////////////////////////////////////////////
 TEST(TemplatedPlugins, InterfaceCount)
 {
-  ignition::common::SystemPaths sp;
+  ignition::plugin::SystemPaths sp;
   sp.AddPluginPaths(IGN_DUMMY_PLUGIN_PATH);
   const std::string path = sp.FindSharedLibrary("IGNTemplatedPlugins");
 
-  ignition::common::PluginLoader pl;
+  ignition::plugin::PluginLoader pl;
   pl.LoadLibrary(path);
 
   const std::size_t getIntCount =
@@ -73,13 +73,13 @@ TEST(TemplatedPlugins, InterfaceCount)
 
 /////////////////////////////////////////////////
 template<typename T>
-using SetAndGetPluginPtr = ignition::common::SpecializedPluginPtr<
+using SetAndGetPluginPtr = ignition::plugin::SpecializedPluginPtr<
     TemplatedGetInterface<T>,
     TemplatedSetInterface<T> >;
 
 /////////////////////////////////////////////////
 template <typename T>
-void TestSetAndGet(const ignition::common::PluginLoader &_pl,
+void TestSetAndGet(const ignition::plugin::PluginLoader &_pl,
                    const T &_valueToUse)
 {
   using GetInterface = TemplatedGetInterface<T>;
@@ -112,11 +112,11 @@ void TestSetAndGet(const ignition::common::PluginLoader &_pl,
 /////////////////////////////////////////////////
 TEST(TemplatedPlugins, SetAndGet)
 {
-  ignition::common::SystemPaths sp;
+  ignition::plugin::SystemPaths sp;
   sp.AddPluginPaths(IGN_DUMMY_PLUGIN_PATH);
   const std::string path = sp.FindSharedLibrary("IGNTemplatedPlugins");
 
-  ignition::common::PluginLoader pl;
+  ignition::plugin::PluginLoader pl;
   pl.LoadLibrary(path);
 
   TestSetAndGet<int>(pl, 120);

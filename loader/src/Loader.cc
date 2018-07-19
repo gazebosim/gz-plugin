@@ -445,7 +445,7 @@ namespace ignition
         return loadedPlugins;
       }
 
-      const std::string infoSymbol = "IGNCOMMONInputOrOutputPluginInfo";
+      const std::string infoSymbol = "IgnitionPluginHook";
       void *infoFuncPtr = dlsym(_dlHandle.get(), infoSymbol.c_str());
 
       // Does the library have the right symbol?
@@ -469,7 +469,7 @@ namespace ignition
       int version = PLUGIN_API_VERSION;
       std::size_t size = sizeof(Info);
       std::size_t alignment = alignof(Info);
-      const PluginInfoMap *allInfo = nullptr;
+      const InfoMap *allInfo = nullptr;
 
       // Note: static_cast cannot be used to convert from a T** to a void**
       // because of the possibility of breaking the type system by assigning a
@@ -486,7 +486,7 @@ namespace ignition
       // pointer gets used, so we do not need to worry about its memory address
       // being filled with a non-compatible type. The only risk would be if a
       // user decides to implement their own version of
-      // IGNCOMMONInputOrOutputPluginInfo, but they surely would have no
+      // IgnitionPluginHook, but they surely would have no
       // incentive in doing that.
       //
       // Also note that the main reason we jump through these hoops is in order
@@ -497,14 +497,14 @@ namespace ignition
       Info(nullptr, reinterpret_cast<const void** const>(&allInfo),
            &version, &size, &alignment);
 
-      if (ignition::common::PLUGIN_API_VERSION != version)
+      if (ignition::plugin::PLUGIN_API_VERSION != version)
       {
         // TODO: When we need to support multiple API versions, put the logic
         // for it into here. We can call Info(~) again with the API version that
         // it expects.
 
         std::cerr << "The library [" << _pathToLibrary << "] is using a newer "
-                  << "version [" << version << "] of the ignition::common Plugin "
+                  << "version [" << version << "] of the ignition::plugin Plugin "
                   << "API. The version in this library is [" << PLUGIN_API_VERSION
                   << "].\n";
         return loadedPlugins;
@@ -533,7 +533,7 @@ namespace ignition
         return loadedPlugins;
       }
 
-      for (const PluginInfoMap::value_type &info : *allInfo)
+      for (const InfoMap::value_type &info : *allInfo)
       {
         loadedPlugins.push_back(info.second);
       }

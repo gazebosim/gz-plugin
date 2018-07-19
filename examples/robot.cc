@@ -21,9 +21,9 @@
 
 #include "plugins/robot.hh"
 
-#include <ignition/common/SpecializedPluginPtr.hh>
-#include <ignition/common/SystemPaths.hh>
-#include <ignition/common/PluginLoader.hh>
+#include <ignition/plugin/SpecializedPluginPtr.hh>
+#include <ignition/plugin/SystemPaths.hh>
+#include <ignition/plugin/PluginLoader.hh>
 
 #ifdef HAVE_BOOST_PROGRAM_OPTIONS
 #include <boost/program_options.hpp>
@@ -33,18 +33,18 @@ namespace bpo = boost::program_options;
 /////////////////////////////////////////////////
 // The macro that this uses is provided as a compile definition in the
 // examples/CMakeLists.txt file.
-const std::string PluginLibDir = IGN_COMMON_EXAMPLES_PLUGIN_LIBDIR;
+const std::string PluginLibDir = IGN_PLUGIN_EXAMPLES_PLUGIN_LIBDIR;
 
 /////////////////////////////////////////////////
-using namespace ignition::common::examples;
+using namespace ignition::plugin::examples;
 
 /////////////////////////////////////////////////
-using RobotPluginPtr = ignition::common::SpecializedPluginPtr<
+using RobotPluginPtr = ignition::plugin::SpecializedPluginPtr<
     Drive, ProximitySensor, GPSSensor, Compass, MapDatabase>;
 
 /////////////////////////////////////////////////
 using EnvironmentPluginPtr =
-    ignition::common::SpecializedPluginPtr<Environment>;
+    ignition::plugin::SpecializedPluginPtr<Environment>;
 
 using PointPair = std::pair<ignition::math::Vector2d, ignition::math::Vector2d>;
 
@@ -220,10 +220,10 @@ void Simulate(const EnvironmentPluginPtr &_environment,
 int main(int argc, char *argv[])
 {
   // Create an object that can search the system paths for the plugin libraries.
-  ignition::common::SystemPaths paths;
+  ignition::plugin::SystemPaths paths;
 
   // Create a plugin loader
-  ignition::common::PluginLoader loader;
+  ignition::plugin::PluginLoader loader;
 
   // Add the build directory path for the plugin libraries so the SystemPaths
   // object will know to search through it.
@@ -326,7 +326,7 @@ int main(int argc, char *argv[])
         paths.FindSharedLibrary(robotLib));
 
   std::unordered_set<std::string> drivePlugins =
-      loader.PluginsImplementing("ignition::common::examples::Drive");
+      loader.PluginsImplementing("ignition::plugin::examples::Drive");
 
   RobotPluginPtr robot;
   // Get the first plugin from the robotLib library that provides a Drive
@@ -352,7 +352,7 @@ int main(int argc, char *argv[])
         paths.FindSharedLibrary(envLib));
 
   std::unordered_set<std::string> envInterfacePlugins =
-      loader.PluginsImplementing("ignition::common::examples::Environment");
+      loader.PluginsImplementing("ignition::plugin::examples::Environment");
 
   EnvironmentPluginPtr environment;
   // Get the first plugin from the envLib library that provides an Environment

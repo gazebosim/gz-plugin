@@ -15,11 +15,11 @@
  *
  */
 
-#include <ignition/common/PluginInfo.hh>
+#include <ignition/plugin/PluginInfo.hh>
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     void PluginInfo::Clear()
     {

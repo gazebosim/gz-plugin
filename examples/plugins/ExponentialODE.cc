@@ -17,12 +17,12 @@
 
 #include <cmath>
 
-#include <ignition/common/PluginMacros.hh>
+#include <ignition/plugin/PluginMacros.hh>
 
 #include "integrators.hh"
 
 namespace ignition {
-namespace common {
+namespace plugin {
 namespace examples {
 namespace ExponentialODE {
 
@@ -141,6 +141,6 @@ class Factory : public ODESystemFactory
 }
 }
 
-IGN_COMMON_REGISTER_SINGLE_PLUGIN(
-    ignition::common::examples::ExponentialODE::Factory,
-    ignition::common::examples::ODESystemFactory)
+IGN_PLUGIN_REGISTER_SINGLE_PLUGIN(
+    ignition::plugin::examples::ExponentialODE::Factory,
+    ignition::plugin::examples::ODESystemFactory)

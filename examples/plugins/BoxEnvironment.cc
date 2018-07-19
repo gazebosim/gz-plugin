@@ -20,11 +20,11 @@
 namespace BoxEnvironment {
 
 /// \brief A plugin that creates a box environment
-class Plugin : public virtual ignition::common::examples::Environment
+class Plugin : public virtual ignition::plugin::examples::Environment
 {
-  public: ignition::common::examples::Layout GenerateLayout() const override
+  public: ignition::plugin::examples::Layout GenerateLayout() const override
   {
-    ignition::common::examples::Layout layout;
+    ignition::plugin::examples::Layout layout;
     const double L = 5.0;
 
     using ignition::math::Vector2d;
@@ -40,6 +40,6 @@ class Plugin : public virtual ignition::common::examples::Environment
 
 }
 
-IGN_COMMON_REGISTER_SINGLE_PLUGIN(
+IGNITION_ADD_PLUGIN(
     BoxEnvironment::Plugin,
-    ignition::common::examples::Environment)
+    ignition::plugin::examples::Environment)

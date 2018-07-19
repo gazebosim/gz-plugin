@@ -16,15 +16,17 @@
 */
 
 
-#ifndef IGNITION_COMMON_DETAIL_REGISTERPLUGIN_HH_
-#define IGNITION_COMMON_DETAIL_REGISTERPLUGIN_HH_
+#ifndef IGNITION_PLUGIN_DETAIL_REGISTERPLUGIN_HH_
+#define IGNITION_PLUGIN_DETAIL_REGISTERPLUGIN_HH_
 
 #include <set>
 #include <string>
 #include <typeinfo>
 #include <type_traits>
-#include <ignition/common/PluginInfo.hh>
-#include <ignition/common/SuppressWarning.hh>
+
+#include <ignition/utilities/SuppressWarning.hh>
+
+#include <ignition/plugin/PluginInfo.hh>
 
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -41,13 +43,13 @@
   #endif
 #endif
 
-// extern "C" ensures that the symbol name of IGNCOMMONInputOrOutputPluginInfo
+// extern "C" ensures that the symbol name of IgnitionPluginHook
 // does not get mangled by the compiler, so we can easily use dlsym(~) to
 // retrieve it.
 extern "C"
 {
-  /// \brief IGNCOMMONInputOrOutputPluginInfo is the hook that's used by the
-  /// PluginLoader to retrieve PluginInfo from a shared library that provides
+  /// \brief IgnitionPluginHook is the hook that's used by the
+  /// PluginLoader to retrieve Info from a shared library that provides
   /// plugins.
   ///
   /// It is declared inline so that the plugin registration macros can
@@ -56,16 +58,16 @@ extern "C"
   ///
   /// The symbol is explicitly exported (visibility is turned on) using
   /// DETAIL_IGN_PLUGIN_VISIBLE to ensure that dlsym(~) is able to find it.
-  DETAIL_IGN_PLUGIN_VISIBLE inline void IGNCOMMONInputOrOutputPluginInfo(
+  DETAIL_IGN_PLUGIN_VISIBLE inline void IgnitionPluginHook(
       const void *_inputSingleInfo,
       const void ** const _outputAllInfo,
       int *_inputAndOutputAPIVersion,
-      std::size_t *_inputAndOutputPluginInfoSize,
-      std::size_t *_inputAndOutputPluginInfoAlign)
+      std::size_t *_inputAndOutputInfoSize,
+      std::size_t *_inputAndOutputInfoAlign)
   {
-    using PluginInfoMap = ignition::common::PluginInfoMap;
+    using InfoMap = ignition::plugin::InfoMap;
     // We use a static variable here so that we can accumulate multiple
-    // PluginInfo objects from multiple plugin registration calls within one
+    // Info objects from multiple plugin registration calls within one
     // shared library, and then provide it all to the PluginLoader through this
     // single hook. We store this static variable inside of an inlined function
     // in order to satisfy two requirements:
@@ -99,16 +101,16 @@ extern "C"
     //       problematic STB_GNU_UNIQUE binding. Note that clang does not have
     //       this issue.
     //
-    static PluginInfoMap pluginMap;
+    static InfoMap pluginMap;
 
     if (_inputSingleInfo)
     {
       // When _inputSingleInfo is not a nullptr, it means that one of the plugin
-      // registration macros is providing us with some PluginInfo.
-      const ignition::common::PluginInfo *input =
-          static_cast<const ignition::common::PluginInfo*>(_inputSingleInfo);
+      // registration macros is providing us with some Info.
+      const ignition::plugin::Info *input =
+          static_cast<const ignition::plugin::Info*>(_inputSingleInfo);
 
-      PluginInfoMap::iterator it;
+      InfoMap::iterator it;
       bool inserted;
 
       // We use insert(~) to ensure that we do not accidentally overwrite some
@@ -125,7 +127,7 @@ extern "C"
         // user to specify different interfaces and aliases for the same plugin
         // type using different macros in different locations or across multiple
         // translation units.
-        ignition::common::PluginInfo &entry = it->second;
+        ignition::plugin::Info &entry = it->second;
 
         for (const auto &interfaceMapEntry : input->interfaces)
           entry.interfaces.insert(interfaceMapEntry);
@@ -137,14 +139,14 @@ extern "C"
 
     if (_outputAllInfo)
     {
-      // When _outputAllInfo is not a nullptr, it means that a PluginLoader is
-      // trying to retrieve PluginInfo from us.
+      // When _outputAllInfo is not a nullptr, it means that a Loader is
+      // trying to retrieve Info from us.
 
       // The PluginLoader should provide valid pointers to these fields as part
       // of a handshake procedure.
       if (nullptr == _inputAndOutputAPIVersion ||
-          nullptr == _inputAndOutputPluginInfoSize ||
-          nullptr == _inputAndOutputPluginInfoAlign)
+          nullptr == _inputAndOutputInfoSize ||
+          nullptr == _inputAndOutputInfoAlign)
       {
         // This should never happen, or else the function is being misused.
         return;
@@ -152,32 +154,32 @@ extern "C"
 
       bool agreement = true;
 
-      if (ignition::common::PLUGIN_API_VERSION
+      if (ignition::plugin::PLUGIN_API_VERSION
           != *_inputAndOutputAPIVersion)
       {
         agreement = false;
       }
 
-      if (sizeof(ignition::common::PluginInfo)
-          != *_inputAndOutputPluginInfoSize)
+      if (sizeof(ignition::plugin::Info)
+          != *_inputAndOutputInfoSize)
       {
         agreement = false;
       }
 
-      if (alignof(ignition::common::PluginInfo)
-          != *_inputAndOutputPluginInfoAlign)
+      if (alignof(ignition::plugin::Info)
+          != *_inputAndOutputInfoAlign)
       {
         agreement = false;
       }
 
       // The handshake parameters that were passed into us are overwritten with
-      // the values that we have on our end. That way, if our PluginInfo API is
+      // the values that we have on our end. That way, if our Info API is
       // lower than that of the PluginLoader, then the PluginLoader will know
-      // to call this function using an older version of PluginInfo, and then
+      // to call this function using an older version of Info, and then
       // convert it to the newer version on the loader side.
-      *_inputAndOutputAPIVersion = ignition::common::PLUGIN_API_VERSION;
-      *_inputAndOutputPluginInfoSize = sizeof(ignition::common::PluginInfo);
-      *_inputAndOutputPluginInfoAlign = alignof(ignition::common::PluginInfo);
+      *_inputAndOutputAPIVersion = ignition::plugin::INFO_API_VERSION;
+      *_inputAndOutputInfoSize = sizeof(ignition::plugin::Info);
+      *_inputAndOutputInfoAlign = alignof(ignition::plugin::Info);
 
       // If the size, alignment, or API do not agree, we should return without
       // outputting any of the plugin info; otherwise, we could get a
@@ -196,7 +198,7 @@ extern "C"
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     namespace detail
     {
@@ -207,7 +209,7 @@ namespace ignition
       template <typename PluginClass, typename... NoMoreInterfaces>
       struct InterfaceHelper
       {
-        public: static void InsertInterfaces(PluginInfo::InterfaceCastingMap &)
+        public: static void InsertInterfaces(Info::InterfaceCastingMap &)
         {
           // Do nothing. This is the terminal specialization of the variadic
           // template class member function.
@@ -222,7 +224,7 @@ namespace ignition
       struct InterfaceHelper<PluginClass, Interface, RemainingInterfaces...>
       {
         public: static void InsertInterfaces(
-          PluginInfo::InterfaceCastingMap &interfaces)
+          Info::InterfaceCastingMap &interfaces)
         {
           // READ ME: If you get a compilation error here, then one of the
           // interfaces that you tried to register for your plugin is not
@@ -268,7 +270,7 @@ namespace ignition
 
       //////////////////////////////////////////////////
       /// \brief This default specialization of the Registrar class will be
-      /// called when no arguments are provided to the IGN_COMMON_ADD_PLUGIN()
+      /// called when no arguments are provided to the IGNITION_ADD_PLUGIN()
       /// macro. This is not allowed and will result in a compilation error.
       template <typename... NoArguments>
       struct Registrar
@@ -276,11 +278,11 @@ namespace ignition
         public: static void RegisterPlugin()
         {
           // READ ME: If you get a compilation error here, then you have
-          // attempted to call IGN_COMMON_ADD_PLUGIN() with no arguments. This
+          // attempted to call IGNITION_ADD_PLUGIN() with no arguments. This
           // is both pointless and not permitted. Either specify a plugin class
           // to register, or else do not call the macro.
           static_assert(sizeof...(NoArguments) > 0,
-                        "YOU ARE ATTEMPTING TO CALL IGN_COMMON_ADD_PLUGIN "
+                        "YOU ARE ATTEMPTING TO CALL IGNITION_ADD_PLUGIN "
                         "WITHOUT SPECIFYING A PLUGIN CLASS");
 
 
@@ -303,7 +305,7 @@ namespace ignition
 
       //////////////////////////////////////////////////
       /// \brief This specialization of the Register class will be called when
-      /// one or more arguments are provided to the IGN_COMMON_ADD_PLUGIN(~)
+      /// one or more arguments are provided to the IGNITION_ADD_PLUGIN(~)
       /// macro. This is the only version of the Registrar class that is allowed
       /// to compile.
       template <typename PluginClass, typename... Interfaces>
@@ -320,9 +322,9 @@ namespace ignition
                       "YOU ARE ATTEMPTING TO REGISTER A PURE ABSTRACT CLASS "
                       "AS A PLUGIN. THIS IS NOT ALLOWED.");
 
-        public: static PluginInfo MakePluginInfo()
+        public: static Info MakeInfo()
         {
-          PluginInfo info;
+          Info info;
 
           // Set the name of the plugin
           info.name = typeid(PluginClass).name();
@@ -333,13 +335,13 @@ namespace ignition
             return static_cast<void*>(new PluginClass);
           };
 
-IGN_COMMON_WARN_IGNORE__DELETE_NON_VIRTUAL_DESTRUCTOR
+IGN_UTILS_WARN_IGNORE__DELETE_NON_VIRTUAL_DESTRUCTOR
           // Create a deleter to clean up destroyed instances
           info.deleter = [=](void *ptr)
           {
             delete static_cast<PluginClass*>(ptr);
           };
-IGN_COMMON_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
+IGN_UTILS_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
 
           // Construct a map from the plugin to its interfaces
           InterfaceHelper<PluginClass, Interfaces...>
@@ -352,12 +354,11 @@ IGN_COMMON_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
         /// interfaces that it provides.
         public: static void RegisterPlugin()
         {
-          PluginInfo info = MakePluginInfo();
+          Info info = MakeInfo();
 
           // Send this information as input to this library's global repository
           // of plugins.
-          IGNCOMMONInputOrOutputPluginInfo(
-                &info, nullptr, nullptr, nullptr, nullptr);
+          IgnitionPluginHook(&info, nullptr, nullptr, nullptr, nullptr);
         }
 
 
@@ -365,7 +366,7 @@ IGN_COMMON_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
         static void RegisterAlias(Aliases&&... aliases)
         {
           // Dev note (MXG): We expect the RegisterAlias function to be called
-          // using the IGN_COMMON_ADD_ALIAS(~) macro, which should never contain
+          // using the IGN_ADD_ALIAS(~) macro, which should never contain
           // any interfaces. Therefore, this parameter pack should be empty.
           //
           // In the future, we could allow Interfaces and Aliases to be
@@ -376,15 +377,14 @@ IGN_COMMON_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
                         "THERE IS A BUG IN THE ALIAS REGISTRATION "
                         "IMPLEMENTATION! PLEASE REPORT THIS!");
 
-          PluginInfo info = MakePluginInfo();
+          Info info = MakeInfo();
 
           // Gather up all the aliases that have been specified for this plugin.
           InsertAlias(info.aliases, std::forward<Aliases>(aliases)...);
 
           // Send this information as input to this library's global repository
           // of plugins.
-          IGNCOMMONInputOrOutputPluginInfo(
-                &info, nullptr, nullptr, nullptr, nullptr);
+          IgnitionPluginHook(&info, nullptr, nullptr, nullptr, nullptr);
         }
       };
     }
@@ -393,15 +393,15 @@ IGN_COMMON_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
 
 //////////////////////////////////////////////////
 /// This macro creates a uniquely-named class whose constructor calls the
-/// ignition::common::detail::RegisterPlugin function. It then declares a
+/// ignition::plugin::detail::RegisterPlugin function. It then declares a
 /// uniquely-named instance of the class with static lifetime. Since the class
 /// instance has a static lifetime, it will be constructed when the shared
 /// library is loaded. When it is constructed, the RegisterPlugin function will
 /// be called
-#define DETAIL_IGN_COMMON_ADD_PLUGIN_HELPER(UniqueID, ...) \
+#define DETAIL_IGNITION_ADD_PLUGIN_HELPER(UniqueID, ...) \
   namespace ignition \
   { \
-    namespace common \
+    namespace plugin \
     { \
       namespace \
       { \
@@ -409,7 +409,7 @@ IGN_COMMON_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
         { \
           ExecuteWhenLoadingLibrary##UniqueID() \
           { \
-            ::ignition::common::detail::Registrar<__VA_ARGS__>:: \
+            ::ignition::plugin::detail::Registrar<__VA_ARGS__>:: \
                 RegisterPlugin(); \
           } \
         }; \
@@ -423,15 +423,15 @@ IGN_COMMON_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
 //////////////////////////////////////////////////
 /// This macro is needed to force the __COUNTER__ macro to expand to a value
 /// before being passed to the *_HELPER macro.
-#define DETAIL_IGN_COMMON_ADD_PLUGIN_WITH_COUNTER(UniqueID, ...) \
-  DETAIL_IGN_COMMON_ADD_PLUGIN_HELPER(UniqueID, __VA_ARGS__)
+#define DETAIL_IGNITION_ADD_PLUGIN_WITH_COUNTER(UniqueID, ...) \
+  DETAIL_IGNITION_ADD_PLUGIN_HELPER(UniqueID, __VA_ARGS__)
 
 
 //////////////////////////////////////////////////
 /// We use the __COUNTER__ here to give each plugin instantiation its own unique
 /// name, which is required in order to statically initialize each one.
-#define DETAIL_IGN_COMMON_ADD_PLUGIN(...) \
-  DETAIL_IGN_COMMON_ADD_PLUGIN_WITH_COUNTER(__COUNTER__, __VA_ARGS__)
+#define DETAIL_IGNITION_ADD_PLUGIN(...) \
+  DETAIL_IGNITION_ADD_PLUGIN_WITH_COUNTER(__COUNTER__, __VA_ARGS__)
 
 
 #endif

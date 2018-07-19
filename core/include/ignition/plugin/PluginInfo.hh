@@ -32,7 +32,7 @@ namespace ignition
     /// version of the PluginInfo struct
     //
     /// This must be incremented when the PluginInfo struct changes
-    const int PLUGIN_INFO_API_VERSION = 1;
+    const int INFO_API_VERSION = 1;
 
     // We use an inline namespace to assist in forward-compatibility. Eventually
     // we may want to support a version-2 of the PluginInfo API, in which case
@@ -43,7 +43,7 @@ namespace ignition
     inline namespace v1
     {
       /// \brief Holds info required to construct a plugin
-      struct PluginInfo
+      struct Info
       {
         /// \brief Clear out all information contained in this PluginInfo object
         void Clear();
@@ -81,7 +81,7 @@ namespace ignition
     /// This typedef is used simultaneously by detail/RegisterPlugin.hh and
     /// PluginLoader.cc, so we store it in a location that is visible to both
     /// of them.
-    using PluginInfoMap = std::unordered_map<std::string, PluginInfo>;
+    using InfoMap = std::unordered_map<std::string, Info>;
   }
 }
 

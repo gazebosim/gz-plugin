@@ -17,12 +17,12 @@
 
 #include <cassert>
 
-#include <ignition/common/PluginMacros.hh>
+#include <ignition/plugin/PluginMacros.hh>
 
 #include "integrators.hh"
 
 namespace ignition{
-namespace common {
+namespace plugin {
 namespace examples {
 namespace ForwardEuler {
 
@@ -53,7 +53,7 @@ std::vector<double> times(const double s,
 }
 
 /// \brief Forward Euler implementation of a numerical integrator
-class Integrator : public ignition::common::examples::NumericalIntegrator
+class Integrator : public ignition::plugin::examples::NumericalIntegrator
 {
   // Documentation inherited
   public: void SetFunction(
@@ -103,6 +103,6 @@ class Integrator : public ignition::common::examples::NumericalIntegrator
 }
 
 
-IGN_COMMON_REGISTER_SINGLE_PLUGIN(
-    ignition::common::examples::ForwardEuler::Integrator,
-    ignition::common::examples::NumericalIntegrator)
+IGN_PLUGIN_REGISTER_SINGLE_PLUGIN(
+    ignition::plugin::examples::ForwardEuler::Integrator,
+    ignition::plugin::examples::NumericalIntegrator)

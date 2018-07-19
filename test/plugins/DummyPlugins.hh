@@ -22,7 +22,7 @@
 #include <string>
 #include <memory>
 
-#include <ignition/common/Export.hh>
+#include <ignition/plugin/Export.hh>
 #include <ignition/plugin/RegisterPlugin.hh>
 
 namespace test

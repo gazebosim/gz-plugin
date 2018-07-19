@@ -15,19 +15,19 @@
  *
 */
 
-#ifndef IGNITION_COMMON_EXAMPLES_PLUGINS_ROBOT_HH_
-#define IGNITION_COMMON_EXAMPLES_PLUGINS_ROBOT_HH_
+#ifndef IGNITION_PLUGIN_EXAMPLES_PLUGINS_ROBOT_HH_
+#define IGNITION_PLUGIN_EXAMPLES_PLUGINS_ROBOT_HH_
 
 #include <utility>
 
 #include <ignition/math/Vector2.hh>
 #include <ignition/math/Vector3.hh>
 
-#include <ignition/common/PluginMacros.hh>
+#include <ignition/plugin/PluginMacros.hh>
 
 namespace ignition
 {
-  namespace common
+  namespace plugin
   {
     namespace examples
     {

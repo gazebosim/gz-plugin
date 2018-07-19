@@ -15,6 +15,6 @@
  *
 */
 
-#include "ignition/common/RegisterPlugin.hh"
+#include "ignition/plugin/RegisterPlugin.hh"
 
-IGN_COMMON_ADD_PLUGIN()
+IGNITION_ADD_PLUGIN()
