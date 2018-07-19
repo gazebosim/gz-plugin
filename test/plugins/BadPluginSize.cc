@@ -25,7 +25,7 @@ extern "C" {
     alignof(ignition::plugin::Info);
 
   int DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginAPIVersion =
-    ignition::plugin::IGN_INFO_API_VERSION;
+    ignition::plugin::INFO_API_VERSION;
 }
 
 extern "C" std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINMultiPluginInfo(

@@ -12,15 +12,17 @@ ign_build_tests(
 
 foreach(test ${test_targets})
 
-  target_compile_definitions(${test} PRIVATE
-    "IGNDummyPlugin_LIB=\"$<TARGET_FILE:IGNDummyPlugins>\"")
-  target_compile_definitions(${test} PRIVATE
-    "IGNBadPluginAlign_LIB=\"$<TARGET_FILE:IGNBadPluginAlign>\"")
-  target_compile_definitions(${test} PRIVATE
-    "IGNBadPluginAPIVersionNew_LIB=\"$<TARGET_FILE:IGNBadPluginAPIVersionNew>\"")
-  target_compile_definitions(${test} PRIVATE
-    "IGNBadPluginAPIVersionOld_LIB=\"$<TARGET_FILE:IGNBadPluginAPIVersionOld>\"")
-  target_compile_definitions(${test} PRIVATE
-    "IGNBadPluginSize_LIB=\"$<TARGET_FILE:IGNBadPluginSize>\"")
+  foreach(plugin_target
+      IGNBadPluginAlign
+      IGNBadPluginAPIVersionNew
+      IGNBadPluginAPIVersionOld
+      IGNBadPluginSize
+      IGNDummyPlugins
+      IGNTemplatedPlugins)
+
+    target_compile_definitions(${test} PRIVATE
+      "${plugin_target}_LIB=\"$<TARGET_FILE:${plugin_target}>\"")
+
+  endforeach()
 
 endforeach()

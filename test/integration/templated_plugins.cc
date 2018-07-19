@@ -22,29 +22,18 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/PluginLoader.hh>
-#include <ignition/plugin/SystemPaths.hh>
+#include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/SpecializedPluginPtr.hh>
 
-#include "test_config.h"
-#include "plugins/TemplatePlugin.hh"
+#include "../plugins/TemplatedPlugins.hh"
 
 using namespace test::plugins;
-
-// This macro provides the path to the directory containing the test plugins.
-// DETAIL_IGN_DUMMY_PLUGIN_PATH is defined in test/integration/CMakeLists.txt
-#define IGN_DUMMY_PLUGIN_PATH \
-  DETAIL_IGN_DUMMY_PLUGIN_PATH
 
 /////////////////////////////////////////////////
 TEST(TemplatedPlugins, InterfaceCount)
 {
-  ignition::plugin::SystemPaths sp;
-  sp.AddPluginPaths(IGN_DUMMY_PLUGIN_PATH);
-  const std::string path = sp.FindSharedLibrary("IGNTemplatedPlugins");
-
-  ignition::plugin::PluginLoader pl;
-  pl.LoadLibrary(path);
+  ignition::plugin::Loader pl;
+  pl.LoadLibrary(IGNTemplatedPlugins_LIB);
 
   const std::size_t getIntCount =
        pl.PluginsImplementing< TemplatedGetInterface<int> >().size();
@@ -79,7 +68,7 @@ using SetAndGetPluginPtr = ignition::plugin::SpecializedPluginPtr<
 
 /////////////////////////////////////////////////
 template <typename T>
-void TestSetAndGet(const ignition::plugin::PluginLoader &_pl,
+void TestSetAndGet(const ignition::plugin::Loader &_pl,
                    const T &_valueToUse)
 {
   using GetInterface = TemplatedGetInterface<T>;
@@ -112,12 +101,8 @@ void TestSetAndGet(const ignition::plugin::PluginLoader &_pl,
 /////////////////////////////////////////////////
 TEST(TemplatedPlugins, SetAndGet)
 {
-  ignition::plugin::SystemPaths sp;
-  sp.AddPluginPaths(IGN_DUMMY_PLUGIN_PATH);
-  const std::string path = sp.FindSharedLibrary("IGNTemplatedPlugins");
-
-  ignition::plugin::PluginLoader pl;
-  pl.LoadLibrary(path);
+  ignition::plugin::Loader pl;
+  pl.LoadLibrary(IGNTemplatedPlugins_LIB);
 
   TestSetAndGet<int>(pl, 120);
   TestSetAndGet<std::string>(pl, "some amazing string");

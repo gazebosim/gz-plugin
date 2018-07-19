@@ -15,8 +15,8 @@
  *
 */
 
-#include "ignition/plugin/RegisterPlugin.hh"
-#include "plugins/DummyPlugins.hh"
+#include <ignition/plugin/Register.hh>
+#include "DummyPlugins.hh"
 
 // We use this file to test that the IGNITION_ADD_PLUGIN macro can be used in
 // multiple translation units for the same plugin without any issues.
@@ -25,6 +25,6 @@
 // macro call.
 
 IGNITION_ADD_PLUGIN(test::util::DummyMultiPlugin,
-                      test::util::DummyDoubleBase,
-                      test::util::DummyIntBase,
-                      test::util::DummySetterBase)
+                    test::util::DummyDoubleBase,
+                    test::util::DummyIntBase,
+                    test::util::DummySetterBase)

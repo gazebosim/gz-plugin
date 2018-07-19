@@ -17,9 +17,9 @@
 
 #include <string>
 
-#include "TemplatePlugin.hh"
+#include "TemplatedPlugins.hh"
 
-#include <ignition/plugin/RegisterPlugin.hh>
+#include <ignition/plugin/Register.hh>
 
 namespace test
 {

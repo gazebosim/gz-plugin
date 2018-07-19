@@ -16,8 +16,8 @@
 */
 
 
-#ifndef IGNITION_PLUGIN_DETAIL_REGISTERPLUGIN_HH_
-#define IGNITION_PLUGIN_DETAIL_REGISTERPLUGIN_HH_
+#ifndef IGNITION_PLUGIN_DETAIL_REGISTER_HH_
+#define IGNITION_PLUGIN_DETAIL_REGISTER_HH_
 
 #include <set>
 #include <string>
@@ -26,7 +26,7 @@
 
 #include <ignition/utilities/SuppressWarning.hh>
 
-#include <ignition/plugin/PluginInfo.hh>
+#include <ignition/plugin/Info.hh>
 
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -154,14 +154,12 @@ extern "C"
 
       bool agreement = true;
 
-      if (ignition::plugin::PLUGIN_API_VERSION
-          != *_inputAndOutputAPIVersion)
+      if (ignition::plugin::INFO_API_VERSION != *_inputAndOutputAPIVersion)
       {
         agreement = false;
       }
 
-      if (sizeof(ignition::plugin::Info)
-          != *_inputAndOutputInfoSize)
+      if (sizeof(ignition::plugin::Info) != *_inputAndOutputInfoSize)
       {
         agreement = false;
       }
@@ -275,7 +273,7 @@ namespace ignition
       template <typename... NoArguments>
       struct Registrar
       {
-        public: static void RegisterPlugin()
+        public: static void Register()
         {
           // READ ME: If you get a compilation error here, then you have
           // attempted to call IGNITION_ADD_PLUGIN() with no arguments. This
@@ -352,7 +350,7 @@ IGN_UTILS_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
 
         /// \brief This function registers a plugin along with a set of
         /// interfaces that it provides.
-        public: static void RegisterPlugin()
+        public: static void Register()
         {
           Info info = MakeInfo();
 
@@ -393,10 +391,10 @@ IGN_UTILS_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
 
 //////////////////////////////////////////////////
 /// This macro creates a uniquely-named class whose constructor calls the
-/// ignition::plugin::detail::RegisterPlugin function. It then declares a
+/// ignition::plugin::detail::Registrar::Register function. It then declares a
 /// uniquely-named instance of the class with static lifetime. Since the class
 /// instance has a static lifetime, it will be constructed when the shared
-/// library is loaded. When it is constructed, the RegisterPlugin function will
+/// library is loaded. When it is constructed, the Register function will
 /// be called
 #define DETAIL_IGNITION_ADD_PLUGIN_HELPER(UniqueID, ...) \
   namespace ignition \
@@ -409,8 +407,7 @@ IGN_UTILS_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
         { \
           ExecuteWhenLoadingLibrary##UniqueID() \
           { \
-            ::ignition::plugin::detail::Registrar<__VA_ARGS__>:: \
-                RegisterPlugin(); \
+            ::ignition::plugin::detail::Registrar<__VA_ARGS__>::Register(); \
           } \
         }; \
   \

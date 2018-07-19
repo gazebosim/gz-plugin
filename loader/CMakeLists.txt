@@ -25,3 +25,7 @@ foreach(test ${test_targets})
     "IGN_PLUGIN_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\"")
 
 endforeach()
+
+install(
+  DIRECTORY include/
+  DESTINATION ${IGN_INCLUDE_INSTALL_DIR_FULL})

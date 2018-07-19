@@ -156,7 +156,7 @@ namespace ignition
 
       /// \brief Create a new plugin instance based on the info provided
       private: void PrivateSetPluginInstance(
-                  const PluginInfo *_info,
+                  const Info *_info,
                   const std::shared_ptr<void> &_dlHandlePtr) const;
 
       /// \brief Get a reference to the std::shared_ptr being managed by this

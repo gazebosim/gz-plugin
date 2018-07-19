@@ -55,20 +55,20 @@ TEST(PluginLoader, LoadExistingLibrary)
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLibrary(IGNDummyPlugin_LIB);
+      pl.LoadLibrary(IGNDummyPlugins_LIB);
   for(const auto& name : pluginNames)
     std::cout << " -- " << name << std::endl;
-  ASSERT_EQ(1u, pluginNames.count("::test::util::DummySinglePlugin"));
-  ASSERT_EQ(1u, pluginNames.count("::test::util::DummyMultiPlugin"));
+  ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
+  ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
 
   std::cout << pl.PrettyStr();
 
   // Make sure the expected interfaces were loaded.
   EXPECT_EQ(5u, pl.InterfacesImplemented().size());
   EXPECT_EQ(1u, pl.InterfacesImplemented()
-            .count("::test::util::DummyNameBase"));
-  EXPECT_EQ(2u, pl.PluginsImplementing("::test::util::DummyNameBase").size());
-  EXPECT_EQ(1u, pl.PluginsImplementing("::test::util::DummyDoubleBase").size());
+            .count("test::util::DummyNameBase"));
+  EXPECT_EQ(2u, pl.PluginsImplementing("test::util::DummyNameBase").size());
+  EXPECT_EQ(1u, pl.PluginsImplementing("test::util::DummyDoubleBase").size());
 
 
   ignition::plugin::PluginPtr firstPlugin =
@@ -90,28 +90,24 @@ TEST(PluginLoader, LoadExistingLibrary)
   // Check that the DummyNameBase interface exists and that it returns the
   // correct value.
   test::util::DummyNameBase* nameBase =
-      firstPlugin->QueryInterface<test::util::DummyNameBase>(
-        "test::util::DummyNameBase");
+      firstPlugin->QueryInterface<test::util::DummyNameBase>();
   ASSERT_NE(nullptr, nameBase);
   EXPECT_EQ(std::string("DummySinglePlugin"), nameBase->MyNameIs());
 
   // Check that DummyDoubleBase does not exist for this plugin
   test::util::DummyDoubleBase* doubleBase =
-      firstPlugin->QueryInterface<test::util::DummyDoubleBase>(
-        "test::util::DummyDoubleBase");
+      firstPlugin->QueryInterface<test::util::DummyDoubleBase>();
   EXPECT_EQ(nullptr, doubleBase);
 
   // Check that DummyDoubleBase does exist for this function and that it returns
   // the correct value.
-  doubleBase = secondPlugin->QueryInterface<test::util::DummyDoubleBase>(
-        "test::util::DummyDoubleBase");
+  doubleBase = secondPlugin->QueryInterface<test::util::DummyDoubleBase>();
   ASSERT_NE(nullptr, doubleBase);
   EXPECT_NEAR(3.14159, doubleBase->MyDoubleValueIs(), 1e-8);
 
   // Check that the DummyNameBase interface exists for this plugin and that it
   // returns the correct value.
-  nameBase = secondPlugin->QueryInterface<test::util::DummyNameBase>(
-        "test::util::DummyNameBase");
+  nameBase = secondPlugin->QueryInterface<test::util::DummyNameBase>();
   ASSERT_NE(nullptr, nameBase);
   EXPECT_EQ(std::string("DummyMultiPlugin"), nameBase->MyNameIs());
 
@@ -128,10 +124,7 @@ TEST(PluginLoader, LoadExistingLibrary)
 }
 
 
-class SomeInterface
-{
-  public: IGN_PLUGIN_SPECIALIZE_INTERFACE(SomeInterface)
-};
+class SomeInterface { };
 
 using SomeSpecializedPluginPtr =
     ignition::plugin::SpecializedPluginPtr<
@@ -142,10 +135,10 @@ using SomeSpecializedPluginPtr =
 TEST(SpecializedPluginPtr, Construction)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugin_LIB);
+  pl.LoadLibrary(IGNDummyPlugins_LIB);
 
   SomeSpecializedPluginPtr plugin(
-        pl.Instantiate("::test::util::DummyMultiPlugin"));
+        pl.Instantiate("test::util::DummyMultiPlugin"));
   EXPECT_FALSE(plugin.IsEmpty());
 
   // Make sure the specialized interface is available, that it is accessed using
@@ -174,8 +167,7 @@ TEST(SpecializedPluginPtr, Construction)
   // the specialized access, and that it returns the expected value.
   usedSpecializedInterfaceAccess = false;
   test::util::DummyDoubleBase *doubleBase =
-      plugin->QueryInterface<test::util::DummyDoubleBase>(
-        "test::util::DummyDoubleBase");
+      plugin->QueryInterface<test::util::DummyDoubleBase>();
   EXPECT_FALSE(usedSpecializedInterfaceAccess);
   EXPECT_NE(nullptr, doubleBase);
   EXPECT_NEAR(3.14159, doubleBase->MyDoubleValueIs(), 1e-8);
@@ -264,7 +256,7 @@ TEST(PluginPtr, CopyMoveSemantics)
   EXPECT_TRUE(plugin.IsEmpty());
 
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugin_LIB);
+  pl.LoadLibrary(IGNDummyPlugins_LIB);
 
   plugin = pl.Instantiate("test::util::DummySinglePlugin");
   EXPECT_FALSE(plugin.IsEmpty());
@@ -332,7 +324,7 @@ void CheckSomeValues(
 TEST(PluginPtr, QueryInterfaceSharedPtr)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugin_LIB);
+  pl.LoadLibrary(IGNDummyPlugins_LIB);
 
   // as_shared_pointer without specialization
   {
@@ -351,8 +343,7 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
 
   std::shared_ptr<test::util::DummyIntBase> int_ptr =
       pl.Instantiate("test::util::DummyMultiPlugin")->
-        QueryInterfaceSharedPtr<test::util::DummyIntBase>(
-          "test::util::DummyIntBase");
+        QueryInterfaceSharedPtr<test::util::DummyIntBase>();
   EXPECT_TRUE(int_ptr.get());
   EXPECT_EQ(5, int_ptr->MyIntegerValueIs());
 
@@ -379,13 +370,11 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
   ASSERT_TRUE(getInt.get());
 
   std::shared_ptr<test::util::DummyDoubleBase> getDouble =
-      plugin->QueryInterfaceSharedPtr<test::util::DummyDoubleBase>(
-        "test::util::DummyDoubleBase");
+      plugin->QueryInterfaceSharedPtr<test::util::DummyDoubleBase>();
   ASSERT_TRUE(getDouble.get());
 
   std::shared_ptr<test::util::DummyNameBase> getName =
-      plugin->QueryInterfaceSharedPtr<test::util::DummyNameBase>(
-        "test::util::DummyNameBase");
+      plugin->QueryInterfaceSharedPtr<test::util::DummyNameBase>();
   ASSERT_TRUE(getName.get());
 
   SetSomeValues(setter);

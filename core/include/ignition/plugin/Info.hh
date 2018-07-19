@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_PLUGININFO_HH_
-#define IGNITION_PLUGIN_PLUGININFO_HH_
+#ifndef IGNITION_PLUGIN_INFO_HH_
+#define IGNITION_PLUGIN_INFO_HH_
 
 #include <functional>
 #include <string>
@@ -29,15 +29,15 @@ namespace ignition
   namespace plugin
   {
     /// \brief sentinel value to check if a plugin was built with the same
-    /// version of the PluginInfo struct
+    /// version of the Info struct
     //
-    /// This must be incremented when the PluginInfo struct changes
+    /// This must be incremented when the Info struct changes
     const int INFO_API_VERSION = 1;
 
     // We use an inline namespace to assist in forward-compatibility. Eventually
-    // we may want to support a version-2 of the PluginInfo API, in which case
+    // we may want to support a version-2 of the Info API, in which case
     // we will remove the "inline" declaration here, and create a new inline
-    // namespace called "v2". This original PluginInfo object will continue to
+    // namespace called "v2". This original Info object will continue to
     // be accessible for backwards compatibility, and even its symbol name in
     // the ABI should remain the same.
     inline namespace v1
@@ -45,7 +45,7 @@ namespace ignition
       /// \brief Holds info required to construct a plugin
       struct Info
       {
-        /// \brief Clear out all information contained in this PluginInfo object
+        /// \brief Clear out all information contained in this Info object
         void Clear();
 
         /// \brief The name of the plugin
@@ -65,7 +65,7 @@ namespace ignition
 
         /// \brief This is a set containing the demangled versions of the names
         /// of the interfaces provided by this plugin. This gets filled in by
-        /// the PluginLoader after receiving the PluginInfo. It is only used by
+        /// the PluginLoader after receiving the Info. It is only used by
         /// the user-facing API. Internally, when looking up Interfaces, the
         /// mangled `interfaces` map will still be used.
         std::set<std::string> demangledInterfaces;
@@ -78,9 +78,8 @@ namespace ignition
       };
     }
 
-    /// This typedef is used simultaneously by detail/RegisterPlugin.hh and
-    /// PluginLoader.cc, so we store it in a location that is visible to both
-    /// of them.
+    /// This typedef is used simultaneously by detail/Register.hh and Loader.cc,
+    /// so we store it in a location that is visible to both of them.
     using InfoMap = std::unordered_map<std::string, Info>;
   }
 }

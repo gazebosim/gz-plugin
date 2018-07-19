@@ -26,11 +26,17 @@ namespace ignition
 {
   namespace plugin
   {
+    template <typename Interface>
+    std::unordered_set<std::string> Loader::PluginsImplementing() const
+    {
+      return this->PluginsImplementing(typeid(Interface).name(), false);
+    }
+
     template <typename PluginPtrType>
     PluginPtrType Loader::Instantiate(
         const std::string &_pluginName) const
     {
-      return PluginPtrType(this->PrivateGetPluginInfo(_pluginName));
+      return PluginPtrType(this->PrivateGetInfo(_pluginName));
     }
   }
 }

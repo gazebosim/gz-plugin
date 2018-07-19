@@ -16,10 +16,10 @@
 */
 
 
-#ifndef IGNITION_PLUGIN_REGISTERPLUGIN_HH_
-#define IGNITION_PLUGIN_REGISTERPLUGIN_HH_
+#ifndef IGNITION_PLUGIN_REGISTER_HH_
+#define IGNITION_PLUGIN_REGISTER_HH_
 
-#include <ignition/plugin/detail/RegisterPlugin.hh>
+#include <ignition/plugin/detail/Register.hh>
 
 
 // ------------- Add a set of plugins or a set of interfaces ------------------
@@ -27,14 +27,5 @@
 /// \brief Add a plugin and interface from this shared library.
 #define IGNITION_ADD_PLUGIN(...)\
   DETAIL_IGNITION_ADD_PLUGIN(__VA_ARGS__)
-
-
-
-// -------------- Add a single plugin with a single interface -----------------
-
-/// \brief Same as IGNITION_ADD_PLUGIN(~,~). This macro currently exists for
-/// backwards API compatibility.
-#define IGN_REGISTER_SINGLE_PLUGIN(plugin, interface) \
-    IGNITION_ADD_PLUGIN(plugin, interface)
 
 #endif

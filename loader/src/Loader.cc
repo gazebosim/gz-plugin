@@ -16,14 +16,15 @@
  */
 
 #include <algorithm>
+#include <cassert>
 #include <dlfcn.h>
 #include <functional>
+#include <iostream>
 #include <locale>
 #include <sstream>
 #include <unordered_map>
-#include <iostream>
 
-#include <ignition/plugin/PluginInfo.hh>
+#include <ignition/plugin/Info.hh>
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/Plugin.hh>
 
@@ -47,8 +48,8 @@ namespace ignition
 
       if (0 != status)
       {
-        ignerr << "[Demangle] Failed to demangle the symbol name [" << _name
-               << "]. Error code: " << status << "\n";
+        std::cerr << "[Demangle] Failed to demangle the symbol name [" << _name
+                  << "]. Error code: " << status << "\n";
         return _name;
       }
 
@@ -78,7 +79,7 @@ namespace ignition
 
     /////////////////////////////////////////////////
     /// \brief PIMPL Implementation of the Loader class
-    class LoaderPrivate
+    class Loader::Implementation
     {
       /// \brief Attempt to load a library at the given path.
       /// \param[in] _pathToLibrary The full path to the desired library
@@ -166,7 +167,7 @@ namespace ignition
 
     /////////////////////////////////////////////////
     Loader::Loader()
-      : dataPtr(new LoaderPrivate())
+      : dataPtr(new Implementation())
     {
       // Do nothing.
     }
@@ -272,9 +273,6 @@ namespace ignition
     /////////////////////////////////////////////////
     bool Loader::ForgetLibrary(const std::string &_pathToLibrary)
     {
-      if (!exists(_pathToLibrary))
-        return false;
-
 #ifndef RTLD_NOLOAD
 // This macro is not part of the POSIX standard, and is a custom addition to
 // glibc-2.2, so we need create a no-op stand-in flag for it if we are not
@@ -302,7 +300,7 @@ namespace ignition
     /////////////////////////////////////////////////
     bool Loader::ForgetLibraryOfPlugin(const std::string &_pluginName)
     {
-      LoaderPrivate::PluginToDlHandleMap::iterator it =
+      Implementation::PluginToDlHandleMap::iterator it =
           dataPtr->pluginToDlHandlePtrs.find(_pluginName);
 
       if (dataPtr->pluginToDlHandlePtrs.end() == it)
@@ -315,7 +313,7 @@ namespace ignition
     const Info *Loader::PrivateGetInfo(
         const std::string &_pluginName) const
     {
-      LoaderPrivate::PluginMap::const_iterator it =
+      Implementation::PluginMap::const_iterator it =
           this->dataPtr->plugins.find(_pluginName);
 
       if (this->dataPtr->plugins.end() == it)
@@ -334,7 +332,7 @@ namespace ignition
     std::shared_ptr<void> Loader::PrivateGetPluginDlHandlePtr(
         const std::string &_pluginName) const
     {
-      LoaderPrivate::PluginToDlHandleMap::iterator it =
+      Implementation::PluginToDlHandleMap::iterator it =
           dataPtr->pluginToDlHandlePtrs.find(_pluginName);
 
       if (this->dataPtr->pluginToDlHandlePtrs.end() == it)
@@ -344,7 +342,7 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    std::shared_ptr<void> LoaderPrivate::LoadLibrary(
+    std::shared_ptr<void> Loader::Implementation::LoadLibrary(
         const std::string &_full_path)
     {
       std::shared_ptr<void> dlHandlePtr;
@@ -361,8 +359,8 @@ namespace ignition
       const char *loadError = dlerror();
       if (nullptr == dlHandle || nullptr != loadError)
       {
-        ignerr << "Error while loading the library [" << _full_path << "]: "
-               << loadError << std::endl;
+        std::cerr << "Error while loading the library [" << _full_path << "]: "
+                  << loadError << std::endl;
 
         // Just return a nullptr if the library could not be loaded. The
         // Loader::LoadLibrary(~) function will handle this gracefully.
@@ -433,7 +431,7 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    std::vector<Info> LoaderPrivate::LoadPlugins(
+    std::vector<Info> Loader::Implementation::LoadPlugins(
         const std::shared_ptr<void> &_dlHandle,
         const std::string& _pathToLibrary) const
     {
@@ -451,9 +449,9 @@ namespace ignition
       // Does the library have the right symbol?
       if (nullptr == infoFuncPtr)
       {
-        ignerr << "Library [" << _pathToLibrary << "] does not export any "
-               << "plugins. The symbol [" << infoSymbol << "] is missing, or "
-               << "it is not externally visible.\n";
+        std::cerr << "Library [" << _pathToLibrary << "] does not export any "
+                  << "plugins. The symbol [" << infoSymbol << "] is missing, "
+                  << "or it is not externally visible.\n";
 
         return loadedPlugins;
       }
@@ -464,9 +462,10 @@ namespace ignition
 
       // Note: Info (below) is a function with a signature that matches
       // PluginLoadFunctionSignature.
-      auto Info = reinterpret_cast<PluginLoadFunctionSignature>(infoFuncPtr);
+      auto InfoHook =
+          reinterpret_cast<PluginLoadFunctionSignature>(infoFuncPtr);
 
-      int version = PLUGIN_API_VERSION;
+      int version = INFO_API_VERSION;
       std::size_t size = sizeof(Info);
       std::size_t alignment = alignof(Info);
       const InfoMap *allInfo = nullptr;
@@ -494,26 +493,26 @@ namespace ignition
       // against the static runtime. Using this pointer-to-a-pointer approach is
       // the cleanest way to ensure that all dynamically allocated objects are
       // deleted in the same heap that they were allocated from.
-      Info(nullptr, reinterpret_cast<const void** const>(&allInfo),
+      InfoHook(nullptr, reinterpret_cast<const void** const>(&allInfo),
            &version, &size, &alignment);
 
-      if (ignition::plugin::PLUGIN_API_VERSION != version)
+      if (ignition::plugin::INFO_API_VERSION != version)
       {
         // TODO: When we need to support multiple API versions, put the logic
-        // for it into here. We can call Info(~) again with the API version that
-        // it expects.
+        // for it into here. We can call InfoHook(~) again with the API version
+        // that it expects.
 
         std::cerr << "The library [" << _pathToLibrary << "] is using a newer "
-                  << "version [" << version << "] of the ignition::plugin Plugin "
-                  << "API. The version in this library is [" << PLUGIN_API_VERSION
+                  << "version [" << version << "] of the ignition::plugin Info "
+                  << "API. The version in this library is [" << INFO_API_VERSION
                   << "].\n";
         return loadedPlugins;
       }
 
       if (sizeof(Info) != size || alignof(Info) != alignment)
       {
-        ignerr << "The plugin::Info size or alignment are not consistent with "
-               << "the expected values for the library [" << _pathToLibrary
+        std::cerr << "The plugin::Info size or alignment are not consistent "
+               << "with the expected values for the library [" << _pathToLibrary
                << "]:\n -- size: expected " << sizeof(Info)
                << " | received " << size << "\n -- alignment: expected "
                << alignof(Info) << " | received " << alignment << "\n"
@@ -525,9 +524,9 @@ namespace ignition
 
       if (!allInfo)
       {
-        ignerr << "The library [" << _pathToLibrary << "] failed to provide "
-               << "plugin::Info for unknown reasons. Please report this error "
-               << "as a bug!\n";
+        std::cerr << "The library [" << _pathToLibrary << "] failed to provide "
+                  << "ignition::plugin Info for unknown reasons. Please report "
+                  << "this error as a bug!\n";
         assert(false);
 
         return loadedPlugins;
@@ -542,7 +541,7 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    bool LoaderPrivate::ForgetLibrary(void *_dlHandle)
+    bool Loader::Implementation::ForgetLibrary(void *_dlHandle)
     {
       DlHandleToPluginMap::iterator it = dlHandleToPluginMap.find(_dlHandle);
       if (dlHandleToPluginMap.end() == it)

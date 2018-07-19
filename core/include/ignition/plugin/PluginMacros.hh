@@ -18,8 +18,8 @@
 #ifndef IGNITION_PLUGIN_PLUGINMACROS_HH_
 #define IGNITION_PLUGIN_PLUGINMACROS_HH_
 
-// This header is for backwards compatibility. Please use RegisterPlugin instead
-#include <ignition/plugin/RegisterPlugin.hh>
+// This header is for backwards compatibility. Please use Register.hh instead
+#include <ignition/plugin/Register.hh>
 
 // These macros are defined for backwards compatibility. They are no longer
 // needed and can simply be removed.

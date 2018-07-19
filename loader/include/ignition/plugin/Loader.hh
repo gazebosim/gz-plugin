@@ -33,10 +33,6 @@ namespace ignition
 {
   namespace plugin
   {
-    /// \brief Forward declaration
-    class LoaderPrivate;
-    struct Info;
-
     /// \brief Class for loading plugins
     class IGNITION_PLUGIN_LOADER_VISIBLE Loader
     {
@@ -136,13 +132,13 @@ namespace ignition
       /// \sa bool ForgetLibrary(const std::string &_pathToLibrary)
       public: bool ForgetLibraryOfPlugin(const std::string &_pluginName);
 
-      /// \brief Get a pointer to the PluginInfo corresponding to _pluginName.
+      /// \brief Get a pointer to the Info corresponding to _pluginName.
       /// Returns nullptr if there is no info for the requested _pluginName.
       ///
       /// \param[in] _pluginName Name of the plugin that is being loaded.
-      /// \return Pointer to the corresponding PluginInfo, or nullptr if the
-      /// PluginInfo was unavailable.
-      private: const PluginInfo *PrivateGetPluginInfo(
+      /// \return Pointer to the corresponding Info, or nullptr if the
+      /// Info was unavailable.
+      private: const Info *PrivateGetInfo(
                   const std::string &_pluginName) const;
 
       /// \brief Get a std::shared_ptr that manages the lifecycle of the shared
@@ -154,14 +150,15 @@ namespace ignition
       private: std::shared_ptr<void> PrivateGetPluginDlHandlePtr(
                   const std::string &_pluginName) const;
 
-      IGN_PLUGIN_WARN_IGNORE__DLL_INTERFACE_MISSING
+      class Implementation;
+      IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to class implementation
-      private: std::unique_ptr<PluginLoaderPrivate> dataPtr;
-      IGN_PLUGIN_WARN_RESUME__DLL_INTERFACE_MISSING
+      private: std::unique_ptr<Implementation> dataPtr;
+      IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }
 
-#include "ignition/plugin/detail/Loader.hh"
+#include <ignition/plugin/detail/Loader.hh>
 
 #endif

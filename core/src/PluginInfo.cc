@@ -15,13 +15,13 @@
  *
  */
 
-#include <ignition/plugin/PluginInfo.hh>
+#include <ignition/plugin/Info.hh>
 
 namespace ignition
 {
   namespace plugin
   {
-    void PluginInfo::Clear()
+    void Info::Clear()
     {
       name.clear();
       aliases.clear();

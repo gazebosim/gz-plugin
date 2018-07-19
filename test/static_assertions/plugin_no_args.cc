@@ -15,6 +15,6 @@
  *
 */
 
-#include "ignition/plugin/RegisterPlugin.hh"
+#include <ignition/plugin/Register.hh>
 
 IGNITION_ADD_PLUGIN()

@@ -22,9 +22,6 @@
 #include <string>
 #include <memory>
 
-#include <ignition/plugin/Export.hh>
-#include <ignition/plugin/RegisterPlugin.hh>
-
 namespace test
 {
 namespace util

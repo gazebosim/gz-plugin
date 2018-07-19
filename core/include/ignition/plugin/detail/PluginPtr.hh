@@ -166,7 +166,7 @@ namespace ignition
     //////////////////////////////////////////////////
     template <typename PluginType>
     TemplatePluginPtr<PluginType>::TemplatePluginPtr(
-        const PluginInfo *_info,
+        const Info *_info,
         const std::shared_ptr<void> &_dlHandlePtr)
       : dataPtr(new PluginType)
     {

@@ -20,7 +20,7 @@
 #include <iostream>
 
 #include "ignition/plugin/Plugin.hh"
-#include "ignition/plugin/PluginInfo.hh"
+#include "ignition/plugin/Info.hh"
 
 namespace ignition
 {
@@ -52,9 +52,9 @@ namespace ignition
         {
           if (!deleter)
           {
-            ignerr << "This plugin instance (" << loadedInstance
-                   << ") was not given a deleter. This should never happen! "
-                   << "Please report this bug!\n";
+            std::cerr << "This plugin instance (" << loadedInstance
+                      << ") was not given a deleter. This should never happen! "
+                      << "Please report this bug!\n";
             assert(false);
             return;
           }
@@ -63,9 +63,9 @@ namespace ignition
         }
         else
         {
-          ignerr << "We have a nullptr plugin instance inside of a "
-                 << "PluginWithDlHandle. This should not be possible! Please "
-                 << "report this bug!\n";
+          std::cerr << "We have a nullptr plugin instance inside of a "
+                    << "PluginWithDlHandle. This should not be possible! "
+                    << "Please report this bug!\n";
           assert(false);
           return;
         }
@@ -119,11 +119,11 @@ namespace ignition
           entry.second = nullptr;
       }
 
-      /// \brief Initialize this PluginPrivate using some PluginInfo instance
+      /// \brief Initialize this PluginPrivate using some Info instance
       /// \param[in] _info Information describing the plugin to initialize
       /// \param[in] _dlHandlePtr A reference to the dl handle that manages the
       ///            lifecycle of the plugin library.
-      public: void Initialize(const PluginInfo *_info,
+      public: void Initialize(const Info *_info,
                               const std::shared_ptr<void> &_dlHandlePtr)
       {
         this->Clear();
@@ -135,10 +135,9 @@ namespace ignition
 
         if (!_dlHandlePtr)
         {
-          ignerr << "Received PluginInfo for [" << _info->name << "], "
-                 << "but we were not provided a shared library handle. "
-                 << "This should never happen! Please report this "
-                 << "bug!\n";
+          std::cerr << "Received Info for [" << _info->name << "], "
+                    << "but we were not provided a shared library handle. "
+                    << "This should never happen! Please report this bug!\n";
           assert(false);
           return;
         }
@@ -234,7 +233,7 @@ namespace ignition
       /// maintain the ordering of these member variables.
       public: std::shared_ptr<void> loadedInstancePtr;
 
-      /// \brief A copy of the PluginInfo that was used to create the Plugin
+      /// \brief A copy of the Info that was used to create the Plugin
       ///
       /// CRUCIAL DEV NOTE (MXG): `info` must come AFTER `loadedInstancePtr` in
       /// this class definition. See the comment on `loadedInstancePtr` for an
@@ -242,7 +241,7 @@ namespace ignition
       ///
       /// If you change this class definition for ANY reason, be sure to
       /// maintain the ordering of these member variables.
-      public: PluginInfo info;
+      public: Info info;
     };
 
     //////////////////////////////////////////////////
@@ -285,7 +284,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     void Plugin::PrivateSetPluginInstance(
-        const PluginInfo *_info,
+        const Info *_info,
         const std::shared_ptr<void> &_dlHandlePtr) const
     {
       this->dataPtr->Initialize(_info, _dlHandlePtr);
