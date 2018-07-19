@@ -15,21 +15,16 @@
  *
 */
 
-#include <ignition/plugin/Register.hh>
+#include <ignition/plugin/Info.hh>
 
-extern "C" {
-  std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginInfoSize =
-    sizeof(ignition::plugin::Info);
+#include "GenericExport.hh"
 
-  std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginInfoAlignment =
-    1 + alignof(ignition::plugin::Info);
-
-  int DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginAPIVersion =
-    ignition::plugin::INFO_API_VERSION;
-}
-
-extern "C" std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINMultiPluginInfo(
-    void *, const std::size_t, const std::size_t)
+extern "C" void EXPORT IgnitionPluginHook(
+    const void *,
+    const void ** const,
+    int *,
+    std::size_t *,
+    std::size_t *_inputAndOutputInfoAlign)
 {
-  return 0u;
+  *_inputAndOutputInfoAlign = alignof(ignition::plugin::Info)+1;
 }

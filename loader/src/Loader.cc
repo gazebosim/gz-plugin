@@ -499,13 +499,13 @@ namespace ignition
       if (ignition::plugin::INFO_API_VERSION != version)
       {
         // TODO: When we need to support multiple API versions, put the logic
-        // for it into here. We can call InfoHook(~) again with the API version
-        // that it expects.
+        // for it into here. We can call IgnitionPluginHook(~) again with the
+        // API version that it expects.
 
-        std::cerr << "The library [" << _pathToLibrary << "] is using a newer "
-                  << "version [" << version << "] of the ignition::plugin Info "
-                  << "API. The version in this library is [" << INFO_API_VERSION
-                  << "].\n";
+        std::cerr << "The library [" << _pathToLibrary << "] is using an "
+                  << " incompatible version [" << version << "] of the "
+                  << "ignition::plugin Info API. The version in this library "
+                  << "is [" << INFO_API_VERSION << "].\n";
         return loadedPlugins;
       }
 

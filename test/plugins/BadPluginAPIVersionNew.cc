@@ -16,22 +16,17 @@
 */
 
 #include <limits>
-#include <ignition/plugin/Register.hh>
 
-extern "C" {
-  std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginInfoSize =
-    sizeof(ignition::plugin::Info);
+#include <ignition/plugin/Info.hh>
 
-  std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginInfoAlignment =
-    alignof(ignition::plugin::Info);
+#include "GenericExport.hh"
 
-  int DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINPluginAPIVersion =
-    std::numeric_limits<int>::max();
-}
-
-extern "C" std::size_t DETAIL_IGN_PLUGIN_VISIBLE IGNPLUGINMultiPluginInfo(
-    void *, const std::size_t, const std::size_t)
+extern "C" void EXPORT IgnitionPluginHook(
+    const void *,
+    const void ** const,
+    int *_inputAndOutputAPIVersion,
+    std::size_t *,
+    std::size_t *)
 {
-  return 0u;
+  *_inputAndOutputAPIVersion = std::numeric_limits<int>::max();
 }
-
