@@ -22,5 +22,3 @@ if(TARGET UNIT_PluginLoader_TEST)
   target_compile_definitions(UNIT_PluginLoader_TEST PRIVATE
     "IGN_COMMON_LIB_PATH=\"$<TARGET_FILE_DIR:${PROJECT_LIBRARY_TARGET_NAME}>\"")
 endif()
-
-add_subdirectory(test)
