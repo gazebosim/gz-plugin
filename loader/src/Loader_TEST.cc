@@ -15,8 +15,9 @@
  *
 */
 
-#include <algorithm>
 #include <gtest/gtest.h>
+
+#include <algorithm>
 
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/config.hh>

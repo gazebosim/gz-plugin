@@ -28,8 +28,6 @@ pipelines:
           - make
           - make install
           - cd ../..
-          # Code checker
-          - sh tools/code_check.sh
           # Build
           - mkdir build
           - cd build
@@ -41,6 +39,8 @@ pipelines:
           # Coverage
           - make coverage
           - bash <(curl -s https://codecov.io/bash)
+          # Codecheck
+          - make codecheck
           # Examples
           - cd ../examples
           - mkdir build

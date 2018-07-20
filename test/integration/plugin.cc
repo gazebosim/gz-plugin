@@ -20,9 +20,9 @@
 // specialized plugin interfaces.
 #define IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
 
+#include <gtest/gtest.h>
 #include <string>
 #include <vector>
-#include <gtest/gtest.h>
 #include <iostream>
 #include "ignition/plugin/Loader.hh"
 #include "ignition/plugin/PluginPtr.hh"
@@ -56,7 +56,7 @@ TEST(PluginLoader, LoadExistingLibrary)
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
       pl.LoadLibrary(IGNDummyPlugin_LIB);
-  for(const auto& name : pluginNames)
+  for (const auto& name : pluginNames)
     std::cout << " -- " << name << std::endl;
   ASSERT_EQ(1u, pluginNames.count("::test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("::test::util::DummyMultiPlugin"));

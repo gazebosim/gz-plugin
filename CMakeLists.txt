@@ -41,7 +41,7 @@ ign_find_package(DL
 # Configure the build
 #============================================================================
 ign_configure_build(QUIT_IF_BUILD_ERRORS
-  COMPONENTS loader register)
+  COMPONENTS loader)
 
 
 #============================================================================

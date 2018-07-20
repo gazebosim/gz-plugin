@@ -15,11 +15,11 @@
  *
 */
 
+#include <gtest/gtest.h>
+
 #include <chrono>
 #include <iomanip>
 #include <cmath>
-
-#include <gtest/gtest.h>
 
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/SpecializedPluginPtr.hh>
