@@ -8,7 +8,9 @@ ign_add_component(loader
   SOURCES ${sources}
   GET_TARGET_NAME loader)
 
-target_link_libraries(${loader} PRIVATE ${DL_TARGET})
+target_link_libraries(${loader}
+  PUBLIC ignition-cmake1::utilities
+  PRIVATE ${DL_TARGET})
 
 ign_build_tests(
   TYPE UNIT
