@@ -19,6 +19,8 @@
 #ifndef IGNITION_PLUGIN_DETAIL_PLUGINPTR_HH_
 #define IGNITION_PLUGIN_DETAIL_PLUGINPTR_HH_
 
+#include <memory>
+#include <utility>
 #include <ignition/plugin/PluginPtr.hh>
 #include <ignition/plugin/TemplateHelpers.hh>
 

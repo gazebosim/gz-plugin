@@ -23,6 +23,7 @@
 #include <string>
 #include <typeinfo>
 #include <type_traits>
+#include <utility>
 
 #include <ignition/utilities/SuppressWarning.hh>
 
@@ -60,7 +61,7 @@ extern "C"
       std::size_t *_inputAndOutputInfoSize,
       std::size_t *_inputAndOutputInfoAlign)
 #ifdef IGN_PLUGIN_REGISTER_MORE_TRANS_UNITS
-  ;
+  ; /* NOLINT */
 #else
   // ATTENTION: If you get a linking error complaining about multiple
   // definitions of IgnitionPluginHook, then make sure that all but one of your
@@ -391,7 +392,7 @@ IGN_UTILS_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
         }; \
   \
         static ExecuteWhenLoadingLibrary##UniqueID execute##UniqueID; \
-      } \
+      } /* namespace */ \
     } \
   }
 

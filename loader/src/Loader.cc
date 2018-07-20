@@ -15,9 +15,10 @@
  *
  */
 
+#include <dlfcn.h>
+
 #include <algorithm>
 #include <cassert>
-#include <dlfcn.h>
 #include <functional>
 #include <iostream>
 #include <locale>
@@ -498,8 +499,9 @@ namespace ignition
 
       if (ignition::plugin::INFO_API_VERSION != version)
       {
-        // TODO: When we need to support multiple API versions, put the logic
-        // for it into here. We can call IgnitionPluginHook(~) again with the
+        // TODO(anyone): When we need to support multiple API versions,
+        // put the logic for it into here.
+        // We can call IgnitionPluginHook(~) again with the
         // API version that it expects.
 
         std::cerr << "The library [" << _pathToLibrary << "] is using an "
