@@ -32,8 +32,7 @@ namespace ignition
 {
   namespace plugin
   {
-    // Forward declarations
-    class PluginPrivate;
+    // Forward declaration
     namespace detail { template <class, class> class ComposePlugin; }
 
     class IGNITION_PLUGIN_VISIBLE Plugin
@@ -164,9 +163,10 @@ namespace ignition
       private: const std::shared_ptr<void> &PrivateGetInstancePtr() const;
 
       /// \brief The InterfaceMap type needs to get used in several places, like
-      /// PluginPrivate and SpecializedPlugin<T>. We make the typedef public so
-      /// that those other classes can use it without needing to be friends of
-      /// Plugin. End-users should not have any need for this typedef.
+      /// Plugin::Implementation and SpecializedPlugin<T>. We make the typedef
+      /// public so that those other classes can use it without needing to be
+      /// friends of Plugin. End-users should not have any need for this
+      /// typedef.
       public: using InterfaceMap = std::map<std::string, void*>;
 
       /// \brief Get or create an iterator to the std::map that holds pointers
@@ -174,9 +174,10 @@ namespace ignition
       private: InterfaceMap::iterator PrivateGetOrCreateIterator(
           const std::string &_interfaceName);
 
+      class Implementation;
       IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to the implementation of this class.
-      private: const std::unique_ptr<PluginPrivate> dataPtr;
+      private: const std::unique_ptr<Implementation> dataPtr;
       IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
 
       /// \brief Virtual destructor

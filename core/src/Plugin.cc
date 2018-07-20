@@ -100,9 +100,9 @@ namespace ignition
       public: std::function<void(void*)> deleter;
     };
 
-    class PluginPrivate
+    class Plugin::Implementation
     {
-      /// \brief Clear this PluginPrivate without invaliding any map entry
+      /// \brief Clear this object without invaliding any map entry
       /// iterators.
       public: void Clear()
       {
@@ -119,7 +119,7 @@ namespace ignition
           entry.second = nullptr;
       }
 
-      /// \brief Initialize this PluginPrivate using some Info instance
+      /// \brief Initialize this object using some Info instance
       /// \param[in] _info Information describing the plugin to initialize
       /// \param[in] _dlHandlePtr A reference to the dl handle that manages the
       ///            lifecycle of the plugin library.
@@ -170,17 +170,17 @@ namespace ignition
         }
       }
 
-      /// \brief Initialize this PluginPrivate using another instance
-      /// \param[in] _other Another instance of a PluginPrivate object
-      public: void Initialize(const PluginPrivate *_other)
+      /// \brief Initialize this object using another instance
+      /// \param[in] _other Another instance of a Plugin::Implementation object
+      public: void Initialize(const Implementation *_other)
       {
         this->Clear();
 
         if (!_other)
         {
           std::cerr << "Received a nullptr _other in the constructor "
-                    << "which uses `const PluginPrivate*`. This should "
-                    << "not be possible! Please report this bug."
+                    << "which uses `const Plugin::Implementation*`. This "
+                    << "should not be possible! Please report this bug."
                     << std::endl;
           assert(false);
           return;
@@ -260,7 +260,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     Plugin::Plugin()
-      : dataPtr(new PluginPrivate)
+      : dataPtr(new Implementation)
     {
       // Do nothing
     }
@@ -310,7 +310,7 @@ namespace ignition
     Plugin::~Plugin()
     {
       // Do nothing. We need this definition to be in a source file so that
-      // the destructor of PluginPrivate is visible to std::unique_ptr.
+      // the destructor of Implementation is visible to std::unique_ptr.
     }
   }
 }
