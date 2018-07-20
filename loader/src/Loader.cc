@@ -235,11 +235,11 @@ namespace ignition
           || nullptr == multiInfoPtr || nullptr == alignPtr)
       {
         std::cerr << "Library [" << _pathToLibrary
-               << "] doesn't have the right symbols: \n"
-               << " -- version symbol: " << versionPtr
-               << "\n -- size symbol: " << sizePtr
-               << "\n -- alignment symbol: " << alignPtr
-               << "\n -- info symbol: " << multiInfoPtr << "\n";
+               << "] doesn't have the right symbols:"
+               << "\n -- version symbol   -- " << versionPtr
+               << "\n -- size symbol      -- " << sizePtr
+               << "\n -- alignment symbol -- " << alignPtr
+               << "\n -- info symbol      -- " << multiInfoPtr << "\n";
 
         return loadedPlugins;
       }
