@@ -42,8 +42,8 @@ pipelines:
           # Codecheck
           - make codecheck
           # Examples
-          - cd ../examples
-          - mkdir build
-          - cd build
-          - cmake ..
-          - make
+          #- cd ../examples
+          #- mkdir build
+          #- cd build
+          #- cmake ..
+          #- make
