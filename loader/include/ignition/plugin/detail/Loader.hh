@@ -20,6 +20,7 @@
 #define IGNITION_PLUGIN_DETAIL_PLUGINLOADER_HH_
 
 #include <string>
+#include <unordered_set>
 #include <ignition/plugin/Loader.hh>
 
 namespace ignition

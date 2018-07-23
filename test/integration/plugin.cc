@@ -20,10 +20,10 @@
 // specialized plugin interfaces.
 #define IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
 
+#include <dlfcn.h>
+#include <gtest/gtest.h>
 #include <string>
 #include <vector>
-#include <gtest/gtest.h>
-#include <dlfcn.h>
 #include <iostream>
 #include "ignition/plugin/Loader.hh"
 #include "ignition/plugin/PluginPtr.hh"

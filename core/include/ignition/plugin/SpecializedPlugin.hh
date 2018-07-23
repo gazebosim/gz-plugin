@@ -19,6 +19,7 @@
 #ifndef IGNITION_PLUGIN_SPECIALIZEDPLUGIN_HH_
 #define IGNITION_PLUGIN_SPECIALIZEDPLUGIN_HH_
 
+#include <memory>
 #include "ignition/plugin/Plugin.hh"
 
 namespace ignition

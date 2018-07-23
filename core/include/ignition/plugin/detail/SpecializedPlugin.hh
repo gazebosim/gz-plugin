@@ -19,6 +19,7 @@
 #ifndef IGNITION_PLUGIN_DETAIL_SPECIALIZEDPLUGIN_HH_
 #define IGNITION_PLUGIN_DETAIL_SPECIALIZEDPLUGIN_HH_
 
+#include <memory>
 #include "ignition/plugin/SpecializedPlugin.hh"
 
 // This preprocessor token should only be used by the unittest that is
@@ -220,16 +221,16 @@ namespace ignition
         /// specializes for the requested Interface, if such a type is availabe
         /// within its inheritance structure. Otherwise, we cast to the generic
         /// Plugin type.
-        #define DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH( \
+#define DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH( \
                       ReturnType, Function, Suffix, CastTo, Args) \
-          public: \
-          template <class T> \
-          ReturnType Function Suffix \
-          { \
-            using Specializer = typename detail::SelectSpecalizerIfAvailable< \
-                    T, Specialization>::Specializer; \
-            return static_cast<CastTo*>(this)->template Function <T> Args; \
-          }
+        public: \
+        template <class T> \
+        ReturnType Function Suffix \
+        { \
+          using Specializer = typename detail::SelectSpecalizerIfAvailable< \
+                  T, Specialization>::Specializer; \
+          return static_cast<CastTo*>(this)->template Function <T> Args; \
+        }
 
 
         DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH(
