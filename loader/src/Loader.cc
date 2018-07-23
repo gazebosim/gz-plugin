@@ -22,6 +22,7 @@
 #include <locale>
 #include <sstream>
 #include <unordered_map>
+#include <vector>
 #include <iostream>
 
 #include "ignition/plugin/PluginInfo.hh"
