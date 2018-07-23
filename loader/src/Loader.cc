@@ -24,6 +24,7 @@
 #include <locale>
 #include <sstream>
 #include <unordered_map>
+#include <vector>
 
 #include <ignition/plugin/Info.hh>
 #include <ignition/plugin/Loader.hh>

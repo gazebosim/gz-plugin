@@ -9,6 +9,7 @@ set(static_assert_tests
 
 if (UNIX)
   set(flag -Wno-unused-private-field)
+  include(CheckCXXCompilerFlag)
   CHECK_CXX_COMPILER_FLAG(${flag} Rflag)
   # Make tests that try to build these files
   foreach (test ${static_assert_tests})
