@@ -288,17 +288,6 @@ namespace ignition
       template <typename PluginClass, typename... Interfaces>
       struct Registrar<PluginClass, Interfaces...>
       {
-        // READ ME: For a plugin to be registered and loadable, it must be a
-        // concrete class (as opposed to an abstract class). This means the
-        // plugin class must provide an implementation (or inherit an
-        // implementation) for each pure virtual function that it inherits from
-        // its parent classes, and it must not declare any pure virtual
-        // functions itself. Abstract classes can never be instantiated, per the
-        // rules of the C++ language.
-        static_assert(!std::is_abstract<PluginClass>::value,
-                      "YOU ARE ATTEMPTING TO REGISTER A PURE ABSTRACT CLASS "
-                      "AS A PLUGIN. THIS IS NOT ALLOWED.");
-
         public: static Info MakeInfo()
         {
           Info info;
@@ -309,6 +298,16 @@ namespace ignition
           // Create a factory for generating new plugin instances
           info.factory = [=]()
           {
+            // vvvvvvvvvvvvvvvvvvvvvvvv  READ ME  vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            // If you get a compilation error here, then you are trying to
+            // register an abstract class as a plugin, which is not allowed. To
+            // register a plugin class, every one if its virtual functions must
+            // have a definition.
+            //
+            // Read through the error produced by your compiler to see which
+            // pure virtual functions you are neglecting to provide overrides
+            // for.
+            // ^^^^^^^^^^^^^ READ ABOVE FOR COMPILATION ERRORS ^^^^^^^^^^^^^^^^
             return static_cast<void*>(new PluginClass);
           };
 

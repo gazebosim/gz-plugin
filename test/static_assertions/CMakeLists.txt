@@ -1,5 +1,4 @@
 set(static_assert_tests
-  plugin_abstract
   plugin_bad_const_construct
   plugin_bad_const_assignment
   plugin_no_args
@@ -26,9 +25,6 @@ if (UNIX)
   endforeach()
 
   # Tests pass if the output contains the expected error
-
-  set_tests_properties(STATIC_ASSERT_plugin_abstract PROPERTIES
-    PASS_REGULAR_EXPRESSION "YOU ARE ATTEMPTING TO REGISTER A PURE ABSTRACT CLASS")
 
   set_tests_properties(STATIC_ASSERT_plugin_bad_const_construct PROPERTIES
     PASS_REGULAR_EXPRESSION "The requested PluginPtr cast would discard const qualifiers")
