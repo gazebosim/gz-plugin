@@ -312,13 +312,13 @@ namespace ignition
             return static_cast<void*>(new PluginClass);
           };
 
-IGN_UTILS_WARN_IGNORE__DELETE_NON_VIRTUAL_DESTRUCTOR
+IGN_UTILS_WARN_IGNORE__NON_VIRTUAL_DESTRUCTOR
           // Create a deleter to clean up destroyed instances
           info.deleter = [=](void *ptr)
           {
             delete static_cast<PluginClass*>(ptr);
           };
-IGN_UTILS_WARN_RESUME__DELETE_NON_VIRTUAL_DESTRUCTOR
+IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 
           // Construct a map from the plugin to its interfaces
           InterfaceHelper<PluginClass, Interfaces...>
