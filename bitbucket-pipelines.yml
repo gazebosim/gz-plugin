@@ -24,7 +24,7 @@ pipelines:
           - cd ign-cmake
           - mkdir build
           - cd build
-          - cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          - cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF
           - make
           - make install
           - cd ../..
