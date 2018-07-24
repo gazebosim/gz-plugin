@@ -20,7 +20,7 @@ pipelines:
             libignition-cmake-dev
             lcov curl mercurial cppcheck
           # Use the branch of ign-cmake that we need
-          - hg clone https://bitbucket.org/ignitionrobotics/ign-cmake -b WarningSuppression_CoreDirectory
+          - hg clone https://bitbucket.org/ignitionrobotics/ign-cmake -b default
           - cd ign-cmake
           - mkdir build
           - cd build
