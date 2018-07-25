@@ -51,7 +51,7 @@ namespace ignition
       /// (used for debug purposes)
       /// \return All the PluginInfo provided by the loaded library.
       public: std::vector<Info> LoadPlugins(
-        void *_dlHandle, const std::string& _pathToLibrary) const;
+        void *_dlHandle, const std::string &_pathToLibrary) const;
 
       public: using PluginMap = std::unordered_map<std::string, Info>;
 
