@@ -100,7 +100,7 @@ IGN_UTILS_WARN_IGNORE__NON_VIRTUAL_DESTRUCTOR \
     } \
     std::unordered_set<std::string> visitedPlugins; \
     ignition::plugin::Info * * const ptrToPlugin = \
-        reinterpret_cast<ignition::plugin::Info * * const>(_outputInfo); \
+        reinterpret_cast<ignition::plugin::Info * * >(_outputInfo); \
     if ( !(*ptrToPlugin) ) \
     { \
        *ptrToPlugin = new ignition::plugin::Info; \
