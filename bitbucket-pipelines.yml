@@ -17,17 +17,8 @@ pipelines:
           - apt-get update
           - apt-get -y install
             cmake pkg-config python ruby-ronn
+            libignition-cmake1-dev
             lcov curl mercurial cppcheck
-            #libignition-cmake1-dev
-          # Use the branch of ign-cmake that we need
-          - hg clone https://bitbucket.org/ignitionrobotics/ign-cmake -b default
-          - cd ign-cmake
-          - mkdir build
-          - cd build
-          - cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF
-          - make
-          - make install
-          - cd ../..
           # Build
           - mkdir build
           - cd build
