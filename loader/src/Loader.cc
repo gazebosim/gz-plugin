@@ -98,7 +98,7 @@ namespace ignition
       /// \return All the Info provided by the loaded library.
       public: std::vector<Info> LoadPlugins(
         const std::shared_ptr<void> &_dlHandle,
-        const std::string& _pathToLibrary) const;
+        const std::string &_pathToLibrary) const;
 
       public: bool ForgetLibrary(void *_dlHandle);
 

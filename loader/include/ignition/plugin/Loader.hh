@@ -43,7 +43,7 @@ namespace ignition
       public: ~Loader();
 
       /// \brief Makes a printable string with info about plugins
-      /// \returns a pretty string
+      /// \returns A pretty string
       public: std::string PrettyStr() const;
 
       /// \brief Get demangled names of interfaces that the loader has plugins
@@ -69,27 +69,27 @@ namespace ignition
       /// \param[in] _interface Name of an interface
       /// \param[in] _demangled Specify whether the _interface string is
       /// demangled (default, true) or mangled (false).
-      /// \returns names of plugins that implement the interface
+      /// \returns Names of plugins that implement the interface
       public: std::unordered_set<std::string> PluginsImplementing(
           const std::string &_interface,
           const bool demangled = true) const;
 
       /// \brief Load a library at the given path
       /// \param[in] _pathToLibrary is the path to a libaray
-      /// \returns the set of plugins that have been loaded from the library
+      /// \returns The set of plugins that have been loaded from the library
       public: std::unordered_set<std::string> LoadLibrary(
                   const std::string &_pathToLibrary);
 
       /// \brief Instantiates a plugin for the given plugin name
       ///
       /// \param[in] _plugin name of the plugin to instantiate
-      /// \returns ptr to instantiated plugin
+      /// \returns Pointer to instantiated plugin
       public: PluginPtr Instantiate(const std::string &_pluginName) const;
 
       /// \brief Instantiates a plugin of PluginType for the given plugin name.
       /// This can be used to create a specialized PluginPtr.
       ///
-      /// \param[in] PluginType The specialized type of PluginPtrPtr that you
+      /// \tparam PluginPtrType The specialized type of PluginPtrPtr that you
       /// want to construct.
       /// \param[in] _pluginName The name of the plugin that you want to
       /// instantiate
@@ -133,11 +133,11 @@ namespace ignition
       public: bool ForgetLibraryOfPlugin(const std::string &_pluginName);
 
       /// \brief Get a pointer to the Info corresponding to _pluginName.
-      /// Returns nullptr if there is no info for the requested _pluginName.
       ///
-      /// \param[in] _pluginName Name of the plugin that is being loaded.
-      /// \return Pointer to the corresponding Info, or nullptr if the
-      /// Info was unavailable.
+      /// \param[in] _pluginName The name of the plugin that you want to
+      /// instantiate.
+      /// \return Pointer to the corresponding Info, or nullptr if there
+      /// is no info for the requested _pluginName.
       private: const Info *PrivateGetInfo(
                   const std::string &_pluginName) const;
 
