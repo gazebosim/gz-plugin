@@ -71,7 +71,7 @@ TEST(Loader, InstantiateSpecializedPlugin)
 
   // This makes sure that Loader::Instantiate can compile
   auto plugin = loader.Instantiate<
-      ignition::plugin::SpecializedPluginPtr<SomeInterface>>("fake::plugin");
+      ignition::plugin::SpecializedPluginPtr<SomeInterface> >("fake::plugin");
   EXPECT_FALSE(plugin);
 }
 
