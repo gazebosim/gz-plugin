@@ -30,7 +30,7 @@
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/Plugin.hh>
 
-#if defined(__GNUC__) or defined(__clang__)
+#if defined(__GNUC__) || defined(__clang__)
 // This header is used for name demangling on GCC and Clang
 #include <cxxabi.h>
 #endif
@@ -43,7 +43,7 @@ namespace ignition
     /////////////////////////////////////////////////
     std::string Demangle(const std::string &_name)
     {
-#if defined(__GNUC__) or defined(__clang__)
+#if defined(__GNUC__) || defined(__clang__)
       int status;
       char *demangled_cstr = abi::__cxa_demangle(
             _name.c_str(), nullptr, nullptr, &status);

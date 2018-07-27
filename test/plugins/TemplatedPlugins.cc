@@ -71,7 +71,7 @@ class DoubleTemplatePlugin
     this->value = _value;
   }
 
-  private: int value = 0.0;
+  private: int value = 0;
 };
 
 /////////////////////////////////////////////////
