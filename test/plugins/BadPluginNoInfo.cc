@@ -27,4 +27,5 @@ extern "C" void EXPORT IgnitionPluginHook(
     std::size_t *_inputAndOutputInfoAlign)
 {
   _inputAndOutputInfoAlign = nullptr;
+  (void)_inputAndOutputInfoAlign;
 }
