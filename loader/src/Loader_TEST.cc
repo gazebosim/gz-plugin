@@ -36,6 +36,7 @@ TEST(Loader, LoadNonexistantLibrary)
 {
   ignition::plugin::Loader loader;
   EXPECT_TRUE(loader.LoadLibrary("/path/to/libDoesNotExist.so").empty());
+  EXPECT_FALSE(loader.ForgetLibrary("/path/to/libDoesNotExist.so"));
 }
 
 /////////////////////////////////////////////////
@@ -60,6 +61,7 @@ TEST(Loader, InstantiateUnloadedPlugin)
   ignition::plugin::PluginPtr plugin =
       loader.Instantiate("plugin::that::is::not::loaded");
   EXPECT_FALSE(plugin);
+  EXPECT_FALSE(loader.ForgetLibraryOfPlugin("plugin::that::is::not::loaded"));
 }
 
 class SomeInterface { };
