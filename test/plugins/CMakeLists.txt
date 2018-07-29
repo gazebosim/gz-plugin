@@ -1,6 +1,7 @@
 add_library(IGNBadPluginAlign         SHARED BadPluginAlign.cc)
 add_library(IGNBadPluginAPIVersionNew SHARED BadPluginAPIVersionNew.cc)
 add_library(IGNBadPluginAPIVersionOld SHARED BadPluginAPIVersionOld.cc)
+add_library(IGNBadPluginNoInfo        SHARED BadPluginNoInfo.cc)
 add_library(IGNBadPluginSize          SHARED BadPluginSize.cc)
 
 add_library(IGNDummyPlugins SHARED
@@ -15,6 +16,7 @@ foreach(plugin_target
     IGNBadPluginAlign
     IGNBadPluginAPIVersionNew
     IGNBadPluginAPIVersionOld
+    IGNBadPluginNoInfo
     IGNBadPluginSize
     IGNDummyPlugins
     IGNTemplatedPlugins)

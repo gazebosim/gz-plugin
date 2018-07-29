@@ -38,6 +38,7 @@ TEST(PluginLoader, LoadBadPlugins)
     IGNBadPluginAPIVersionOld_LIB,
     IGNBadPluginAPIVersionNew_LIB,
     IGNBadPluginAlign_LIB,
+    IGNBadPluginNoInfo_LIB,
     IGNBadPluginSize_LIB};
   for (auto const & library : libraries)
   {
