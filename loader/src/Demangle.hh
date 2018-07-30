@@ -18,9 +18,10 @@
 #ifndef IGNITION_PLUGIN_SRC_DEMANGLE_HH_
 #define IGNITION_PLUGIN_SRC_DEMANGLE_HH_
 
-#include <string>
-#include <iostream>
 #include <cassert>
+#include <iostream>
+#include <regex>
+#include <string>
 
 #if defined(__GNUC__) || defined(__clang__)
 // This header is used for name demangling on GCC and Clang
@@ -60,10 +61,9 @@ namespace ignition
       // Visual Studio's typeid(~).name() does not mangle the name, except that
       // it prefixes the normal name of the class with the character sequence
       // "class ". So to get the "demangled" name, all we have to do is remove
-      // the first six characters. The plugin framework does not handle any
-      // non-class types, so we do not lose anything by removing the "class "
-      // designator.
-      return _name.substr(6);
+      // "class " from each place where it appears.
+	  const std::regex classRegex("class ");
+	  return std::regex_replace(_name, classRegex, "");
     #else
       // If we don't know the compiler, then we can't perform name demangling.
       // The tests will probably fail in this situation, and the class names
