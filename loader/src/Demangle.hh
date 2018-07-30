@@ -41,10 +41,12 @@ namespace ignition
 
       if (0 != status)
       {
+        // LCOV_EXCL_START
         std::cerr << "[Demangle] Failed to demangle the symbol name [" << _name
                   << "]. Error code: " << status << "\n";
         assert(false);
         return _name;
+        // LCOV_EXCL_STOP
       }
 
       const std::string demangled(demangled_cstr);

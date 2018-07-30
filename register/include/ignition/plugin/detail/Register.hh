@@ -128,25 +128,32 @@ extern "C"
           nullptr == _inputAndOutputInfoAlign)
       {
         // This should never happen, or else the function is being misused.
+        // LCOV_EXCL_START
         return;
+        // LCOV_EXCL_STOP
       }
 
       bool agreement = true;
 
       if (ignition::plugin::INFO_API_VERSION != *_inputAndOutputAPIVersion)
       {
+        // LCOV_EXCL_START
         agreement = false;
+        // LCOV_EXCL_STOP
       }
 
       if (sizeof(ignition::plugin::Info) != *_inputAndOutputInfoSize)
       {
+        // LCOV_EXCL_START
         agreement = false;
+        // LCOV_EXCL_STOP
       }
 
-      if (alignof(ignition::plugin::Info)
-          != *_inputAndOutputInfoAlign)
+      if (alignof(ignition::plugin::Info) != *_inputAndOutputInfoAlign)
       {
+        // LCOV_EXCL_START
         agreement = false;
+        // LCOV_EXCL_STOP
       }
 
       // The handshake parameters that were passed into us are overwritten with
@@ -166,7 +173,11 @@ extern "C"
       // then decide to attempt the call to this function again with the correct
       // API version if it supports backwards/forwards compatibility.
       if (!agreement)
+      {
+        // LCOV_EXCL_START
         return;
+        // LCOV_EXCL_STOP
+      }
 
       *_outputAllInfo = &pluginMap;
     }

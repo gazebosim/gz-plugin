@@ -52,22 +52,26 @@ namespace ignition
         {
           if (!deleter)
           {
+            // LCOV_EXCL_START
             std::cerr << "This plugin instance (" << loadedInstance
                       << ") was not given a deleter. This should never happen! "
                       << "Please report this bug!\n";
             assert(false);
             return;
+            // LCOV_EXCL_STOP
           }
 
           deleter(loadedInstance);
         }
         else
         {
+          // LCOV_EXCL_START
           std::cerr << "We have a nullptr plugin instance inside of a "
                     << "PluginWithDlHandle. This should not be possible! "
                     << "Please report this bug!\n";
           assert(false);
           return;
+          // LCOV_EXCL_STOP
         }
       }
 
@@ -135,11 +139,13 @@ namespace ignition
 
         if (!_dlHandlePtr)
         {
+          // LCOV_EXCL_START
           std::cerr << "Received Info for [" << _info->name << "], "
                     << "but we were not provided a shared library handle. "
                     << "This should never happen! Please report this bug!\n";
           assert(false);
           return;
+          // LCOV_EXCL_STOP
         }
 
         // Create a std::shared_ptr to a struct which ensures that the
@@ -178,12 +184,14 @@ namespace ignition
 
         if (!_other)
         {
+          // LCOV_EXCL_START
           std::cerr << "Received a nullptr _other in the constructor "
                     << "which uses `const Plugin::Implementation*`. This "
                     << "should not be possible! Please report this bug."
                     << std::endl;
           assert(false);
           return;
+          // LCOV_EXCL_STOP
         }
 
         this->loadedInstancePtr = _other->loadedInstancePtr;
