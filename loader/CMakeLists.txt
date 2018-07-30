@@ -26,6 +26,9 @@ foreach(test ${test_targets})
   target_compile_definitions(${test} PRIVATE
     "IGN_PLUGIN_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\"")
 
+  target_compile_definitions(${test} PRIVATE
+    "IGNDummyPlugins_LIB=\"$<TARGET_FILE:IGNDummyPlugins>\"")
+
 endforeach()
 
 install(

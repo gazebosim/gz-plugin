@@ -78,6 +78,28 @@ TEST(Loader, InstantiateSpecializedPlugin)
 }
 
 /////////////////////////////////////////////////
+TEST(Loader, DoubleLoad)
+{
+  // We do this test for code coverage, to test the lines of code that get run
+  // when a user asks for a library to be loaded twice.
+  ignition::plugin::Loader loader;
+
+  loader.LoadLibrary(IGNDummyPlugins_LIB);
+  const std::size_t interfaceCount = loader.InterfacesImplemented().size();
+  EXPECT_LT(0u, interfaceCount);
+
+  loader.LoadLibrary(IGNDummyPlugins_LIB);
+  EXPECT_EQ(interfaceCount, loader.InterfacesImplemented().size());
+}
+
+/////////////////////////////////////////////////
+TEST(Loader, ForgetUnloadedLibrary)
+{
+  ignition::plugin::Loader loader;
+  EXPECT_FALSE(loader.ForgetLibrary(IGNDummyPlugins_LIB));
+}
+
+/////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);

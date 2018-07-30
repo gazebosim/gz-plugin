@@ -30,55 +30,12 @@
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/Plugin.hh>
 
-#if defined(__GNUC__) || defined(__clang__)
-// This header is used for name demangling on GCC and Clang
-#include <cxxabi.h>
-#endif
-
+#include "Demangle.hh"
 
 namespace ignition
 {
   namespace plugin
   {
-    /////////////////////////////////////////////////
-    std::string Demangle(const std::string &_name)
-    {
-#if defined(__GNUC__) || defined(__clang__)
-      int status;
-      char *demangled_cstr = abi::__cxa_demangle(
-            _name.c_str(), nullptr, nullptr, &status);
-
-      if (0 != status)
-      {
-        std::cerr << "[Demangle] Failed to demangle the symbol name [" << _name
-                  << "]. Error code: " << status << "\n";
-        return _name;
-      }
-
-      const std::string demangled(demangled_cstr);
-      free(demangled_cstr);
-
-      return demangled;
-#elif _MSC_VER
-
-      assert(_name.substr(0, 6) == "class ");
-
-      // Visual Studio's typeid(~).name() does not mangle the name, except that
-      // it prefixes the normal name of the class with the character sequence
-      // "class ". So to get the "demangled" name, all we have to do is remove
-      // the first six characters. The plugin framework does not handle any
-      // non-class types, so we do not lose anything by removing the "class "
-      // designator.
-      return _name.substr(6);
-#else
-      // If we don't know the compiler, then we can't perform name demangling.
-      // The tests will probably fail in this situation, and the class names
-      // will probably look gross to users. Plugin name aliasing can be used
-      // to make plugins robust to this situation.
-      return _name;
-#endif
-    }
-
     /////////////////////////////////////////////////
     /// \brief PIMPL Implementation of the Loader class
     class Loader::Implementation
@@ -439,11 +396,10 @@ namespace ignition
     {
       std::vector<Info> loadedPlugins;
 
-      if (nullptr == _dlHandle)
-      {
-        std::cerr << "Passed NULL handle.\n";
-        return loadedPlugins;
-      }
+      // This function should never be called with a nullptr _dlHandle
+      assert(_dlHandle &&
+             "Bug in code: Loader::Implementation::LoadPlugins was called with "
+             "a nullptr value for _dlHandle.");
 
       const std::string infoSymbol = "IgnitionPluginHook";
       void *infoFuncPtr = dlsym(_dlHandle.get(), infoSymbol.c_str());
