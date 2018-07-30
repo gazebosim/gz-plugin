@@ -486,7 +486,6 @@ namespace ignition
         std::cerr << "The library [" << _pathToLibrary << "] failed to provide "
                   << "ignition::plugin Info for unknown reasons. Please report "
                   << "this error as a bug!\n";
-        assert(false);
 
         return loadedPlugins;
       }

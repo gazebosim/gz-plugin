@@ -38,9 +38,7 @@ TEST(PluginLoader, LoadBadPlugins)
     IGNBadPluginAPIVersionOld_LIB,
     IGNBadPluginAPIVersionNew_LIB,
     IGNBadPluginAlign_LIB,
-#ifdef NDEBUG
     IGNBadPluginNoInfo_LIB,
-#endif
     IGNBadPluginSize_LIB};
   for (auto const & library : libraries)
   {
@@ -50,14 +48,6 @@ TEST(PluginLoader, LoadBadPlugins)
     std::unordered_set<std::string> pluginNames = pl.LoadLibrary(library);
     EXPECT_TRUE(pluginNames.empty());
   }
-#ifndef NDEBUG
-  {
-    // this one generates an assert
-    ignition::plugin::Loader pl;
-    EXPECT_DEATH_IF_SUPPORTED(pl.LoadLibrary(IGNBadPluginNoInfo_LIB),
-      "failed to provide ignition::plugin Info for unknown reasons");
-  }
-#endif
 }
 
 /////////////////////////////////////////////////
