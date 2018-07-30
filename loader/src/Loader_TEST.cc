@@ -95,7 +95,20 @@ TEST(Loader, DoubleLoad)
 /////////////////////////////////////////////////
 TEST(Loader, ForgetUnloadedLibrary)
 {
+  // These tests are for line coverage.
+
+  // This first test triggers lines for the case that:
+  //   1. A library is not loaded, and
+  //   2. We tell a loader to forget the library
   ignition::plugin::Loader loader;
+  EXPECT_FALSE(loader.ForgetLibrary(IGNDummyPlugins_LIB));
+
+  // This next test triggers lines for the case that:
+  //   1. A library is loaded by some loader in the application, and
+  //   2. We tell a *different* loader to forget the library
+  ignition::plugin::Loader hasTheLibrary;
+  EXPECT_LT(0u, hasTheLibrary.LoadLibrary(IGNDummyPlugins_LIB).size());
+
   EXPECT_FALSE(loader.ForgetLibrary(IGNDummyPlugins_LIB));
 }
 
