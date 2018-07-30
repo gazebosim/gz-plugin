@@ -62,8 +62,8 @@ namespace ignition
       // it prefixes the normal name of the class with the character sequence
       // "class ". So to get the "demangled" name, all we have to do is remove
       // "class " from each place where it appears.
-	  const std::regex classRegex("class ");
-	  return std::regex_replace(_name, classRegex, "");
+      const std::regex classRegex("class ");
+      return std::regex_replace(_name, classRegex, "");
     #else
       // If we don't know the compiler, then we can't perform name demangling.
       // The tests will probably fail in this situation, and the class names
