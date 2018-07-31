@@ -17,7 +17,7 @@
 
 #include <cmath>
 
-#include <ignition/plugin/PluginMacros.hh>
+#include <ignition/plugin/Register.hh>
 
 #include "integrators.hh"
 
@@ -136,11 +136,9 @@ class Factory : public ODESystemFactory
   }
 };
 
-}
-}
-}
-}
+IGNITION_ADD_PLUGIN(Factory, ODESystemFactory)
 
-IGN_PLUGIN_REGISTER_SINGLE_PLUGIN(
-    ignition::plugin::examples::ExponentialODE::Factory,
-    ignition::plugin::examples::ODESystemFactory)
+}
+}
+}
+}

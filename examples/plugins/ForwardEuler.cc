@@ -17,7 +17,7 @@
 
 #include <cassert>
 
-#include <ignition/plugin/PluginMacros.hh>
+#include <ignition/plugin/Register.hh>
 
 #include "integrators.hh"
 
@@ -97,12 +97,9 @@ class Integrator : public ignition::plugin::examples::NumericalIntegrator
 
 };
 
-}
-}
-}
-}
+IGNITION_ADD_PLUGIN(Integrator, NumericalIntegrator)
 
-
-IGN_PLUGIN_REGISTER_SINGLE_PLUGIN(
-    ignition::plugin::examples::ForwardEuler::Integrator,
-    ignition::plugin::examples::NumericalIntegrator)
+}
+}
+}
+}

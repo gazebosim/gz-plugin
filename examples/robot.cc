@@ -21,9 +21,9 @@
 
 #include "plugins/robot.hh"
 
+#include <ignition/common/SystemPaths.hh>
 #include <ignition/plugin/SpecializedPluginPtr.hh>
-#include <ignition/plugin/SystemPaths.hh>
-#include <ignition/plugin/PluginLoader.hh>
+#include <ignition/plugin/Loader.hh>
 
 #ifdef HAVE_BOOST_PROGRAM_OPTIONS
 #include <boost/program_options.hpp>
@@ -33,7 +33,7 @@ namespace bpo = boost::program_options;
 /////////////////////////////////////////////////
 // The macro that this uses is provided as a compile definition in the
 // examples/CMakeLists.txt file.
-const std::string PluginLibDir = IGN_PLUGIN_EXAMPLES_PLUGIN_LIBDIR;
+const std::string PluginLibDir = IGN_PLUGIN_EXAMPLES_LIBDIR;
 
 /////////////////////////////////////////////////
 using namespace ignition::plugin::examples;
@@ -220,10 +220,10 @@ void Simulate(const EnvironmentPluginPtr &_environment,
 int main(int argc, char *argv[])
 {
   // Create an object that can search the system paths for the plugin libraries.
-  ignition::plugin::SystemPaths paths;
+  ignition::common::SystemPaths paths;
 
   // Create a plugin loader
-  ignition::plugin::PluginLoader loader;
+  ignition::plugin::Loader loader;
 
   // Add the build directory path for the plugin libraries so the SystemPaths
   // object will know to search through it.

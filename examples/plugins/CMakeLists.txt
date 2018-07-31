@@ -11,7 +11,10 @@ foreach(plugin_file ${plugin_files})
 
   add_library(${plugin} SHARED ${plugin_file})
 
-  target_link_libraries(${plugin} PRIVATE ignition-plugin2::ignition-plugin2)
+  target_link_libraries(${plugin}
+    PRIVATE
+      ignition-plugin0::register
+      ignition-math5::core)
 
   # All these libraries will go into the same directory, so it's sufficient for
   # us to grab the last one.

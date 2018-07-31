@@ -60,6 +60,6 @@ class CrashBot
   public: bool detectedWall;
 };
 
-IGNITION_ADD_PLUGIN(CrashBot, CrashBot::Drive, CrashBot::ProximitySensor)
+IGNITION_ADD_PLUGIN(CrashBot, Drive, ProximitySensor)
 
 }

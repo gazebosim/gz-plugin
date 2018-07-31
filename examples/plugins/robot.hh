@@ -23,7 +23,7 @@
 #include <ignition/math/Vector2.hh>
 #include <ignition/math/Vector3.hh>
 
-#include <ignition/plugin/PluginMacros.hh>
+#include <ignition/plugin/Register.hh>
 
 namespace ignition
 {

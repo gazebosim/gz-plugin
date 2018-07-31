@@ -22,7 +22,7 @@
 #include <cmath>
 #include <set>
 
-#include <ignition/common/PluginLoader.hh>
+#include <ignition/plugin/Loader.hh>
 #include <ignition/common/SystemPaths.hh>
 
 #include "plugins/integrators.hh"
@@ -32,13 +32,13 @@
 namespace bpo = boost::program_options;
 #endif
 
-using NumericalIntegrator = ignition::common::examples::NumericalIntegrator;
-using ODESystem = ignition::common::examples::ODESystem;
-using ODESystemFactory = ignition::common::examples::ODESystemFactory;
+using NumericalIntegrator = ignition::plugin::examples::NumericalIntegrator;
+using ODESystem = ignition::plugin::examples::ODESystem;
+using ODESystemFactory = ignition::plugin::examples::ODESystemFactory;
 
 // The macro that this uses is provided as a compile definition in the
 // examples/CMakeLists.txt file.
-const std::string PluginLibDir = IGN_COMMON_EXAMPLES_PLUGIN_LIBDIR;
+const std::string PluginLibDir = IGN_PLUGIN_EXAMPLES_LIBDIR;
 
 /// \brief Return structure for numerical integration test results. If the name
 /// is blank, that means the test was not run.
@@ -60,7 +60,7 @@ struct TestResult
 struct PluginHolder
 {
   std::string name;
-  ignition::common::PluginPtr plugin;
+  ignition::plugin::PluginPtr plugin;
 };
 
 /// \brief Compute the component-wise percent error of the estimate produced by
@@ -88,7 +88,7 @@ TestResult TestIntegrator(
     const double _timeStep,
     const unsigned int _numSteps)
 {
-  const ignition::common::PluginPtr &plugin = _pluginHolder.plugin;
+  const ignition::plugin::PluginPtr &plugin = _pluginHolder.plugin;
   NumericalIntegrator* integrator =
       plugin->QueryInterface<NumericalIntegrator>();
 
@@ -210,7 +210,7 @@ void TestPlugins(
 
 /// \brief Load all the plugins that implement _interface.
 std::vector<PluginHolder> LoadPlugins(
-    const ignition::common::PluginLoader &_loader,
+    const ignition::plugin::Loader &_loader,
     const std::string &_interface)
 {
   // Fill in the holders object with each plugin.
@@ -220,7 +220,7 @@ std::vector<PluginHolder> LoadPlugins(
 
   for (const std::string &name : pluginNames)
   {
-    ignition::common::PluginPtr plugin = _loader.Instantiate(name);
+    ignition::plugin::PluginPtr plugin = _loader.Instantiate(name);
     if (!plugin)
     {
       std::cout << "Failed to load [" << name << "] as a class"
@@ -236,25 +236,25 @@ std::vector<PluginHolder> LoadPlugins(
 
 /// \brief Load all plugins that implement the NumericalIntegrator interface.
 std::vector<PluginHolder> LoadIntegratorPlugins(
-    const ignition::common::PluginLoader &_loader)
+    const ignition::plugin::Loader &_loader)
 {
   return LoadPlugins(
-        _loader, "ignition::common::examples::NumericalIntegrator");
+        _loader, "ignition::plugin::examples::NumericalIntegrator");
 }
 
 /// \brief Load all plugins that implement the ODESystemFactory interface
 std::vector<PluginHolder> LoadSystemFactoryPlugins(
-    const ignition::common::PluginLoader &_loader)
+    const ignition::plugin::Loader &_loader)
 {
   return LoadPlugins(
-        _loader, "ignition::common::examples::ODESystemFactory");
+        _loader, "ignition::plugin::examples::ODESystemFactory");
 }
 
 /// \brief Prime the plugin loader with the paths and library names that it
 /// should try to get plugins from.
 void PrimeTheLoader(
     ignition::common::SystemPaths &_paths, /* TODO: This should be const */
-    ignition::common::PluginLoader &_loader,
+    ignition::plugin::Loader &_loader,
     const std::set<std::string> &_pluginNames)
 {
   for (const std::string &name : _pluginNames)
@@ -287,7 +287,7 @@ int main(int argc, char *argv[])
   ignition::common::SystemPaths paths;
 
   // Create a plugin loader
-  ignition::common::PluginLoader loader;
+  ignition::plugin::Loader loader;
 
   // Add the build directory path for the plugin libraries so the SystemPaths
   // object will know to search through it.
@@ -311,7 +311,7 @@ int main(int argc, char *argv[])
       "\nNumerical integrator plugins must inherit the NumericalIntegrator \n"
       "interface, and differential equation plugins must inherit the \n"
       "ODESystemFactory interface. Both interfaces can be found in the header\n"
-      "ign-common/examples/plugins/Interfaces.hh.\n\n"
+      "ign-plugin/examples/plugins/Interfaces.hh.\n\n"
 
       "Custom plugins can be used by passing in the custom plugin library\n"
       "directory to the -I flag, and the library name(s) to the -p flag,\n"
