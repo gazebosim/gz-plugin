@@ -64,13 +64,13 @@ namespace ignition
       /// \brief This function has been deprecated in favor of the version of
       /// QueryInterface which does not take a std::string argument.
       public: template <class Interface>
-              IGN_DEPRECATED(2.0)
+              IGN_DEPRECATED(0.0)
               Interface *QueryInterface(const std::string &/*_interfaceName*/);
 
       /// \brief const-qualified version of
       /// QueryInterface<Interface>(std::string)
       public: template <class Interface>
-              IGN_DEPRECATED(2.0)
+              IGN_DEPRECATED(0.0)
               const Interface *QueryInterface(
                   const std::string &/*_interfaceName*/) const;
 
@@ -104,14 +104,14 @@ namespace ignition
       /// \brief This version of QueryInterfaceSharedPtr has been deprecated in
       /// favor of the version that does not take a std::string argument.
       public: template <class Interface>
-              IGN_DEPRECATED(2.0)
+              IGN_DEPRECATED(0.0)
               std::shared_ptr<Interface> QueryInterfaceSharedPtr(
                   const std::string &/*_interfaceName*/);
 
       /// \brief Same as QueryInterfaceSharedPtr<Interface>(std::string), but
       /// it returns a std::shared_ptr to a const-qualified Interface.
       public: template <class Interface>
-              IGN_DEPRECATED(2.0)
+              IGN_DEPRECATED(0.0)
               std::shared_ptr<const Interface> QueryInterfaceSharedPtr(
                   const std::string &/*_interfaceName*/) const;
 
