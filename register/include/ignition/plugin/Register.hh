@@ -25,7 +25,32 @@
 // ------------- Add a set of plugins or a set of interfaces ------------------
 
 /// \brief Add a plugin and interface from this shared library.
-#define IGNITION_ADD_PLUGIN(...)\
+///
+/// This macro can be put in any namespace and may be called any number of
+/// times. It can be called multiple times on the same plugin class in order to
+/// register multiple interfaces, e.g.:
+///
+/// \code
+/// IGNITION_ADD_PLUGIN(PluginClass, Interface1)
+/// IGNITION_ADD_PLUGIN(PluginClass, Interface2)
+///
+/// /* Some other code */
+///
+/// IGNITION_ADD_PLUGIN(PluginClass, Interface3)
+/// \endcode
+///
+/// Or you can list multiple interfaces in a single call to the macro, e.g.:
+///
+/// \code
+/// IGNITION_ADD_PLUGIN(PluginClass, Interface1, Interface2, Interface3)
+/// \endcode
+///
+/// If your library has multiple translation units (.cpp files) and you want to
+/// register plugins in multiple translation units, use this
+/// ignition/plugin/Register.hh header in ONE of the translation units, and then
+/// the ignition/plugin/RegisterMore.hh header in all of the rest of the
+/// translation units.
+#define IGNITION_ADD_PLUGIN(...) \
   DETAIL_IGNITION_ADD_PLUGIN(__VA_ARGS__)
 
 #endif
