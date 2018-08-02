@@ -16,15 +16,18 @@
  */
 
 
-#ifndef IGNITION_COMMON_PLUGINLOADER_HH_
-#define IGNITION_COMMON_PLUGINLOADER_HH_
+#ifndef IGNITION_PLUGIN_PLUGINLOADER_HH_
+#define IGNITION_PLUGIN_PLUGINLOADER_HH_
 
 #include <memory>
 #include <string>
 #include <typeinfo>
 #include <unordered_set>
 
+#include <ignition/utilities/SuppressWarning.hh>
+
 #include <ignition/plugin/loader/Export.hh>
+#include <ignition/plugin/PluginPtr.hh>
 
 namespace ignition
 {
@@ -33,9 +36,6 @@ namespace ignition
     /// \brief Forward declaration
     class LoaderPrivate;
     struct Info;
-    class Plugin;
-
-    using PluginPtr = std::shared_ptr<Plugin>;
 
     /// \brief Class for loading plugins
     class IGNITION_PLUGIN_LOADER_VISIBLE Loader
@@ -47,42 +47,59 @@ namespace ignition
       public: ~Loader();
 
       /// \brief Makes a printable string with info about plugins
-      /// \returns a pretty string
+      /// \returns A pretty string
       public: std::string PrettyStr() const;
 
-      /// \brief get names of interfaces that the loader has plugins for
-      /// \returns interfaces that are implemented
+      /// \brief Get names of interfaces that the loader has plugins for
+      /// \returns Interfaces that are implemented
       public: std::unordered_set<std::string> InterfacesImplemented() const;
 
-      /// \brief get plugin names that implement the interface
-      /// \param[in] _interface name of an interface
-      /// \returns names of plugins that implement the interface
+      /// \brief Get plugin names that implement the interface
+      /// \param[in] _interface Name of an interface
+      /// \returns Names of plugins that implement the interface
       public: std::unordered_set<std::string> PluginsImplementing(
                   const std::string &_interface) const;
 
       /// \brief Load a library at the given path
       /// \param[in] _pathToLibrary is the path to a libaray
-      /// \returns the set of plugins that have been loaded from the library
+      /// \returns The set of plugins that have been loaded from the library
       public: std::unordered_set<std::string> LoadLibrary(
                   const std::string &_pathToLibrary);
 
       /// \brief Instantiates a plugin for the given plugin name
       ///
       /// \param[in] _plugin name of the plugin to instantiate
-      /// \returns ptr to instantiated plugin
+      /// \returns Pointer to instantiated plugin
       public: PluginPtr Instantiate(const std::string &_pluginName) const;
 
+      /// \brief Instantiates a plugin of PluginType for the given plugin name.
+      /// This can be used to create a specialized PluginPtr.
+      ///
+      /// \tparam PluginPtrType The specialized type of PluginPtrPtr that you
+      /// want to construct.
+      /// \param[in] _pluginName The name of the plugin that you want to
+      /// instantiate
+      /// \returns pointer for the instantiated PluginPtr
+      public: template <typename PluginPtrType>
+              PluginPtrType Instantiate(
+                  const std::string &_pluginName) const;
+
       /// \brief Get a pointer to the PluginInfo corresponding to _pluginName.
-      /// Returns nullptr if there is no info for the requested _pluginName.
+      /// \param[in] _pluginName The name of the plugin that you want to
+      /// instantiate
+      /// \return Pointer to PluginInfo or nullptr if there is no info for the
+      /// requested _pluginName.
       private: const Info *PrivateGetPluginInfo(
                   const std::string &_pluginName) const;
 
-//      IGN_COMMON_WARN_IGNORE__DLL_INTERFACE_MISSING
+      IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to class implementation
       private: std::unique_ptr<LoaderPrivate> dataPtr;
-//      IGN_COMMON_WARN_RESUME__DLL_INTERFACE_MISSING
+      IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }
+
+#include "ignition/plugin/detail/Loader.hh"
 
 #endif

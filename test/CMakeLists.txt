@@ -6,3 +6,8 @@ target_link_libraries(gtest_main gtest)
 target_include_directories(gtest
   PUBLIC "${CMAKE_CURRENT_LIST_DIR}/gtest/include"
   PRIVATE "${CMAKE_CURRENT_LIST_DIR}/gtest")
+
+add_subdirectory(performance)
+add_subdirectory(integration)
+add_subdirectory(static_assertions)
+add_subdirectory(plugins)

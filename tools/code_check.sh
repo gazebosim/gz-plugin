@@ -45,7 +45,8 @@ then
   CPPLINT_FILES="$CHECK_FILES"
   QUICK_TMP=`mktemp -t asdfXXXXXXXXXX`
 else
-  CHECK_DIRS="./src ./include ./test/integration ./test/regression ./test/performance"
+  CHECK_DIRS="./core/src ./core/include ./loader/src ./loader/include "\
+"./test/integration ./test/regression ./test/performance"
   EXCLUDE_DIRS="./src/tinyxml2"
   if [ $CPPCHECK_LT_161 -eq 1 ]; then
     # cppcheck is older than 1.57, so don't check header files (issue #907)

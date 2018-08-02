@@ -17,7 +17,7 @@
 #include <gtest/gtest.h>
 #include <string>
 
-#include "PluginUtils.hh"
+#include "ignition/plugin/PluginUtils.hh"
 
 using namespace ignition;
 

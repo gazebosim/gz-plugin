@@ -8,7 +8,7 @@ project(ignition-plugin0 VERSION 0.1.0)
 #============================================================================
 # Find ignition-cmake
 #============================================================================
-find_package(ignition-cmake1 REQUIRED)
+find_package(ignition-cmake1 1.1 REQUIRED)
 
 #============================================================================
 # Configure the project
@@ -41,7 +41,7 @@ ign_find_package(DL
 # Configure the build
 #============================================================================
 ign_configure_build(QUIT_IF_BUILD_ERRORS
-  COMPONENTS loader register)
+  COMPONENTS loader)
 
 
 #============================================================================

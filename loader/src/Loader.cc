@@ -15,17 +15,20 @@
  *
  */
 
-#include <algorithm>
 #include <dlfcn.h>
+
+#include <algorithm>
 #include <functional>
 #include <locale>
 #include <sstream>
 #include <unordered_map>
+#include <vector>
 #include <iostream>
 
 #include "ignition/plugin/PluginInfo.hh"
 #include "ignition/plugin/Loader.hh"
 #include "ignition/plugin/Plugin.hh"
+#include "ignition/plugin/PluginUtils.hh"
 
 namespace ignition
 {
@@ -48,7 +51,7 @@ namespace ignition
       /// (used for debug purposes)
       /// \return All the PluginInfo provided by the loaded library.
       public: std::vector<Info> LoadPlugins(
-        void *_dlHandle, const std::string& _pathToLibrary) const;
+        void *_dlHandle, const std::string &_pathToLibrary) const;
 
       public: using PluginMap = std::unordered_map<std::string, Info>;
 
@@ -113,15 +116,14 @@ namespace ignition
           if (plugin.name.empty())
             continue;
 
-//          plugin.name = NormalizeName(plugin.name);
+          plugin.name = NormalizeName(plugin.name);
 
           Info::InterfaceCastingMap normalizedMap;
           normalizedMap.reserve(plugin.interfaces.size());
           for (const auto &interface : plugin.interfaces)
           {
             normalizedMap.insert(std::make_pair(
-//                     NormalizeName(interface.first),
-                     interface.first,
+                     NormalizeName(interface.first),
                      interface.second));
           }
           plugin.interfaces = normalizedMap;
@@ -176,9 +178,7 @@ namespace ignition
     PluginPtr Loader::Instantiate(
         const std::string &_plugin) const
     {
-      PluginPtr instance = std::shared_ptr<Plugin>(new Plugin());
-      instance->PrivateSetPluginInstance(this->PrivateGetPluginInfo(_plugin));
-      return instance;
+      return PluginPtr(this->PrivateGetPluginInfo(NormalizeName(_plugin)));
     }
 
     /////////////////////////////////////////////////
@@ -191,7 +191,13 @@ namespace ignition
           this->dataPtr->plugins.find(plugin);
 
       if (this->dataPtr->plugins.end() == it)
+      {
+        std::cerr << "Failed to get info for plugin ["
+               << plugin
+               << "] since it has not been loaded."
+               << std::endl;
         return nullptr;
+      }
 
       return &(it->second);
     }
@@ -216,10 +222,10 @@ namespace ignition
         return loadedPlugins;
       }
 
-      const std::string versionSymbol = "IGNCOMMONPluginAPIVersion";
-      const std::string sizeSymbol = "IGNCOMMONPluginInfoSize";
-      const std::string alignSymbol = "IGNCOMMONPluginInfoAlignment";
-      const std::string multiInfoSymbol = "IGNCOMMONMultiPluginInfo";
+      const std::string versionSymbol = "IGNPLUGINPluginAPIVersion";
+      const std::string sizeSymbol = "IGNPLUGINPluginInfoSize";
+      const std::string alignSymbol = "IGNPLUGINPluginInfoAlignment";
+      const std::string multiInfoSymbol = "IGNPLUGINMultiPluginInfo";
       void *versionPtr = dlsym(_dlHandle, versionSymbol.c_str());
       void *sizePtr = dlsym(_dlHandle, sizeSymbol.c_str());
       void *alignPtr = dlsym(_dlHandle, alignSymbol.c_str());
@@ -230,11 +236,11 @@ namespace ignition
           || nullptr == multiInfoPtr || nullptr == alignPtr)
       {
         std::cerr << "Library [" << _pathToLibrary
-               << "] doesn't have the right symbols: \n"
-               << " -- version symbol: " << versionPtr
-               << "\n -- size symbol: " << sizePtr
-               << "\n -- alignment symbol: " << alignPtr
-               << "\n -- info symbol: " << multiInfoPtr << "\n";
+               << "] doesn't have the right symbols:"
+               << "\n -- version symbol   -- " << versionPtr
+               << "\n -- size symbol      -- " << sizePtr
+               << "\n -- alignment symbol -- " << alignPtr
+               << "\n -- info symbol      -- " << multiInfoPtr << "\n";
 
         return loadedPlugins;
       }
@@ -246,17 +252,20 @@ namespace ignition
 
       if (version < IGN_PLUGIN_INFO_API_VERSION)
       {
-        std::cerr << "The library [" << _pathToLibrary <<"] is using an outdated "
-                << "version [" << version << "] of the ignition::plugin Plugin "
-                << "API. The version in this library is [" << IGN_PLUGIN_INFO_API_VERSION
-                << "].\n";
+        std::cerr << "The library [" << _pathToLibrary
+                  << "] is using an outdated version [" << version
+                  << "] of the ignition::plugin Plugin API."
+                  << " The version in this library is ["
+                  << IGN_PLUGIN_INFO_API_VERSION
+                  << "].\n";
       }
 
       if (version > IGN_PLUGIN_INFO_API_VERSION)
       {
         std::cerr << "The library [" << _pathToLibrary << "] is using a newer "
                << "version [" << version << "] of the ignition::plugin Plugin "
-               << "API. The version in this library is [" << IGN_PLUGIN_INFO_API_VERSION
+               << "API. The version in this library is ["
+               << IGN_PLUGIN_INFO_API_VERSION
                << "].\n";
         return loadedPlugins;
       }
@@ -271,7 +280,8 @@ namespace ignition
         // Info here is a function which matches the function signature defined
         // by PluginLoadFunctionSignature. Info(~) will be used to extract the
         // information about each plugin from the loaded library.
-        auto InfoFcn = reinterpret_cast<PluginLoadFunctionSignature>(multiInfoPtr);
+        auto InfoFcn =
+            reinterpret_cast<PluginLoadFunctionSignature>(multiInfoPtr);
 
         Info * ptrToPlugin = nullptr;
         void ** vPlugin = reinterpret_cast<void **>(&ptrToPlugin);
@@ -288,11 +298,12 @@ namespace ignition
         const size_t expectedSize = sizeof(Info);
         const size_t expectedAlignment = alignof(Info);
 
-        std::cerr << "The library [" << _pathToLibrary << "] has the wrong plugin "
-               << "size or alignment for API version [" << IGN_PLUGIN_INFO_API_VERSION
-               << "]. Expected size [" << expectedSize << "], got ["
-               << size << "]. Expected alignment [" << expectedAlignment
-               << "], got [" << alignment << "].\n";
+        std::cerr << "The library [" << _pathToLibrary << "] "
+                  << "has the wrong plugin size or alignment for API version ["
+                  << IGN_PLUGIN_INFO_API_VERSION
+                  << "]. Expected size [" << expectedSize << "], got ["
+                  << size << "]. Expected alignment [" << expectedAlignment
+                  << "], got [" << alignment << "].\n";
 
         return loadedPlugins;
       }

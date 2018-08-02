@@ -16,9 +16,10 @@
  */
 
 
-#ifndef IGNITION_COMMON_DETAIL_PLUGIN_HH_
-#define IGNITION_COMMON_DETAIL_PLUGIN_HH_
+#ifndef IGNITION_PLUGIN_DETAIL_PLUGIN_HH_
+#define IGNITION_PLUGIN_DETAIL_PLUGIN_HH_
 
+#include <memory>
 #include <string>
 #include <ignition/plugin/Plugin.hh>
 
@@ -31,7 +32,7 @@ namespace ignition
     Interface *Plugin::QueryInterface()
     {
       return static_cast<Interface*>(
-            this->PrivateGetInterface(Interface::IGNCOMMONInterfaceName));
+            this->PrivateGetInterface(Interface::IGNPLUGINInterfaceName));
     }
 
     //////////////////////////////////////////////////
@@ -39,7 +40,7 @@ namespace ignition
     const Interface *Plugin::QueryInterface() const
     {
       return static_cast<const Interface*>(
-            this->PrivateGetInterface(Interface::IGNCOMMONInterfaceName));
+            this->PrivateGetInterface(Interface::IGNPLUGINInterfaceName));
     }
 
     //////////////////////////////////////////////////
@@ -64,7 +65,7 @@ namespace ignition
     std::shared_ptr<Interface> Plugin::QueryInterfaceSharedPtr()
     {
       return this->QueryInterfaceSharedPtr<Interface>(
-            Interface::IGNCOMMONInterfaceName);
+            Interface::IGNPLUGINInterfaceName);
     }
 
     //////////////////////////////////////////////////
@@ -72,7 +73,7 @@ namespace ignition
     std::shared_ptr<const Interface> Plugin::QueryInterfaceSharedPtr() const
     {
       return this->QueryInterfaceSharedPtr<Interface>(
-            Interface::IGNCOMMONInterfaceName);
+            Interface::IGNPLUGINInterfaceName);
     }
 
     //////////////////////////////////////////////////
@@ -103,7 +104,7 @@ namespace ignition
     template <class Interface>
     bool Plugin::HasInterface() const
     {
-      return this->HasInterface(Interface::IGNCOMMONInterfaceName);
+      return this->HasInterface(Interface::IGNPLUGINInterfaceName);
     }
   }
 }
