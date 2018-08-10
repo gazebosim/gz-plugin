@@ -67,7 +67,9 @@ SUPPRESS=/tmp/cpp_check.suppress
 echo "" > $SUPPRESS
 
 #cppcheck
-CPPCHECK_BASE="cppcheck -q --inline-suppr --suppressions-list=$SUPPRESS"
+CPPCHECK_BASE="cppcheck -q --inline-suppr --suppressions-list=$SUPPRESS"\
+" --suppress=unmatchedSuppression:core/include/ignition/plugin/detail/PluginPtr.hh"\
+" --suppress=unmatchedSuppression:core/include/ignition/plugin/detail/SpecializedPlugin.hh"
 if [ $CPPCHECK_LT_161 -eq 0 ]; then
   # use --language argument if 1.57 or greater (issue #907)
   CPPCHECK_BASE="$CPPCHECK_BASE --language=c++"
