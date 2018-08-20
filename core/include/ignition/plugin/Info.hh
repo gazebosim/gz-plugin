@@ -20,9 +20,9 @@
 #define IGNITION_PLUGIN_INFO_HH_
 
 #include <functional>
+#include <set>
 #include <string>
 #include <unordered_map>
-#include <set>
 
 namespace ignition
 {
