@@ -63,8 +63,9 @@ extern "C"
 #ifdef IGN_PLUGIN_REGISTER_MORE_TRANS_UNITS
   ; /* NOLINT */
 #else
-  // ATTENTION: If you get a linking error complaining about multiple
-  // definitions of IgnitionPluginHook, then make sure that all but one of your
+  // ATTENTION: If you get a linking error complaining about
+  // multiple definitions of IgnitionPluginHook,
+  // then make sure that all but one of your
   // library's translation units (.cpp files) includes the
   // <ignition/plugin/RegisterMore.hh> header instead of
   // <ignition/plugin/Register.hh>.
