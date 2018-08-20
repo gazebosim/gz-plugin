@@ -9,11 +9,11 @@ project(ignition-plugin0 VERSION 0.1.0)
 # Find ignition-cmake
 #============================================================================
 find_package(ignition-cmake1 1.1 QUIET)
-set(IGN_CMAKE_VER 1)
+set(IGN_CMAKE_VER ${ignition-cmake1_VERSION_MAJOR})
 
 if(NOT ignition-cmake1_FOUND)
   find_package(ignition-cmake2 REQUIRED)
-  set(IGN_CMAKE_VER 2)
+  set(IGN_CMAKE_VER ${ignition-cmake2_VERSION_MAJOR})
 endif()
 
 #============================================================================
