@@ -32,7 +32,7 @@
 #include "../plugins/DummyPlugins.hh"
 
 /////////////////////////////////////////////////
-TEST(PluginLoader, LoadBadPlugins)
+TEST(Loader, LoadBadPlugins)
 {
   std::vector<std::string> libraries = {
     IGNBadPluginAPIVersionOld_LIB,
@@ -51,7 +51,7 @@ TEST(PluginLoader, LoadBadPlugins)
 }
 
 /////////////////////////////////////////////////
-TEST(PluginLoader, LoadExistingLibrary)
+TEST(Loader, LoadExistingLibrary)
 {
   ignition::plugin::Loader pl;
 
@@ -535,7 +535,7 @@ TEST(PluginPtr, LibraryManagement)
 
   CHECK_FOR_LIBRARY(path, false);
 
-  // Check that mulitple PluginLoaders can work side-by-side
+  // Check that mulitple Loaders can work side-by-side
   {
     ignition::plugin::Loader pl1;
     pl1.LoadLibrary(path);

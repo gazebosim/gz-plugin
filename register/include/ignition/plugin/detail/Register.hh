@@ -78,7 +78,7 @@ extern "C"
     using InfoMap = ignition::plugin::InfoMap;
     // We use a static variable here so that we can accumulate multiple
     // Info objects from multiple plugin registration calls within one
-    // shared library, and then provide it all to the PluginLoader through this
+    // shared library, and then provide it all to the Loader through this
     // single hook.
     static InfoMap pluginMap;
 
@@ -121,7 +121,7 @@ extern "C"
       // When _outputAllInfo is not a nullptr, it means that a Loader is
       // trying to retrieve Info from us.
 
-      // The PluginLoader should provide valid pointers to these fields as part
+      // The Loader should provide valid pointers to these fields as part
       // of a handshake procedure.
       if (nullptr == _inputAndOutputAPIVersion ||
           nullptr == _inputAndOutputInfoSize ||
@@ -158,7 +158,7 @@ extern "C"
 
       // The handshake parameters that were passed into us are overwritten with
       // the values that we have on our end. That way, if our Info API is
-      // lower than that of the PluginLoader, then the PluginLoader will know
+      // lower than that of the Loader, then the Loader will know
       // to call this function using an older version of Info, and then
       // convert it to the newer version on the loader side.
       *_inputAndOutputAPIVersion = ignition::plugin::INFO_API_VERSION;
@@ -169,7 +169,7 @@ extern "C"
       // outputting any of the plugin info; otherwise, we could get a
       // segmentation fault.
       //
-      // We will return the current API version to the PluginLoader, and it may
+      // We will return the current API version to the Loader, and it may
       // then decide to attempt the call to this function again with the correct
       // API version if it supports backwards/forwards compatibility.
       if (!agreement)

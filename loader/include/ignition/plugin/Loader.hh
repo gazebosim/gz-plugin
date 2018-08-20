@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_PLUGINLOADER_HH_
-#define IGNITION_PLUGIN_PLUGINLOADER_HH_
+#ifndef IGNITION_PLUGIN_LOADER_HH_
+#define IGNITION_PLUGIN_LOADER_HH_
 
 #include <memory>
 #include <string>
@@ -105,10 +105,10 @@ namespace ignition
       /// After this function has been called, once all plugin instances that
       /// are tied to the library have been deleted, the library will
       /// automatically be unloaded from the executable. Note that when this
-      /// PluginLoader leaves scope (or gets deleted), it will have the same
+      /// Loader leaves scope (or gets deleted), it will have the same
       /// effect as calling ForgetLibrary on all of the libraries that it
       /// loaded, so there is generally no need to call this function. However,
-      /// it may be useful if you want to reduce clutter in the PluginLoader
+      /// it may be useful if you want to reduce clutter in the Loader
       /// instance or let go of library resources that are no longer being used.
       ///
       /// Note that even if you have released all references to a library, it is

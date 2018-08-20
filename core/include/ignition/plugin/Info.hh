@@ -65,7 +65,7 @@ namespace ignition
 
         /// \brief This is a set containing the demangled versions of the names
         /// of the interfaces provided by this plugin. This gets filled in by
-        /// the PluginLoader after receiving the Info. It is only used by
+        /// the Loader after receiving the Info. It is only used by
         /// the user-facing API. Internally, when looking up Interfaces, the
         /// mangled `interfaces` map will still be used.
         std::set<std::string> demangledInterfaces;
