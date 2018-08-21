@@ -418,7 +418,7 @@ namespace ignition
           void(*)(void * const, const void ** const,
                   int *, std::size_t *, std::size_t *);
 
-      // Note: Info (below) is a function with a signature that matches
+      // Note: InfoHook (below) is a function with a signature that matches
       // PluginLoadFunctionSignature.
       auto InfoHook =
           reinterpret_cast<PluginLoadFunctionSignature>(infoFuncPtr);
