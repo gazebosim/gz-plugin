@@ -15,18 +15,27 @@
  *
 */
 
-#include <limits>
+#include <ignition/plugin/Register.hh>
 
-#include <ignition/plugin/Info.hh>
-
-#include "GenericExport.hh"
-
-extern "C" void EXPORT IgnitionPluginHook(
-    const void *,
-    const void ** const,
-    int *_inputAndOutputAPIVersion,
-    std::size_t *,
-    std::size_t *)
+namespace ns
 {
-  *_inputAndOutputAPIVersion = std::numeric_limits<int>::max();
+
+class Base
+{
+  int test3;
+};
+
+class WrongBase
+{
+  int test3;
+};
+
+class A : public Base
+{
+  float test1;
+  double test2;
+};
+
 }
+
+IGNITION_ADD_PLUGIN(ns::A, ns::WrongBase)

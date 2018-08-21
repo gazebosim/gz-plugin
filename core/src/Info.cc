@@ -15,29 +15,20 @@
  *
  */
 
-#ifndef IGNITION_PLUGIN_PLUGINUTILS_HH_
-#define IGNITION_PLUGIN_PLUGINUTILS_HH_
-
-#include <string>
+#include <ignition/plugin/Info.hh>
 
 namespace ignition
 {
   namespace plugin
   {
-    /// \brief Format the name to start with "::"
-    /// \param[in] _name The name of a plugin or interface
-    /// \return The input, but with "::" prepended if it was not there already.
-    inline std::string NormalizeName(const std::string &_name)
+    void Info::Clear()
     {
-      std::string name = _name;
-      if (_name.substr(0, 2) != "::")
-      {
-        name = std::string("::") + _name;
-      }
-      return name;
+      name.clear();
+      aliases.clear();
+      interfaces.clear();
+      demangledInterfaces.clear();
+      factory = nullptr;
+      deleter = nullptr;
     }
   }
 }
-
-
-#endif

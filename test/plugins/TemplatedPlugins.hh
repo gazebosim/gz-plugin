@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Open Source Robotics Foundation
+ * Copyright (C) 2018 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,29 @@
  *
 */
 
-#include <limits>
+#ifndef IGNITION_PLUGIN_TEST_PLUGINS_TEMPLATEPLUGIN_HH_
+#define IGNITION_PLUGIN_TEST_PLUGINS_TEMPLATEPLUGIN_HH_
 
-#include <ignition/plugin/Info.hh>
-
-#include "GenericExport.hh"
-
-extern "C" void EXPORT IgnitionPluginHook(
-    const void *,
-    const void ** const,
-    int *_inputAndOutputAPIVersion,
-    std::size_t *,
-    std::size_t *)
+namespace test
 {
-  *_inputAndOutputAPIVersion = std::numeric_limits<int>::max();
+namespace plugins
+{
+
+// Interface class to test output from templated interfaces
+template <typename T>
+class TemplatedGetInterface
+{
+  public: virtual T Get() const = 0;
+};
+
+// Interface class to test input to templated interfaces
+template <typename T>
+class TemplatedSetInterface
+{
+  public: virtual void Set(const T &_value) = 0;
+};
+
 }
+}
+
+#endif

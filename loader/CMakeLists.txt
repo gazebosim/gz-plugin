@@ -9,7 +9,7 @@ ign_add_component(loader
   GET_TARGET_NAME loader)
 
 target_link_libraries(${loader}
-  PUBLIC ignition-cmake1::utilities
+  PUBLIC ignition-cmake${IGN_CMAKE_VER}::utilities
   PRIVATE ${DL_TARGET})
 
 ign_build_tests(
@@ -26,4 +26,11 @@ foreach(test ${test_targets})
   target_compile_definitions(${test} PRIVATE
     "IGN_PLUGIN_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\"")
 
+  target_compile_definitions(${test} PRIVATE
+    "IGNDummyPlugins_LIB=\"$<TARGET_FILE:IGNDummyPlugins>\"")
+
 endforeach()
+
+install(
+  DIRECTORY include/
+  DESTINATION ${IGN_INCLUDE_INSTALL_DIR_FULL})

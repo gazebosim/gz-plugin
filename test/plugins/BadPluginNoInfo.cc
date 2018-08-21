@@ -15,8 +15,6 @@
  *
 */
 
-#include <limits>
-
 #include <ignition/plugin/Info.hh>
 
 #include "GenericExport.hh"
@@ -24,9 +22,10 @@
 extern "C" void EXPORT IgnitionPluginHook(
     const void *,
     const void ** const,
-    int *_inputAndOutputAPIVersion,
+    int *,
     std::size_t *,
-    std::size_t *)
+    std::size_t *_inputAndOutputInfoAlign)
 {
-  *_inputAndOutputAPIVersion = std::numeric_limits<int>::max();
+  _inputAndOutputInfoAlign = nullptr;
+  (void)_inputAndOutputInfoAlign;
 }

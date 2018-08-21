@@ -22,6 +22,8 @@
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/config.hh>
 
+#include <ignition/plugin/SpecializedPluginPtr.hh>
+
 /////////////////////////////////////////////////
 TEST(Loader, InitialNoInterfacesImplemented)
 {
@@ -34,6 +36,7 @@ TEST(Loader, LoadNonexistantLibrary)
 {
   ignition::plugin::Loader loader;
   EXPECT_TRUE(loader.LoadLibrary("/path/to/libDoesNotExist.so").empty());
+  EXPECT_FALSE(loader.ForgetLibrary("/path/to/libDoesNotExist.so"));
 }
 
 /////////////////////////////////////////////////
@@ -58,6 +61,55 @@ TEST(Loader, InstantiateUnloadedPlugin)
   ignition::plugin::PluginPtr plugin =
       loader.Instantiate("plugin::that::is::not::loaded");
   EXPECT_FALSE(plugin);
+  EXPECT_FALSE(loader.ForgetLibraryOfPlugin("plugin::that::is::not::loaded"));
+}
+
+class SomeInterface { };
+
+/////////////////////////////////////////////////
+TEST(Loader, InstantiateSpecializedPlugin)
+{
+  ignition::plugin::Loader loader;
+
+  // This makes sure that Loader::Instantiate can compile
+  auto plugin = loader.Instantiate<
+      ignition::plugin::SpecializedPluginPtr<SomeInterface> >("fake::plugin");
+  EXPECT_FALSE(plugin);
+}
+
+/////////////////////////////////////////////////
+TEST(Loader, DoubleLoad)
+{
+  // We do this test for code coverage, to test the lines of code that get run
+  // when a user asks for a library to be loaded twice.
+  ignition::plugin::Loader loader;
+
+  loader.LoadLibrary(IGNDummyPlugins_LIB);
+  const std::size_t interfaceCount = loader.InterfacesImplemented().size();
+  EXPECT_LT(0u, interfaceCount);
+
+  loader.LoadLibrary(IGNDummyPlugins_LIB);
+  EXPECT_EQ(interfaceCount, loader.InterfacesImplemented().size());
+}
+
+/////////////////////////////////////////////////
+TEST(Loader, ForgetUnloadedLibrary)
+{
+  // These tests are for line coverage.
+
+  // This first test triggers lines for the case that:
+  //   1. A library is not loaded, and
+  //   2. We tell a loader to forget the library
+  ignition::plugin::Loader loader;
+  EXPECT_FALSE(loader.ForgetLibrary(IGNDummyPlugins_LIB));
+
+  // This next test triggers lines for the case that:
+  //   1. A library is loaded by some loader in the application, and
+  //   2. We tell a *different* loader to forget the library
+  ignition::plugin::Loader hasTheLibrary;
+  EXPECT_LT(0u, hasTheLibrary.LoadLibrary(IGNDummyPlugins_LIB).size());
+
+  EXPECT_FALSE(loader.ForgetLibrary(IGNDummyPlugins_LIB));
 }
 
 /////////////////////////////////////////////////

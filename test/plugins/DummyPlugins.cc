@@ -15,7 +15,7 @@
  *
 */
 
-#include "ignition/plugin/PluginMacros.hh"
+#include "ignition/plugin/Register.hh"
 #include "DummyPlugins.hh"
 
 
@@ -76,14 +76,12 @@ DummyMultiPlugin::DummyMultiPlugin()
   // Do nothing
 }
 
+// Show that we can add plugins from within a namespace
+IGNITION_ADD_PLUGIN(DummyMultiPlugin, DummyGetSomeObjectBase)
+
 }
 }
 
-IGN_PLUGIN_BEGIN_ADDING_PLUGINS
-  IGN_PLUGIN_ADD_PLUGIN(test::util::DummySinglePlugin, test::util::DummyNameBase)
-  IGN_PLUGIN_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyNameBase)
-  IGN_PLUGIN_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyDoubleBase)
-  IGN_PLUGIN_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyIntBase)
-  IGN_PLUGIN_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummySetterBase)
-  IGN_PLUGIN_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyGetSomeObjectBase)
-IGN_PLUGIN_FINISH_ADDING_PLUGINS
+IGNITION_ADD_PLUGIN(test::util::DummySinglePlugin, test::util::DummyNameBase)
+
+IGNITION_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyNameBase)

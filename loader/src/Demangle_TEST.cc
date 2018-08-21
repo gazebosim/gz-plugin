@@ -14,24 +14,42 @@
  * limitations under the License.
  *
 */
+
 #include <gtest/gtest.h>
-#include <string>
 
-#include "ignition/plugin/PluginUtils.hh"
+#include "Demangle.hh"
 
-using namespace ignition;
+using namespace ignition::plugin;
+
+class SomeSymbol { };
 
 /////////////////////////////////////////////////
-TEST(PluginUtils, NormalizeName)
+TEST(Demangle, RealSymbol)
 {
-  EXPECT_EQ("::", plugin::NormalizeName(""));
-  EXPECT_EQ("::", plugin::NormalizeName("::"));
+  EXPECT_EQ("SomeSymbol", Demangle(typeid(SomeSymbol).name()));
+}
 
-  EXPECT_EQ("::ignition", plugin::NormalizeName("ignition"));
-  EXPECT_EQ("::ignition", plugin::NormalizeName("::ignition"));
+template <typename T>
+class SomeTemplate { };
 
-  EXPECT_EQ("::ignition::math", plugin::NormalizeName("ignition::math"));
-  EXPECT_EQ("::ignition::math", plugin::NormalizeName("::ignition::math"));
+/////////////////////////////////////////////////
+TEST(Demangle, TemplatedSymbol)
+{
+  EXPECT_EQ("SomeTemplate<SomeSymbol>",
+            Demangle(typeid(SomeTemplate<SomeSymbol>).name()));
+}
+
+/////////////////////////////////////////////////
+TEST(Demangle, FakeSymbol)
+{
+#ifdef NDEBUG
+  // When a fake symbol is passed in, we expect it to be returned exactly as it
+  // was provided.
+  EXPECT_EQ("NotReallyASymbol!@#$", Demangle("NotReallyASymbol!@#$"));
+#else
+  // If NDEBUG is not defined, we expect an assertion to be triggered, so we
+  // will skip this test.
+#endif
 }
 
 /////////////////////////////////////////////////
@@ -40,4 +58,3 @@ int main(int argc, char **argv)
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-

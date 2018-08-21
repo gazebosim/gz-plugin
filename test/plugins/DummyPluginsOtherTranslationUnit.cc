@@ -15,18 +15,16 @@
  *
 */
 
-#include <limits>
+#include <ignition/plugin/RegisterMore.hh>
+#include "DummyPlugins.hh"
 
-#include <ignition/plugin/Info.hh>
+// We use this file to test that the IGNITION_ADD_PLUGIN macro can be used in
+// multiple translation units for the same plugin without any issues.
 
-#include "GenericExport.hh"
+// This also tests that we can add multiple interfaces for a plugin with one
+// macro call.
 
-extern "C" void EXPORT IgnitionPluginHook(
-    const void *,
-    const void ** const,
-    int *_inputAndOutputAPIVersion,
-    std::size_t *,
-    std::size_t *)
-{
-  *_inputAndOutputAPIVersion = std::numeric_limits<int>::max();
-}
+IGNITION_ADD_PLUGIN(test::util::DummyMultiPlugin,
+                    test::util::DummyDoubleBase,
+                    test::util::DummyIntBase,
+                    test::util::DummySetterBase)
