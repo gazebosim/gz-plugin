@@ -79,9 +79,11 @@ void TestSetAndGet(const ignition::plugin::Loader &_pl,
     const SetAndGetPluginPtr<T> plugin = _pl.Instantiate(pluginName);
 
     usedSpecializedInterfaceAccess = false;
-    // We assume that plugins which provide the setter also provide the setter.
-    // This is just for testing convenience.
     ASSERT_TRUE(plugin->template HasInterface<SetInterface>());
+    EXPECT_TRUE(usedSpecializedInterfaceAccess);
+
+    usedSpecializedInterfaceAccess = false;
+    ASSERT_TRUE(plugin->template HasInterface<GetInterface>());
     EXPECT_TRUE(usedSpecializedInterfaceAccess);
 
     usedSpecializedInterfaceAccess = false;
