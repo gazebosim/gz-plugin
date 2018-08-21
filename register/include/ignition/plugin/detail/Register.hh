@@ -49,11 +49,55 @@
 // retrieve it.
 extern "C"
 {
-  /// \brief IgnitionPluginHook is the hook that's used by the Loader to
+  /// \private IgnitionPluginHook is the hook that's used by the Loader to
   /// retrieve Info from a shared library that provides plugins.
   ///
   /// The symbol is explicitly exported (visibility is turned on) using
   /// DETAIL_IGN_PLUGIN_VISIBLE to ensure that dlsym(~) is able to find it.
+  ///
+  /// DO NOT CALL THIS FUNCTION DIRECTLY OR CREATE YOUR OWN IMPLEMENTATION OF IT
+  /// This function is used by the Registrar and Loader classes. Nothing else
+  /// should be using it.
+  ///
+  /// \param[in] _inputSingleInfo
+  ///   This argument is used by Registrar to input a single instance of
+  ///   plugin::Info data. Loader will set this to a nullptr when trying to
+  ///   receive data from the hook.
+  ///
+  /// \param[out] _outputAllInfo
+  ///   Loader will pass in a pointer to a pointer of an InfoMap pertaining to
+  ///   the highest API version that it knows of. If this IgnitionPluginHook was
+  ///   built against a version of ign-plugin that provides an equal or greater
+  ///   API version, then IgnitionPluginHook will modify *_outputAllInfo to
+  ///   point at its internal &InfoMap that corresponds to the requested API
+  ///   version, which is identified by _inputAndOutputAPIVersion.
+  ///
+  ///   If _inputAndOutputAPIVersion is greater than the highest API version
+  ///   known by this IgnitionPluginHook, then IgnitionPluginHook will not
+  ///   modify _outputAllInfo, and instead it will change the value pointed to
+  ///   by _inputAndOutputAPIVersion so that it points to the highest API
+  ///   version known by this IgnitionPluginHook. At that point, Loader can call
+  ///   this function again, but using the older API version which known by this
+  ///   IgnitionPluginHook.
+  ///
+  /// \param[in,out] _inputAndOutputAPIVersion
+  ///   Loader will pass in a pointer to the highest API version that it knows.
+  ///   If that API version is higher than what this IgnitionPluginHook is
+  ///   compatible with, then this IgnitionPluginHook will change the value
+  ///   pointed to by _inputAndOutputAPIVersion to the value of the highest API
+  ///   version that it knows.
+  ///
+  /// \param[in,out] _inputAndOutputInfoSize
+  ///   This input/output parameter is used for sanity checking. The Loader
+  ///   inputs a pointer to the size that it expects for the Info data
+  ///   structure, and IgnitionPluginHook verifies that this expectation matches
+  ///   its own Info size. Then, IgnitionPluginHook will overwrite the value
+  ///   pointed to so that it matches its own Info size value.
+  ///
+  /// \param[in,out] _inputAndOutputInfoAlign
+  ///   Similar to _inputAndOutputInfoSize, this is used for sanity checking. It
+  ///   inspects and returns the alignof(Info) value instead of the sizeof(Info)
+  ///   value.
   DETAIL_IGN_PLUGIN_VISIBLE void IgnitionPluginHook(
       const void *_inputSingleInfo,
       const void ** const _outputAllInfo,
@@ -162,6 +206,10 @@ extern "C"
       // lower than that of the Loader, then the Loader will know
       // to call this function using an older version of Info, and then
       // convert it to the newer version on the loader side.
+      //
+      // This implementation might change when new API versions are introduced,
+      // but this current implementation will still be forward compatible with
+      // new API versions.
       *_inputAndOutputAPIVersion = ignition::plugin::INFO_API_VERSION;
       *_inputAndOutputInfoSize = sizeof(ignition::plugin::Info);
       *_inputAndOutputInfoAlign = alignof(ignition::plugin::Info);
