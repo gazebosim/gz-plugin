@@ -98,9 +98,9 @@ namespace ignition
               PluginPtrType Instantiate(
                   const std::string &_pluginName) const;
 
-      /// \brief This loader will forget about the library with the given name.
-      /// If you want to instantiate a plugin from this library using this
-      /// loader, you will first need to call LoadLibrary again.
+      /// \brief This loader will forget about the library at the given path
+      /// location. If you want to instantiate a plugin from this library using
+      /// this loader, you will first need to call LoadLibrary again.
       ///
       /// After this function has been called, once all plugin instances that
       /// are tied to the library have been deleted, the library will
