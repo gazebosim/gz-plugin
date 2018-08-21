@@ -462,7 +462,7 @@ namespace ignition
       // against the static runtime. Using this pointer-to-a-pointer approach is
       // the cleanest way to ensure that all dynamically allocated objects are
       // deleted in the same heap that they were allocated from.
-      InfoHook(nullptr, reinterpret_cast<const void** const>(&allInfo),
+      InfoHook(nullptr, reinterpret_cast<const void**>(&allInfo),
            &version, &size, &alignment);
 
       if (ignition::plugin::INFO_API_VERSION != version)
