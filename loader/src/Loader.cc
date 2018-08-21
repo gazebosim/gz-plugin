@@ -90,6 +90,17 @@ namespace ignition
       using DlHandleMap = std::unordered_map< void*, std::weak_ptr<void> >;
       /// \brief A map which keeps track of which shared libraries have been
       /// loaded by this Loader.
+      ///
+      /// The key of this map is a pointer to a dl handle, and the values are
+      /// weak_ptrs to the shared_ptr that was constructed for that dl handle.
+      /// Since these are weak_ptrs, they will automatically get cleared
+      /// whenever the library get unloaded. Therefore, if a map entry exists
+      /// for a dl handle and the value of that map entry still points to a
+      /// valid shared_ptr, then the library for that dl handle is currently
+      /// loaded, and we are already managing its reference count.
+      ///
+      /// This is used to ensure that we keep one single authoritative reference
+      /// count of the dl handle per Loader.
       public: DlHandleMap dlHandlePtrMap;
 
       public: using DlHandleToPluginMap =
