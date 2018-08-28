@@ -264,7 +264,7 @@ namespace ignition
       /// tries to double-inherit a direct base class.
       template <class RepeatedBase>
       class ComposePlugin<RepeatedBase, RepeatedBase>
-          : public virtual RepeatedBase { };
+          : public virtual RepeatedBase { };  // NOLINT
     }
 
     /// \brief Construct an unbalanced binary tree of specializations by
