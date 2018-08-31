@@ -280,6 +280,10 @@ using AnotherSpecializedPluginPtr =
         SomeInterface,
         test::util::DummyIntBase>;
 
+using DuplicatedInterfaceSpecializedPluginPtr =
+    ignition::plugin::SpecializedPluginPtr<
+        SomeInterface, SomeInterface>;
+
 /////////////////////////////////////////////////
 TEST(PluginPtr, CopyMoveSemantics)
 {
@@ -326,6 +330,11 @@ TEST(PluginPtr, CopyMoveSemantics)
   TestSetAndMapUsage<
       AnotherSpecializedPluginPtr,
       SingleSpecializedPluginPtr>(
+        pl, plugin);
+
+  TestSetAndMapUsage<
+      DuplicatedInterfaceSpecializedPluginPtr,
+      DuplicatedInterfaceSpecializedPluginPtr>(
         pl, plugin);
 
   ignition::plugin::ConstPluginPtr c_plugin(plugin);
