@@ -269,6 +269,9 @@ void TestSetAndMapUsage(
 }
 
 /////////////////////////////////////////////////
+using EmptySpecializedPluginPtr =
+    ignition::plugin::SpecializedPluginPtr<>;
+
 using SingleSpecializedPluginPtr =
     ignition::plugin::SpecializedPluginPtr<SomeInterface>;
 
@@ -303,6 +306,11 @@ TEST(PluginPtr, CopyMoveSemantics)
   TestSetAndMapUsage<
       ignition::plugin::PluginPtr,
       ignition::plugin::PluginPtr>(
+        pl, plugin);
+
+  TestSetAndMapUsage<
+      ignition::plugin::PluginPtr,
+      EmptySpecializedPluginPtr>(
         pl, plugin);
 
   TestSetAndMapUsage<

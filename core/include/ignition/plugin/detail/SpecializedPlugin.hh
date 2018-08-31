@@ -279,6 +279,10 @@ namespace ignition
       /// \brief Default constructor
       private: SpecializedPlugin() = default;
     };
+
+    /// \brief Allow empty specializations of SpecializedPlugin
+    template <>
+    class SpecializedPlugin<> : public virtual Plugin { }; // NOLINT
   }
 }
 
