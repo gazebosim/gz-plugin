@@ -509,4 +509,11 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
   DETAIL_IGNITION_ADD_PLUGIN_WITH_COUNTER(__COUNTER__, __VA_ARGS__)
 
 
+//////////////////////////////////////////////////
+#define DETAIL_IGNITION_ADD_FACTORY(ProductType, FactoryType) \
+  DETAIL_IGNITION_ADD_PLUGIN(FactoryType::Producer<ProductType>, FactoryType)
+
+// TODO(MXG): Add "ProductType" as an alias for this factory plugin once aliases
+// are supported.
+
 #endif

@@ -53,4 +53,9 @@
 #define IGNITION_ADD_PLUGIN(...) \
   DETAIL_IGNITION_ADD_PLUGIN(__VA_ARGS__)
 
+
+#define IGNITION_ADD_FACTORY(ProductType, FactoryType) \
+  DETAIL_IGNITION_ADD_FACTORY(ProductType, FactoryType)
+
+
 #endif
