@@ -28,6 +28,7 @@
 #include <ignition/utilities/SuppressWarning.hh>
 
 #include <ignition/plugin/Info.hh>
+#include <ignition/plugin/EnablePluginFromThis.hh>
 
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -342,6 +343,39 @@ namespace ignition
       };
 
       //////////////////////////////////////////////////
+      template <typename PluginClass, bool DoEnablePluginFromThis>
+      struct IfEnablePluginFromThisImpl
+      {
+        public: static void AddIt(Info::InterfaceCastingMap &_interfaces)
+        {
+          _interfaces.insert(std::make_pair(
+                  typeid(EnablePluginFromThis).name(),
+                  [=](void *v_ptr)
+                  {
+                    PluginClass *d_ptr = static_cast<PluginClass*>(v_ptr);
+                    return static_cast<EnablePluginFromThis*>(d_ptr);
+                  }));
+        }
+      };
+
+      //////////////////////////////////////////////////
+      template <typename PluginClass>
+      struct IfEnablePluginFromThisImpl<PluginClass, false>
+      {
+        public: static void AddIt(Info::InterfaceCastingMap &)
+        {
+          // Do nothing, because the plugin does not inherit
+          // the EnablePluginFromThis interface.
+        }
+      };
+
+      //////////////////////////////////////////////////
+      template <typename PluginClass>
+      struct IfEnablePluginFromThis
+          : IfEnablePluginFromThisImpl<PluginClass,
+                std::is_base_of<EnablePluginFromThis, PluginClass>::value> { };
+
+      //////////////////////////////////////////////////
       /// \brief This specialization of the Register class will be called when
       /// one or more arguments are provided to the IGNITION_ADD_PLUGIN(~)
       /// macro. This is the only version of the Registrar class that is allowed
@@ -391,7 +425,12 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
         /// interfaces that it provides.
         public: static void Register()
         {
+          // Make all info that the user has specified
           Info info = MakeInfo();
+
+          // Add the EnablePluginFromThis interface automatically if it is
+          // inherited by PluginClass.
+          IfEnablePluginFromThis<PluginClass>::AddIt(info.interfaces);
 
           // Send this information as input to this library's global repository
           // of plugins.

@@ -64,7 +64,7 @@ TEST(Loader, LoadExistingLibrary)
   std::cout << pl.PrettyStr();
 
   // Make sure the expected interfaces were loaded.
-  EXPECT_EQ(5u, pl.InterfacesImplemented().size());
+  EXPECT_EQ(6u, pl.InterfacesImplemented().size());
   EXPECT_EQ(1u, pl.InterfacesImplemented().count("test::util::DummyNameBase"));
 
   EXPECT_EQ(2u, pl.PluginsImplementing<::test::util::DummyNameBase>().size());

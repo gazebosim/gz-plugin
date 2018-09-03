@@ -34,6 +34,8 @@ namespace ignition
   {
     // Forward declaration
     namespace detail { template <class, class> class ComposePlugin; }
+    class EnablePluginFromThis;
+    class WeakPluginPtr;
 
     class IGNITION_PLUGIN_VISIBLE Plugin
     {
@@ -141,6 +143,8 @@ namespace ignition
       template <class> friend class TemplatePluginPtr;
       template <class...> friend class SpecializedPlugin;
       template <class, class> friend class detail::ComposePlugin;
+      friend class EnablePluginFromThis;
+      friend class WeakPluginPtr;
 
       /// \brief Default constructor. This is kept private to ensure that
       /// Plugins are always managed by a PluginPtr object.
@@ -153,14 +157,30 @@ namespace ignition
       /// \brief Copy the plugin instance from another Plugin object
       private: void PrivateCopyPluginInstance(const Plugin &_other) const;
 
+      /// \brief Copy an existing plugin instance into this plugin
+      /// \param[in] _info
+      ///   Pointer to the Info for this plugin
+      /// \param[in] _instancePtr
+      ///   Pointer to an already-existing abstract plugin instance pointer
+      private: void PrivateCopyPluginInstance(
+                  const ConstInfoPtr &_info,
+                  const std::shared_ptr<void> &_instancePtr) const;
+
       /// \brief Create a new plugin instance based on the info provided
-      private: void PrivateSetPluginInstance(
-                  const Info *_info,
+      /// \param[in] _info
+      ///   Pointer to the Info for this plugin
+      /// \param[in] _dlHandlePtr
+      ///   Reference counter for the dl handle of this Plugin
+      private: void PrivateCreatePluginInstance(
+                  const ConstInfoPtr &_info,
                   const std::shared_ptr<void> &_dlHandlePtr) const;
 
-      /// \brief Get a reference to the std::shared_ptr being managed by this
+      /// \brief Get a reference to the abstract instance being managed by this
       /// wrapper
       private: const std::shared_ptr<void> &PrivateGetInstancePtr() const;
+
+      /// \brief Get a reference to the Info being used by this wrapper
+      private: const ConstInfoPtr &PrivateGetInfoPtr() const;
 
       /// \brief The InterfaceMap type needs to get used in several places, like
       /// Plugin::Implementation and SpecializedPlugin<T>. We make the typedef

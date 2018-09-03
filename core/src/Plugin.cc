@@ -111,7 +111,7 @@ namespace ignition
       public: void Clear()
       {
         this->loadedInstancePtr.reset();
-        this->info.Clear();
+        this->info.reset();
 
         // Dev note (MXG): We must NOT call clear() on the InterfaceMap or
         // remove ANY of the map entries, because that would potentially
@@ -123,19 +123,21 @@ namespace ignition
           entry.second = nullptr;
       }
 
-      /// \brief Initialize this object using some Info instance
+      /// \brief Initialize this object by creating a new plugin instance from
+      /// the info provided.
       /// \param[in] _info Information describing the plugin to initialize
       /// \param[in] _dlHandlePtr A reference to the dl handle that manages the
       ///            lifecycle of the plugin library.
-      public: void Initialize(const Info *_info,
-                              const std::shared_ptr<void> &_dlHandlePtr)
+      public: void Create(
+          const ConstInfoPtr &_info,
+          const std::shared_ptr<void> &_dlHandlePtr)
       {
         this->Clear();
 
         if (!_info)
           return;
 
-        this->info = *_info;
+        this->info = _info;
 
         if (!_dlHandlePtr)
         {
@@ -178,7 +180,7 @@ namespace ignition
 
       /// \brief Initialize this object using another instance
       /// \param[in] _other Another instance of a Plugin::Implementation object
-      public: void Initialize(const Implementation *_other)
+      public: void Copy(const Implementation *_other)
       {
         this->Clear();
 
@@ -205,6 +207,45 @@ namespace ignition
             // entry.second: pointer to the location of that interface within
             //               the plugin instance
             this->interfaces[entry.first] = entry.second;
+          }
+        }
+      }
+
+      /// \brief Initialize this object using another instance
+      /// \param[in] _info
+      ///   A reference to the plugin's Info
+      /// \param[in] _instance
+      ///   A reference to the plugin's abstact instance
+      public: void Copy(const ConstInfoPtr &_info,
+                        const std::shared_ptr<void> &_instance)
+      {
+        this->loadedInstancePtr = _instance;
+        this->info = _info;
+
+        if (this->loadedInstancePtr)
+        {
+          if (!this->info)
+          {
+            // LCOV_EXCL_START
+            std::cerr << "[Plugin::Implementation::Copy(_info, _instance)] A "
+                      << "Plugin has been copied from its info and instance, "
+                      << "but the info was null even though the instance was "
+                      << "valid. This should never happen! Please report this "
+                      << "bug!" << std::endl;
+            assert(false);
+            return;
+            // LCOV_EXCL_STOP
+          }
+
+          // We need to construct the interface map for this Plugin
+          for (const auto &entry : this->info->interfaces)
+          {
+            // entry.first:  name of the interface
+            // entry.second: function which casts the loadedInstance pointer to
+            //               the correct location of the interface within the
+            //               plugin
+            this->interfaces[entry.first] =
+                entry.second(this->loadedInstancePtr.get());
           }
         }
       }
@@ -249,7 +290,7 @@ namespace ignition
       ///
       /// If you change this class definition for ANY reason, be sure to
       /// maintain the ordering of these member variables.
-      public: Info info;
+      public: ConstInfoPtr info;
     };
 
     //////////////////////////////////////////////////
@@ -257,10 +298,13 @@ namespace ignition
         const std::string &_interfaceName,
         const bool _demangled) const
     {
+      const ConstInfoPtr &info = this->dataPtr->info;
+      if (!info)
+        return false;
+
       if (_demangled)
       {
-        return (this->dataPtr->info.demangledInterfaces
-                .count(_interfaceName) != 0);
+        return (info->demangledInterfaces.count(_interfaceName) != 0);
       }
 
       return (this->dataPtr->interfaces.count(_interfaceName) != 0);
@@ -287,21 +331,35 @@ namespace ignition
     //////////////////////////////////////////////////
     void Plugin::PrivateCopyPluginInstance(const Plugin &_other) const
     {
-      this->dataPtr->Initialize(_other.dataPtr.get());
+      this->dataPtr->Copy(_other.dataPtr.get());
     }
 
     //////////////////////////////////////////////////
-    void Plugin::PrivateSetPluginInstance(
-        const Info *_info,
+    void Plugin::PrivateCopyPluginInstance(
+        const ConstInfoPtr &_info,
+        const std::shared_ptr<void> &_instancePtr) const
+    {
+      this->dataPtr->Copy(_info, _instancePtr);
+    }
+
+    //////////////////////////////////////////////////
+    void Plugin::PrivateCreatePluginInstance(
+        const ConstInfoPtr &_info,
         const std::shared_ptr<void> &_dlHandlePtr) const
     {
-      this->dataPtr->Initialize(_info, _dlHandlePtr);
+      this->dataPtr->Create(_info, _dlHandlePtr);
     }
 
     //////////////////////////////////////////////////
     const std::shared_ptr<void> &Plugin::PrivateGetInstancePtr() const
     {
       return this->dataPtr->loadedInstancePtr;
+    }
+
+    //////////////////////////////////////////////////
+    const ConstInfoPtr &Plugin::PrivateGetInfoPtr() const
+    {
+      return this->dataPtr->info;
     }
 
     //////////////////////////////////////////////////

@@ -164,17 +164,17 @@ namespace ignition
     template <typename PluginType>
     void TemplatePluginPtr<PluginType>::Clear()
     {
-      this->dataPtr->PrivateSetPluginInstance(nullptr, nullptr);
+      this->dataPtr->PrivateCreatePluginInstance(nullptr, nullptr);
     }
 
     //////////////////////////////////////////////////
     template <typename PluginType>
     TemplatePluginPtr<PluginType>::TemplatePluginPtr(
-        const Info *_info,
+        const ConstInfoPtr &_info,
         const std::shared_ptr<void> &_dlHandlePtr)
       : dataPtr(new PluginType)
     {
-      dataPtr->PrivateSetPluginInstance(_info, _dlHandlePtr);
+      dataPtr->PrivateCreatePluginInstance(_info, _dlHandlePtr);
     }
   }
 }

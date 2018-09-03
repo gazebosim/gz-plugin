@@ -204,7 +204,8 @@ namespace ignition
       /// empty PluginPtr.
       /// \param[in] _dlHandlePtr A reference count for the DL handle.
       private: explicit TemplatePluginPtr(
-          const Info *_info, const std::shared_ptr<void> &_dlHandlePtr);
+          const ConstInfoPtr &_info,
+          const std::shared_ptr<void> &_dlHandlePtr);
     };
 
     /// \brief Typical usage for TemplatePluginPtr is to just hold a generic

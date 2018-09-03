@@ -17,7 +17,7 @@
 
 #include "ignition/plugin/Register.hh"
 #include "DummyPlugins.hh"
-
+#include "DummyMultiPlugin.hh"
 
 namespace test
 {
