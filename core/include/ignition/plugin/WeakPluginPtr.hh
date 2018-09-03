@@ -18,6 +18,8 @@
 #ifndef IGNITION_PLUGIN_WEAKPLUGINPTR_HH_
 #define IGNITION_PLUGIN_WEAKPLUGINPTR_HH_
 
+#include <memory>
+
 #include <ignition/plugin/PluginPtr.hh>
 
 namespace ignition
