@@ -46,6 +46,7 @@ then
   QUICK_TMP=`mktemp -t asdfXXXXXXXXXX`
 else
   CHECK_DIRS="./core/src ./core/include ./loader/src ./loader/include "\
+"./register/src ./register/include "\
 "./test/integration ./test/regression ./test/performance"
   EXCLUDE_DIRS="./src/tinyxml2"
   if [ $CPPCHECK_LT_161 -eq 1 ]; then
@@ -75,8 +76,7 @@ if [ $CPPCHECK_LT_161 -eq 0 ]; then
   CPPCHECK_BASE="$CPPCHECK_BASE --language=c++"
 fi
 CPPCHECK_INCLUDES="-I . -I ./include -I $builddir -I test"
-CPPCHECK_RULES="-UPATH_MAX -UFREEIMAGE_COLORORDER "\
-" -US_IROTH -US_IXOTH -US_IRGRP -U_XOPEN_PATH_MAX "\
+CPPCHECK_RULES="-DRTLD_NOLOAD "\
 "--max-configs=50"
 CPPCHECK_CMD1A="-j 4 --enable=style,performance,portability,information"
 CPPCHECK_CMD1B="$CPPCHECK_RULES $CPPCHECK_FILES"
