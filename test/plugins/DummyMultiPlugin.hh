@@ -9,7 +9,7 @@ namespace test
 {
 namespace util
 {
-
+/// \brief A plugin that implements multiple interfaces
 class DummyMultiPlugin
     : public DummyNameBase,
       public DummyDoubleBase,

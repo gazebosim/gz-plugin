@@ -20,26 +20,25 @@
 #include <ignition/plugin/Factory.hh>
 #include <ignition/plugin/Loader.hh>
 
-class SomeBase
-{
-
-};
-
-class SomeDerived : public SomeBase
-{
-
-};
-
-using MyFactoryNoArgs = ignition::plugin::Factory<SomeBase>;
-using MyFactoryWithArgs = ignition::plugin::Factory<SomeBase, double, int>;
+#include "../plugins/FactoryPlugins.hh"
 
 /////////////////////////////////////////////////
 TEST(Factory, Producer)
 {
   ignition::plugin::Loader pl;
+  pl.LoadLibrary(IGNFactoryPlugins_LIB);
 
-  pl.Factory<MyFactoryNoArgs>("some::factory::name")->Construct();
-  pl.Factory<MyFactoryWithArgs>("some::factory::name")->Construct(0.0, 1u);
+  for (const auto &list : {
+       pl.PluginsImplementing<test::util::NameFactory>(),
+       pl.PluginsImplementing<test::util::DoubleFactory>(),
+       pl.PluginsImplementing<test::util::IntFactory>(),
+       pl.PluginsImplementing<test::util::SomeObjectFactory>()})
+  {
+    for (const std::string &entry : list)
+    {
+      std::cout << " -- " << entry << std::endl;
+    }
+  }
 }
 
 

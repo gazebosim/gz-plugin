@@ -18,8 +18,9 @@ foreach(test ${test_targets})
       IGNBadPluginAPIVersionOld
       IGNBadPluginNoInfo
       IGNBadPluginSize
-      IGNDummyPlugins
-      IGNTemplatedPlugins)
+      IGNTemplatedPlugins
+      IGNFactoryPlugins
+      IGNDummyPlugins)
 
     target_compile_definitions(${test} PRIVATE
       "${plugin_target}_LIB=\"$<TARGET_FILE:${plugin_target}>\"")

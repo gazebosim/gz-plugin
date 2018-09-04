@@ -24,10 +24,13 @@ namespace test
 namespace util
 {
 
-std::string DummySinglePlugin::MyNameIs() const
+class DummySinglePlugin : public DummyNameBase
 {
-  return std::string("DummySinglePlugin");
-}
+  public: virtual std::string MyNameIs() const override
+  {
+    return std::string("DummySinglePlugin");
+  }
+};
 
 std::string DummyMultiPlugin::MyNameIs() const
 {

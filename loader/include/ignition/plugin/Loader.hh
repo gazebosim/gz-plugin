@@ -105,6 +105,13 @@ namespace ignition
       /// Construct(...) on the returned interface, as long as the returned
       /// interface is not a nullptr.
       ///
+      /// \remark This function is identical to:
+      ///
+      /// \code
+      /// loader->Instantiate(_pluginName)
+      ///   ->QueryInterfaceSharedPtr<InterfaceType>();
+      /// \endcode
+      ///
       /// \tparam InterfaceType
       ///   The type of interface to look for. This function is meant for
       ///   producing Factories, but any type of Interface can be requested.
