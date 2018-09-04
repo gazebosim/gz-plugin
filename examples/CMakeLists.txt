@@ -5,7 +5,18 @@ project(examples)
 # Find the ignition-plugin library
 find_package(ignition-plugin0 QUIET REQUIRED COMPONENTS all)
 find_package(ignition-common2 QUIET)
-find_package(ignition-math5 QUIET REQUIRED)
+set(IGN_COMMON_VER 2)
+if(NOT ignition-common2_FOUND)
+  find_package(ignition-common3 QUIET REQUIRED)
+  set(IGN_COMMON_VER 3)
+endif()
+
+find_package(ignition-math5 QUIET)
+set(IGN_MATH_VER 5)
+if(NOT ignition-math5_FOUND)
+  find_package(ignition-math6 QUIET REQUIRED)
+  set(IGN_MATH_VER 6)
+endif()
 
 add_subdirectory(plugins)
 
@@ -27,8 +38,8 @@ foreach(example_file ${example_files})
   target_link_libraries(${example}
     PRIVATE
       ignition-plugin0::loader
-      ignition-common2::core
-      ignition-math5::core
+      ignition-common${IGN_COMMON_VER}::core
+      ignition-math${IGN_MATH_VER}::core
   )
 
   # This is only needed for the examples that use plugins, but it doesn't hurt
