@@ -46,6 +46,7 @@ namespace ignition
       ///   A live PluginPtr to refer to. As long as the Plugin instance
       ///   continues to be held by PluginPtr containers, you can use Lock() to
       ///   retrieve a reference to it.
+      // cppcheck-suppress noExplicitConstructor
       public: WeakPluginPtr(const PluginPtr &_ptr);
 
       /// \brief Copy assignment operator
