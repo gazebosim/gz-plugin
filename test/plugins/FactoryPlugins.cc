@@ -158,5 +158,9 @@ class SomeObjectAddTwo : public SomeObject
 };
 IGNITION_ADD_FACTORY(SomeObjectAddTwo, SomeObjectFactory)
 
+IGNITION_ADD_FACTORY_ALIAS(
+    SomeObjectAddTwo, SomeObjectFactory,
+    "This factory has an alias", "and also a second alias")
+
 }
 }

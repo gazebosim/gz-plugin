@@ -34,7 +34,7 @@ namespace ignition
     /// arguments, for example:
     ///
     /// \code
-    ///   using MyFactory = Factory<InterfaceClass, InputType1, InputType2>;
+    /// using MyFactory = Factory<InterfaceClass, InputType1, InputType2>;
     /// \endcode
     ///
     /// defines a factory that can produce a `std::unique_ptr<InterfaceClass>`
@@ -43,7 +43,7 @@ namespace ignition
     /// To register a factory, use the `IGNITION_ADD_FACTORY` macro, e.g.:
     ///
     /// \code
-    /// IGNITION_ADD_FACTORY(MyFactory, ImplementedClass)
+    /// IGNITION_ADD_FACTORY(ImplementedClass, MyFactory)
     /// \endcode
     ///
     /// where `ImplementedClass` is the name of the class that your plugin
@@ -64,7 +64,7 @@ namespace ignition
       /// \private This nested class is used to implement the plugin factory.
       /// It is not intended for external use.
       public: template <typename Product>
-      class Producer;
+      class Producing;
     };
   }
 }

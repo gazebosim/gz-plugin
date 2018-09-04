@@ -26,7 +26,7 @@ namespace ignition
   {
     template <typename Interface, typename... Args>
     template <typename Product>
-    class Factory<Interface, Args...>::Producer
+    class Factory<Interface, Args...>::Producing
         : public Factory<Interface, Args...>
     {
       /// \brief This class extends Product so that it can safely perform RAII
@@ -47,7 +47,7 @@ namespace ignition
         private: std::shared_ptr<void> pluginInstancePtr;
 
         // Declare friendship
-        friend class Producer;
+        friend class Producing;
       };
 
       // Documentation inherited

@@ -52,14 +52,14 @@ struct SomeDerived : public SomeBase
 };
 
 using NoArgFactory = ignition::plugin::Factory<SomeBase>;
-using NoArgProducer = NoArgFactory::Producer<SomeDerived>;
+using NoArgProducer = NoArgFactory::Producing<SomeDerived>;
 
 using DoubleIntFactory = ignition::plugin::Factory<SomeBase, double, int>;
-using DoubleIntProducer = DoubleIntFactory::Producer<SomeDerived>;
+using DoubleIntProducer = DoubleIntFactory::Producing<SomeDerived>;
 
 using VectorFactory = ignition::plugin::Factory<
     SomeBase, const std::vector<double>&>;
-using VectorProducer = VectorFactory::Producer<SomeDerived>;
+using VectorProducer = VectorFactory::Producing<SomeDerived>;
 
 /////////////////////////////////////////////////
 TEST(Factory, ProducerNoArgs)
