@@ -66,16 +66,54 @@ namespace ignition
       /// If you want to pass in a mangled version of an interface name, e.g.
       /// the result that would be produced by typeid(T).name(), then set
       /// `demangled` to false.
-      /// \param[in] _interface Name of an interface
-      /// \param[in] _demangled Specify whether the _interface string is
-      /// demangled (default, true) or mangled (false).
+      /// \param[in] _interface
+      ///   Name of an interface
+      /// \param[in] _demangled
+      ///   Specify whether the _interface string is demangled (default, true)
+      ///   or mangled (false).
       /// \returns Names of plugins that implement the interface
       public: std::unordered_set<std::string> PluginsImplementing(
           const std::string &_interface,
           const bool demangled = true) const;
 
+      /// \brief Get a set of the names of all plugins that are currently known
+      /// to this Loader.
+      /// \return A set of all plugin names known to this Loader.
+      public: std::set<std::string> AllPlugins() const;
+
+      /// \brief Get plugin names that correspond to the specified alias string.
+      ///
+      /// If there is more than one entry in this set, then the alias cannot be
+      /// used to instantiate any of those plugins.
+      ///
+      /// If the name of a plugin matches the alias string, then that plugin
+      /// will be instantiated any time the string is used to instantiate a
+      /// plugin, no matter how many other plugins use the alias.
+      /// \param[in] _alias
+      ///   The std::string of the alias
+      /// \return A set of plugins that correspond to the desired alias
+      public: std::set<std::string> PluginsWithAlias(
+          const std::string &_alias) const;
+
+      /// \brief Get the aliases of the plugin with the given name
+      /// \param[in] _pluginName
+      ///   The name of the desired plugin
+      /// \return A set of aliases corresponding to the desired plugin
+      public: std::set<std::string> AliasesOfPlugin(
+          const std::string &_pluginName) const;
+
+      /// \brief Resolve the plugin name or alias into the name of the plugin
+      /// that it maps to. If this is a name or alias that does not uniquely map
+      /// to a known plugin, then the return value will be an empty string.
+      /// \param[in] _nameOrAlias
+      ///   The name or alias of the plugin of interest.
+      /// \return The name of the plugin being referred to, or an empty string
+      /// if no such plugin is known.
+      public: std::string LookupPlugin(const std::string &_nameOrAlias) const;
+
       /// \brief Load a library at the given path
-      /// \param[in] _pathToLibrary is the path to a libaray
+      /// \param[in] _pathToLibrary
+      ///   The path to a libaray
       /// \returns The set of plugins that have been loaded from the library
       public: std::unordered_set<std::string> LoadLibrary(
                   const std::string &_pathToLibrary);
@@ -134,21 +172,22 @@ namespace ignition
 
       /// \brief Get a pointer to the Info corresponding to _pluginName.
       ///
-      /// \param[in] _pluginName The name of the plugin that you want to
-      /// instantiate.
+      /// \param[in] _pluginNameOrAlias
+      ///   The name or alias of the plugin that you
+      ///   want to instantiate.
       /// \return Pointer to the corresponding Info, or nullptr if there
       /// is no info for the requested _pluginName.
-      private: ConstInfoPtr PrivateGetInfo(
-                  const std::string &_pluginName) const;
+      private: ConstInfoPtr PrivateGetInfo(const std::string &_resolvedName) const;
 
       /// \brief Get a std::shared_ptr that manages the lifecycle of the shared
       /// library handle which provides the specified plugin.
       ///
-      /// \param[in] _pluginName Name of the plugin that is being loaded.
+      /// \param[in] _pluginNameOrAlias
+      ///   Name or alias of the plugin that is being loaded.
       /// \return Reference-counting pointer to a library handle, or else a
       /// nullptr if the plugin is not available.
       private: std::shared_ptr<void> PrivateGetPluginDlHandlePtr(
-                  const std::string &_pluginName) const;
+                  const std::string &_pluginNameOrAlias) const;
 
       class Implementation;
       IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING

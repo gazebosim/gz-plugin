@@ -53,4 +53,25 @@
 #define IGNITION_ADD_PLUGIN(...) \
   DETAIL_IGNITION_ADD_PLUGIN(__VA_ARGS__)
 
+/// \brief Add an alias for one of your plugins.
+///
+/// This macro can be put in any namespace and may be called any number of
+/// times. It can be called multiple times on the same plugin class in order to
+/// register multiple aliases, e.g.:
+///
+/// \code
+/// IGNITION_ADD_PLUGIN_ALIAS(PluginClass, "PluginClass")
+/// IGNITION_ADD_PLUGIN_ALIAS(PluginClass, "SomeOtherName", "Yet another name")
+/// IGNOTION_ADD_PLUGIN_ALIAS(AnotherPluginClass, "Foo", "Bar", "Baz")
+/// \endcode
+///
+/// You can give the same alias to multiple plugins, but then that alias can no
+/// longer be used to instantiate any plugin.
+///
+/// If you give a plugin an alias string that matches the demangled symbol name
+/// of another plugin, then the Loader will always prefer to instantiate the
+/// plugin whose symbol name matches that string.
+#define IGNITION_ADD_PLUGIN_ALIAS(PluginClass, ...) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS(PluginClass, __VA_ARGS__)
+
 #endif

@@ -442,8 +442,9 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
         static void RegisterAlias(Aliases&&... aliases)
         {
           // Dev note (MXG): We expect the RegisterAlias function to be called
-          // using the IGN_ADD_ALIAS(~) macro, which should never contain
-          // any interfaces. Therefore, this parameter pack should be empty.
+          // using the IGNITION_ADD_PLUGIN_ALIAS(~) macro, which should never
+          // contain any interfaces. Therefore, this parameter pack should be
+          // empty.
           //
           // In the future, we could allow Interfaces and Aliases to be
           // specified simultaneously, but that would be very tricky to do with
@@ -473,7 +474,7 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 /// uniquely-named instance of the class with static lifetime. Since the class
 /// instance has a static lifetime, it will be constructed when the shared
 /// library is loaded. When it is constructed, the Register function will
-/// be called
+/// be called.
 #define DETAIL_IGNITION_ADD_PLUGIN_HELPER(UniqueID, ...) \
   namespace ignition \
   { \
@@ -503,10 +504,54 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 
 
 //////////////////////////////////////////////////
-/// We use the __COUNTER__ here to give each plugin instantiation its own unique
+/// We use the __COUNTER__ here to give each plugin registration its own unique
 /// name, which is required in order to statically initialize each one.
 #define DETAIL_IGNITION_ADD_PLUGIN(...) \
   DETAIL_IGNITION_ADD_PLUGIN_WITH_COUNTER(__COUNTER__, __VA_ARGS__)
+
+
+//////////////////////////////////////////////////
+/// This macro creates a uniquely-named class whose constructor calls the
+/// ignition::plugin::detail::Registrar::RegisterAlias function. It then
+/// declares a uniquely-named instance of the class with static lifetime. Since
+/// the class instance has a static lifetime, it will be constructed when the
+/// shared library is loaded. When it is constructed, the Register function will
+/// be called.
+#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_HELPER(UniqueID, PluginClass, ...) \
+  namespace ignition \
+  { \
+    namespace plugin \
+    { \
+      namespace \
+      { \
+        struct ExecuteWhenLoadingLibrary##UniqueID \
+        { \
+          ExecuteWhenLoadingLibrary##UniqueID() \
+          { \
+            ::ignition::plugin::detail::Registrar<PluginClass>::RegisterAlias( \
+                __VA_ARGS__); \
+          } \
+        }; \
+  \
+        static ExecuteWhenLoadingLibrary##UniqueID execute##UniqueID; \
+      } /* namespace */ \
+    } \
+  }
+
+
+//////////////////////////////////////////////////
+/// This macro is needed to force the __COUNTER__ macro to expand to a value
+/// before being passed to the *_HELPER macro.
+#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER(UniqueID, ...) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_HELPER(UniqueID, __VA_ARGS__)
+
+
+//////////////////////////////////////////////////
+/// We use the __COUNTER__ here to give each plugin registration its own unique
+/// name, which is required in order to statically initialize each one.
+#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS(...) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER(__COUNTER__, __VA_ARGS__)
+
 
 
 #endif

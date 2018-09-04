@@ -77,6 +77,7 @@ TEST(Loader, LoadExistingLibrary)
   EXPECT_EQ(1u, pl.PluginsImplementing(
               typeid(test::util::DummyDoubleBase).name(), false).size());
 
+  EXPECT_EQ(2u, pl.AllPlugins().size());
 
   ignition::plugin::PluginPtr firstPlugin =
       pl.Instantiate("test::util::DummySinglePlugin");

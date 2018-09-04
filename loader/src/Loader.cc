@@ -57,7 +57,21 @@ namespace ignition
         const std::shared_ptr<void> &_dlHandle,
         const std::string &_pathToLibrary) const;
 
+      /// \sa Loader::ForgetLibrary()
       public: bool ForgetLibrary(void *_dlHandle);
+
+      /// \brief Pass in a plugin name or alias, and this will give back the
+      /// plugin name that corresponds to it. If the name or alias could not be
+      /// found, this returns an empty string.
+      /// \return The demangled symbol name of the desired plugin, or an empty
+      /// string if no matching plugin could be found.
+      public: std::string LookupPlugin(const std::string &_nameOrAlias) const;
+
+      public: using AliasMap = std::map<std::string, std::set<std::string>>;
+      /// \brief A map from known alias names to the plugin names that they
+      /// correspond to. Since an alias might refer to more than one plugin, the
+      /// key of this map is a set.
+      public: AliasMap aliases;
 
       public: using PluginToDlHandleMap =
           std::unordered_map< std::string, std::shared_ptr<void> >;
@@ -124,12 +138,51 @@ namespace ignition
       for (const auto &pair : dataPtr->plugins)
       {
         const ConstInfoPtr &plugin = pair.second;
-        const size_t iSize = plugin->interfaces.size();
-        pretty << "\t\t[" << plugin->name << "] which implements "
-               << iSize << (iSize == 1? " interface" : " interfaces") << ":\n";
+        const std::size_t aSize = plugin->aliases.size();
+
+        pretty << "\t\t[" << plugin->name << "]\n";
+        if (0 < aSize)
+        {
+          pretty << "\t\t\thas "
+                 << aSize << (aSize == 1? " alias" : " aliases") << ":\n";
+          for (const auto &alias : plugin->aliases)
+            pretty << "\t\t\t\t[" << alias << "]\n";
+        }
+        else
+        {
+          pretty << "has no aliases\n";
+        }
+
+        const std::size_t iSize = plugin->interfaces.size();
+        pretty << "\t\t\timplements " << iSize
+               << (iSize == 1? " interface" : " interfaces") << ":\n";
         for (const auto &interface : plugin->demangledInterfaces)
-          pretty << "\t\t\t" << interface << "\n";
+          pretty << "\t\t\t\t" << interface << "\n";
       }
+
+      Implementation::AliasMap badAliases;
+      for (const auto &entry : this->dataPtr->aliases)
+      {
+        if (entry.second.size() > 1)
+        {
+          badAliases.insert(entry);
+        }
+      }
+
+      if (!badAliases.empty())
+      {
+        const std::size_t aSize = badAliases.size();
+        pretty << "\tThere " << (aSize == 1? "is " : "are ")  << aSize
+               << (aSize == 1? " alias" : " aliases") << " with a "
+               << "name collision:\n";
+        for (const auto &alias : badAliases)
+        {
+          pretty << "\t\t[" << alias.first << "] collides between:\n";
+          for (const auto &name : alias.second)
+            pretty << "\t\t\t[" << name << "]\n";
+        }
+      }
+
       pretty << std::endl;
 
       return pretty.str();
@@ -171,6 +224,10 @@ namespace ignition
       {
         // Demangle the plugin name before creating an entry for it.
         plugin.name = Demangle(plugin.name);
+
+        // Add the plugin's aliases to the alias map
+        for (const std::string &alias : plugin.aliases)
+          this->dataPtr->aliases[alias].insert(plugin.name);
 
         // Make a list of the demangled interface names for later convenience.
         for (auto const &interface : plugin.interfaces)
@@ -234,11 +291,68 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
+    std::set<std::string> Loader::AllPlugins() const
+    {
+      std::set<std::string> result;
+
+      for (const auto &entry : this->dataPtr->plugins)
+        result.insert(result.end(), entry.first);
+
+      return result;
+    }
+
+    /////////////////////////////////////////////////
+    std::set<std::string> Loader::PluginsWithAlias(
+        const std::string &_alias) const
+    {
+      std::set<std::string> result;
+
+      const Implementation::AliasMap::const_iterator names =
+          this->dataPtr->aliases.find(_alias);
+
+      if (names != this->dataPtr->aliases.end())
+        result = names->second;
+
+      const Implementation::PluginMap::const_iterator plugin =
+          this->dataPtr->plugins.find(_alias);
+
+      if (plugin != this->dataPtr->plugins.end())
+        result.insert(_alias);
+
+      return result;
+    }
+
+    /////////////////////////////////////////////////
+    std::set<std::string> Loader::AliasesOfPlugin(
+        const std::string &_pluginName) const
+    {
+      std::set<std::string> result;
+
+      const Implementation::PluginMap::const_iterator plugin =
+          this->dataPtr->plugins.find(_pluginName);
+
+      if (plugin != this->dataPtr->plugins.end())
+        return plugin->second->aliases;
+
+      return {};
+    }
+
+    /////////////////////////////////////////////////
+    std::string Loader::LookupPlugin(const std::string &_nameOrAlias) const
+    {
+      return this->dataPtr->LookupPlugin(_nameOrAlias);
+    }
+
+    /////////////////////////////////////////////////
     PluginPtr Loader::Instantiate(
         const std::string &_pluginName) const
     {
-      PluginPtr ptr(this->PrivateGetInfo(_pluginName),
-                    this->PrivateGetPluginDlHandlePtr(_pluginName));
+      const std::string &resolvedName = this->LookupPlugin(_pluginName);
+      if (resolvedName.empty())
+        return PluginPtr();
+
+      PluginPtr ptr(this->PrivateGetInfo(resolvedName),
+                    this->PrivateGetPluginDlHandlePtr(resolvedName));
 
       if (auto *enableFromThis = ptr->QueryInterface<EnablePluginFromThis>())
         enableFromThis->PrivateSetPluginFromThis(ptr);
@@ -287,18 +401,20 @@ namespace ignition
 
     /////////////////////////////////////////////////
     ConstInfoPtr Loader::PrivateGetInfo(
-        const std::string &_pluginName) const
+        const std::string &_resolvedName) const
     {
       const Implementation::PluginMap::const_iterator it =
-          this->dataPtr->plugins.find(_pluginName);
+          this->dataPtr->plugins.find(_resolvedName);
 
       if (this->dataPtr->plugins.end() == it)
       {
-        std::cerr << "Failed to get info for plugin ["
-                  << _pluginName
-                  << "] since it has not been loaded."
-                  << std::endl;
+        // LCOV_EXCL_START
+        std::cerr << "[ignition::Loader::PrivateGetInfo] A resolved name ["
+                  << _resolvedName << "] could not be found in the PluginMap. "
+                  << "This should not be possible! Please report this bug!\n";
+        assert(false);
         return nullptr;
+        // LCOV_EXCL_STOP
       }
 
       return it->second;
@@ -306,13 +422,22 @@ namespace ignition
 
     /////////////////////////////////////////////////
     std::shared_ptr<void> Loader::PrivateGetPluginDlHandlePtr(
-        const std::string &_pluginName) const
+        const std::string &_resolvedName) const
     {
       Implementation::PluginToDlHandleMap::iterator it =
-          dataPtr->pluginToDlHandlePtrs.find(_pluginName);
+          dataPtr->pluginToDlHandlePtrs.find(_resolvedName);
 
       if (this->dataPtr->pluginToDlHandlePtrs.end() == it)
+      {
+        // LCOV_EXCL_START
+        std::cerr << "[ignition::Loader::PrivateGetInfo] A resolved name ["
+                  << _resolvedName << "] could not be found in the "
+                  << "PluginToDlHandleMap. This should not be possible! Please "
+                  << "report this bug!\n";
+        assert(false);
         return nullptr;
+        // LCOV_EXCL_STOP
+      }
 
       return it->second;
     }
@@ -479,7 +604,7 @@ namespace ignition
         // API version that it expects.
 
         std::cerr << "The library [" << _pathToLibrary << "] is using an "
-                  << " incompatible version [" << version << "] of the "
+                  << "incompatible version [" << version << "] of the "
                   << "ignition::plugin Info API. The version in this library "
                   << "is [" << INFO_API_VERSION << "].\n";
         return loadedPlugins;
@@ -516,6 +641,44 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
+    std::string Loader::Implementation::LookupPlugin(
+        const std::string &_nameOrAlias) const
+    {
+      const PluginMap::const_iterator name = this->plugins.find(_nameOrAlias);
+
+      if (this->plugins.end() != name)
+        return _nameOrAlias;
+
+      const AliasMap::const_iterator alias = this->aliases.find(_nameOrAlias);
+      if (this->aliases.end() != alias && !alias->second.empty())
+      {
+        if (alias->second.size() == 1)
+          return *alias->second.begin();
+
+        // We use a stringstream because we're going to output to std::cerr, and
+        // we want it all to print at once, but std::cerr does not support
+        // buffering.
+        std::stringstream ss;
+
+        ss << "[ignition::plugin::Loader::LookupPlugin] Failed to resolve the "
+           << "alias [" << _nameOrAlias << "] because it refers to multiple "
+           << "plugins:\n";
+        for (const std::string &plugin : alias->second)
+          ss << " -- [" << plugin << "]\n";
+
+        std::cerr << ss.str();
+
+        return "";
+      }
+
+      std::cerr << "[ignition::plugin::Loader::LookupPlugin] Failed to get "
+                << "info for [" << _nameOrAlias << "]. Could not find a plugin "
+                << "with that name or alias.\n";
+
+      return "";
+    }
+
+    /////////////////////////////////////////////////
     bool Loader::Implementation::ForgetLibrary(void *_dlHandle)
     {
       DlHandleToPluginMap::iterator it = dlHandleToPluginMap.find(_dlHandle);
@@ -523,6 +686,14 @@ namespace ignition
         return false;
 
       const std::unordered_set<std::string> &forgottenPlugins = it->second;
+
+      for (const std::string &forget : forgottenPlugins)
+      {
+        // Erase each alias entry corresponding to this plugin
+        const ConstInfoPtr &info = plugins.at(forget);
+        for (const std::string &alias : info->aliases)
+          this->aliases.at(alias).erase(info->name);
+      }
 
       for (const std::string &forget : forgottenPlugins)
       {
