@@ -20,6 +20,7 @@
 #define IGNITION_PLUGIN_LOADER_HH_
 
 #include <memory>
+#include <set>
 #include <string>
 #include <typeinfo>
 #include <unordered_set>
@@ -177,7 +178,8 @@ namespace ignition
       ///   want to instantiate.
       /// \return Pointer to the corresponding Info, or nullptr if there
       /// is no info for the requested _pluginName.
-      private: ConstInfoPtr PrivateGetInfo(const std::string &_resolvedName) const;
+      private: ConstInfoPtr PrivateGetInfo(
+                  const std::string &_resolvedName) const;
 
       /// \brief Get a std::shared_ptr that manages the lifecycle of the shared
       /// library handle which provides the specified plugin.
