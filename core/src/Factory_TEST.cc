@@ -15,10 +15,10 @@
  *
 */
 
+#include <gtest/gtest.h>
+
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 #include <ignition/plugin/Factory.hh>
 
@@ -30,7 +30,6 @@
 
 struct SomeBase
 {
-
 };
 
 struct SomeDerived : public SomeBase
@@ -45,7 +44,7 @@ struct SomeDerived : public SomeBase
     // Do nothing
   }
 
-  SomeDerived(const std::vector<double>&)
+  explicit SomeDerived(const std::vector<double>&)
   {
     // Do nothing
   }

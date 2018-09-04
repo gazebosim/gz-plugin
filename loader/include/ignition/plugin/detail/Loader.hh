@@ -19,6 +19,7 @@
 #ifndef IGNITION_PLUGIN_DETAIL_LOADER_HH_
 #define IGNITION_PLUGIN_DETAIL_LOADER_HH_
 
+#include <memory>
 #include <string>
 #include <unordered_set>
 #include <ignition/plugin/EnablePluginFromThis.hh>
