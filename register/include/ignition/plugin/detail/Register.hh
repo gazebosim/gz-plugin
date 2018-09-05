@@ -373,7 +373,8 @@ namespace ignition
       template <typename PluginClass>
       struct IfEnablePluginFromThis
           : IfEnablePluginFromThisImpl<PluginClass,
-                std::is_base_of<EnablePluginFromThis, PluginClass>::value> { }
+                std::is_base_of<EnablePluginFromThis, PluginClass>::value>
+      { }; // NOLINT
 
       //////////////////////////////////////////////////
       /// \brief This specialization of the Register class will be called when
