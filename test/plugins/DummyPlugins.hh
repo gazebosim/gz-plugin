@@ -67,6 +67,11 @@ class DummyGetSomeObjectBase
   public: virtual std::unique_ptr<SomeObject> GetSomeObject() const = 0;
 };
 
+class DummyGetPluginInstancePtr
+{
+  public: virtual std::shared_ptr<void> PluginInstancePtr() const = 0;
+};
+
 }
 }
 

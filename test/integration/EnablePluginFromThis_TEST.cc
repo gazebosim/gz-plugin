@@ -40,6 +40,17 @@ TEST(EnablePluginFromThis, BasicInstantiate)
   ignition::plugin::PluginPtr fromThis = fromThisInterface->PluginFromThis();
   EXPECT_EQ(plugin, fromThis);
 
+  ignition::plugin::ConstPluginPtr constFromThis =
+      static_cast<const ignition::plugin::EnablePluginFromThis*>(
+        fromThisInterface)->PluginFromThis();
+  EXPECT_EQ(constFromThis, fromThis);
+
+  test::util::DummyGetPluginInstancePtr *getInstance =
+      plugin->QueryInterface<test::util::DummyGetPluginInstancePtr>();
+  ASSERT_TRUE(getInstance);
+  std::shared_ptr<void> ptr = getInstance->PluginInstancePtr();
+  EXPECT_NE(nullptr, ptr);
+
 
   // Note: the DummySinglePlugin class does not inherit EnablePluginFromThis
   plugin = pl.Instantiate("test::util::DummySinglePlugin");
