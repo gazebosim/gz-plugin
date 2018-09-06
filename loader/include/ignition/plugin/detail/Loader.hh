@@ -21,6 +21,7 @@
 
 #include <string>
 #include <unordered_set>
+#include <ignition/plugin/EnablePluginFromThis.hh>
 #include <ignition/plugin/Loader.hh>
 
 namespace ignition
@@ -37,8 +38,14 @@ namespace ignition
     PluginPtrType Loader::Instantiate(
         const std::string &_pluginName) const
     {
-      return PluginPtrType(this->PrivateGetInfo(_pluginName),
-                           this->PrivateGetPluginDlHandlePtr(_pluginName));
+       PluginPtrType ptr(this->PrivateGetInfo(_pluginName),
+                         this->PrivateGetPluginDlHandlePtr(_pluginName));
+
+       if (auto *enableFromThis =
+              ptr->template QueryInterface<EnablePluginFromThis>())
+         enableFromThis->PrivateSetPluginFromThis(ptr);
+
+       return ptr;
     }
   }
 }

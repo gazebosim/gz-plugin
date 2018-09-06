@@ -20,6 +20,7 @@
 #define IGNITION_PLUGIN_INFO_HH_
 
 #include <functional>
+#include <memory>
 #include <set>
 #include <string>
 #include <unordered_map>
@@ -81,6 +82,7 @@ namespace ignition
     /// This typedef is used simultaneously by detail/Register.hh and Loader.cc,
     /// so we store it in a location that is visible to both of them.
     using InfoMap = std::unordered_map<std::string, Info>;
+    using ConstInfoPtr = std::shared_ptr<const Info>;
   }
 }
 

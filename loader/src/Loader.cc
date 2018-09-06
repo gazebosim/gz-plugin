@@ -76,7 +76,7 @@ namespace ignition
       /// maintain the ordering of these member variables.
       public: PluginToDlHandleMap pluginToDlHandlePtrs;
 
-      public: using PluginMap = std::unordered_map<std::string, Info>;
+      public: using PluginMap = std::unordered_map<std::string, ConstInfoPtr>;
       /// \brief A map from known plugin names to their Info
       ///
       /// CRUCIAL DEV NOTE (MXG): `plugins` MUST come AFTER
@@ -123,11 +123,11 @@ namespace ignition
       pretty << "\tKnown Plugins: " << dataPtr->plugins.size() << std::endl;
       for (const auto &pair : dataPtr->plugins)
       {
-        const Info &plugin = pair.second;
-        const size_t iSize = plugin.interfaces.size();
-        pretty << "\t\t[" << plugin.name << "] which implements "
+        const ConstInfoPtr &plugin = pair.second;
+        const size_t iSize = plugin->interfaces.size();
+        pretty << "\t\t[" << plugin->name << "] which implements "
                << iSize << (iSize == 1? " interface" : " interfaces") << ":\n";
-        for (const auto &interface : plugin.demangledInterfaces)
+        for (const auto &interface : plugin->demangledInterfaces)
           pretty << "\t\t\t" << interface << "\n";
       }
       pretty << std::endl;
@@ -177,7 +177,8 @@ namespace ignition
           plugin.demangledInterfaces.insert(Demangle(interface.first));
 
         // Add the plugin to the map
-        this->dataPtr->plugins.insert(std::make_pair(plugin.name, plugin));
+        this->dataPtr->plugins.insert(
+              std::make_pair(plugin.name, std::make_shared<Info>(plugin)));
 
         // Add the plugin's name to the set of newPlugins
         newPlugins.insert(plugin.name);
@@ -197,7 +198,7 @@ namespace ignition
       std::unordered_set<std::string> interfaces;
       for (auto const &plugin : this->dataPtr->plugins)
       {
-        for (auto const &interface : plugin.second.demangledInterfaces)
+        for (auto const &interface : plugin.second->demangledInterfaces)
           interfaces.insert(interface);
       }
       return interfaces;
@@ -214,18 +215,18 @@ namespace ignition
       {
         for (auto const &plugin : this->dataPtr->plugins)
         {
-          if (plugin.second.demangledInterfaces.find(_interface) !=
-              plugin.second.demangledInterfaces.end())
-            plugins.insert(plugin.second.name);
+          if (plugin.second->demangledInterfaces.find(_interface) !=
+              plugin.second->demangledInterfaces.end())
+            plugins.insert(plugin.second->name);
         }
       }
       else
       {
         for (auto const &plugin : this->dataPtr->plugins)
         {
-          if (plugin.second.interfaces.find(_interface) !=
-              plugin.second.interfaces.end())
-            plugins.insert(plugin.second.name);
+          if (plugin.second->interfaces.find(_interface) !=
+              plugin.second->interfaces.end())
+            plugins.insert(plugin.second->name);
         }
       }
 
@@ -236,8 +237,13 @@ namespace ignition
     PluginPtr Loader::Instantiate(
         const std::string &_pluginName) const
     {
-      return PluginPtr(this->PrivateGetInfo(_pluginName),
-                       this->PrivateGetPluginDlHandlePtr(_pluginName));
+      PluginPtr ptr(this->PrivateGetInfo(_pluginName),
+                    this->PrivateGetPluginDlHandlePtr(_pluginName));
+
+      if (auto *enableFromThis = ptr->QueryInterface<EnablePluginFromThis>())
+        enableFromThis->PrivateSetPluginFromThis(ptr);
+
+      return ptr;
     }
 
     /////////////////////////////////////////////////
@@ -280,10 +286,10 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    const Info *Loader::PrivateGetInfo(
+    ConstInfoPtr Loader::PrivateGetInfo(
         const std::string &_pluginName) const
     {
-      Implementation::PluginMap::const_iterator it =
+      const Implementation::PluginMap::const_iterator it =
           this->dataPtr->plugins.find(_pluginName);
 
       if (this->dataPtr->plugins.end() == it)
@@ -295,7 +301,7 @@ namespace ignition
         return nullptr;
       }
 
-      return &(it->second);
+      return it->second;
     }
 
     /////////////////////////////////////////////////

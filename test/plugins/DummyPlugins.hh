@@ -67,27 +67,9 @@ class DummyGetSomeObjectBase
   public: virtual std::unique_ptr<SomeObject> GetSomeObject() const = 0;
 };
 
-class DummyMultiPlugin
-    : public DummyNameBase,
-      public DummyDoubleBase,
-      public DummyIntBase,
-      public DummySetterBase,
-      public DummyGetSomeObjectBase
+class DummyGetPluginInstancePtr
 {
-  public: virtual std::string MyNameIs() const override;
-  public: virtual double MyDoubleValueIs() const override;
-  public: virtual int MyIntegerValueIs() const override;
-  public: virtual std::unique_ptr<SomeObject> GetSomeObject() const override;
-
-  public: virtual void SetName(const std::string &_name) override;
-  public: virtual void SetDoubleValue(const double _val) override;
-  public: virtual void SetIntegerValue(const int _val) override;
-
-  public: DummyMultiPlugin();
-
-  private: std::string name;
-  private: double val;
-  private: int intVal;
+  public: virtual std::shared_ptr<void> PluginInstancePtr() const = 0;
 };
 
 }

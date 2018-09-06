@@ -138,7 +138,7 @@ namespace ignition
       /// instantiate.
       /// \return Pointer to the corresponding Info, or nullptr if there
       /// is no info for the requested _pluginName.
-      private: const Info *PrivateGetInfo(
+      private: ConstInfoPtr PrivateGetInfo(
                   const std::string &_pluginName) const;
 
       /// \brief Get a std::shared_ptr that manages the lifecycle of the shared
