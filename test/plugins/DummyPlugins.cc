@@ -68,6 +68,11 @@ void DummyMultiPlugin::SetIntegerValue(const int _val)
   intVal = _val;
 }
 
+std::shared_ptr<void> DummyMultiPlugin::PluginInstancePtr() const
+{
+  return this->PluginInstancePtrFromThis();
+}
+
 DummyMultiPlugin::DummyMultiPlugin()
   : name("DummyMultiPlugin"),
     val(3.14159),
@@ -77,7 +82,10 @@ DummyMultiPlugin::DummyMultiPlugin()
 }
 
 // Show that we can add plugins from within a namespace
-IGNITION_ADD_PLUGIN(DummyMultiPlugin, DummyGetSomeObjectBase)
+IGNITION_ADD_PLUGIN(
+    DummyMultiPlugin,
+    DummyGetSomeObjectBase,
+    DummyGetPluginInstancePtr)
 
 }
 }

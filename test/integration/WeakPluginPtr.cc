@@ -56,6 +56,39 @@ TEST(WeakPluginPtr, Lifecycle)
 }
 
 /////////////////////////////////////////////////
+TEST(WeakPluginPtr, CopyMove)
+{
+  ignition::plugin::Loader pl;
+  pl.LoadLibrary(IGNDummyPlugins_LIB);
+
+  ignition::plugin::PluginPtr plugin =
+      pl.Instantiate("test::util::DummyMultiPlugin");
+
+  ignition::plugin::WeakPluginPtr weakConstructFromPlugin(plugin);
+  EXPECT_EQ(plugin, weakConstructFromPlugin.Lock());
+
+  ignition::plugin::WeakPluginPtr weakCopyFromOther(
+        weakConstructFromPlugin);
+  EXPECT_EQ(plugin, weakConstructFromPlugin.Lock());
+
+  ignition::plugin::WeakPluginPtr weakCopyAssignFromOther;
+  weakCopyAssignFromOther = weakConstructFromPlugin;
+  EXPECT_EQ(plugin, weakCopyAssignFromOther.Lock());
+
+  ignition::plugin::WeakPluginPtr weakMoveFromOther(
+        std::move(weakCopyFromOther));
+  EXPECT_EQ(plugin, weakMoveFromOther.Lock());
+
+  ignition::plugin::WeakPluginPtr weakMoveAssignFromOther;
+  weakMoveAssignFromOther = std::move(weakCopyAssignFromOther);
+  EXPECT_EQ(plugin, weakMoveAssignFromOther.Lock());
+
+  ignition::plugin::WeakPluginPtr weakAssignFromPlugin;
+  weakAssignFromPlugin = plugin;
+  EXPECT_EQ(plugin, weakAssignFromPlugin.Lock());
+}
+
+/////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);

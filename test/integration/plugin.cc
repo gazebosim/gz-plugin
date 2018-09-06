@@ -64,7 +64,7 @@ TEST(Loader, LoadExistingLibrary)
   std::cout << pl.PrettyStr();
 
   // Make sure the expected interfaces were loaded.
-  EXPECT_EQ(6u, pl.InterfacesImplemented().size());
+  EXPECT_EQ(7u, pl.InterfacesImplemented().size());
   EXPECT_EQ(1u, pl.InterfacesImplemented().count("test::util::DummyNameBase"));
 
   EXPECT_EQ(2u, pl.PluginsImplementing<::test::util::DummyNameBase>().size());
@@ -210,6 +210,10 @@ TEST(SpecializedPluginPtr, Construction)
   SomeInterface *someInterface = plugin->QueryInterface<SomeInterface>();
   EXPECT_TRUE(usedSpecializedInterfaceAccess);
   EXPECT_EQ(nullptr, someInterface);
+
+  ignition::plugin::PluginPtr empty;
+  EXPECT_TRUE(empty.IsEmpty());
+  EXPECT_FALSE(empty->HasInterface<SomeInterface>());
 }
 
 /////////////////////////////////////////////////
