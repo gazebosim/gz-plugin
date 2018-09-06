@@ -326,8 +326,6 @@ namespace ignition
     std::set<std::string> Loader::AliasesOfPlugin(
         const std::string &_pluginName) const
     {
-      std::set<std::string> result;
-
       const Implementation::PluginMap::const_iterator plugin =
           this->dataPtr->plugins.find(_pluginName);
 
