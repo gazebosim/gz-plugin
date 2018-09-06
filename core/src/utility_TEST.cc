@@ -74,7 +74,7 @@ TEST(Demangle, FakeSymbol)
 #ifdef NDEBUG
   // When a fake symbol is passed in, we expect it to be returned exactly as it
   // was provided.
-  EXPECT_EQ("NotReallyASymbol!@#$", Demangle("NotReallyASymbol!@#$"));
+  EXPECT_EQ("NotReallyASymbol!@#$", DemangleSymbol("NotReallyASymbol!@#$"));
 #else
   // If NDEBUG is not defined, we expect an assertion to be triggered, so we
   // will skip this test.
