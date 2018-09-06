@@ -24,7 +24,7 @@
 #include "../plugins/DummyPlugins.hh"
 
 /////////////////////////////////////////////////
-TEST(EnableSharedFromThis, BasicInstantiate)
+TEST(EnablePluginFromThis, BasicInstantiate)
 {
   ignition::plugin::Loader pl;
   pl.LoadLibrary(IGNDummyPlugins_LIB);
@@ -58,7 +58,7 @@ using MySpecializedPluginPtr = ignition::plugin::SpecializedPluginPtr<
 >;
 
 /////////////////////////////////////////////////
-TEST(EnableSharedFromThis, TemplatedInstantiate)
+TEST(EnablePluginFromThis, TemplatedInstantiate)
 {
   ignition::plugin::Loader pl;
   pl.LoadLibrary(IGNDummyPlugins_LIB);
