@@ -64,12 +64,12 @@ TEST(Loader, LoadExistingLibrary)
   std::cout << pl.PrettyStr();
 
   // Make sure the expected interfaces were loaded.
-  EXPECT_EQ(6u, pl.InterfacesImplemented().size());
+  EXPECT_EQ(7u, pl.InterfacesImplemented().size());
   EXPECT_EQ(1u, pl.InterfacesImplemented().count("test::util::DummyNameBase"));
 
-  EXPECT_EQ(2u, pl.PluginsImplementing<::test::util::DummyNameBase>().size());
-  EXPECT_EQ(2u, pl.PluginsImplementing("test::util::DummyNameBase").size());
-  EXPECT_EQ(2u, pl.PluginsImplementing(
+  EXPECT_EQ(3u, pl.PluginsImplementing<::test::util::DummyNameBase>().size());
+  EXPECT_EQ(3u, pl.PluginsImplementing("test::util::DummyNameBase").size());
+  EXPECT_EQ(3u, pl.PluginsImplementing(
               typeid(test::util::DummyNameBase).name(), false).size());
 
   EXPECT_EQ(1u, pl.PluginsImplementing<::test::util::DummyDoubleBase>().size());
@@ -77,11 +77,12 @@ TEST(Loader, LoadExistingLibrary)
   EXPECT_EQ(1u, pl.PluginsImplementing(
               typeid(test::util::DummyDoubleBase).name(), false).size());
 
-  EXPECT_EQ(2u, pl.AllPlugins().size());
+  EXPECT_EQ(3u, pl.AllPlugins().size());
 
   ignition::plugin::PluginPtr firstPlugin =
       pl.Instantiate("test::util::DummySinglePlugin");
   EXPECT_FALSE(firstPlugin.IsEmpty());
+  EXPECT_TRUE(static_cast<bool>(firstPlugin));
 
   EXPECT_TRUE(firstPlugin->HasInterface<test::util::DummyNameBase>());
   EXPECT_TRUE(firstPlugin->HasInterface("test::util::DummyNameBase"));
@@ -210,6 +211,14 @@ TEST(SpecializedPluginPtr, Construction)
   SomeInterface *someInterface = plugin->QueryInterface<SomeInterface>();
   EXPECT_TRUE(usedSpecializedInterfaceAccess);
   EXPECT_EQ(nullptr, someInterface);
+
+  ignition::plugin::PluginPtr empty;
+  EXPECT_TRUE(empty.IsEmpty());
+  EXPECT_FALSE(empty->HasInterface<SomeInterface>());
+  EXPECT_FALSE(static_cast<bool>(empty));
+  EXPECT_EQ(nullptr, empty->QueryInterfaceSharedPtr<SomeInterface>());
+  ignition::plugin::ConstPluginPtr constEmpty;
+  EXPECT_EQ(nullptr, constEmpty->QueryInterfaceSharedPtr<SomeInterface>());
 }
 
 /////////////////////////////////////////////////
@@ -375,7 +384,7 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
   ignition::plugin::Loader pl;
   pl.LoadLibrary(IGNDummyPlugins_LIB);
 
-  // as_shared_pointer without specialization
+  // QueryInterfaceSharedPtr without specialization
   {
     ignition::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");
@@ -385,9 +394,21 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
     EXPECT_TRUE(int_ptr.get());
     EXPECT_EQ(5, int_ptr->MyIntegerValueIs());
 
+    std::shared_ptr<const test::util::DummyIntBase> const_int_ptr =
+        ignition::plugin::ConstPluginPtr(plugin)
+        ->QueryInterfaceSharedPtr<test::util::DummyIntBase>();
+    EXPECT_TRUE(const_int_ptr.get());
+    EXPECT_EQ(5, int_ptr->MyIntegerValueIs());
+
+
     std::shared_ptr<SomeInterface> some_ptr =
       plugin->QueryInterfaceSharedPtr<SomeInterface>();
     EXPECT_FALSE(some_ptr.get());
+
+    std::shared_ptr<const SomeInterface> const_some_ptr =
+        ignition::plugin::ConstPluginPtr(plugin)
+        ->QueryInterfaceSharedPtr<SomeInterface>();
+    EXPECT_FALSE(const_some_ptr.get());
   }
 
   std::shared_ptr<test::util::DummyIntBase> int_ptr =

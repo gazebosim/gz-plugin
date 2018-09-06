@@ -31,15 +31,19 @@ TEST(Alias, InspectAliases)
       pl.LoadLibrary(IGNDummyPlugins_LIB);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
+  ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));
 
   EXPECT_EQ(0u, pl.PluginsWithAlias("fake alias").size());
   EXPECT_EQ(1u, pl.PluginsWithAlias("Alternative name").size());
   EXPECT_EQ(2u, pl.PluginsWithAlias("Bar").size());
   EXPECT_EQ(2u, pl.PluginsWithAlias("Baz").size());
   EXPECT_EQ(1u, pl.PluginsWithAlias("Foo").size());
+  EXPECT_EQ(1u, pl.PluginsWithAlias("test::util::DummySinglePlugin").size());
 
   EXPECT_EQ(3u, pl.AliasesOfPlugin("test::util::DummySinglePlugin").size());
   EXPECT_EQ(3u, pl.AliasesOfPlugin("test::util::DummyMultiPlugin").size());
+  EXPECT_EQ(0u, pl.AliasesOfPlugin("test::util::DummyNoAliasPlugin").size());
+  EXPECT_EQ(0u, pl.AliasesOfPlugin("fake::plugin").size());
 }
 
 /////////////////////////////////////////////////
@@ -52,6 +56,7 @@ TEST(Alias, ConflictingAlias)
       pl.LoadLibrary(IGNDummyPlugins_LIB);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
+  ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));
 
   // This alias conflicts between DummySinglePlugin and DummyMultiPlugin
   ignition::plugin::PluginPtr attempt = pl.Instantiate("Bar");

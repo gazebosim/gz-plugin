@@ -16,6 +16,7 @@ class DummyMultiPlugin
       public DummyIntBase,
       public DummySetterBase,
       public DummyGetSomeObjectBase,
+      public DummyGetPluginInstancePtr,
       public ignition::plugin::EnablePluginFromThis
 {
   public: virtual std::string MyNameIs() const override;
@@ -26,6 +27,8 @@ class DummyMultiPlugin
   public: virtual void SetName(const std::string &_name) override;
   public: virtual void SetDoubleValue(const double _val) override;
   public: virtual void SetIntegerValue(const int _val) override;
+
+  public: virtual std::shared_ptr<void> PluginInstancePtr() const override;
 
   public: DummyMultiPlugin();
 

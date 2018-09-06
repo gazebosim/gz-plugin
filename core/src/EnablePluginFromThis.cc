@@ -48,8 +48,8 @@ namespace ignition
       // Do nothing
     }
 
-    std::shared_ptr<void> EnablePluginFromThis
-    ::PluginInstancePtrFromThis() const
+    std::shared_ptr<void>
+    EnablePluginFromThis::PluginInstancePtrFromThis() const
     {
       return this->pimpl->weak.Lock()->PrivateGetInstancePtr();
     }
