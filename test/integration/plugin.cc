@@ -81,6 +81,7 @@ TEST(Loader, LoadExistingLibrary)
   ignition::plugin::PluginPtr firstPlugin =
       pl.Instantiate("test::util::DummySinglePlugin");
   EXPECT_FALSE(firstPlugin.IsEmpty());
+  EXPECT_TRUE(static_cast<bool>(firstPlugin));
 
   EXPECT_TRUE(firstPlugin->HasInterface<test::util::DummyNameBase>());
   EXPECT_TRUE(firstPlugin->HasInterface("test::util::DummyNameBase"));
@@ -213,6 +214,10 @@ TEST(SpecializedPluginPtr, Construction)
   ignition::plugin::PluginPtr empty;
   EXPECT_TRUE(empty.IsEmpty());
   EXPECT_FALSE(empty->HasInterface<SomeInterface>());
+  EXPECT_FALSE(static_cast<bool>(empty));
+  EXPECT_EQ(nullptr, empty->QueryInterfaceSharedPtr<SomeInterface>());
+  ignition::plugin::ConstPluginPtr constEmpty;
+  EXPECT_EQ(nullptr, constEmpty->QueryInterfaceSharedPtr<SomeInterface>());
 }
 
 /////////////////////////////////////////////////
@@ -378,7 +383,7 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
   ignition::plugin::Loader pl;
   pl.LoadLibrary(IGNDummyPlugins_LIB);
 
-  // as_shared_pointer without specialization
+  // QueryInterfaceSharedPtr without specialization
   {
     ignition::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");
@@ -388,9 +393,21 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
     EXPECT_TRUE(int_ptr.get());
     EXPECT_EQ(5, int_ptr->MyIntegerValueIs());
 
+    std::shared_ptr<const test::util::DummyIntBase> const_int_ptr =
+        ignition::plugin::ConstPluginPtr(plugin)
+        ->QueryInterfaceSharedPtr<test::util::DummyIntBase>();
+    EXPECT_TRUE(const_int_ptr.get());
+    EXPECT_EQ(5, int_ptr->MyIntegerValueIs());
+
+
     std::shared_ptr<SomeInterface> some_ptr =
       plugin->QueryInterfaceSharedPtr<SomeInterface>();
     EXPECT_FALSE(some_ptr.get());
+
+    std::shared_ptr<const SomeInterface> const_some_ptr =
+        ignition::plugin::ConstPluginPtr(plugin)
+        ->QueryInterfaceSharedPtr<SomeInterface>();
+    EXPECT_FALSE(const_some_ptr.get());
   }
 
   std::shared_ptr<test::util::DummyIntBase> int_ptr =
