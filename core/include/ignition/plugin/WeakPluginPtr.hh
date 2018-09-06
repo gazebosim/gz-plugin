@@ -26,6 +26,16 @@ namespace ignition
 {
   namespace plugin
   {
+    /// \brief WeakPluginPtr is a non-reference-holding smart pointer for a
+    /// Plugin. WeakPluginPtr is analogous to std::weak_ptr where PluginPtr is
+    /// analogous to std::shared_ptr.
+    ///
+    /// Use Lock() to receive a reference-holding PluginPtr that points to the
+    /// Plugin that this WeakPluginPtr is meant to reference.
+    ///
+    /// If the Plugin is deleted while this WeakPluginPtr is referring to it,
+    /// then Lock() will return an empty PluginPtr, and IsExpired() will return
+    /// true.
     class IGNITION_PLUGIN_VISIBLE WeakPluginPtr
     {
       /// \brief Default constructor
