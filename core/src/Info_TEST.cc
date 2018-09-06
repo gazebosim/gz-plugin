@@ -21,12 +21,10 @@
 
 struct SomeInterface
 {
-
 };
 
 struct SomePlugin : public SomeInterface
 {
-
 };
 
 TEST(Info, Clear)
