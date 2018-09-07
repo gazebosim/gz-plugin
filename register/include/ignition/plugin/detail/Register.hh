@@ -308,41 +308,6 @@ namespace ignition
       }
 
       //////////////////////////////////////////////////
-      /// \brief This default specialization of the Registrar class will be
-      /// called when no arguments are provided to the IGNITION_ADD_PLUGIN()
-      /// macro. This is not allowed and will result in a compilation error.
-      template <typename... NoArguments>
-      struct Registrar
-      {
-        public: static void Register()
-        {
-          // READ ME: If you get a compilation error here, then you have
-          // attempted to call IGNITION_ADD_PLUGIN() with no arguments. This
-          // is both pointless and not permitted. Either specify a plugin class
-          // to register, or else do not call the macro.
-          static_assert(sizeof...(NoArguments) > 0,
-                        "YOU ARE ATTEMPTING TO CALL IGNITION_ADD_PLUGIN "
-                        "WITHOUT SPECIFYING A PLUGIN CLASS");
-
-
-
-          // --------------------------------------------------------------- //
-          // Dev Note (MXG): The following static assert should never fail, or
-          // else there is a bug in our variadic template implementation. If a
-          // compilation failure occurs in this function, it should happen at
-          // the previous static_assert. If the parameter pack `NoArguments`
-          // contains one or more types, then the other template specialization
-          // of the Registrar class should be chosen, instead of this default
-          // one. This static_assert is only here as reassurance that the
-          // implementation is correct.
-          static_assert(sizeof...(NoArguments) == 0,
-                        "THERE IS A BUG IN THE PLUGIN REGISTRATION "
-                        "IMPLEMENTATION! PLEASE REPORT THIS!");
-          // --------------------------------------------------------------- //
-        }
-      };
-
-      //////////////////////////////////////////////////
       template <typename PluginClass, bool DoEnablePluginFromThis>
       struct IfEnablePluginFromThisImpl
       {
@@ -382,7 +347,7 @@ namespace ignition
       /// macro. This is the only version of the Registrar class that is allowed
       /// to compile.
       template <typename PluginClass, typename... Interfaces>
-      struct Registrar<PluginClass, Interfaces...>
+      struct Registrar
       {
         public: static Info MakeInfo()
         {
@@ -543,15 +508,15 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 //////////////////////////////////////////////////
 /// This macro is needed to force the __COUNTER__ macro to expand to a value
 /// before being passed to the *_HELPER macro.
-#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER(UniqueID, ...) \
-  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_HELPER(UniqueID, __VA_ARGS__)
+#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER(UniqueID, PluginClass, ...) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_HELPER(UniqueID, PluginClass, __VA_ARGS__)
 
 
 //////////////////////////////////////////////////
 /// We use the __COUNTER__ here to give each plugin registration its own unique
 /// name, which is required in order to statically initialize each one.
-#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS(...) \
-  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER(__COUNTER__, __VA_ARGS__)
+#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS(PluginClass, ...) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER(__COUNTER__, PluginClass, __VA_ARGS__)
 
 
 

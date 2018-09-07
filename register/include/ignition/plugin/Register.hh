@@ -50,8 +50,8 @@
 /// ignition/plugin/Register.hh header in ONE of the translation units, and then
 /// the ignition/plugin/RegisterMore.hh header in all of the rest of the
 /// translation units.
-#define IGNITION_ADD_PLUGIN(...) \
-  DETAIL_IGNITION_ADD_PLUGIN(__VA_ARGS__)
+#define IGNITION_ADD_PLUGIN(PluginClass, ...) \
+  DETAIL_IGNITION_ADD_PLUGIN(PluginClass, __VA_ARGS__)
 
 /// \brief Add an alias for one of your plugins.
 ///
