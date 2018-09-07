@@ -508,7 +508,8 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 //////////////////////////////////////////////////
 /// This macro is needed to force the __COUNTER__ macro to expand to a value
 /// before being passed to the *_HELPER macro.
-#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER(UniqueID, PluginClass, ...) \
+#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER( \
+  UniqueID, PluginClass, ...) \
   DETAIL_IGNITION_ADD_PLUGIN_ALIAS_HELPER(UniqueID, PluginClass, __VA_ARGS__)
 
 
@@ -516,7 +517,8 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 /// We use the __COUNTER__ here to give each plugin registration its own unique
 /// name, which is required in order to statically initialize each one.
 #define DETAIL_IGNITION_ADD_PLUGIN_ALIAS(PluginClass, ...) \
-  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER(__COUNTER__, PluginClass, __VA_ARGS__)
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER( \
+  __COUNTER__, PluginClass, __VA_ARGS__)
 
 
 
