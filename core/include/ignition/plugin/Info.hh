@@ -25,6 +25,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <ignition/utilities/SuppressWarning.hh>
+
 #include <ignition/plugin/Export.hh>
 
 namespace ignition
@@ -52,32 +54,44 @@ namespace ignition
         void Clear();
 
         /// \brief The name of the plugin
+        IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
         std::string name;
+        IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
 
         /// \brief Alternative names that may be used to instantiate the plugin
+        IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
         std::set<std::string> aliases;
+        IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
 
         /// \brief The keys are the names of the types of interfaces that this
         /// plugin provides. The values are functions that convert a void
         /// pointer (which actually points to the plugin instance) to another
         /// void pointer (which actually points to the location of the interface
         /// within the plugin instance).
+        IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
         using InterfaceCastingMap =
             std::unordered_map< std::string, std::function<void*(void*)> >;
         InterfaceCastingMap interfaces;
+        IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
 
         /// \brief This is a set containing the demangled versions of the names
         /// of the interfaces provided by this plugin. This gets filled in by
         /// the Loader after receiving the Info. It is only used by
         /// the user-facing API. Internally, when looking up Interfaces, the
         /// mangled `interfaces` map will still be used.
+        IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
         std::set<std::string> demangledInterfaces;
+        IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
 
         /// \brief A method that instantiates a new instance of a plugin
+        IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
         std::function<void*()> factory;
+        IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
 
         /// \brief A method that safely deletes an instance of the plugin
+        IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
         std::function<void(void*)> deleter;
+        IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
       };
     }
 
