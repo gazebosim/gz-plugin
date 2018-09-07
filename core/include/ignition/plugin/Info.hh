@@ -25,6 +25,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <ignition/plugin/Export.hh>
+
 namespace ignition
 {
   namespace plugin
@@ -44,7 +46,7 @@ namespace ignition
     inline namespace v1
     {
       /// \brief Holds info required to construct a plugin
-      struct Info
+      struct IGNITION_PLUGIN_VISIBLE Info
       {
         /// \brief Clear out all information contained in this Info object
         void Clear();
