@@ -24,7 +24,7 @@ build_script:
   - cd build
   - cmake ..
       -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake
-      #-DCMAKE_CXX_FLAGS="-WX"
+      -DCMAKE_CXX_FLAGS="-WX"
   - cmake --build . --config %CONFIGURATION%
 
 after_build:
