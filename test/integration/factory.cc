@@ -95,9 +95,21 @@ TEST(Factory, Alias)
   ignition::plugin::Loader pl;
   pl.LoadLibrary(IGNFactoryPlugins_LIB);
 
+  std::string symbolName;
+  for (const std::string &name : pl.AllPlugins())
+  {
+    if (name.find("ignition::plugin::Factory") != std::string::npos &&
+        name.find("test::util::SomeObjectAddTwo") != std::string::npos)
+    {
+      symbolName = name;
+      break;
+    }
+  }
+
+  EXPECT_FALSE(symbolName.empty());
+
   for (const std::string &alias : {
-       "ignition::plugin::Factory<test::util::SomeObject, int, "
-          "double>::Producing<test::util::SomeObjectAddTwo>",
+       symbolName.c_str(),
        "test::util::SomeObjectAddTwo",
        "This factory has an alias",
        "and also a second alias"})
