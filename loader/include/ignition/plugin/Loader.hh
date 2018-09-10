@@ -121,21 +121,23 @@ namespace ignition
 
       /// \brief Instantiates a plugin for the given plugin name
       ///
-      /// \param[in] _plugin name of the plugin to instantiate
+      /// \param[in] _pluginNameOrAlias
+      ///   Name or alias of the plugin to instantiate.
       /// \returns Pointer to instantiated plugin
-      public: PluginPtr Instantiate(const std::string &_pluginName) const;
+      public: PluginPtr Instantiate(
+          const std::string &_pluginNameOrAlias) const;
 
       /// \brief Instantiates a plugin of PluginType for the given plugin name.
       /// This can be used to create a specialized PluginPtr.
       ///
-      /// \tparam PluginPtrType The specialized type of PluginPtrPtr that you
-      /// want to construct.
-      /// \param[in] _pluginName The name of the plugin that you want to
-      /// instantiate
+      /// \tparam PluginPtrType
+      ///   The specialized type of PluginPtrPtr that you
+      ///   want to construct.
+      /// \param[in] _pluginNameOrAlias
+      ///   Name or alias of the plugin that you want to instantiate.
       /// \returns pointer for the instantiated PluginPtr
       public: template <typename PluginPtrType>
-              PluginPtrType Instantiate(
-                  const std::string &_pluginName) const;
+      PluginPtrType Instantiate(const std::string &_pluginNameOrAlias) const;
 
       /// \brief This loader will forget about the library at the given path
       /// location. If you want to instantiate a plugin from this library using
@@ -173,9 +175,9 @@ namespace ignition
 
       /// \brief Get a pointer to the Info corresponding to _pluginName.
       ///
-      /// \param[in] _pluginNameOrAlias
-      ///   The name or alias of the plugin that you
-      ///   want to instantiate.
+      /// \param[in] _resolvedName
+      ///   The resolved name, i.e. the demangled class symbol name as returned
+      ///   by LookupPlugin(~), of the plugin that you want to instantiate.
       /// \return Pointer to the corresponding Info, or nullptr if there
       /// is no info for the requested _pluginName.
       private: ConstInfoPtr PrivateGetInfo(
@@ -184,12 +186,13 @@ namespace ignition
       /// \brief Get a std::shared_ptr that manages the lifecycle of the shared
       /// library handle which provides the specified plugin.
       ///
-      /// \param[in] _pluginNameOrAlias
-      ///   Name or alias of the plugin that is being loaded.
+      /// \param[in] _resolvedName
+      ///   The resolved name, i.e. the demangled class symbol name as returned
+      ///   by LookupPlugin(~), of the plugin that you want to instantiate.
       /// \return Reference-counting pointer to a library handle, or else a
       /// nullptr if the plugin is not available.
       private: std::shared_ptr<void> PrivateGetPluginDlHandlePtr(
-                  const std::string &_pluginNameOrAlias) const;
+                  const std::string &_resolvedName) const;
 
       class Implementation;
       IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING

@@ -36,9 +36,9 @@ namespace ignition
 
     template <typename PluginPtrType>
     PluginPtrType Loader::Instantiate(
-        const std::string &_pluginName) const
+        const std::string &_pluginNameOrAlias) const
     {
-      const std::string &resolvedName = this->LookupPlugin(_pluginName);
+      const std::string &resolvedName = this->LookupPlugin(_pluginNameOrAlias);
       if (resolvedName.empty())
         return PluginPtr();
 
