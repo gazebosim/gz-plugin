@@ -67,9 +67,9 @@ TEST(Loader, LoadExistingLibrary)
   EXPECT_EQ(7u, pl.InterfacesImplemented().size());
   EXPECT_EQ(1u, pl.InterfacesImplemented().count("test::util::DummyNameBase"));
 
-  EXPECT_EQ(2u, pl.PluginsImplementing<::test::util::DummyNameBase>().size());
-  EXPECT_EQ(2u, pl.PluginsImplementing("test::util::DummyNameBase").size());
-  EXPECT_EQ(2u, pl.PluginsImplementing(
+  EXPECT_EQ(3u, pl.PluginsImplementing<::test::util::DummyNameBase>().size());
+  EXPECT_EQ(3u, pl.PluginsImplementing("test::util::DummyNameBase").size());
+  EXPECT_EQ(3u, pl.PluginsImplementing(
               typeid(test::util::DummyNameBase).name(), false).size());
 
   EXPECT_EQ(1u, pl.PluginsImplementing<::test::util::DummyDoubleBase>().size());
@@ -77,6 +77,7 @@ TEST(Loader, LoadExistingLibrary)
   EXPECT_EQ(1u, pl.PluginsImplementing(
               typeid(test::util::DummyDoubleBase).name(), false).size());
 
+  EXPECT_EQ(3u, pl.AllPlugins().size());
 
   ignition::plugin::PluginPtr firstPlugin =
       pl.Instantiate("test::util::DummySinglePlugin");
