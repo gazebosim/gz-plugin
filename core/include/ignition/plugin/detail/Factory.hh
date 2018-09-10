@@ -28,6 +28,7 @@ namespace ignition
   namespace plugin
   {
     template <typename Interface, typename... Args>
+    // cppcheck-suppress syntaxError
     template <typename Product>
     class Factory<Interface, Args...>::Producing
         : public Factory<Interface, Args...>
