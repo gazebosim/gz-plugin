@@ -116,7 +116,9 @@ TEST(Factory, Alias)
   {
     std::shared_ptr<SomeObjectFactory> factory =
         pl.Factory<SomeObjectFactory>(alias);
-    ASSERT_NE(nullptr, factory) << " failed on name: " << alias;
+    EXPECT_NE(nullptr, factory) << " failed on name: " << alias;
+    if (!factory)
+      continue;
 
     std::unique_ptr<SomeObject> object = factory->Construct(110, 2.25);
     ASSERT_NE(nullptr, object);
