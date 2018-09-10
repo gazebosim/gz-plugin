@@ -342,10 +342,9 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    PluginPtr Loader::Instantiate(
-        const std::string &_pluginName) const
+    PluginPtr Loader::Instantiate(const std::string &_pluginNameOrAlias) const
     {
-      const std::string &resolvedName = this->LookupPlugin(_pluginName);
+      const std::string &resolvedName = this->LookupPlugin(_pluginNameOrAlias);
       if (resolvedName.empty())
         return PluginPtr();
 
