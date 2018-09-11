@@ -87,6 +87,10 @@ TEST(Factory, Construct)
   ASSERT_NE(nullptr, someObject);
   EXPECT_EQ(9, someObject->someInt);
   EXPECT_DOUBLE_EQ(8.5, someObject->someDouble);
+
+  auto nullFactory =
+      pl.Factory<SomeObjectFactory>("not a real factory");
+  EXPECT_EQ(nullptr, nullFactory);
 }
 
 /////////////////////////////////////////////////
