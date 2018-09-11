@@ -3,7 +3,7 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: ubuntu:xenial
+image: ubuntu:bionic
 
 options:
   max-time: 10
@@ -17,9 +17,18 @@ pipelines:
           - apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys D2486D2DD83DB69272AFE98867170598AF249743
           - apt-get update
           - apt-get -y install
-            cmake pkg-config python ruby-ronn
-            libignition-cmake1-dev
-            lcov curl mercurial cppcheck
+            cmake pkg-config python ruby-ronn g++-8
+            libignition-cmake2-dev
+            curl mercurial cppcheck
+          - update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8 --slave /usr/bin/gcov gcov /usr/bin/gcov-8
+          - gcc -v
+          - g++ -v
+          - gcov -v
+          # lcov
+          - git clone https://github.com/linux-test-project/lcov.git
+          - cd lcov
+          - make install
+          - cd ..
           # Build
           - mkdir build
           - cd build
