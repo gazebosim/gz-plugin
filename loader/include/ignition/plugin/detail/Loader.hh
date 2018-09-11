@@ -55,9 +55,9 @@ namespace ignition
 
     template <typename InterfaceType>
     std::shared_ptr<InterfaceType> Loader::Factory(
-        const std::string &_pluginName) const
+        const std::string &_pluginNameOrAlias) const
     {
-      return this->Instantiate(_pluginName)
+      return this->Instantiate(_pluginNameOrAlias)
           ->template QueryInterfaceSharedPtr<InterfaceType>();
     }
   }

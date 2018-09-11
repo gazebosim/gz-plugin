@@ -385,10 +385,12 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    bool Loader::ForgetLibraryOfPlugin(const std::string &_pluginName)
+    bool Loader::ForgetLibraryOfPlugin(const std::string &_pluginNameOrAlias)
     {
+      const std::string &resolvedName = this->LookupPlugin(_pluginNameOrAlias);
+
       Implementation::PluginToDlHandleMap::iterator it =
-          dataPtr->pluginToDlHandlePtrs.find(_pluginName);
+          dataPtr->pluginToDlHandlePtrs.find(resolvedName);
 
       if (dataPtr->pluginToDlHandlePtrs.end() == it)
         return false;
