@@ -55,7 +55,7 @@ namespace ignition
       };
 
       // Documentation inherited
-      public: ReturnType Construct(Args&&... _args) override
+      public: InterfacePtr Construct(Args&&... _args) override
       {
         std::unique_ptr<ProductWithRefCounter> product(
               new ProductWithRefCounter(std::forward<Args>(_args)...));

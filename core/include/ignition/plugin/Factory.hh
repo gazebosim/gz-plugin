@@ -51,15 +51,15 @@ namespace ignition
     template <typename Interface, typename... Args>
     class Factory : public EnablePluginFromThis
     {
-      public: using ReturnType = std::unique_ptr<Interface>;
+      public: using InterfacePtr = std::unique_ptr<Interface>;
 
       /// \brief This function is called by Loader to construct the class that
-      /// implements the ReturnT interface.
+      /// implements the InterfacePtr interface.
       /// \param[in] _args
       ///   The arguments as defined by the template parameters.
       /// \return an RAII-managed reference to the interface type as defined by
       /// the template parameters.
-      public: virtual std::unique_ptr<Interface> Construct(Args&&... _args) = 0;
+      public: virtual InterfacePtr Construct(Args&&... _args) = 0;
 
       /// \private This nested class is used to implement the plugin factory.
       /// It is not intended for external use.
