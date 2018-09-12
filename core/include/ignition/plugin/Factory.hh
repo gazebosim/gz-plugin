@@ -18,6 +18,7 @@
 #ifndef IGNITION_PLUGIN_FACTORY_HH_
 #define IGNITION_PLUGIN_FACTORY_HH_
 
+#include <functional>
 #include <memory>
 #include <tuple>
 
@@ -27,6 +28,8 @@ namespace ignition
 {
   namespace plugin
   {
+    template <typename Interface> class Deleter;
+
     /// \brief The Factory class defines a plugin factory that can be used by
     /// the Loader class to produce std::unique_ptr interface classes.
     ///
@@ -51,7 +54,8 @@ namespace ignition
     template <typename Interface, typename... Args>
     class Factory : public EnablePluginFromThis
     {
-      public: using InterfacePtr = std::unique_ptr<Interface>;
+      public: using InterfacePtr =
+          std::unique_ptr<Interface, Deleter<Interface>>;
 
       /// \brief This function is called by Loader to construct the class that
       /// implements the InterfacePtr interface.
@@ -59,7 +63,9 @@ namespace ignition
       ///   The arguments as defined by the template parameters.
       /// \return an RAII-managed reference to the interface type as defined by
       /// the template parameters.
-      public: virtual InterfacePtr Construct(Args&&... _args) = 0;
+      public: InterfacePtr Construct(Args&&... _args);
+
+      public: virtual Interface *ImplConstruct(Args&&... _args) = 0;
 
       /// \private This nested class is used to implement the plugin factory.
       /// It is not intended for external use.

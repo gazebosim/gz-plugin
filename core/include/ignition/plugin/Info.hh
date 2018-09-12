@@ -29,12 +29,6 @@
 
 #include <ignition/plugin/Export.hh>
 
-
-
-#include <iostream>
-
-
-
 namespace ignition
 {
   namespace plugin
@@ -98,25 +92,12 @@ namespace ignition
         IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
         std::function<void(void*)> deleter;
         IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
-
-            ~Info()
-        {
-          std::cout << " {{{{{ Deleting Info: " << name <<" }}}}}} " << std::endl;
-        }
       };
     }
 
     /// This typedef is used simultaneously by detail/Register.hh and Loader.cc,
     /// so we store it in a location that is visible to both of them.
-//    using InfoMap = std::unordered_map<std::string, Info>;
-    struct InfoMap : std::unordered_map<std::string, Info>
-    {
-      ~InfoMap()
-      {
-        std::cout << "Deleting InfoMap [" << size() << "]" << std::endl;
-      }
-    };
-
+    using InfoMap = std::unordered_map<std::string, Info>;
     using ConstInfoPtr = std::shared_ptr<const Info>;
   }
 }

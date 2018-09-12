@@ -23,16 +23,65 @@
 
 #include <ignition/plugin/Factory.hh>
 
-
-#include <iostream>
-
-
-
-
 namespace ignition
 {
   namespace plugin
   {
+    template <typename Interface>
+    class Deleter
+    {
+      public: Deleter()
+        : pluginInstancePtr(nullptr)
+      {
+        // Do nothing
+      }
+
+      public: Deleter(std::shared_ptr<void> _pluginInstancePtr)
+        : pluginInstancePtr(
+            new std::shared_ptr<void>(std::move(_pluginInstancePtr)))
+      {
+        // Do nothing
+      }
+
+      public: void operator()(Interface *_ptr)
+      {
+        delete _ptr;
+
+        // Release the reference to the plugin
+        if (pluginInstancePtr)
+          *pluginInstancePtr = nullptr;
+      }
+
+      public: ~Deleter()
+      {
+        if (pluginInstancePtr && *pluginInstancePtr)
+        {
+          // If this std::shared_ptr still contains a value, then that means
+          // the original object has been released from its ownership and will
+          // never be able to get deleted by this deleter. Therefore, we should
+          // release the pluginInstancePtr so that the library remains loaded.
+          //
+          // Note that this is an intentional memory leak to accommodate the use
+          // case where a user simply cannot retain ownership of the object from
+          // the plugin and is okay with its library remaining loaded forever.
+        }
+        else if (pluginInstancePtr)
+        {
+          delete pluginInstancePtr;
+        }
+      }
+
+      private: std::shared_ptr<void> *pluginInstancePtr;
+    };
+
+    template <typename Interface, typename... Args>
+    auto Factory<Interface, Args...>::Construct(Args&&... _args) -> InterfacePtr
+    {
+      return InterfacePtr(
+            this->ImplConstruct(std::forward<Args>(_args)...),
+            Deleter<Interface>(this->PluginInstancePtrFromThis()));
+    }
+
     /// \brief Producing provides the implementation of Factory for a specific
     /// derivative of Factory's Interface type. That derivative is called
     /// Product, which must be a fully-defined class that implements Interface.
@@ -46,66 +95,9 @@ namespace ignition
     class Factory<Interface, Args...>::Producing
         : public Factory<Interface, Args...>
     {
-      /// \brief The class ProductWithRefCounter needs to call the Product
-      /// destructor before the parentPluginInstancePtr member gets destructed,
-      /// because the destructor of Product depends on the library that this
-      /// Product's plugin was loaded from. Therefore, we create a base class to
-      /// hold this reference counter, and we list this class first in the
-      /// base-specifier-list of ProductWithRefCounter so that it gets
-      /// constructed first and destructed last.
-      public: class RefCounter
+      private: Interface *ImplConstruct(Args&&... _args) override
       {
-        /// \brief Reference counter for the plugin instance. This reference
-        /// counter ensures that the shared library that provides this plugin
-        /// will remain loaded throughout the entire lifetime of the plugin.
-//        private: std::shared_ptr<void> parentPluginInstancePtr;
-        public: PluginPtr parentPluginInstancePtr;
-
-        /// \brief Virtual destructor
-        public: virtual ~RefCounter()
-        {
-          std::cout << " ----- Destructing RefCounter ------ " << std::endl;
-          std::cout
-              << "Internal factory: "
-              << this->parentPluginInstancePtr->template QueryInterfaceSharedPtr<Factory<Interface, Args...>>()
-              << std::endl;
-        }
-
-        // Declare friendship
-        friend class Producing;
-      };
-
-      /// \brief This class extends Product so that it can safely perform RAII
-      /// reference counting on the shared library.
-      ///
-      /// CRITICAL DEV NOTE(MXG): RefCounter MUST come BEFORE Product in this
-      /// base-specifier-list in order to ensure that the library dependency of
-      /// Product remains loaded until Product is destructed.
-      public: class ProductWithRefCounter : public RefCounter, public Product
-      {
-        /// \brief Forwarding constructor. Accepts arguments as defined by the
-        /// template parameters.
-        private: ProductWithRefCounter(Args&&... args)
-          : RefCounter(),
-            Product(std::forward<Args>(args)...)
-        {
-          // Do nothing
-        }
-
-        // Declare friendship
-        friend class Producing;
-      };
-
-      // Documentation inherited
-      public: InterfacePtr Construct(Args&&... _args) override
-      {
-        std::unique_ptr<ProductWithRefCounter> product(
-              new ProductWithRefCounter(std::forward<Args>(_args)...));
-
-//        product->parentPluginInstancePtr = this->PluginInstancePtrFromThis();
-        product->parentPluginInstancePtr = this->PluginFromThis();
-
-        return product;
+        return new Product(std::forward<Args>(_args)...);
       }
     };
   }
