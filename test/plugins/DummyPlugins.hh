@@ -22,6 +22,9 @@
 #include <string>
 #include <memory>
 
+
+#include <iostream>
+
 namespace test
 {
 namespace util
@@ -74,7 +77,10 @@ struct SomeObject
     // Do nothing
   }
 
-  public: virtual ~SomeObject() = default;
+  public: virtual ~SomeObject()
+  {
+    std::cout << " ======= Destructing SomeObject ======== " << std::endl;
+  }
 };
 
 /// \brief An interface that returns a reference to an arbitrary struct
@@ -86,6 +92,20 @@ class DummyGetSomeObjectBase
 class DummyGetPluginInstancePtr
 {
   public: virtual std::shared_ptr<void> PluginInstancePtr() const = 0;
+};
+
+class SomeObjectAddTwo : public SomeObject
+{
+  public: SomeObjectAddTwo(int _intValue, double _doubleValue)
+    : SomeObject{_intValue + 2, _doubleValue + 2.0}
+  {
+    // Do nothing
+  }
+
+  public: ~SomeObjectAddTwo() override
+  {
+    std::cout << " +++++++ Destructing SomeObjectAddTwo +++++++ " << std::endl;
+  }
 };
 
 }

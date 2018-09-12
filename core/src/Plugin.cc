@@ -48,8 +48,10 @@ namespace ignition
       /// deleter and dlHandlePtr are still valid and available.
       public: ~PluginWithDlHandle()
       {
+        std::cout << " ||||||||| Destructing PluginWithDlHandle ||||||||| " << std::endl;
         if (loadedInstance)
         {
+          std::cout << "Checking for deleter" << std::endl;
           if (!deleter)
           {
             // LCOV_EXCL_START
@@ -61,7 +63,9 @@ namespace ignition
             // LCOV_EXCL_STOP
           }
 
+          std::cout << "About to call deleter" << std::endl;
           deleter(loadedInstance);
+          std::cout << "Called deleter" << std::endl;
         }
         else
         {
@@ -73,6 +77,8 @@ namespace ignition
           return;
           // LCOV_EXCL_STOP
         }
+
+        std::cout << "Leaving destructor of PluginWithDlHandle" << std::endl;
       }
 
       /// \brief A reference counting handle for the shared library that this

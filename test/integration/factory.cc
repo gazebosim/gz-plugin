@@ -21,6 +21,7 @@
 #include <ignition/plugin/Loader.hh>
 
 #include "../plugins/FactoryPlugins.hh"
+#include "utils.hh"
 
 using namespace test::util;
 
@@ -129,6 +130,91 @@ TEST(Factory, Alias)
     EXPECT_EQ(112, object->someInt);
     EXPECT_DOUBLE_EQ(4.25, object->someDouble);
   }
+}
+
+/////////////////////////////////////////////////
+std::unique_ptr<SomeObject> GenerateSomeObject(const std::string &_libraryPath)
+{
+  ignition::plugin::Loader pl;
+  pl.LoadLibrary(_libraryPath);
+
+  auto factory = pl.Factory<SomeObjectFactory>("test::util::SomeObjectAddTwo");
+  EXPECT_NE(nullptr, factory);
+
+  if(factory)
+  {
+    auto obj = factory->Construct(1, 2.0);
+    return nullptr;
+  }
+
+  return nullptr;
+}
+
+/////////////////////////////////////////////////
+TEST(Factory, LibraryManagement)
+{
+  const std::string &libraryPath = IGNFactoryPlugins_LIB;
+
+  // Use scoping to destroy the product
+  {
+//    GenerateSomeObject(libraryPath);
+//    CHECK_FOR_LIBRARY(libraryPath, false);
+//    std::unique_ptr<SomeObject> obj = GenerateSomeObject(libraryPath);
+//    ASSERT_NE(nullptr, obj);
+//    CHECK_FOR_LIBRARY(libraryPath, true);
+
+
+//    ignition::plugin::Loader pl;
+//    pl.LoadLibrary(libraryPath);
+
+//    auto factory = pl.Factory<SomeObjectFactory>("test::util::SomeObjectAddTwo");
+//    ASSERT_NE(nullptr, factory);
+
+//    std::unique_ptr<SomeObject> obj = factory->Construct(1, 2.0);
+//    EXPECT_NE(nullptr, obj);
+  }
+
+  {
+    std::unique_ptr<SomeObject> obj;
+
+    {
+      std::shared_ptr<SomeObjectFactory> factory;
+      ignition::plugin::PluginPtr plugin;
+
+      ignition::plugin::Loader pl;
+      pl.LoadLibrary(libraryPath);
+
+      plugin = pl.Instantiate("test::util::SomeObjectAddTwo");
+      factory = plugin->QueryInterfaceSharedPtr<SomeObjectFactory>();
+
+//      factory = pl.Factory<SomeObjectFactory>(
+//            "test::util::SomeObjectAddTwo");
+
+      ASSERT_NE(nullptr, factory);
+
+      std::cout << "Factory: " << factory << std::endl;
+
+      obj = factory->Construct(1, 2.0);
+
+      auto* ref = dynamic_cast<SomeObjectFactory::Producing<SomeObjectAddTwo>::ProductWithRefCounter*>(obj.get());
+
+//      ref->parentPluginInstancePtr = plugin;
+
+//      ASSERT_NE(nullptr, ref);
+//      std::cout << ref->parentPluginInstancePtr << std::endl;
+
+//      obj.reset();
+    }
+
+    std::cout << "Resetting object" << std::endl;
+//    obj.release();
+    obj.reset();
+    std::cout << "Done resetting object" << std::endl;
+
+    CHECK_FOR_LIBRARY(libraryPath, true);
+  }
+
+  CHECK_FOR_LIBRARY(libraryPath, false);
 }
 
 /////////////////////////////////////////////////

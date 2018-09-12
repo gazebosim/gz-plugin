@@ -148,14 +148,14 @@ IGNITION_ADD_FACTORY(SomeObjectForward, SomeObjectFactory)
 
 /// \brief An implementation of SomeObject that adds two to each value that gets
 /// passed to it.
-class SomeObjectAddTwo : public SomeObject
-{
-  public: SomeObjectAddTwo(int _intValue, double _doubleValue)
-    : SomeObject{_intValue + 2, _doubleValue + 2.0}
-  {
-    // Do nothing
-  }
-};
+//class SomeObjectAddTwo : public SomeObject
+//{
+//  public: SomeObjectAddTwo(int _intValue, double _doubleValue)
+//    : SomeObject{_intValue + 2, _doubleValue + 2.0}
+//  {
+//    // Do nothing
+//  }
+//};
 IGNITION_ADD_FACTORY(SomeObjectAddTwo, SomeObjectFactory)
 
 IGNITION_ADD_FACTORY_ALIAS(
