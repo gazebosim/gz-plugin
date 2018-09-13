@@ -30,6 +30,7 @@
 
 struct SomeBase
 {
+  virtual ~SomeBase() = default;
 };
 
 struct SomeDerived : public SomeBase

@@ -62,25 +62,23 @@ class DummySetterBase
 };
 
 /// \brief An arbitrary struct
-struct SomeObject
+struct DummyObject
 {
-  int someInt;
-  double someDouble;
+  public: int dummyInt;
+  public: double dummyDouble;
 
-  inline SomeObject(int _intValue = 0, double _doubleValue = 0.0)
-    : someInt(_intValue),
-      someDouble(_doubleValue)
+  inline DummyObject(int _intValue = 0, double _doubleValue = 0.0)
+    : dummyInt(_intValue),
+      dummyDouble(_doubleValue)
   {
     // Do nothing
   }
-
-  public: virtual ~SomeObject() = default;
 };
 
 /// \brief An interface that returns a reference to an arbitrary struct
-class DummyGetSomeObjectBase
+class DummyGetObjectBase
 {
-  public: virtual std::unique_ptr<SomeObject> GetSomeObject() const = 0;
+  public: virtual DummyObject GetDummyObject() const = 0;
 };
 
 class DummyGetPluginInstancePtr

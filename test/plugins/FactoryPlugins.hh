@@ -39,6 +39,24 @@ using DoubleFactory = ignition::plugin::Factory<DummyDoubleBase, double>;
 /// implementation
 using IntFactory = ignition::plugin::Factory<DummyIntBase, int>;
 
+/// \brief A class whose constructor takes in arguments
+class SomeObject
+{
+  public: inline SomeObject(int _iValue, double _dValue)
+    : someInt(_iValue),
+      someDouble(_dValue)
+  {
+    // Do nothing
+  }
+
+  public: virtual double SomeOperation() const = 0;
+
+  public: virtual ~SomeObject() = default;
+
+  public: int someInt;
+  public: double someDouble;
+};
+
 /// \brief A signature for factories that take an int and double and then return
 /// a SomeObject instance
 using SomeObjectFactory = ignition::plugin::Factory<SomeObject, int, double>;

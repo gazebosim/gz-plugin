@@ -20,8 +20,10 @@
 #include <ignition/plugin/EnablePluginFromThis.hh>
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/SpecializedPluginPtr.hh>
+#include <ignition/plugin/WeakPluginPtr.hh>
 
 #include "../plugins/DummyPlugins.hh"
+#include "utils.hh"
 
 /////////////////////////////////////////////////
 TEST(EnablePluginFromThis, BasicInstantiate)
@@ -94,6 +96,48 @@ TEST(EnablePluginFromThis, TemplatedInstantiate)
   fromThisInterface =
       plugin->QueryInterface<ignition::plugin::EnablePluginFromThis>();
   EXPECT_EQ(nullptr, fromThisInterface);
+}
+
+/////////////////////////////////////////////////
+TEST(EnablePluginFromThis, LibraryManagement)
+{
+  const std::string &libraryPath = IGNDummyPlugins_LIB;
+
+  ignition::plugin::WeakPluginPtr weak;
+
+  {
+    ignition::plugin::PluginPtr longterm;
+
+    CHECK_FOR_LIBRARY(libraryPath, false);
+
+    {
+      ignition::plugin::Loader pl;
+      pl.LoadLibrary(libraryPath);
+
+      CHECK_FOR_LIBRARY(libraryPath, true);
+
+      ignition::plugin::PluginPtr temporary =
+          pl.Instantiate("test::util::DummyMultiPlugin");
+
+      auto fromThis =
+          temporary->QueryInterface<ignition::plugin::EnablePluginFromThis>();
+
+      longterm = fromThis->PluginFromThis();
+      weak = fromThis->PluginFromThis();
+
+      EXPECT_FALSE(weak.IsExpired());
+      EXPECT_FALSE(longterm.IsEmpty());
+    }
+
+    EXPECT_FALSE(weak.IsExpired());
+    EXPECT_FALSE(longterm.IsEmpty());
+
+    CHECK_FOR_LIBRARY(libraryPath, true);
+  }
+
+  EXPECT_TRUE(weak.IsExpired());
+
+  CHECK_FOR_LIBRARY(libraryPath, false);
 }
 
 /////////////////////////////////////////////////

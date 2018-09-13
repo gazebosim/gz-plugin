@@ -20,7 +20,6 @@
 // specialized plugin interfaces.
 #define IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
 
-#include <dlfcn.h>
 #include <gtest/gtest.h>
 #include <string>
 #include <vector>
@@ -30,6 +29,7 @@
 #include "ignition/plugin/SpecializedPluginPtr.hh"
 
 #include "../plugins/DummyPlugins.hh"
+#include "utils.hh"
 
 /////////////////////////////////////////////////
 TEST(Loader, LoadBadPlugins)
@@ -136,16 +136,14 @@ TEST(Loader, LoadExistingLibrary)
   ASSERT_NE(nullptr, nameBase);
   EXPECT_EQ(std::string("DummyMultiPlugin"), nameBase->MyNameIs());
 
-  test::util::DummyGetSomeObjectBase *objectBase =
-    secondPlugin->QueryInterface<test::util::DummyGetSomeObjectBase>();
+  test::util::DummyGetObjectBase *objectBase =
+    secondPlugin->QueryInterface<test::util::DummyGetObjectBase>();
   ASSERT_NE(nullptr, objectBase);
 
-  std::unique_ptr<test::util::SomeObject> object =
-    objectBase->GetSomeObject();
+  test::util::DummyObject object = objectBase->GetDummyObject();
   EXPECT_EQ(secondPlugin->QueryInterface<test::util::DummyIntBase>()
-                ->MyIntegerValueIs(),
-            object->someInt);
-  EXPECT_NEAR(doubleBase->MyDoubleValueIs(), object->someDouble, 1e-8);
+                ->MyIntegerValueIs(), object.dummyInt);
+  EXPECT_NEAR(doubleBase->MyDoubleValueIs(), object.dummyDouble, 1e-8);
 }
 
 
@@ -469,31 +467,6 @@ ignition::plugin::PluginPtr GetSomePlugin(const std::string &path)
 }
 
 /////////////////////////////////////////////////
-// Note (MXG): According to some online discussions, there is no guarantee
-// that a correct number of calls to dlclose(void*) will actually unload the
-// shared library. In fact, there is no guarantee that a dynamically loaded
-// library from dlopen will ever be unloaded until the program is terminated.
-// This may cause dlopen(~, RTLD_NOLOAD) to return a non-null handle even if
-// we are managing the handles correctly. If the test for
-// EXPECT_EQ(nullptr, dlHandle) is found to fail occasionally, we should
-// consider removing it because it may be unreliable. At the very least, if
-// it fails very infrequently, then we can safely consider the failures to be
-// false negatives and may want to consider relaxing this test.
-#define CHECK_FOR_LIBRARY(_path, _isLoaded) \
-{ \
-  void *dlHandle = dlopen(_path.c_str(), \
-                          RTLD_NOLOAD | RTLD_LAZY | RTLD_GLOBAL); \
-  \
-  if (_isLoaded) \
-    EXPECT_NE(nullptr, dlHandle); \
-  else /* NOLINT */ \
-    EXPECT_EQ(nullptr, dlHandle); \
-  \
-  if (dlHandle) \
-    dlclose(dlHandle); \
-}
-
-/////////////////////////////////////////////////
 TEST(PluginPtr, LibraryManagement)
 {
   const std::string &path = IGNDummyPlugins_LIB;
@@ -502,6 +475,22 @@ TEST(PluginPtr, LibraryManagement)
   {
     ignition::plugin::PluginPtr somePlugin = GetSomePlugin(path);
     EXPECT_TRUE(somePlugin);
+
+    CHECK_FOR_LIBRARY(path, true);
+  }
+
+  CHECK_FOR_LIBRARY(path, false);
+
+  // Test that we can transfer between plugins
+  {
+    ignition::plugin::PluginPtr somePlugin;
+    CHECK_FOR_LIBRARY(path, false);
+
+    {
+      ignition::plugin::PluginPtr temporaryPlugin = GetSomePlugin(path);
+      CHECK_FOR_LIBRARY(path, true);
+      somePlugin = temporaryPlugin;
+    }
 
     CHECK_FOR_LIBRARY(path, true);
   }
