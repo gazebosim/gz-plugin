@@ -82,7 +82,8 @@ namespace ignition
     };
 
     template <typename Interface, typename... Args>
-    auto Factory<Interface, Args...>::Construct(Args&&... _args) -> ProductPtrType
+    auto Factory<Interface, Args...>::Construct(Args&&... _args)
+        -> ProductPtrType
     {
       return ProductPtrType(this->ImplConstruct(std::forward<Args>(_args)...));
     }

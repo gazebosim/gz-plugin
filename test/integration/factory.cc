@@ -135,24 +135,6 @@ TEST(Factory, Alias)
 }
 
 /////////////////////////////////////////////////
-std::unique_ptr<SomeObject> GenerateSomeObject(const std::string &_libraryPath)
-{
-  ignition::plugin::Loader pl;
-  pl.LoadLibrary(_libraryPath);
-
-  auto factory = pl.Factory<SomeObjectFactory>("test::util::SomeObjectAddTwo");
-  EXPECT_NE(nullptr, factory);
-
-  if(factory)
-  {
-    auto obj = factory->Construct(1, 2.0);
-    return nullptr;
-  }
-
-  return nullptr;
-}
-
-/////////////////////////////////////////////////
 TEST(Factory, LibraryManagement)
 {
   const std::string &libraryPath = IGNFactoryPlugins_LIB;
