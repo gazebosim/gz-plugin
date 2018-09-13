@@ -56,13 +56,9 @@ int DummyMultiPlugin::MyIntegerValueIs() const
   return intVal;
 }
 
-std::unique_ptr<SomeObject> DummyMultiPlugin::GetSomeObject() const
+DummyObject DummyMultiPlugin::GetDummyObject() const
 {
-  std::unique_ptr<SomeObject> object(new SomeObject);
-  object->someInt = this->MyIntegerValueIs();
-  object->someDouble = this->MyDoubleValueIs();
-
-  return object;
+  return DummyObject(this->MyIntegerValueIs(), this->MyDoubleValueIs());
 }
 
 void DummyMultiPlugin::SetName(const std::string &_name)
@@ -96,7 +92,7 @@ DummyMultiPlugin::DummyMultiPlugin()
 // Show that we can add plugins from within a namespace
 IGNITION_ADD_PLUGIN(
     DummyMultiPlugin,
-    DummyGetSomeObjectBase,
+    DummyGetObjectBase,
     DummyGetPluginInstancePtr)
 
 }

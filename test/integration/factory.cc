@@ -80,6 +80,7 @@ TEST(Factory, Construct)
   ASSERT_NE(nullptr, someObject);
   EXPECT_EQ(7, someObject->someInt);
   EXPECT_DOUBLE_EQ(6.5, someObject->someDouble);
+  EXPECT_DOUBLE_EQ(7 + 6.5, someObject->SomeOperation());
 
   someObjectFactory =
       pl.Factory<SomeObjectFactory>("test::util::SomeObjectAddTwo");
@@ -88,6 +89,7 @@ TEST(Factory, Construct)
   ASSERT_NE(nullptr, someObject);
   EXPECT_EQ(9, someObject->someInt);
   EXPECT_DOUBLE_EQ(8.5, someObject->someDouble);
+  EXPECT_DOUBLE_EQ(9 + 8.5 + 2, someObject->SomeOperation());
 
   auto nullFactory =
       pl.Factory<SomeObjectFactory>("not a real factory");
@@ -155,23 +157,96 @@ TEST(Factory, LibraryManagement)
 {
   const std::string &libraryPath = IGNFactoryPlugins_LIB;
 
+  // Test that a single ProductPtr will keep the library loaded and correctly
+  // manage the lifecycle of the product.
   {
-    SomeObjectFactory::InterfacePtr obj;
+    SomeObjectFactory::ProductPtrType obj;
 
     {
       ignition::plugin::Loader pl;
       pl.LoadLibrary(libraryPath);
+      CHECK_FOR_LIBRARY(libraryPath, true);
 
       auto factory = pl.Factory<SomeObjectFactory>(
             "test::util::SomeObjectAddTwo");
-
       ASSERT_NE(nullptr, factory);
 
       obj = factory->Construct(1, 2.0);
+      ASSERT_NE(nullptr, obj);
+
+      // These values are based on us loading a SomeObjectAddTwo plugin
+      EXPECT_EQ(3, obj->someInt);
+      EXPECT_DOUBLE_EQ(4.0, obj->someDouble);
     }
 
     CHECK_FOR_LIBRARY(libraryPath, true);
   }
+
+  CHECK_FOR_LIBRARY(libraryPath, false);
+
+  // Test that we can release from a ProductPtr, and the library will still
+  // remain loaded, and then it will unload correctly later, as long as we
+  // manually destruct with a ProductDeleter
+  {
+    SomeObject *obj;
+
+    {
+      ignition::plugin::Loader pl;
+      pl.LoadLibrary(libraryPath);
+      CHECK_FOR_LIBRARY(libraryPath, true);
+
+      auto factory = pl.Factory<SomeObjectFactory>(
+            "test::util::SomeObjectForward");
+      ASSERT_NE(nullptr, factory);
+
+      obj = factory->Construct(1, 2.0).release();
+      ASSERT_NE(nullptr, obj);
+
+      // These values are based on us loading a SomeObjectForward plugin
+      EXPECT_EQ(1, obj->someInt);
+      EXPECT_DOUBLE_EQ(2.0, obj->someDouble);
+    }
+
+    CHECK_FOR_LIBRARY(libraryPath, true);
+
+    ignition::plugin::ProductDeleter<SomeObject>()(obj);
+
+    CHECK_FOR_LIBRARY(libraryPath, false);
+  }
+
+  CHECK_FOR_LIBRARY(libraryPath, false);
+
+  // Test that if we release from a ProductPtr but do not delete it with a
+  // ProductDeleter, then its shared library will remain loaded until we call
+  // CleanupLostProducts().
+  {
+    std::unique_ptr<SomeObject> obj;
+
+    {
+      ignition::plugin::Loader pl;
+      pl.LoadLibrary(libraryPath);
+      CHECK_FOR_LIBRARY(libraryPath, true);
+
+      auto factory = pl.Factory<SomeObjectFactory>(
+            "test::util::SomeObjectAddTwo");
+      ASSERT_NE(nullptr, factory);
+
+      obj = std::unique_ptr<SomeObject>(factory->Construct(3, 4.0).release());
+      ASSERT_NE(nullptr, obj);
+
+      // These values are based on us loading a SomeObjectAddTwo plugin
+      EXPECT_EQ(5, obj->someInt);
+      EXPECT_DOUBLE_EQ(6.0, obj->someDouble);
+    }
+
+    CHECK_FOR_LIBRARY(libraryPath, true);
+  }
+
+  // Now the reference count for the library has been intentionally leaked, so
+  // the library will remain loaded until the executable finishes.
+  CHECK_FOR_LIBRARY(libraryPath, true);
+
+  ignition::plugin::CleanupLostProducts();
 
   CHECK_FOR_LIBRARY(libraryPath, false);
 }

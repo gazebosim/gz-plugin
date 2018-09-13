@@ -132,7 +132,7 @@ class DummyIntAddOne : public DummyIntBase
 
   private: const int value;
 };
-IGNITION_ADD_FACTORY(DummyIntAddOne, IntFactory)
+IGNITION_ADD_FACTORY(DummyIntAddOne, IntFactory);
 
 /// \brief An implementation of SomeObject that just sets the values that get
 /// passed to it.
@@ -142,6 +142,11 @@ class SomeObjectForward : public SomeObject
     : SomeObject{_intValue, _doubleValue}
   {
     // Do nothing
+  }
+
+  public: double SomeOperation() const override
+  {
+    return this->someInt + this->someDouble;
   }
 };
 IGNITION_ADD_FACTORY(SomeObjectForward, SomeObjectFactory)
@@ -154,6 +159,11 @@ class SomeObjectAddTwo : public SomeObject
     : SomeObject{_intValue + 2, _doubleValue + 2.0}
   {
     // Do nothing
+  }
+
+  public: double SomeOperation() const override
+  {
+    return this->someInt + this->someDouble + 2;
   }
 };
 IGNITION_ADD_FACTORY(SomeObjectAddTwo, SomeObjectFactory)

@@ -136,16 +136,14 @@ TEST(Loader, LoadExistingLibrary)
   ASSERT_NE(nullptr, nameBase);
   EXPECT_EQ(std::string("DummyMultiPlugin"), nameBase->MyNameIs());
 
-  test::util::DummyGetSomeObjectBase *objectBase =
-    secondPlugin->QueryInterface<test::util::DummyGetSomeObjectBase>();
+  test::util::DummyGetObjectBase *objectBase =
+    secondPlugin->QueryInterface<test::util::DummyGetObjectBase>();
   ASSERT_NE(nullptr, objectBase);
 
-  std::unique_ptr<test::util::SomeObject> object =
-    objectBase->GetSomeObject();
+  test::util::DummyObject object = objectBase->GetDummyObject();
   EXPECT_EQ(secondPlugin->QueryInterface<test::util::DummyIntBase>()
-                ->MyIntegerValueIs(),
-            object->someInt);
-  EXPECT_NEAR(doubleBase->MyDoubleValueIs(), object->someDouble, 1e-8);
+                ->MyIntegerValueIs(), object.dummyInt);
+  EXPECT_NEAR(doubleBase->MyDoubleValueIs(), object.dummyDouble, 1e-8);
 }
 
 
