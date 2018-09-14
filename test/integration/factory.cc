@@ -226,10 +226,12 @@ TEST(Factory, LibraryManagement)
 
   // Now the reference count for the library has been intentionally leaked, so
   // the library will remain loaded until the executable finishes.
+  EXPECT_EQ(ignition::plugin::LostProductCount(), 1u);
   CHECK_FOR_LIBRARY(libraryPath, true);
 
   ignition::plugin::CleanupLostProducts();
 
+  EXPECT_EQ(ignition::plugin::LostProductCount(), 0u);
   CHECK_FOR_LIBRARY(libraryPath, false);
 }
 
