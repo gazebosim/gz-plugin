@@ -132,7 +132,7 @@ class DummyIntAddOne : public DummyIntBase
 
   private: const int value;
 };
-IGNITION_ADD_FACTORY(DummyIntAddOne, IntFactory);
+IGNITION_ADD_FACTORY(DummyIntAddOne, IntFactory)
 
 /// \brief An implementation of SomeObject that just sets the values that get
 /// passed to it.
