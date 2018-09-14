@@ -104,9 +104,20 @@ namespace ignition
       /// \brief This class mixes the product implementation with the factory
       /// counter so that the factory remains alive and the library remains
       /// loaded throughout the lifecycle of the product.
+      ///
+      /// Dev note(MXG): FactoryCounter is inherited first so that its
+      /// destructor gets called last. In case this product is not deleted by a
+      /// ProductDeleter, having the FactoryCounter destruct last will minimize
+      /// the amount of time between handing off its shared_ptr to the
+      /// lostProductManager and the time that the call stack leaves the
+      /// destructor of this symbol entirely. This makes it less risky to call
+      /// CleanupLostProducts() in a multi-threaded application. Combined with
+      /// giving CleanupLostProducts() a brief waiting period, this should allow
+      /// even completely reckless multi-threaded applications to be able to
+      /// cleanup its lost products safely.
       class ProductWithFactoryCounter
-          : public Product,
-            public detail::FactoryCounter
+          : public detail::FactoryCounter,
+            public Product
       {
         /// \brief Forwarding constructor
         public: ProductWithFactoryCounter(Args&&... _args)

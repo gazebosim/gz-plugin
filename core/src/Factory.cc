@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <mutex>
+#include <thread>
 #include <vector>
 
 #include <ignition/plugin/Factory.hh>
@@ -80,9 +81,15 @@ namespace ignition
       }
     }
 
-    void CleanupLostProducts()
+    void CleanupLostProducts(const std::chrono::nanoseconds &_safetyWait)
     {
       std::unique_lock<std::mutex> lock(lostProductManager.mutex);
+
+      // In case any products are in-between handing off their factory reference
+      // and exiting their destructor, wait for a short while so that the call
+      // stack can fully exit the destructor before we unload its library.
+      std::this_thread::sleep_for(_safetyWait);
+
       lostProductManager.lostProducts.clear();
     }
 

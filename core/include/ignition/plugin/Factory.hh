@@ -18,6 +18,7 @@
 #ifndef IGNITION_PLUGIN_FACTORY_HH_
 #define IGNITION_PLUGIN_FACTORY_HH_
 
+#include <chrono>
 #include <functional>
 #include <memory>
 #include <tuple>
@@ -113,10 +114,27 @@ namespace ignition
     /// \warning If you have a multi-threaded application where you have
     /// absolutely no control over the lifecycle of the products, and you cannot
     /// reliably predict a safe window in which you know that no products are
-    /// being actively deleted, then you might be better off NOT calling this
-    /// function and simply allowing the (very small) memory leaks to build up
-    /// so that the shared library stays loaded until the application quits.
-    void CleanupLostProducts();
+    /// being actively deleted, then you can specify a short safety wait to the
+    /// cleanup call. If any products were being deleted while this function is
+    /// called, this wait can give them time to fully exit their destructors
+    /// before we unload their libraries.
+    ///
+    /// \note For some applications, it might not be important if there are tiny
+    /// memory leaks or if plugin libraries remain loaded until the application
+    /// exits. For those applications, it is okay to not bother calling this
+    /// function at all.
+    ///
+    /// \param[in] _safetyWait
+    ///   For multi-threaded applications, this short waiting window gives time
+    ///   for products that are currently being deleted to exit their
+    ///   destructors before we unload their libraries. If you can reliably
+    ///   predict a window of time in which no products are actively being
+    ///   destructed (or if you have a single-threaded application), then it is
+    ///   okay to set this waiting time to 0. Note that any threads which are
+    ///   about to destruct a product will be blocked until this wait is over.
+    void CleanupLostProducts(
+        const std::chrono::nanoseconds &_safetyWait =
+            std::chrono::nanoseconds(5));
 
     /// \brief Get the number of lost products that have currently accumulated
     /// since the last time CleanupLostProducts() was called (or since the
