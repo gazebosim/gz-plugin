@@ -132,14 +132,14 @@ namespace ignition
     ///   destructed (or if you have a single-threaded application), then it is
     ///   okay to set this waiting time to 0. Note that any threads which are
     ///   about to destruct a product will be blocked until this wait is over.
-    void CleanupLostProducts(
+    void IGNITION_PLUGIN_VISIBLE CleanupLostProducts(
         const std::chrono::nanoseconds &_safetyWait =
             std::chrono::nanoseconds(5));
 
     /// \brief Get the number of lost products that have currently accumulated
     /// since the last time CleanupLostProducts() was called (or since the
     /// program began, if CleanupLostProducts() has not been called yet).
-    std::size_t LostProductCount();
+    std::size_t IGNITION_PLUGIN_VISIBLE LostProductCount();
   }
 }
 

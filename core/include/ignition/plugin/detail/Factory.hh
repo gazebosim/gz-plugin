@@ -36,7 +36,7 @@ namespace ignition
       /// might get unloaded while the Product is still alive, and then the
       /// application will experience a segmentation fault as soon as it tries
       /// to do anything with the Product (including deleting it).
-      class FactoryCounter
+      class IGNITION_PLUGIN_VISIBLE FactoryCounter
       {
         /// \brief A reference to the factory that created this product
         private: std::shared_ptr<void> factoryPluginInstancePtr;

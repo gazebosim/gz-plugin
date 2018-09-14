@@ -450,14 +450,6 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
 }
 
 /////////////////////////////////////////////////
-// The macro RTLD_NOLOAD is not part of the POSIX standard, and is a custom
-// addition to glibc-2.2, so the unloading test can only work when we are using
-// glibc-2.2 or higher. The unloading tests fundamentally require the use of the
-// RTLD_NOLOAD feature, because without it, there is no way to observe that a
-// library is not loaded.
-#ifdef RTLD_NOLOAD
-
-/////////////////////////////////////////////////
 ignition::plugin::PluginPtr GetSomePlugin(const std::string &path)
 {
   ignition::plugin::Loader pl;
@@ -582,8 +574,6 @@ TEST(PluginPtr, LibraryManagement)
 
   CHECK_FOR_LIBRARY(path, false);
 }
-
-#endif
 
 /////////////////////////////////////////////////
 int main(int argc, char **argv)

@@ -21,6 +21,14 @@
 #include <dlfcn.h>
 
 /////////////////////////////////////////////////
+// The macro RTLD_NOLOAD is not part of the POSIX standard, and is a custom
+// addition to glibc-2.2, so the unloading test can only work when we are using
+// glibc-2.2 or higher. The unloading tests fundamentally require the use of the
+// RTLD_NOLOAD feature, because without it, there is no way to observe that a
+// library is not loaded.
+#ifdef RTLD_NOLOAD
+
+/////////////////////////////////////////////////
 // Note (MXG): According to some online discussions, there is no guarantee
 // that a correct number of calls to dlclose(void*) will actually unload the
 // shared library. In fact, there is no guarantee that a dynamically loaded
@@ -44,5 +52,11 @@
   if (dlHandle) \
     dlclose(dlHandle); \
 }
+
+#else
+
+#define CHECK_FOR_LIBRARY(_path, _isLoaded)
+
+#endif
 
 #endif
