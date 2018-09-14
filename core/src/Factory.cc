@@ -49,7 +49,7 @@ namespace
   /// static instance of the lost product manager that will be used to store the
   /// factory references of any lost products.
   static LostProductManager lostProductManager;
-}
+}  // namespace
 
 namespace ignition
 {
