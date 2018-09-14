@@ -21,6 +21,8 @@
 #include <memory>
 #include <utility>
 
+#include <ignition/utilities/SuppressWarning.hh>
+
 #include <ignition/plugin/Factory.hh>
 
 namespace ignition
@@ -38,8 +40,10 @@ namespace ignition
       /// to do anything with the Product (including deleting it).
       class IGNITION_PLUGIN_VISIBLE FactoryCounter
       {
+        IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
         /// \brief A reference to the factory that created this product
         private: std::shared_ptr<void> factoryPluginInstancePtr;
+        IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
 
         /// \brief A special destructor that ensures the shared library remains
         /// loaded throughout the destruction process of this product.
