@@ -188,8 +188,8 @@ TEST(SpecializedPluginPtr, Construction)
   setterBase->SetIntegerValue(newIntValue);
   EXPECT_EQ(newIntValue, fooBase->MyIntegerValueIs());
 
-  // Make sure the specialized interface is available, that it is accessed using
-  // the specialized access, and that it returns the expected value.
+  // Make sure the specialized interface is available, that it is not accessed
+  // using the specialized access, and that it returns the expected value.
   usedSpecializedInterfaceAccess = false;
   test::util::DummyDoubleBase *doubleBase =
       plugin->QueryInterface<test::util::DummyDoubleBase>();
@@ -209,7 +209,10 @@ TEST(SpecializedPluginPtr, Construction)
   SomeInterface *someInterface = plugin->QueryInterface<SomeInterface>();
   EXPECT_TRUE(usedSpecializedInterfaceAccess);
   EXPECT_EQ(nullptr, someInterface);
+}
 
+TEST(PluginPtr, Empty)
+{
   ignition::plugin::PluginPtr empty;
   EXPECT_TRUE(empty.IsEmpty());
   EXPECT_FALSE(empty->HasInterface<SomeInterface>());
