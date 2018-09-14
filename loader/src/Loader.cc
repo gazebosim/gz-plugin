@@ -30,7 +30,7 @@
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/Plugin.hh>
 
-#include "Demangle.hh"
+#include <ignition/plugin/utility.hh>
 
 namespace ignition
 {
@@ -223,7 +223,7 @@ namespace ignition
       for (Info &plugin : loadedPlugins)
       {
         // Demangle the plugin name before creating an entry for it.
-        plugin.name = Demangle(plugin.name);
+        plugin.name = DemangleSymbol(plugin.name);
 
         // Add the plugin's aliases to the alias map
         for (const std::string &alias : plugin.aliases)
@@ -231,7 +231,7 @@ namespace ignition
 
         // Make a list of the demangled interface names for later convenience.
         for (auto const &interface : plugin.interfaces)
-          plugin.demangledInterfaces.insert(Demangle(interface.first));
+          plugin.demangledInterfaces.insert(DemangleSymbol(interface.first));
 
         // Add the plugin to the map
         this->dataPtr->plugins.insert(
@@ -385,10 +385,12 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    bool Loader::ForgetLibraryOfPlugin(const std::string &_pluginName)
+    bool Loader::ForgetLibraryOfPlugin(const std::string &_pluginNameOrAlias)
     {
+      const std::string &resolvedName = this->LookupPlugin(_pluginNameOrAlias);
+
       Implementation::PluginToDlHandleMap::iterator it =
-          dataPtr->pluginToDlHandlePtrs.find(_pluginName);
+          dataPtr->pluginToDlHandlePtrs.find(resolvedName);
 
       if (dataPtr->pluginToDlHandlePtrs.end() == it)
         return false;

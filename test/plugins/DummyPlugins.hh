@@ -27,44 +27,58 @@ namespace test
 namespace util
 {
 
+/// \brief An interface that returns a string
 class DummyNameBase
 {
   public: virtual std::string MyNameIs() const = 0;
+
+  public: virtual ~DummyNameBase() = default;
 };
 
-
-class DummySinglePlugin : public DummyNameBase
-{
-  public: virtual std::string MyNameIs() const override;
-};
-
-
+/// \brief An interface that returns a double
 class DummyDoubleBase
 {
   public: virtual double MyDoubleValueIs() const = 0;
+
+  public: virtual ~DummyDoubleBase() = default;
 };
 
+/// \brief An interface that returns an int
 class DummyIntBase
 {
   public: virtual int MyIntegerValueIs() const = 0;
+
+  public: virtual ~DummyIntBase() = default;
 };
 
+/// \brief An interface that allows values to be set
 class DummySetterBase
 {
   public: virtual void SetName(const std::string &_name) = 0;
   public: virtual void SetDoubleValue(const double _val) = 0;
   public: virtual void SetIntegerValue(const int _val) = 0;
+
+  public: virtual ~DummySetterBase() = default;
 };
 
-struct SomeObject
+/// \brief An arbitrary struct
+struct DummyObject
 {
-  int someInt;
-  double someDouble;
+  public: int dummyInt;
+  public: double dummyDouble;
+
+  inline DummyObject(int _intValue = 0, double _doubleValue = 0.0)
+    : dummyInt(_intValue),
+      dummyDouble(_doubleValue)
+  {
+    // Do nothing
+  }
 };
 
-class DummyGetSomeObjectBase
+/// \brief An interface that returns a reference to an arbitrary struct
+class DummyGetObjectBase
 {
-  public: virtual std::unique_ptr<SomeObject> GetSomeObject() const = 0;
+  public: virtual DummyObject GetDummyObject() const = 0;
 };
 
 class DummyGetPluginInstancePtr
