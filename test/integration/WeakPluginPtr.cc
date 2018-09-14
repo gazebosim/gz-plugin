@@ -21,16 +21,22 @@
 #include <ignition/plugin/Loader.hh>
 
 #include "../plugins/DummyPlugins.hh"
+#include "utils.hh"
 
 /////////////////////////////////////////////////
 TEST(WeakPluginPtr, Lifecycle)
 {
-  ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugins_LIB);
+  const std::string &libraryPath = IGNDummyPlugins_LIB;
 
   ignition::plugin::WeakPluginPtr weak;
 
+  CHECK_FOR_LIBRARY(libraryPath, false);
+
   {
+    ignition::plugin::Loader pl;
+    pl.LoadLibrary(libraryPath);
+    CHECK_FOR_LIBRARY(libraryPath, true);
+
     ignition::plugin::PluginPtr plugin =
         pl.Instantiate("test::util::DummyMultiPlugin");
 
@@ -46,7 +52,11 @@ TEST(WeakPluginPtr, Lifecycle)
     EXPECT_TRUE(base);
     EXPECT_EQ(5, base->MyIntegerValueIs());
     EXPECT_EQ(plugin->QueryInterface<test::util::DummyIntBase>(), base);
+
+    CHECK_FOR_LIBRARY(libraryPath, true);
   }
+
+  CHECK_FOR_LIBRARY(libraryPath, false);
 
   EXPECT_TRUE(weak.IsExpired());
 

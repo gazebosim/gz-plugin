@@ -16,12 +16,14 @@
 */
 
 #include <gtest/gtest.h>
-#include <string>
 
-#include <ignition/plugin/TemplateHelpers.hh>
+#include <ignition/plugin/utility.hh>
+
+using namespace ignition::plugin;
 
 struct SomeType { };
 
+/////////////////////////////////////////////////
 TEST(TemplateHelpers, ConstCompatible)
 {
   // Test that ConstCompatible returns the expected result. Expectations:
@@ -37,7 +39,6 @@ TEST(TemplateHelpers, ConstCompatible)
 
   // The extra pair of parentheses are so the comma between the template
   // arguments don't confuse the macro.
-  using namespace ignition::plugin;
   EXPECT_TRUE((ConstCompatible<const int, const double>::value));
   EXPECT_FALSE((ConstCompatible<double, const int>::value));
   EXPECT_TRUE((ConstCompatible<const float, std::string>::value));
@@ -49,6 +50,38 @@ TEST(TemplateHelpers, ConstCompatible)
   EXPECT_FALSE((ConstCompatible<SomeType, SomeAliasedType>::value));
 }
 
+class SomeSymbol { };
+
+/////////////////////////////////////////////////
+TEST(Demangle, RealSymbol)
+{
+  EXPECT_EQ("SomeSymbol", DemangleSymbol(typeid(SomeSymbol).name()));
+}
+
+template <typename T>
+class SomeTemplate { };
+
+/////////////////////////////////////////////////
+TEST(Demangle, TemplatedSymbol)
+{
+  EXPECT_EQ("SomeTemplate<SomeSymbol>",
+            DemangleSymbol(typeid(SomeTemplate<SomeSymbol>).name()));
+}
+
+/////////////////////////////////////////////////
+TEST(Demangle, FakeSymbol)
+{
+#ifdef NDEBUG
+  // When a fake symbol is passed in, we expect it to be returned exactly as it
+  // was provided.
+  EXPECT_EQ("NotReallyASymbol!@#$", DemangleSymbol("NotReallyASymbol!@#$"));
+#else
+  // If NDEBUG is not defined, we expect an assertion to be triggered, so we
+  // will skip this test.
+#endif
+}
+
+/////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);

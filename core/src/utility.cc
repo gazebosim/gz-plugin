@@ -15,9 +15,6 @@
  *
  */
 
-#ifndef IGNITION_PLUGIN_SRC_DEMANGLE_HH_
-#define IGNITION_PLUGIN_SRC_DEMANGLE_HH_
-
 #include <cassert>
 #include <iostream>
 #include <regex>
@@ -28,12 +25,14 @@
 #include <cxxabi.h>
 #endif
 
+#include <ignition/plugin/utility.hh>
+
 namespace ignition
 {
   namespace plugin
   {
     /////////////////////////////////////////////////
-    inline std::string Demangle(const std::string &_name)
+    std::string DemangleSymbol(const std::string &_name)
     {
     #if defined(__GNUC__) || defined(__clang__)
       int status;
@@ -74,5 +73,3 @@ namespace ignition
     }
   }
 }
-
-#endif

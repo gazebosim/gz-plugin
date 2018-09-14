@@ -9,20 +9,20 @@ namespace test
 {
 namespace util
 {
-
+/// \brief A plugin that implements multiple interfaces
 class DummyMultiPlugin
     : public DummyNameBase,
       public DummyDoubleBase,
       public DummyIntBase,
       public DummySetterBase,
-      public DummyGetSomeObjectBase,
+      public DummyGetObjectBase,
       public DummyGetPluginInstancePtr,
       public ignition::plugin::EnablePluginFromThis
 {
   public: virtual std::string MyNameIs() const override;
   public: virtual double MyDoubleValueIs() const override;
   public: virtual int MyIntegerValueIs() const override;
-  public: virtual std::unique_ptr<SomeObject> GetSomeObject() const override;
+  public: virtual DummyObject GetDummyObject() const override;
 
   public: virtual void SetName(const std::string &_name) override;
   public: virtual void SetDoubleValue(const double _val) override;

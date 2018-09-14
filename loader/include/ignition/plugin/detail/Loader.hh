@@ -19,6 +19,7 @@
 #ifndef IGNITION_PLUGIN_DETAIL_LOADER_HH_
 #define IGNITION_PLUGIN_DETAIL_LOADER_HH_
 
+#include <memory>
 #include <string>
 #include <unordered_set>
 #include <ignition/plugin/EnablePluginFromThis.hh>
@@ -50,6 +51,14 @@ namespace ignition
          enableFromThis->PrivateSetPluginFromThis(ptr);
 
        return ptr;
+    }
+
+    template <typename InterfaceType>
+    std::shared_ptr<InterfaceType> Loader::Factory(
+        const std::string &_pluginNameOrAlias) const
+    {
+      return this->Instantiate(_pluginNameOrAlias)
+          ->template QueryInterfaceSharedPtr<InterfaceType>();
     }
   }
 }

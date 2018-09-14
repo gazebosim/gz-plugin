@@ -19,6 +19,7 @@ foreach(test ${test_targets})
       IGNBadPluginNoInfo
       IGNBadPluginSize
       IGNDummyPlugins
+      IGNFactoryPlugins
       IGNTemplatedPlugins)
 
     target_compile_definitions(${test} PRIVATE
@@ -28,8 +29,14 @@ foreach(test ${test_targets})
 
 endforeach()
 
-if(TARGET INTEGRATION_plugin)
+foreach(test
+    INTEGRATION_EnablePluginFromThis_TEST
+    INTEGRATION_factory
+    INTEGRATION_plugin
+    INTEGRATION_WeakPluginPtr)
 
-  target_link_libraries(INTEGRATION_plugin ${DL_TARGET})
+  if(TARGET ${test})
+    target_link_libraries(${test} ${DL_TARGET})
+  endif()
 
-endif()
+endforeach()

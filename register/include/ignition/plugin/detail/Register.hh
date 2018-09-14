@@ -27,8 +27,9 @@
 
 #include <ignition/utilities/SuppressWarning.hh>
 
-#include <ignition/plugin/Info.hh>
 #include <ignition/plugin/EnablePluginFromThis.hh>
+#include <ignition/plugin/Info.hh>
+#include <ignition/plugin/utility.hh>
 
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -521,5 +522,18 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
   __COUNTER__, PluginClass, __VA_ARGS__)
 
 
+//////////////////////////////////////////////////
+#define DETAIL_IGNITION_ADD_FACTORY(ProductType, FactoryType) \
+  DETAIL_IGNITION_ADD_PLUGIN(FactoryType::Producing<ProductType>, FactoryType) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS( \
+      FactoryType::Producing<ProductType>, \
+      ::ignition::plugin::DemangleSymbol(typeid(ProductType).name()))
+
+
+//////////////////////////////////////////////////
+#define DETAIL_IGNITION_ADD_FACTORY_ALIAS(ProductType, FactoryType, ...) \
+  DETAIL_IGNITION_ADD_FACTORY(ProductType, FactoryType) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS(FactoryType::Producing<ProductType>, \
+      __VA_ARGS__)
 
 #endif
