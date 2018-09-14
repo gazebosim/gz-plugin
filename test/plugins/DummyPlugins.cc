@@ -24,10 +24,22 @@ namespace test
 namespace util
 {
 
-std::string DummySinglePlugin::MyNameIs() const
+class DummySinglePlugin : public DummyNameBase
 {
-  return std::string("DummySinglePlugin");
-}
+  public: virtual std::string MyNameIs() const override
+  {
+    return std::string("DummySinglePlugin");
+  }
+};
+
+class DummyNoAliasPlugin : public DummyNameBase
+{
+  public: std::string MyNameIs() const override
+  {
+    return std::string("DummyNoAliasPlugin");
+  }
+};
+IGNITION_ADD_PLUGIN(DummyNoAliasPlugin, DummyNameBase)
 
 std::string DummyMultiPlugin::MyNameIs() const
 {
@@ -44,13 +56,9 @@ int DummyMultiPlugin::MyIntegerValueIs() const
   return intVal;
 }
 
-std::unique_ptr<SomeObject> DummyMultiPlugin::GetSomeObject() const
+DummyObject DummyMultiPlugin::GetDummyObject() const
 {
-  std::unique_ptr<SomeObject> object(new SomeObject);
-  object->someInt = this->MyIntegerValueIs();
-  object->someDouble = this->MyDoubleValueIs();
-
-  return object;
+  return DummyObject(this->MyIntegerValueIs(), this->MyDoubleValueIs());
 }
 
 void DummyMultiPlugin::SetName(const std::string &_name)
@@ -84,12 +92,15 @@ DummyMultiPlugin::DummyMultiPlugin()
 // Show that we can add plugins from within a namespace
 IGNITION_ADD_PLUGIN(
     DummyMultiPlugin,
-    DummyGetSomeObjectBase,
+    DummyGetObjectBase,
     DummyGetPluginInstancePtr)
 
 }
 }
 
 IGNITION_ADD_PLUGIN(test::util::DummySinglePlugin, test::util::DummyNameBase)
+IGNITION_ADD_PLUGIN_ALIAS(test::util::DummySinglePlugin, "Alternative name")
+IGNITION_ADD_PLUGIN_ALIAS(test::util::DummySinglePlugin, "Bar", "Baz")
 
 IGNITION_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyNameBase)
+IGNITION_ADD_PLUGIN_ALIAS(test::util::DummyMultiPlugin, "Foo", "Bar", "Baz")

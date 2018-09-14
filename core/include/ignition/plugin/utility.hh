@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Open Source Robotics Foundation
+ * Copyright (C) 2018 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,19 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_TEMPLATEHELPERS_HH_
-#define IGNITION_PLUGIN_TEMPLATEHELPERS_HH_
+#ifndef IGNITION_PLUGIN_UTILITY_HH_
+#define IGNITION_PLUGIN_UTILITY_HH_
 
+#include <string>
 
-#include "ignition/plugin/detail/TemplateHelpers.hh"
+#include <ignition/plugin/detail/utility.hh>
+#include <ignition/plugin/Export.hh>
 
 namespace ignition
 {
   namespace plugin
   {
+    /////////////////////////////////////////////////
     /// \brief Contains a static constexpr field named `value` which will be
     /// true if the type `From` has a const-quality less than or equal to the
     /// type `To`.
@@ -45,6 +48,16 @@ namespace ignition
     ///
     template <typename To, typename From>
     using ConstCompatible = detail::ConstCompatible<To, From>;
+
+
+    /////////////////////////////////////////////////
+    /// \brief Demangle the ABI typeinfo name of a symbol into a human-readable
+    /// version.
+    /// \param[in] _symbol
+    ///   Pass in the result of typeid(T).name()
+    /// \return The demangled (human-readable) version of the symbol name
+    std::string IGNITION_PLUGIN_VISIBLE DemangleSymbol(
+        const std::string &_symbol);
   }
 }
 

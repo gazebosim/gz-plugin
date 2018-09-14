@@ -19,6 +19,7 @@
 #ifndef IGNITION_PLUGIN_DETAIL_LOADER_HH_
 #define IGNITION_PLUGIN_DETAIL_LOADER_HH_
 
+#include <memory>
 #include <string>
 #include <unordered_set>
 #include <ignition/plugin/EnablePluginFromThis.hh>
@@ -36,16 +37,28 @@ namespace ignition
 
     template <typename PluginPtrType>
     PluginPtrType Loader::Instantiate(
-        const std::string &_pluginName) const
+        const std::string &_pluginNameOrAlias) const
     {
-       PluginPtrType ptr(this->PrivateGetInfo(_pluginName),
-                         this->PrivateGetPluginDlHandlePtr(_pluginName));
+      const std::string &resolvedName = this->LookupPlugin(_pluginNameOrAlias);
+      if (resolvedName.empty())
+        return PluginPtr();
+
+       PluginPtrType ptr(this->PrivateGetInfo(resolvedName),
+                         this->PrivateGetPluginDlHandlePtr(resolvedName));
 
        if (auto *enableFromThis =
               ptr->template QueryInterface<EnablePluginFromThis>())
          enableFromThis->PrivateSetPluginFromThis(ptr);
 
        return ptr;
+    }
+
+    template <typename InterfaceType>
+    std::shared_ptr<InterfaceType> Loader::Factory(
+        const std::string &_pluginNameOrAlias) const
+    {
+      return this->Instantiate(_pluginNameOrAlias)
+          ->template QueryInterfaceSharedPtr<InterfaceType>();
     }
   }
 }

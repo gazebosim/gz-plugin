@@ -27,8 +27,9 @@
 
 #include <ignition/utilities/SuppressWarning.hh>
 
-#include <ignition/plugin/Info.hh>
 #include <ignition/plugin/EnablePluginFromThis.hh>
+#include <ignition/plugin/Info.hh>
+#include <ignition/plugin/utility.hh>
 
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -308,41 +309,6 @@ namespace ignition
       }
 
       //////////////////////////////////////////////////
-      /// \brief This default specialization of the Registrar class will be
-      /// called when no arguments are provided to the IGNITION_ADD_PLUGIN()
-      /// macro. This is not allowed and will result in a compilation error.
-      template <typename... NoArguments>
-      struct Registrar
-      {
-        public: static void Register()
-        {
-          // READ ME: If you get a compilation error here, then you have
-          // attempted to call IGNITION_ADD_PLUGIN() with no arguments. This
-          // is both pointless and not permitted. Either specify a plugin class
-          // to register, or else do not call the macro.
-          static_assert(sizeof...(NoArguments) > 0,
-                        "YOU ARE ATTEMPTING TO CALL IGNITION_ADD_PLUGIN "
-                        "WITHOUT SPECIFYING A PLUGIN CLASS");
-
-
-
-          // --------------------------------------------------------------- //
-          // Dev Note (MXG): The following static assert should never fail, or
-          // else there is a bug in our variadic template implementation. If a
-          // compilation failure occurs in this function, it should happen at
-          // the previous static_assert. If the parameter pack `NoArguments`
-          // contains one or more types, then the other template specialization
-          // of the Registrar class should be chosen, instead of this default
-          // one. This static_assert is only here as reassurance that the
-          // implementation is correct.
-          static_assert(sizeof...(NoArguments) == 0,
-                        "THERE IS A BUG IN THE PLUGIN REGISTRATION "
-                        "IMPLEMENTATION! PLEASE REPORT THIS!");
-          // --------------------------------------------------------------- //
-        }
-      };
-
-      //////////////////////////////////////////////////
       template <typename PluginClass, bool DoEnablePluginFromThis>
       struct IfEnablePluginFromThisImpl
       {
@@ -382,7 +348,7 @@ namespace ignition
       /// macro. This is the only version of the Registrar class that is allowed
       /// to compile.
       template <typename PluginClass, typename... Interfaces>
-      struct Registrar<PluginClass, Interfaces...>
+      struct Registrar
       {
         public: static Info MakeInfo()
         {
@@ -443,8 +409,9 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
         static void RegisterAlias(Aliases&&... aliases)
         {
           // Dev note (MXG): We expect the RegisterAlias function to be called
-          // using the IGN_ADD_ALIAS(~) macro, which should never contain
-          // any interfaces. Therefore, this parameter pack should be empty.
+          // using the IGNITION_ADD_PLUGIN_ALIAS(~) macro, which should never
+          // contain any interfaces. Therefore, this parameter pack should be
+          // empty.
           //
           // In the future, we could allow Interfaces and Aliases to be
           // specified simultaneously, but that would be very tricky to do with
@@ -474,7 +441,7 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 /// uniquely-named instance of the class with static lifetime. Since the class
 /// instance has a static lifetime, it will be constructed when the shared
 /// library is loaded. When it is constructed, the Register function will
-/// be called
+/// be called.
 #define DETAIL_IGNITION_ADD_PLUGIN_HELPER(UniqueID, ...) \
   namespace ignition \
   { \
@@ -504,10 +471,69 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 
 
 //////////////////////////////////////////////////
-/// We use the __COUNTER__ here to give each plugin instantiation its own unique
+/// We use the __COUNTER__ here to give each plugin registration its own unique
 /// name, which is required in order to statically initialize each one.
 #define DETAIL_IGNITION_ADD_PLUGIN(...) \
   DETAIL_IGNITION_ADD_PLUGIN_WITH_COUNTER(__COUNTER__, __VA_ARGS__)
 
+
+//////////////////////////////////////////////////
+/// This macro creates a uniquely-named class whose constructor calls the
+/// ignition::plugin::detail::Registrar::RegisterAlias function. It then
+/// declares a uniquely-named instance of the class with static lifetime. Since
+/// the class instance has a static lifetime, it will be constructed when the
+/// shared library is loaded. When it is constructed, the Register function will
+/// be called.
+#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_HELPER(UniqueID, PluginClass, ...) \
+  namespace ignition \
+  { \
+    namespace plugin \
+    { \
+      namespace \
+      { \
+        struct ExecuteWhenLoadingLibrary##UniqueID \
+        { \
+          ExecuteWhenLoadingLibrary##UniqueID() \
+          { \
+            ::ignition::plugin::detail::Registrar<PluginClass>::RegisterAlias( \
+                __VA_ARGS__); \
+          } \
+        }; \
+  \
+        static ExecuteWhenLoadingLibrary##UniqueID execute##UniqueID; \
+      } /* namespace */ \
+    } \
+  }
+
+
+//////////////////////////////////////////////////
+/// This macro is needed to force the __COUNTER__ macro to expand to a value
+/// before being passed to the *_HELPER macro.
+#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER( \
+  UniqueID, PluginClass, ...) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_HELPER(UniqueID, PluginClass, __VA_ARGS__)
+
+
+//////////////////////////////////////////////////
+/// We use the __COUNTER__ here to give each plugin registration its own unique
+/// name, which is required in order to statically initialize each one.
+#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS(PluginClass, ...) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER( \
+  __COUNTER__, PluginClass, __VA_ARGS__)
+
+
+//////////////////////////////////////////////////
+#define DETAIL_IGNITION_ADD_FACTORY(ProductType, FactoryType) \
+  DETAIL_IGNITION_ADD_PLUGIN(FactoryType::Producing<ProductType>, FactoryType) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS( \
+      FactoryType::Producing<ProductType>, \
+      ::ignition::plugin::DemangleSymbol(typeid(ProductType).name()))
+
+
+//////////////////////////////////////////////////
+#define DETAIL_IGNITION_ADD_FACTORY_ALIAS(ProductType, FactoryType, ...) \
+  DETAIL_IGNITION_ADD_FACTORY(ProductType, FactoryType) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS(FactoryType::Producing<ProductType>, \
+      __VA_ARGS__)
 
 #endif

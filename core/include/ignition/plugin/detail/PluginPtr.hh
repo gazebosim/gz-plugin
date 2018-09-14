@@ -22,7 +22,7 @@
 #include <memory>
 #include <utility>
 #include <ignition/plugin/PluginPtr.hh>
-#include <ignition/plugin/TemplateHelpers.hh>
+#include <ignition/plugin/utility.hh>
 
 namespace ignition
 {

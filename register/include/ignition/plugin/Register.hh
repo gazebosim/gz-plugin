@@ -50,7 +50,91 @@
 /// ignition/plugin/Register.hh header in ONE of the translation units, and then
 /// the ignition/plugin/RegisterMore.hh header in all of the rest of the
 /// translation units.
-#define IGNITION_ADD_PLUGIN(...) \
-  DETAIL_IGNITION_ADD_PLUGIN(__VA_ARGS__)
+#define IGNITION_ADD_PLUGIN(PluginClass, ...) \
+  DETAIL_IGNITION_ADD_PLUGIN(PluginClass, __VA_ARGS__)
+
+/// \brief Add an alias for one of your plugins.
+///
+/// This macro can be put in any namespace and may be called any number of
+/// times. It can be called multiple times on the same plugin class in order to
+/// register multiple aliases, e.g.:
+///
+/// \code
+/// IGNITION_ADD_PLUGIN_ALIAS(PluginClass, "PluginClass")
+/// IGNITION_ADD_PLUGIN_ALIAS(PluginClass, "SomeOtherName", "Yet another name")
+/// IGNOTION_ADD_PLUGIN_ALIAS(AnotherPluginClass, "Foo", "Bar", "Baz")
+/// \endcode
+///
+/// You can give the same alias to multiple plugins, but then that alias can no
+/// longer be used to instantiate any plugin.
+///
+/// If you give a plugin an alias string that matches the demangled symbol name
+/// of another plugin, then the Loader will always prefer to instantiate the
+/// plugin whose symbol name matches that string.
+#define IGNITION_ADD_PLUGIN_ALIAS(PluginClass, ...) \
+  DETAIL_IGNITION_ADD_PLUGIN_ALIAS(PluginClass, __VA_ARGS__)
+
+
+/// \brief Add a plugin factory.
+///
+/// A plugin factory is a plugin that is able to generate objects that implement
+/// some interface. These objects can be passed off to a consumer, and as long
+/// as the object is alive, it will ensure that the shared library of the plugin
+/// remains loaded. The objects are handed off with a std::unique_ptr, so the
+/// raw pointer can be released from its std::unique_ptr and passed into any
+/// memory management system the consumer prefers.
+///
+/// The inputs and output of a factory are defined using the
+/// ignition::plugin::Factory class in the ignition/plugin/Factory.hh header.
+///
+/// The first argument of this macro should be the class that implements the
+/// factory's output interface. The second argument should be the factory
+/// definition.
+///
+/// NOTE: If your factory has any input arguments, then you must define it
+/// outside of this macro, or else you will get a compilation error. This
+/// happens because macros will parse the commas between your template arguments
+/// as separators for the macro arguments. For example:
+///
+/// \code
+/// class MyBase
+/// {
+///   public: virtual double SomeFunction() = 0;
+/// };
+///
+/// class MyType : public MyBase
+/// {
+///   public: MyType(double value);
+///   public: double SomeFunction() override;
+/// };
+///
+/// /* BAD! Will not compile:
+/// IGNITION_ADD_FACTORY(MyType, ignition::plugin::Factory<MyBase, double>);
+/// */
+///
+/// // Instead do this:
+/// using MyFactory = ignition::plugin::Factory<MyBase, double>;
+/// IGNITION_ADD_FACTORY(MyType, MyFactory);
+/// \endcode
+#define IGNITION_ADD_FACTORY(ProductType, FactoryType) \
+  DETAIL_IGNITION_ADD_FACTORY(ProductType, FactoryType)
+
+/// \brief Add an alias for a factory.
+///
+/// This will do the same as IGNITION_ADD_FACTORY(), but you may also add in
+/// any number of strings which can then be used as aliases for this factory.
+/// For example:
+///
+/// \code
+/// IGNITION_ADD_FACTORY_ALIAS(MyType, MyFactory, "Foo", "My favorite factory")
+/// \endcode
+///
+/// This macro can be called any number of times for the same factory or for
+/// different factories. If you call this macro, you do not need to call
+/// IGNITION_ADD_FACTORY(), but there is nothing wrong with calling both (except
+/// it might imperceptibly increase your compile time).
+#define IGNITION_ADD_FACTORY_ALIAS(ProductType, FactoryType, ...) \
+  DETAIL_IGNITION_ADD_FACTORY_ALIAS(ProductType, FactoryType, __VA_ARGS__)
+
 
 #endif
