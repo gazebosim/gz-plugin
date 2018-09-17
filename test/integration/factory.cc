@@ -224,14 +224,22 @@ TEST(Factory, LibraryManagement)
     CHECK_FOR_LIBRARY(libraryPath, true);
   }
 
-  // Now the reference count for the library has been intentionally leaked, so
-  // the library will remain loaded until the executable finishes.
-  EXPECT_EQ(ignition::plugin::LostProductCount(), 1u);
+  // Now the reference count for the library has been passed into the
+  // lostProductManager.
+  EXPECT_EQ(1u, ignition::plugin::LostProductCount());
+
+  // As long as the reference count is in the lostProductManager, the library
+  // will remain loaded.
   CHECK_FOR_LIBRARY(libraryPath, true);
 
+  // This function will clean up all the lost products, deleting their reference
+  // counts.
   ignition::plugin::CleanupLostProducts();
 
-  EXPECT_EQ(ignition::plugin::LostProductCount(), 0u);
+  // Now there should be no more lost products, so this count is 0.
+  EXPECT_EQ(0u, ignition::plugin::LostProductCount());
+
+  // With the reference counts deleted, the library should automatically unload.
   CHECK_FOR_LIBRARY(libraryPath, false);
 }
 
