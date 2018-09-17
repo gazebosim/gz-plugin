@@ -188,8 +188,8 @@ TEST(SpecializedPluginPtr, Construction)
   setterBase->SetIntegerValue(newIntValue);
   EXPECT_EQ(newIntValue, fooBase->MyIntegerValueIs());
 
-  // Make sure the specialized interface is available, that it is not accessed
-  // using the specialized access, and that it returns the expected value.
+  // SomeSpecializedPluginPtr is not specialized for DummyDoubleBase, so here we
+  // make sure that it is not being retrieved through specialized acccess.
   usedSpecializedInterfaceAccess = false;
   test::util::DummyDoubleBase *doubleBase =
       plugin->QueryInterface<test::util::DummyDoubleBase>();
