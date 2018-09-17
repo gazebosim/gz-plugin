@@ -87,6 +87,10 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
+    // This function is necessary for compilation, but COMPOSEPLUGIN_DISPATCH
+    // always seems to call the base Plugin class instead of this.
+    // So we will exclude it from code coverage.
+    // LCOV_EXCL_START
     template <class SpecInterface>
     template <class Interface>
     Interface *SpecializedPlugin<SpecInterface>::PrivateQueryInterface(
@@ -94,6 +98,7 @@ namespace ignition
     {
       return this->Plugin::QueryInterface<Interface>();
     }
+    // LCOV_EXCL_STOP
 
     /////////////////////////////////////////////////
     template <class SpecInterface>
