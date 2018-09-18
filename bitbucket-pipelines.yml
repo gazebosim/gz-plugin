@@ -12,8 +12,11 @@ pipelines:
   default:
     - step:
         script:
-          - echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable bionic main" > /etc/apt/sources.list.d/gazebo-stable.list
-          - echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-prerelease bionic main" > /etc/apt/sources.list.d/gazebo-prerelease.list
+          - apt update
+          - apt -y install
+            gnupg lsb-release
+          - echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list
+          - echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-prerelease $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-prerelease.list
           - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D2486D2DD83DB69272AFE98867170598AF249743
           - apt-get update
           - apt-get -y install
