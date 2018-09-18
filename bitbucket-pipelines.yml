@@ -13,10 +13,11 @@ pipelines:
     - step:
         script:
           - apt update
-          - apt -y install wget lsb-release gnupg
-          - sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
-          - sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-prerelease `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-prerelease.list'
-          - wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add -
+          - apt -y install
+            gnupg lsb-release
+          - echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list
+          - echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-prerelease $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-prerelease.list
+          - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D2486D2DD83DB69272AFE98867170598AF249743
           - apt-get update
           - apt-get -y install
             cmake pkg-config python ruby-ronn g++-8
