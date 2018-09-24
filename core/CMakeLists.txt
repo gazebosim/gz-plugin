@@ -6,7 +6,7 @@ ign_get_libsources_and_unittests(sources tests)
 # Create the library target
 ign_create_core_library(
   SOURCES ${sources}
-  CXX_STANDARD 11)
+  CXX_STANDARD 17)
 
 target_link_libraries(${PROJECT_LIBRARY_TARGET_NAME}
   PUBLIC ignition-cmake${IGN_CMAKE_VER}::utilities)
