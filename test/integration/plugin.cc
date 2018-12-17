@@ -45,7 +45,7 @@ TEST(Loader, LoadBadPlugins)
     ignition::plugin::Loader pl;
 
     // Make sure the expected plugins were loaded.
-    std::unordered_set<std::string> pluginNames = pl.LoadLibrary(library);
+    std::unordered_set<std::string> pluginNames = pl.LoadLib(library);
     EXPECT_TRUE(pluginNames.empty());
   }
 }
@@ -57,7 +57,7 @@ TEST(Loader, LoadExistingLibrary)
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLibrary(IGNDummyPlugins_LIB);
+      pl.LoadLib(IGNDummyPlugins_LIB);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
 
@@ -160,7 +160,7 @@ using SomeSpecializedPluginPtr =
 TEST(SpecializedPluginPtr, Construction)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugins_LIB);
+  pl.LoadLib(IGNDummyPlugins_LIB);
 
   SomeSpecializedPluginPtr plugin(
         pl.Instantiate("test::util::DummyMultiPlugin"));
@@ -302,7 +302,7 @@ TEST(PluginPtr, CopyMoveSemantics)
   EXPECT_TRUE(plugin.IsEmpty());
 
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugins_LIB);
+  pl.LoadLib(IGNDummyPlugins_LIB);
 
   plugin = pl.Instantiate("test::util::DummySinglePlugin");
   EXPECT_FALSE(plugin.IsEmpty());
@@ -383,7 +383,7 @@ void CheckSomeValues(
 TEST(PluginPtr, QueryInterfaceSharedPtr)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugins_LIB);
+  pl.LoadLib(IGNDummyPlugins_LIB);
 
   // QueryInterfaceSharedPtr without specialization
   {
@@ -456,7 +456,7 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
 ignition::plugin::PluginPtr GetSomePlugin(const std::string &path)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(path);
+  pl.LoadLib(path);
 
   return pl.Instantiate("test::util::DummyMultiPlugin");
 }
@@ -495,7 +495,7 @@ TEST(PluginPtr, LibraryManagement)
   // Test that we can forget libraries
   {
     ignition::plugin::Loader pl;
-    pl.LoadLibrary(path);
+    pl.LoadLib(path);
 
     CHECK_FOR_LIBRARY(path, true);
 
@@ -510,7 +510,7 @@ TEST(PluginPtr, LibraryManagement)
     ignition::plugin::PluginPtr plugin;
 
     ignition::plugin::Loader pl;
-    pl.LoadLibrary(path);
+    pl.LoadLib(path);
 
     CHECK_FOR_LIBRARY(path, true);
 
@@ -528,7 +528,7 @@ TEST(PluginPtr, LibraryManagement)
   // Check that we can unload libraries based on plugin name
   {
     ignition::plugin::Loader pl;
-    pl.LoadLibrary(path);
+    pl.LoadLib(path);
 
     CHECK_FOR_LIBRARY(path, true);
 
@@ -561,13 +561,13 @@ TEST(PluginPtr, LibraryManagement)
   // Check that mulitple Loaders can work side-by-side
   {
     ignition::plugin::Loader pl1;
-    pl1.LoadLibrary(path);
+    pl1.LoadLib(path);
 
     CHECK_FOR_LIBRARY(path, true);
 
     {
       ignition::plugin::Loader pl2;
-      pl2.LoadLibrary(path);
+      pl2.LoadLib(path);
 
       CHECK_FOR_LIBRARY(path, true);
     }

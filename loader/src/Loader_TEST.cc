@@ -35,7 +35,7 @@ TEST(Loader, InitialNoInterfacesImplemented)
 TEST(Loader, LoadNonexistantLibrary)
 {
   ignition::plugin::Loader loader;
-  EXPECT_TRUE(loader.LoadLibrary("/path/to/libDoesNotExist.so").empty());
+  EXPECT_TRUE(loader.LoadLib("/path/to/libDoesNotExist.so").empty());
   EXPECT_FALSE(loader.ForgetLibrary("/path/to/libDoesNotExist.so"));
 }
 
@@ -43,7 +43,7 @@ TEST(Loader, LoadNonexistantLibrary)
 TEST(Loader, LoadNonLibrary)
 {
   ignition::plugin::Loader loader;
-  EXPECT_TRUE(loader.LoadLibrary(std::string(IGN_PLUGIN_SOURCE_DIR)
+  EXPECT_TRUE(loader.LoadLib(std::string(IGN_PLUGIN_SOURCE_DIR)
                              + "/core/src/Plugin.cc").empty());
 }
 
@@ -51,7 +51,7 @@ TEST(Loader, LoadNonLibrary)
 TEST(Loader, LoadNonPluginLibrary)
 {
   ignition::plugin::Loader loader;
-  EXPECT_TRUE(loader.LoadLibrary(IGN_PLUGIN_LIB).empty());
+  EXPECT_TRUE(loader.LoadLib(IGN_PLUGIN_LIB).empty());
 }
 
 /////////////////////////////////////////////////
@@ -84,11 +84,11 @@ TEST(Loader, DoubleLoad)
   // when a user asks for a library to be loaded twice.
   ignition::plugin::Loader loader;
 
-  loader.LoadLibrary(IGNDummyPlugins_LIB);
+  loader.LoadLib(IGNDummyPlugins_LIB);
   const std::size_t interfaceCount = loader.InterfacesImplemented().size();
   EXPECT_LT(0u, interfaceCount);
 
-  loader.LoadLibrary(IGNDummyPlugins_LIB);
+  loader.LoadLib(IGNDummyPlugins_LIB);
   EXPECT_EQ(interfaceCount, loader.InterfacesImplemented().size());
 }
 
@@ -107,7 +107,7 @@ TEST(Loader, ForgetUnloadedLibrary)
   //   1. A library is loaded by some loader in the application, and
   //   2. We tell a *different* loader to forget the library
   ignition::plugin::Loader hasTheLibrary;
-  EXPECT_LT(0u, hasTheLibrary.LoadLibrary(IGNDummyPlugins_LIB).size());
+  EXPECT_LT(0u, hasTheLibrary.LoadLib(IGNDummyPlugins_LIB).size());
 
   EXPECT_FALSE(loader.ForgetLibrary(IGNDummyPlugins_LIB));
 }

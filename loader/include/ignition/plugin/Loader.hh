@@ -130,7 +130,19 @@ namespace ignition
       ///   The path to a libaray
       ///
       /// \returns The set of plugins that have been loaded from the library
-      public: std::unordered_set<std::string> LoadLibrary(
+      public: IGN_DEPRECATED(0.0) std::unordered_set<std::string> LoadLibrary(
+                  const std::string &_pathToLibrary)
+              {
+		  return LoadLib(_pathToLibrary);
+	      }
+
+      /// \brief Load a library at the given path
+      ///
+      /// \param[in] _pathToLibrary
+      ///   The path to a libaray
+      ///
+      /// \returns The set of plugins that have been loaded from the library
+      public: std::unordered_set<std::string> LoadLib(
                   const std::string &_pathToLibrary);
 
       /// \brief Instantiates a plugin for the given plugin name
@@ -185,7 +197,7 @@ namespace ignition
 
       /// \brief This loader will forget about the library at the given path
       /// location. If you want to instantiate a plugin from this library using
-      /// this loader, you will first need to call LoadLibrary again.
+      /// this loader, you will first need to call LoadLib again.
       ///
       /// After this function has been called, once all plugin instances that
       /// are tied to the library have been deleted, the library will

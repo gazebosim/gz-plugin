@@ -29,7 +29,7 @@ using namespace test::util;
 TEST(Factory, Inspect)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNFactoryPlugins_LIB);
+  pl.LoadLib(IGNFactoryPlugins_LIB);
 
   std::cout << pl.PrettyStr() << std::endl;
 
@@ -43,7 +43,7 @@ TEST(Factory, Inspect)
 TEST(Factory, Construct)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNFactoryPlugins_LIB);
+  pl.LoadLib(IGNFactoryPlugins_LIB);
 
   auto nameFactory = pl.Factory<NameFactory>("test::util::DummyNameForward");
   ASSERT_NE(nullptr, nameFactory);
@@ -100,7 +100,7 @@ TEST(Factory, Construct)
 TEST(Factory, Alias)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNFactoryPlugins_LIB);
+  pl.LoadLib(IGNFactoryPlugins_LIB);
 
   std::string symbolName;
   for (const std::string &name : pl.AllPlugins())
@@ -146,7 +146,7 @@ TEST(Factory, LibraryManagement)
 
     {
       ignition::plugin::Loader pl;
-      pl.LoadLibrary(libraryPath);
+      pl.LoadLib(libraryPath);
       CHECK_FOR_LIBRARY(libraryPath, true);
 
       auto factory = pl.Factory<SomeObjectFactory>(
@@ -174,7 +174,7 @@ TEST(Factory, LibraryManagement)
 
     {
       ignition::plugin::Loader pl;
-      pl.LoadLibrary(libraryPath);
+      pl.LoadLib(libraryPath);
       CHECK_FOR_LIBRARY(libraryPath, true);
 
       auto factory = pl.Factory<SomeObjectFactory>(
@@ -206,7 +206,7 @@ TEST(Factory, LibraryManagement)
 
     {
       ignition::plugin::Loader pl;
-      pl.LoadLibrary(libraryPath);
+      pl.LoadLib(libraryPath);
       CHECK_FOR_LIBRARY(libraryPath, true);
 
       auto factory = pl.Factory<SomeObjectFactory>(
