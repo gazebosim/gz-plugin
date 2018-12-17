@@ -133,8 +133,8 @@ namespace ignition
       public: IGN_DEPRECATED(0.0) std::unordered_set<std::string> LoadLibrary(
                   const std::string &_pathToLibrary)
               {
-		  return LoadLib(_pathToLibrary);
-	      }
+                return LoadLib(_pathToLibrary);
+              }
 
       /// \brief Load a library at the given path
       ///
