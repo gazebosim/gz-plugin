@@ -130,18 +130,6 @@ namespace ignition
       ///   The path to a library
       ///
       /// \returns The set of plugins that have been loaded from the library
-      public: IGN_DEPRECATED(0.0) std::unordered_set<std::string> LoadLibrary(
-                  const std::string &_pathToLibrary)
-              {
-                return LoadLib(_pathToLibrary);
-              }
-
-      /// \brief Load a library at the given path
-      ///
-      /// \param[in] _pathToLibrary
-      ///   The path to a library
-      ///
-      /// \returns The set of plugins that have been loaded from the library
       public: std::unordered_set<std::string> LoadLib(
                   const std::string &_pathToLibrary);
 
