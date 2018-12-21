@@ -44,12 +44,12 @@ namespace ignition
       /// \param[in] _pathToLibrary The full path to the desired library
       /// \return If a library exists at the given path, get a point to its dl
       /// handle. If the library does not exist, get a nullptr.
-      public: std::shared_ptr<void> LoadLibrary(
+      public: std::shared_ptr<void> LoadLib(
         const std::string &_pathToLibrary);
 
-      /// \brief Using a dl handle produced by LoadLibrary, extract the
+      /// \brief Using a dl handle produced by LoadLib, extract the
       /// Info from the loaded library.
-      /// \param[in] _dlHandle A handle produced by LoadLibrary
+      /// \param[in] _dlHandle A handle produced by LoadLib
       /// \param[in] _pathToLibrary The path that the library was loaded from
       /// (used for debug purposes)
       /// \return All the Info provided by the loaded library.
@@ -202,14 +202,14 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    std::unordered_set<std::string> Loader::LoadLibrary(
+    std::unordered_set<std::string> Loader::LoadLib(
         const std::string &_pathToLibrary)
     {
       std::unordered_set<std::string> newPlugins;
 
       // Attempt to load the library at this path
       const std::shared_ptr<void> &dlHandle =
-          this->dataPtr->LoadLibrary(_pathToLibrary);
+          this->dataPtr->LoadLib(_pathToLibrary);
 
       // Quit early and return an empty set of plugin names if we did not
       // actually get a valid dlHandle.
@@ -442,7 +442,7 @@ namespace ignition
     }
 
     /////////////////////////////////////////////////
-    std::shared_ptr<void> Loader::Implementation::LoadLibrary(
+    std::shared_ptr<void> Loader::Implementation::LoadLib(
         const std::string &_full_path)
     {
       std::shared_ptr<void> dlHandlePtr;
@@ -463,7 +463,7 @@ namespace ignition
                   << loadError << std::endl;
 
         // Just return a nullptr if the library could not be loaded. The
-        // Loader::LoadLibrary(~) function will handle this gracefully.
+        // Loader::LoadLib(~) function will handle this gracefully.
         return nullptr;
       }
 
@@ -506,7 +506,7 @@ namespace ignition
           // dlopen.
           //
           // At this line of code, we know that dlopen had been called by this
-          // Loader instance prior to this run of LoadLibrary. Therefore,
+          // Loader instance prior to this run of LoadLib. Therefore,
           // we should undo the dlopen that we did just a moment ago in this
           // function so that only one dlclose must be performed to finally
           // close the shared library. That final dlclose will be performed in

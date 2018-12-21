@@ -34,7 +34,7 @@ TEST(WeakPluginPtr, Lifecycle)
 
   {
     ignition::plugin::Loader pl;
-    pl.LoadLibrary(libraryPath);
+    pl.LoadLib(libraryPath);
     CHECK_FOR_LIBRARY(libraryPath, true);
 
     ignition::plugin::PluginPtr plugin =
@@ -69,7 +69,7 @@ TEST(WeakPluginPtr, Lifecycle)
 TEST(WeakPluginPtr, CopyMove)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugins_LIB);
+  pl.LoadLib(IGNDummyPlugins_LIB);
 
   ignition::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");
