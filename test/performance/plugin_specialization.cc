@@ -128,7 +128,7 @@ double RunPerformanceTest(const PluginType &plugin)
 TEST(PluginSpecialization, AccessTime)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugin_LIB);
+  pl.LoadLib(IGNDummyPlugin_LIB);
 
   // Load up the generic plugin
   ignition::plugin::PluginPtr plugin =

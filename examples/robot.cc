@@ -322,7 +322,7 @@ int main(int argc, char *argv[])
 
 #endif
 
-  std::unordered_set<std::string> robotPlugins = loader.LoadLibrary(
+  std::unordered_set<std::string> robotPlugins = loader.LoadLib(
         paths.FindSharedLibrary(robotLib));
 
   std::unordered_set<std::string> drivePlugins =
@@ -348,7 +348,7 @@ int main(int argc, char *argv[])
     return 2;
   }
 
-  std::unordered_set<std::string> envPlugins = loader.LoadLibrary(
+  std::unordered_set<std::string> envPlugins = loader.LoadLib(
         paths.FindSharedLibrary(envLib));
 
   std::unordered_set<std::string> envInterfacePlugins =

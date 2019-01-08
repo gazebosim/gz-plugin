@@ -28,7 +28,7 @@ TEST(Alias, InspectAliases)
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLibrary(IGNDummyPlugins_LIB);
+      pl.LoadLib(IGNDummyPlugins_LIB);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));
@@ -53,7 +53,7 @@ TEST(Alias, ConflictingAlias)
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLibrary(IGNDummyPlugins_LIB);
+      pl.LoadLib(IGNDummyPlugins_LIB);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));

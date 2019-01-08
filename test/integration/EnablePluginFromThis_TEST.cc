@@ -29,7 +29,7 @@
 TEST(EnablePluginFromThis, BasicInstantiate)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugins_LIB);
+  pl.LoadLib(IGNDummyPlugins_LIB);
 
   ignition::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");
@@ -74,7 +74,7 @@ using MySpecializedPluginPtr = ignition::plugin::SpecializedPluginPtr<
 TEST(EnablePluginFromThis, TemplatedInstantiate)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLibrary(IGNDummyPlugins_LIB);
+  pl.LoadLib(IGNDummyPlugins_LIB);
 
   MySpecializedPluginPtr plugin =
       pl.Instantiate<MySpecializedPluginPtr>("test::util::DummyMultiPlugin");
@@ -112,7 +112,7 @@ TEST(EnablePluginFromThis, LibraryManagement)
 
     {
       ignition::plugin::Loader pl;
-      pl.LoadLibrary(libraryPath);
+      pl.LoadLib(libraryPath);
 
       CHECK_FOR_LIBRARY(libraryPath, true);
 

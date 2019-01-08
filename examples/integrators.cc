@@ -273,7 +273,7 @@ void PrimeTheLoader(
     std::cout << "Path for [" << name << "] is [" << pluginPath << "]"
               << std::endl;
 
-    if (_loader.LoadLibrary(pluginPath).empty())
+    if (_loader.LoadLib(pluginPath).empty())
     {
       std::cout << "Failed to load [" << name << "] as a plugin library"
                 << std::endl;
