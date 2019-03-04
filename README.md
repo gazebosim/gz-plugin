@@ -9,7 +9,7 @@ of libraries designed to rapidly develop robot applications.
 
 Test coverage:
 
-[![codecov](https://codecov.io/bb/ignitionrobotics/ign-plugin/branch/master/graph/badge.svg)](https://codecov.io/bb/ignitionrobotics/ign-plugin)
+[![codecov](https://codecov.io/bb/ignitionrobotics/ign-plugin/branch/ign-plugin1/graph/badge.svg)](https://codecov.io/bb/ignitionrobotics/ign-plugin)
 
 ## Installation
 
