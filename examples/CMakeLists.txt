@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 project(examples)
 
 # Find the ignition-plugin library
-find_package(ignition-plugin0 QUIET REQUIRED COMPONENTS all)
+find_package(ignition-plugin1 QUIET REQUIRED COMPONENTS all)
+set(IGN_PLUGIN_VER ${ignition-plugin1_VERSION_MAJOR})
 find_package(ignition-common2 QUIET)
 set(IGN_COMMON_VER ${ignition-common2_VERSION_MAJOR})
 if(NOT ignition-common2_FOUND)
@@ -37,7 +38,7 @@ foreach(example_file ${example_files})
 
   target_link_libraries(${example}
     PRIVATE
-      ignition-plugin0::loader
+      ignition-plugin${IGN_PLUGIN_VER}::loader
       ignition-common${IGN_COMMON_VER}::core
       ignition-math${IGN_MATH_VER}::core
   )
