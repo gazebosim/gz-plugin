@@ -44,3 +44,12 @@ pipelines:
           - bash <(curl -s https://raw.githubusercontent.com/codecov/codecov-bash/4678d212cce2078bbaaf5027af0c0dafaad6a095/codecov) -X gcovout -X gcov
           # Codecheck
           - make codecheck
+          # Examples
+          - cd ..
+          - cd examples
+          - mkdir build
+          - cd build
+          - cmake ..
+          - make
+          - ./integrators -a
+          - ./robot
