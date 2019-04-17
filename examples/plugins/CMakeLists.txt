@@ -13,7 +13,7 @@ foreach(plugin_file ${plugin_files})
 
   target_link_libraries(${plugin}
     PRIVATE
-      ignition-plugin0::register
+      ignition-plugin${IGN_PLUGIN_VER}::register
       ignition-math${IGN_MATH_VER}::core)
 
   # All these libraries will go into the same directory, so it's sufficient for

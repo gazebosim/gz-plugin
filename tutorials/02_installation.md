@@ -6,7 +6,7 @@ This tutorial describes how to install Ignition Plugin on [Ubuntu Linux](#ubuntu
 ## Ubuntu ## {#ubuntu_install}
 
 
-Ignition Plugin version 1 requires Ubuntu Bionic, while version 0
+Ignition Plugin versions 1+ require Ubuntu Bionic, while version 0
 can be used with Ubuntu Xenial.
 
 If you don't already have the `lsb-release` package installed, please do so now:
@@ -61,8 +61,8 @@ sudo make install
 
 Ignition Plugin and several of its dependencies can be installed on macOS
 with [Homebrew](http://brew.sh/) using the [osrf/simulation
-tap](https://github.com/osrf/homebrew-simulation). Ignition Plugin version 1
-requires macOS High Sierra (10.13) or later, while version 0 supports
+tap](https://github.com/osrf/homebrew-simulation). Ignition Plugin versions 1+
+require macOS High Sierra (10.13) or later, while version 0 supports
 Sierra (10.12) or later.
 
 **Install Binaries using Homebrew**
@@ -78,7 +78,7 @@ Run the following commands:
 
 ```{.sh}
 brew tap osrf/simulation
-brew install ignition-plugin1
+brew install ignition-plugin2
 ```
 
 **Build from source using Homebrew**
@@ -86,7 +86,7 @@ brew install ignition-plugin1
 Run the following to install dependencies
 ```{.sh}
 brew tap osrf/simulation
-brew install ignition-plugin1 --only-dependencies
+brew install ignition-plugin2 --only-dependencies
 ```
 
 Clone the ign-plugin repository from bitbucket
