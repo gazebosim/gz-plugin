@@ -33,7 +33,10 @@ namespace ignition
   namespace plugin
   {
     // Forward declaration
-    namespace detail { template <class, class> class ComposePlugin; }
+    namespace detail {
+      template <class, class> class ComposePlugin;
+      template <class> class SelectSpecializers;
+    }
     class EnablePluginFromThis;
     class WeakPluginPtr;
 
@@ -143,6 +146,7 @@ namespace ignition
       template <class> friend class TemplatePluginPtr;
       template <class...> friend class SpecializedPlugin;
       template <class, class> friend class detail::ComposePlugin;
+      template <class> friend class detail::SelectSpecializers;
       friend class EnablePluginFromThis;
       friend class WeakPluginPtr;
 

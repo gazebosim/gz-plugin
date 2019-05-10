@@ -198,26 +198,19 @@ namespace ignition
             >::Specializer;
       };
 
-      /// \brief ComposePlugin provides a way for a multi-specialized Plugin
-      /// type to find its specializations within itself each time an
-      /// interface-querying function is called. The macro
-      /// DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH accomplishes this for each
-      /// of the different functions by doing a compile-time check on whether
-      /// Base2 contains the specialization, and then picks Base1 if it does
-      /// not.
-      template <class Base1, class Base2>
-      class ComposePlugin : public virtual Base1, public virtual Base2
+      template <class Base>
+      class SelectSpecializers : public virtual Base
       {
         /// \brief Default destructor
-        public: virtual ~ComposePlugin() = default;
+        public: virtual ~SelectSpecializers() = default;
 
         // Inherit function overloads
         using Plugin::QueryInterface;
         using Plugin::QueryInterfaceSharedPtr;
         using Plugin::HasInterface;
 
-        // Used for template metaprogramming
-        using Specialization = ComposePlugin<Base1, Base2>;
+        // Used for tmeplate metaprogramming
+        using Specialization = Base;
 
         /// \brief Implement functions whose only roles are to dispatch their
         /// functionalities between two base classes, depending on which base is
@@ -256,9 +249,30 @@ namespace ignition
         DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH(
             bool, HasInterface, () const, const Specializer, ())
 
+        // Declare friendship
+        template <class...> friend class ignition::plugin::SpecializedPlugin;
+        template <class> friend class SelectSpecializers;
+        template <class, class> friend class ComposePlugin;
+
+        private: SelectSpecializers() = default;
+      };
+
+      /// \brief ComposePlugin provides a way for a multi-specialized Plugin
+      /// type to find its specializations within itself each time an
+      /// interface-querying function is called. The macro
+      /// DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH accomplishes this for each
+      /// of the different functions by doing a compile-time check on whether
+      /// Base2 contains the specialization, and then picks Base1 if it does
+      /// not.
+      template <class Base1, class Base2>
+      class ComposePlugin : public virtual Base1, public virtual Base2
+      {
+        // Used for template metaprogramming
+        using Specialization = ComposePlugin<Base1, Base2>;
 
         // Declare friendship
         template <class...> friend class ignition::plugin::SpecializedPlugin;
+        template <class> friend class SelectSpecializers;
         template <class, class> friend class ComposePlugin;
 
         private: ComposePlugin() = default;
@@ -276,13 +290,17 @@ namespace ignition
     /// convoluting SpecializedPlugin types using ComposePlugin.
     template <class SpecInterface1, class... OtherSpecInterfaces>
     class SpecializedPlugin<SpecInterface1, OtherSpecInterfaces...> :
-        public virtual detail::ComposePlugin<
-          SpecializedPlugin<SpecInterface1>,
-          SpecializedPlugin<OtherSpecInterfaces...> >
+        public virtual detail::SelectSpecializers<
+            detail::ComposePlugin<
+              SpecializedPlugin<SpecInterface1>,
+              SpecializedPlugin<OtherSpecInterfaces...>
+            >
+          >
     {
       // Declare friendship
       template <class...> friend class SpecializedPlugin;
       template <class, class> friend class detail::ComposePlugin;
+      template <class> friend class detail::SelectSpecializers;
       template <class> friend class TemplatePluginPtr;
 
       /// \brief Virtual destructor

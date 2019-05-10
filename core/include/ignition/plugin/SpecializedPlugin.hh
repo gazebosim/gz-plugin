@@ -27,7 +27,10 @@ namespace ignition
   namespace plugin
   {
     // Forward declarations
-    namespace detail { template <class, class> class ComposePlugin; }
+    namespace detail {
+      template <class, class> class ComposePlugin;
+      template <class> class SelectSpecializers;
+    }
 
     // Forward declaration of the variadic template SpecializedPlugin class.
     template <class... OtherSpecInterfaces>
@@ -94,6 +97,7 @@ namespace ignition
       // Declare friendship
       template <class...> friend class SpecializedPlugin;
       template <class, class> friend class detail::ComposePlugin;
+      template <class> friend class detail::SelectSpecializers;
       template <class> friend class TemplatePluginPtr;
 
       /// \brief type is an empty placeholder class which is used by the private
