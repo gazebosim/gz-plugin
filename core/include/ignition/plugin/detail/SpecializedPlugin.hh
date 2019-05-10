@@ -209,7 +209,7 @@ namespace ignition
         using Plugin::QueryInterfaceSharedPtr;
         using Plugin::HasInterface;
 
-        // Used for tmeplate metaprogramming
+        // Used for template metaprogramming
         using Specialization = Base;
 
         /// \brief Implement functions whose only roles are to dispatch their
@@ -221,7 +221,7 @@ namespace ignition
         /// specializes for the requested Interface, if such a type is availabe
         /// within its inheritance structure. Otherwise, we cast to the generic
         /// Plugin type.
-#define DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH( \
+        #define DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH( \
                       ReturnType, Function, Suffix, CastTo, Args) \
         public: \
         template <class T> \
@@ -254,7 +254,7 @@ namespace ignition
         template <class> friend class SelectSpecializers;
         template <class, class> friend class ComposePlugin;
 
-        private: SelectSpecializers() = default;
+        protected: SelectSpecializers() = default;
       };
 
       /// \brief ComposePlugin provides a way for a multi-specialized Plugin
@@ -275,7 +275,7 @@ namespace ignition
         template <class> friend class SelectSpecializers;
         template <class, class> friend class ComposePlugin;
 
-        private: ComposePlugin() = default;
+        protected: ComposePlugin() = default;
       };
 
       /// \brief This template specialization is used when Base1 and Base2 are
@@ -307,7 +307,7 @@ namespace ignition
       public: virtual ~SpecializedPlugin() = default;
 
       /// \brief Default constructor
-      private: SpecializedPlugin() = default;
+      protected: SpecializedPlugin() = default;
     };
 
     /// \brief Allow empty specializations of SpecializedPlugin

@@ -155,7 +155,7 @@ namespace ignition
       const Plugin::InterfaceMap::iterator privateSpecializedInterfaceIterator;
 
       /// \brief Default constructor
-      private: SpecializedPlugin();
+      protected: SpecializedPlugin();
     };
   }
 }

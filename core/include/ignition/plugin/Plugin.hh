@@ -150,9 +150,10 @@ namespace ignition
       friend class EnablePluginFromThis;
       friend class WeakPluginPtr;
 
-      /// \brief Default constructor. This is kept private to ensure that
-      /// Plugins are always managed by a PluginPtr object.
-      private: Plugin();
+      /// \brief Default constructor. This is kept protected to discourage users
+      /// from instantiating them directly. They should instead only be
+      /// retrieved as a PluginPtr from the plugin Loader.
+      protected: Plugin();
 
       /// \brief Type-agnostic retriever for interfaces
       private: void *PrivateQueryInterface(
