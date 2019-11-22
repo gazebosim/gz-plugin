@@ -33,7 +33,10 @@ namespace ignition
   namespace plugin
   {
     // Forward declaration
-    namespace detail { template <class, class> class ComposePlugin; }
+    namespace detail {
+      template <class, class> class ComposePlugin;
+      template <class> class SelectSpecializers;
+    }
     class EnablePluginFromThis;
     class WeakPluginPtr;
 
@@ -143,12 +146,14 @@ namespace ignition
       template <class> friend class TemplatePluginPtr;
       template <class...> friend class SpecializedPlugin;
       template <class, class> friend class detail::ComposePlugin;
+      template <class> friend class detail::SelectSpecializers;
       friend class EnablePluginFromThis;
       friend class WeakPluginPtr;
 
-      /// \brief Default constructor. This is kept private to ensure that
-      /// Plugins are always managed by a PluginPtr object.
-      private: Plugin();
+      /// \brief Default constructor. This is kept protected to discourage users
+      /// from instantiating them directly. They should instead only be
+      /// retrieved as a PluginPtr from the plugin Loader.
+      protected: Plugin();
 
       /// \brief Type-agnostic retriever for interfaces
       private: void *PrivateQueryInterface(
