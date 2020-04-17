@@ -42,9 +42,9 @@ Run the following to install dependencies
 sudo apt-get install libignition-cmake2-dev
 ```
 
-Clone the ign-plugin repository from bitbucket
+Clone the ign-plugin repository from GitHub
 ```{.sh}
-hg clone https://bitbucket.org/ignitionrobotics/ign-plugin
+git clone https://github.com/ignitionrobotics/ign-plugin
 ```
 
 Then build using CMake
@@ -89,9 +89,9 @@ brew tap osrf/simulation
 brew install ignition-plugin1 --only-dependencies
 ```
 
-Clone the ign-plugin repository from bitbucket
+Clone the ign-plugin repository from GitHub
 ```{.sh}
-hg clone https://bitbucket.org/ignitionrobotics/ign-plugin
+git clone https://github.com/ignitionrobotics/ign-plugin
 ```
 
 Then build using CMake
