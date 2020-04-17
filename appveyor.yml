@@ -10,9 +10,8 @@ environment:
 
 install:
   - vcpkg install dlfcn-win32
-  - hg summary
   # ign-cmake
-  - hg clone https://bitbucket.org/ignitionrobotics/ign-cmake -b gz11
+  - git clone https://github.com/ignitionrobotics/ign-cmake -b gz11
   - cd ign-cmake
   - md build
   - cd build
