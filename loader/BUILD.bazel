@@ -91,8 +91,8 @@ cc_library(
         "@gtest//:gtest_main",
     ],
     local_defines = [
-        "IGN_PLUGIN_SOURCE_DIR='\"testing\"'",
-        "IGN_PLUGIN_LIB='\"testing\"'",
-        "IGNDummyPlugins_LIB='\"testing\"'",
+        "IGN_PLUGIN_SOURCE_DIR='\"TODO: set the correct path here\"'",
+        "IGN_PLUGIN_LIB='\"TODO: set the correct path here\"'",
+        "IGNDummyPlugins_LIB='\"TODO: set the correct path here\"'",
     ],
 ) for src in test_sources]
