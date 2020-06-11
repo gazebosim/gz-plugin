@@ -18,7 +18,7 @@ sources = [
 ]
 
 test_sources = [
-    "src/Loader_TEST.cc"
+    # "src/Loader_TEST.cc"
 ]
 
 generate_file(
@@ -75,8 +75,6 @@ cc_library(
     hdrs = public_headers,
     includes = ["include"],
     visibility = ["//visibility:public"],
-    linkstatic = True,
-    alwayslink = 1,
     deps = [],
 )
 
