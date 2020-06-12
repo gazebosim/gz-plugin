@@ -12,7 +12,7 @@ load(
 )
 
 
-PROJECT_NAME = "ignition-common"
+PROJECT_NAME = "ignition-plugin"
 PROJECT_MAJOR = 2
 PROJECT_MINOR = 0
 PROJECT_PATCH = 0
