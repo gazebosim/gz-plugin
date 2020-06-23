@@ -17,6 +17,9 @@
 
 #include <gtest/gtest.h>
 
+#include <ignition/common/Filesystem.hh>
+#include <ignition/common/Util.hh>
+
 #include <ignition/plugin/WeakPluginPtr.hh>
 #include <ignition/plugin/Loader.hh>
 
@@ -24,9 +27,29 @@
 #include "utils.hh"
 
 /////////////////////////////////////////////////
+bool IgnDummyPluginLib(std::string &_path)
+{
+#ifdef IGNDummyPlugins_LIB
+  _path = IGNDummyPlugins_LIB;
+  return true;
+#else
+  std::string dataDir;
+  if (ignition::common::env("TEST_SRCDIR", dataDir))
+  {
+    _path = ignition::common::joinPaths(dataDir,
+        "__main__/ign_plugin/test/IGNDummyPlugins.so");
+    return true;
+  }
+#endif
+  return false;
+}
+
+/////////////////////////////////////////////////
 TEST(WeakPluginPtr, Lifecycle)
 {
-  const std::string &libraryPath = IGNDummyPlugins_LIB;
+  std::string libDir;
+  ASSERT_TRUE(IgnDummyPluginLib(libDir));
+  const std::string &libraryPath = libDir;
 
   ignition::plugin::WeakPluginPtr weak;
 
@@ -69,7 +92,9 @@ TEST(WeakPluginPtr, Lifecycle)
 TEST(WeakPluginPtr, CopyMove)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
+  pl.LoadLib(libPath);
 
   ignition::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");

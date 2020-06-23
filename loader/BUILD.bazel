@@ -1,0 +1,97 @@
+load(
+    "//ign_bazel:generate_include_header.bzl",
+    "generate_include_header",
+)
+
+load(
+    "//ign_bazel:generate_file.bzl",
+    "generate_file",
+)
+
+public_headers_no_gen = [
+    "include/ignition/plugin/Loader.hh",
+    "include/ignition/plugin/detail/Loader.hh",
+]
+
+sources = [
+    "src/Loader.cc"
+]
+
+test_sources = [
+    "src/Loader_TEST.cc"
+]
+
+generate_file(
+    name = "include/ignition/plugin/loader/Export.hh",
+    content = """
+#pragma once
+// IGN_DEPRECATED is defined by all ignition libraries, but the version below
+// is a simplified version.  When mixing the regular ignition libraries and
+// the drake compiled ignition libraries, the compiler throws a warning about
+// the macro being multiply defined.  We undefine it before redefining it here
+// to work around that issue.  Note that the IGNITION_PLUGIN_LOADER_VISIBLE macro
+// shouldn't be defined multiple times, but we undefine it just in case.
+#ifdef IGNITION_PLUGIN_LOADER_VISIBLE
+#undef IGNITION_PLUGIN_LOADER_VISIBLE
+#endif
+#define IGNITION_PLUGIN_LOADER_VISIBLE __attribute__ ((visibility("default")))
+#ifdef IGN_DEPRECATED
+#undef IGN_DEPRECATED
+#endif
+#define IGN_DEPRECATED(version) __attribute__ ((__deprecated__))
+    """,
+    visibility = ["//visibility:private"],
+)
+
+generate_include_header(
+    name = "loader_hh_genrule",
+    out = "include/ignition/plugin/loader.hh",
+    hdrs = public_headers_no_gen + [
+        "include/ignition/plugin/loader/Export.hh",
+    ],
+)
+
+public_headers = public_headers_no_gen + [
+    "include/ignition/plugin/loader/Export.hh",
+    "include/ignition/plugin/loader.hh",
+]
+
+cc_binary(
+    name = "libignition-plugin2-loader.so",
+    srcs = sources + public_headers,
+    includes = ["include"],
+    linkopts = ["-Wl,-soname,libignition-plugin2-loader.so", "-ldl"],
+    linkshared = True,
+    visibility = [],
+    deps = [
+        "//ign_plugin/core:ign_plugin",
+        "//ign_bazel:utilities",
+    ],
+)
+
+cc_library(
+    name = "loader",
+    srcs = ["libignition-plugin2-loader.so"],
+    hdrs = public_headers,
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    linkopts = ["-ldl"],
+    deps = [
+        "//ign_plugin/core:ign_plugin",
+        "//ign_bazel:utilities",
+    ],
+)
+
+[cc_test(
+    name = src.replace("/", "_").replace(".cc", "").replace("src_", ""),
+    srcs = [src],
+    deps = [
+        "//ign_bazel:utilities",
+        "//ign_common",
+        "//ign_plugin/loader",
+        "//ign_plugin/core:ign_plugin",
+        "//ign_plugin/test:IGNDummyPlugins.so",
+        "@gtest//:gtest",
+        "@gtest//:gtest_main",
+    ],
+) for src in test_sources]
