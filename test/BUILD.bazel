@@ -1,0 +1,63 @@
+plugin_sources = [
+    "plugins/BadPluginAlign.cc",
+    "plugins/BadPluginAPIVersionNew.cc",
+    "plugins/BadPluginAPIVersionOld.cc",
+    "plugins/BadPluginNoInfo.cc",
+    "plugins/BadPluginSize.cc",
+    "plugins/FactoryPlugins.cc",
+    "plugins/TemplatedPlugins.cc",
+]
+
+headers = [
+    "plugins/DummyPlugins.hh",
+    "plugins/DummyMultiPlugin.hh",
+    "plugins/FactoryPlugins.hh",
+    "plugins/GenericExport.hh",
+    "plugins/TemplatedPlugins.hh"
+]
+
+[
+    cc_binary(
+        name = 'IGN' + plugin.split('/')[1].replace('.cc', '') + '.so',
+        srcs = [plugin] + headers,
+        deps = ["//ign_plugin/register"],
+        includes = ["plugins"],
+        visibility = ["//visibility:public"],
+        linkshared = True,
+    )
+    for plugin in plugin_sources
+]
+
+cc_binary(
+    name = "IGNDummyPlugins.so",
+    srcs = [
+        "plugins/DummyPlugins.cc",
+        "plugins/DummyPluginsOtherTranslationUnit.cc",
+        "plugins/DummyPlugins.hh",
+        "plugins/DummyMultiPlugin.hh"
+    ],
+    deps = ["//ign_plugin/register"],
+    includes = ["plugins"],
+    visibility = ["//visibility:public"],
+    linkshared = True,
+)
+
+[
+    cc_test(
+        name = "INTEGRATION_" + test.split('/')[1].replace('.cc', ''),
+        srcs = [ test, "integration/utils.hh" ] + headers,
+        deps = [
+          "//ign_common",
+          "//ign_plugin/register",
+          "//ign_plugin/loader",
+          "@gtest//:gtest",
+          "@gtest//:gtest_main",
+          ":IGNDummyPlugins.so",
+          ":IGNFactoryPlugins.so",
+          ":IGNTemplatedPlugins.so",
+        ],
+        includes = [".", "plugins", "integration"],
+    ) for test in glob(["integration/*.cc"])
+]
+
+

@@ -50,10 +50,10 @@ public_headers = public_headers_no_gen + [
 ]
 
 cc_binary(
-    name = "libign_plugin-register.so",
+    name = "libignition-plugin2-register.so",
     srcs = public_headers,
     includes = ["include"],
-    linkopts = ["-Wl,-soname,libign_plugin-register.so"],
+    linkopts = ["-Wl,-soname,libignition-plugin2-register.so"],
     linkshared = True,
     visibility = [],
     deps = [
@@ -64,11 +64,14 @@ cc_binary(
 
 cc_library(
     name = "register",
-    srcs = ["libign_plugin-register.so"],
+    srcs = ["libignition-plugin2-register.so"],
     hdrs = public_headers,
     includes = ["include"],
     visibility = ["//visibility:public"],
     linkstatic = True,
     alwayslink = 1,
-    deps = [],
+    deps = [
+        "//ign_plugin/core:ign_plugin",
+        "//ign_bazel:utilities",
+    ],
 )
