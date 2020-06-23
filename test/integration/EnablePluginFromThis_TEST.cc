@@ -17,6 +17,9 @@
 
 #include <gtest/gtest.h>
 
+#include <ignition/common/Filesystem.hh>
+#include <ignition/common/Util.hh>
+
 #include <ignition/plugin/EnablePluginFromThis.hh>
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/SpecializedPluginPtr.hh>
@@ -26,10 +29,30 @@
 #include "utils.hh"
 
 /////////////////////////////////////////////////
+bool IgnDummyPluginLib(std::string &_path)
+{
+#ifdef IGNDummyPlugins_LIB
+  _path = IGNDummyPlugins_LIB;
+  return true;
+#else
+  std::string dataDir;
+  if (ignition::common::env("TEST_SRCDIR", dataDir))
+  {
+    _path = ignition::common::joinPaths(dataDir,
+        "__main__/ign_plugin/test/IGNDummyPlugins.so");
+    return true;
+  }
+#endif
+  return false;
+}
+
+/////////////////////////////////////////////////
 TEST(EnablePluginFromThis, BasicInstantiate)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
+  pl.LoadLib(libPath);
 
   ignition::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");
@@ -74,7 +97,9 @@ using MySpecializedPluginPtr = ignition::plugin::SpecializedPluginPtr<
 TEST(EnablePluginFromThis, TemplatedInstantiate)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
+  pl.LoadLib(libPath);
 
   MySpecializedPluginPtr plugin =
       pl.Instantiate<MySpecializedPluginPtr>("test::util::DummyMultiPlugin");
@@ -101,7 +126,9 @@ TEST(EnablePluginFromThis, TemplatedInstantiate)
 /////////////////////////////////////////////////
 TEST(EnablePluginFromThis, LibraryManagement)
 {
-  const std::string &libraryPath = IGNDummyPlugins_LIB;
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
+  const std::string &libraryPath = libPath;
 
   ignition::plugin::WeakPluginPtr weak;
 

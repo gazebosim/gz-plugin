@@ -18,7 +18,7 @@ sources = [
 ]
 
 test_sources = [
-    # "src/Loader_TEST.cc"
+    "src/Loader_TEST.cc"
 ]
 
 generate_file(
@@ -57,10 +57,10 @@ public_headers = public_headers_no_gen + [
 ]
 
 cc_binary(
-    name = "libign_plugin-loader.so",
+    name = "libignition-plugin2-loader.so",
     srcs = sources + public_headers,
     includes = ["include"],
-    linkopts = ["-Wl,-soname,libign_plugin-loader.so", "-ldl"],
+    linkopts = ["-Wl,-soname,libignition-plugin2-loader.so", "-ldl"],
     linkshared = True,
     visibility = [],
     deps = [
@@ -71,11 +71,15 @@ cc_binary(
 
 cc_library(
     name = "loader",
-    srcs = ["libign_plugin-loader.so"],
+    srcs = ["libignition-plugin2-loader.so"],
     hdrs = public_headers,
     includes = ["include"],
     visibility = ["//visibility:public"],
-    deps = [],
+    linkopts = ["-ldl"],
+    deps = [
+        "//ign_plugin/core:ign_plugin",
+        "//ign_bazel:utilities",
+    ],
 )
 
 [cc_test(
@@ -83,14 +87,11 @@ cc_library(
     srcs = [src],
     deps = [
         "//ign_bazel:utilities",
+        "//ign_common",
         "//ign_plugin/loader",
         "//ign_plugin/core:ign_plugin",
+        "//ign_plugin/test:IGNDummyPlugins.so",
         "@gtest//:gtest",
         "@gtest//:gtest_main",
-    ],
-    local_defines = [
-        "IGN_PLUGIN_SOURCE_DIR='\"TODO: set the correct path here\"'",
-        "IGN_PLUGIN_LIB='\"TODO: set the correct path here\"'",
-        "IGNDummyPlugins_LIB='\"TODO: set the correct path here\"'",
     ],
 ) for src in test_sources]

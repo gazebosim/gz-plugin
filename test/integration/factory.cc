@@ -17,6 +17,9 @@
 
 #include <gtest/gtest.h>
 
+#include <ignition/common/Filesystem.hh>
+#include <ignition/common/Util.hh>
+
 #include <ignition/plugin/Factory.hh>
 #include <ignition/plugin/Loader.hh>
 
@@ -26,10 +29,30 @@
 using namespace test::util;
 
 /////////////////////////////////////////////////
+bool IgnFactoryPlugins(std::string &_path)
+{
+#ifdef IGNFactoryPlugins_LIB
+  _path = IGNFactoryPlugins_LIB;
+  return true;
+#else
+  std::string dataDir;
+  if (ignition::common::env("TEST_SRCDIR", dataDir))
+  {
+    _path = ignition::common::joinPaths(dataDir,
+        "__main__/ign_plugin/test/IGNFactoryPlugins.so");
+    return true;
+  }
+#endif
+  return false;
+}
+
+/////////////////////////////////////////////////
 TEST(Factory, Inspect)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNFactoryPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnFactoryPlugins(libPath));
+  pl.LoadLib(libPath);
 
   std::cout << pl.PrettyStr() << std::endl;
 
@@ -43,7 +66,9 @@ TEST(Factory, Inspect)
 TEST(Factory, Construct)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNFactoryPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnFactoryPlugins(libPath));
+  pl.LoadLib(libPath);
 
   auto nameFactory = pl.Factory<NameFactory>("test::util::DummyNameForward");
   ASSERT_NE(nullptr, nameFactory);
@@ -100,7 +125,9 @@ TEST(Factory, Construct)
 TEST(Factory, Alias)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNFactoryPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnFactoryPlugins(libPath));
+  pl.LoadLib(libPath);
 
   std::string symbolName;
   for (const std::string &name : pl.AllPlugins())
@@ -137,7 +164,9 @@ TEST(Factory, Alias)
 /////////////////////////////////////////////////
 TEST(Factory, LibraryManagement)
 {
-  const std::string &libraryPath = IGNFactoryPlugins_LIB;
+  std::string libPath;
+  ASSERT_TRUE(IgnFactoryPlugins(libPath));
+  const std::string &libraryPath = libPath;
 
   // Test that a single ProductPtr will keep the library loaded and correctly
   // manage the lifecycle of the product.
