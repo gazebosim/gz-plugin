@@ -17,18 +17,42 @@
 
 #include <gtest/gtest.h>
 
+#include <ignition/common/Filesystem.hh>
+#include <ignition/common/Util.hh>
+
 #include <ignition/plugin/Loader.hh>
 
 #include "../plugins/DummyPlugins.hh"
+
+/////////////////////////////////////////////////
+bool IgnDummyPluginLib(std::string &_path)
+{
+#ifdef IGNDummyPlugins_LIB
+  _path = IGNDummyPlugins_LIB;
+  return true;
+#else
+  std::string dataDir;
+  if (ignition::common::env("TEST_SRCDIR", dataDir))
+  {
+    _path = ignition::common::joinPaths(dataDir,
+        "__main__/ign_plugin/test/IGNDummyPlugins.so");
+    return true;
+  }
+#endif
+  return false;
+}
 
 /////////////////////////////////////////////////
 TEST(Alias, InspectAliases)
 {
   ignition::plugin::Loader pl;
 
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
+
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLib(IGNDummyPlugins_LIB);
+      pl.LoadLib(libPath);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));
@@ -51,9 +75,12 @@ TEST(Alias, ConflictingAlias)
 {
   ignition::plugin::Loader pl;
 
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
+
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLib(IGNDummyPlugins_LIB);
+      pl.LoadLib(libPath);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));

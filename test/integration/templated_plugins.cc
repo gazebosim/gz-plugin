@@ -22,6 +22,9 @@
 
 #include <gtest/gtest.h>
 
+#include <ignition/common/Filesystem.hh>
+#include <ignition/common/Util.hh>
+
 #include <ignition/plugin/Loader.hh>
 #include <ignition/plugin/SpecializedPluginPtr.hh>
 
@@ -30,10 +33,30 @@
 using namespace test::plugins;
 
 /////////////////////////////////////////////////
+bool IgnTemplatedPluginLib(std::string &_path)
+{
+#ifdef IGNTemplatedPlugins_LIB
+  _path = IGNTemplatedPlugins_LIB;
+  return true;
+#else
+  std::string dataDir;
+  if (ignition::common::env("TEST_SRCDIR", dataDir))
+  {
+    _path = ignition::common::joinPaths(dataDir,
+        "__main__/ign_plugin/test/IGNTemplatedPlugins.so");
+    return true;
+  }
+#endif
+  return false;
+}
+
+/////////////////////////////////////////////////
 TEST(TemplatedPlugins, InterfaceCount)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNTemplatedPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnTemplatedPluginLib(libPath));
+  pl.LoadLib(libPath);
 
   const std::size_t getIntCount =
        pl.PluginsImplementing< TemplatedGetInterface<int> >().size();
@@ -107,7 +130,9 @@ void TestSetAndGet(const ignition::plugin::Loader &_pl,
 TEST(TemplatedPlugins, SetAndGet)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNTemplatedPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnTemplatedPluginLib(libPath));
+  pl.LoadLib(libPath);
 
   TestSetAndGet<int>(pl, 120);
   TestSetAndGet<std::string>(pl, "some amazing string");

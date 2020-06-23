@@ -12,7 +12,7 @@ load(
 )
 
 
-PROJECT_NAME = "ignition-common"
+PROJECT_NAME = "ignition-plugin"
 PROJECT_MAJOR = 2
 PROJECT_MINOR = 0
 PROJECT_PATCH = 0
@@ -93,7 +93,7 @@ public_headers = public_headers_no_gen + [
 ]
 
 cc_binary(
-    name = "libign_plugin.so",
+    name = "libignition-plugin2.so",
     srcs = [
         "src/EnablePluginFromThis.cc",
         "src/Factory.cc",
@@ -103,6 +103,7 @@ cc_binary(
         "src/WeakPluginPtr.cc"
     ] + public_headers,
     includes = ["include"],
+    linkopts = ["-Wl,-soname,libignition-plugin2.so"],
     linkshared = True,
     visibility = [],
     deps = [ "//ign_bazel:utilities" ]
@@ -110,7 +111,7 @@ cc_binary(
 
 cc_library(
     name = "ign_plugin",
-    srcs = ["libign_plugin.so"],
+    srcs = ["libignition-plugin2.so"],
     hdrs = public_headers,
     includes = ["include"],
     visibility = ["//visibility:public"],

@@ -24,6 +24,10 @@
 #include <string>
 #include <vector>
 #include <iostream>
+
+#include <ignition/common/Filesystem.hh>
+#include <ignition/common/Util.hh>
+
 #include "ignition/plugin/Loader.hh"
 #include "ignition/plugin/PluginPtr.hh"
 #include "ignition/plugin/SpecializedPluginPtr.hh"
@@ -32,14 +36,62 @@
 #include "utils.hh"
 
 /////////////////////////////////////////////////
-TEST(Loader, LoadBadPlugins)
+bool BadPlugins(std::vector<std::string> &_paths)
 {
-  std::vector<std::string> libraries = {
+#ifdef IGNDummyPlugins_LIB
+  _paths = std::vector<std::string>{
     IGNBadPluginAPIVersionOld_LIB,
     IGNBadPluginAPIVersionNew_LIB,
     IGNBadPluginAlign_LIB,
     IGNBadPluginNoInfo_LIB,
     IGNBadPluginSize_LIB};
+  return true;
+#else
+  std::string dataDir;
+  if (ignition::common::env("TEST_SRCDIR", dataDir))
+  {
+    _paths = std::vector<std::string>{
+      ignition::common::joinPaths(dataDir,
+          "__main__/ign_plugin/test/IGNBadPluginAPIVersionOld.so"),
+      ignition::common::joinPaths(dataDir,
+          "__main__/ign_plugin/test/IGNBadPluginAPIVersionNew.so"),
+      ignition::common::joinPaths(dataDir,
+          "__main__/ign_plugin/test/IGNBadPluginAlign.so"),
+      ignition::common::joinPaths(dataDir,
+          "__main__/ign_plugin/test/IGNBadPluginNoInfo.so"),
+      ignition::common::joinPaths(dataDir,
+          "__main__/ign_plugin/test/IGNBadPluginSize.so")
+    };
+    return true;
+  }
+#endif
+  return false;
+
+}
+
+/////////////////////////////////////////////////
+bool IgnDummyPluginLib(std::string &_path)
+{
+#ifdef IGNDummyPlugins_LIB
+  _path = IGNDummyPlugins_LIB;
+  return true;
+#else
+  std::string dataDir;
+  if (ignition::common::env("TEST_SRCDIR", dataDir))
+  {
+    _path = ignition::common::joinPaths(dataDir,
+        "__main__/ign_plugin/test/IGNDummyPlugins.so");
+    return true;
+  }
+#endif
+  return false;
+}
+
+/////////////////////////////////////////////////
+TEST(Loader, LoadBadPlugins)
+{
+  std::vector<std::string> libraries;
+  ASSERT_TRUE(BadPlugins(libraries));
   for (auto const & library : libraries)
   {
     ignition::plugin::Loader pl;
@@ -54,6 +106,8 @@ TEST(Loader, LoadBadPlugins)
 TEST(Loader, LoadExistingLibrary)
 {
   ignition::plugin::Loader pl;
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
@@ -185,7 +239,9 @@ using SomeSpecializedPluginPtr =
 TEST(SpecializedPluginPtr, Construction)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
+  pl.LoadLib(libPath);
 
   SomeSpecializedPluginPtr plugin(
       pl.Instantiate("test::util::DummyMultiPlugin"));
@@ -330,7 +386,9 @@ TEST(PluginPtr, CopyMoveSemantics)
   EXPECT_TRUE(plugin.IsEmpty());
 
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
+  pl.LoadLib(libPath);
 
   plugin = pl.Instantiate("test::util::DummySinglePlugin");
   EXPECT_FALSE(plugin.IsEmpty());
@@ -411,7 +469,9 @@ void CheckSomeValues(
 TEST(PluginPtr, QueryInterfaceSharedPtr)
 {
   ignition::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
+  pl.LoadLib(libPath);
 
   // QueryInterfaceSharedPtr without specialization
   {
@@ -492,7 +552,9 @@ ignition::plugin::PluginPtr GetSomePlugin(const std::string &path)
 /////////////////////////////////////////////////
 TEST(PluginPtr, LibraryManagement)
 {
-  const std::string &path = IGNDummyPlugins_LIB;
+  std::string libPath;
+  ASSERT_TRUE(IgnDummyPluginLib(libPath));
+  const std::string &path = libPath;
 
   // Use scoping to destroy somePlugin
   {
