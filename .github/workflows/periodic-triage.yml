@@ -1,0 +1,11 @@
+name: Periodic triage
+on:
+  schedule:
+    - cron: '*/1 * * * *'
+jobs:
+  labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ignition-tooling/pr-collection-labeler@chapulina/periodic
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
