@@ -10,4 +10,4 @@ jobs:
       if: github.event.action == 'opened'
       uses: ignition-tooling/pr-collection-labeler@v1
       with:
-        github-token: ${{ secrets.TRIAGE_TOKEN }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
