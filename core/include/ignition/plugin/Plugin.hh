@@ -120,13 +120,13 @@ namespace ignition
               std::shared_ptr<const Interface> QueryInterfaceSharedPtr(
                   const std::string &/*_interfaceName*/) const;
 
-      /// \brief Returns true if this Plugin has the specified type of
-      /// interface.
+      /// \brief Checks if this Plugin has the specified type of interface.
+      /// \return Returns true if this Plugin has the specified type of
+      /// interface, and false otherwise.
       public: template <class Interface>
               bool HasInterface() const;
 
-      /// \brief Returns true if this Plugin has the specified type of
-      /// interface, otherwise returns false.
+      /// \brief Checks if this Plugin has the specified type of interface.
       ///
       /// By default, we expect you to pass in a demangled version of the
       /// interface name. If you want to use a mangled version of the name,
@@ -137,9 +137,15 @@ namespace ignition
       /// \param[in] _demangled If _interfaceName is demangled, set this to
       /// true. If you are instead using the raw mangled name that gets provided
       /// by typeid(T).name(), then set _demangled to false.
+      /// \return Returns true if this Plugin has the specified type of
+      /// interface, and false otherwise.
       public: bool HasInterface(const std::string &_interfaceName,
                                 const bool _demangled = true) const;
 
+      /// \brief Gets the name of this Plugin.
+      /// \return A pointer to the name of this Plugin, or nullptr if this
+      /// Plugin is not instantiated.
+      public: const std::string *Name() const;
 
       // -------------------- Private API -----------------------
 
