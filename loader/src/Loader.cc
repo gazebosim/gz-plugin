@@ -150,7 +150,7 @@ namespace ignition
         }
         else
         {
-          pretty << "has no aliases\n";
+          pretty << "\t\t\thas no aliases\n";
         }
 
         const std::size_t iSize = plugin->interfaces.size();
