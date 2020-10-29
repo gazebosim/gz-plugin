@@ -79,6 +79,8 @@ void TestSetAndGet(const ignition::plugin::Loader &_pl,
     const SetAndGetPluginPtr<T> plugin = _pl.Instantiate(pluginName);
     ASSERT_TRUE(static_cast<bool>(plugin));
 
+    EXPECT_EQ(pluginName, *plugin->Name());
+
     usedSpecializedInterfaceAccess = false;
     ASSERT_TRUE(plugin->template HasInterface<SetInterface>());
     EXPECT_TRUE(usedSpecializedInterfaceAccess);
