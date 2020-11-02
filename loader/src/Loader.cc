@@ -452,7 +452,8 @@ namespace ignition
       // state gets cleared each time it is called.
       dlerror();
 
-      // NOTE: We are using RTLD_GLOBAL, this may overwrite the symbols of different libraries.
+      // NOTE: We are using RTLD_GLOBAL, this may overwrite the symbols of
+      // different libraries.
       void * dlHandle = dlopen(_full_path.c_str(), RTLD_LAZY | RTLD_GLOBAL);
 
       const char *loadError = dlerror();
