@@ -452,9 +452,8 @@ namespace ignition
       // state gets cleared each time it is called.
       dlerror();
 
-      // NOTE: We open using RTLD_LOCAL instead of RTLD_GLOBAL to prevent the
-      // symbols of different libraries from writing over each other.
-      void *dlHandle = dlopen(_full_path.c_str(), RTLD_LAZY | RTLD_LOCAL);
+      // NOTE: We are using RTLD_GLOBAL, this may overwrite the symbols of different libraries.
+      void * dlHandle = dlopen(_full_path.c_str(), RTLD_LAZY | RTLD_GLOBAL);
 
       const char *loadError = dlerror();
       if (nullptr == dlHandle || nullptr != loadError)
@@ -536,12 +535,6 @@ namespace ignition
         const std::string& _pathToLibrary) const
     {
       std::vector<Info> loadedPlugins;
-
-      // This function should never be called with a nullptr _dlHandle
-      assert(_dlHandle &&
-             "Bug in code: Loader::Implementation::LoadPlugins was called with "
-             "a nullptr value for _dlHandle.");
-
       const std::string infoSymbol = "IgnitionPluginHook";
       void *infoFuncPtr = dlsym(_dlHandle.get(), infoSymbol.c_str());
 
@@ -634,6 +627,11 @@ namespace ignition
       for (const InfoMap::value_type &info : *allInfo)
       {
         loadedPlugins.push_back(info.second);
+      }
+
+      if (loadedPlugins.size() == 0)
+      {
+        return LoadPlugins(nullptr, _pathToLibrary);
       }
 
       return loadedPlugins;
