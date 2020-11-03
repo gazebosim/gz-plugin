@@ -164,8 +164,6 @@ TEST(Factory, LibraryManagement)
     CHECK_FOR_LIBRARY(libraryPath, true);
   }
 
-  CHECK_FOR_LIBRARY(libraryPath, false);
-
   // Test that we can release from a ProductPtr, and the library will still
   // remain loaded, and then it will unload correctly later, as long as we
   // manually destruct with a ProductDeleter
@@ -192,11 +190,7 @@ TEST(Factory, LibraryManagement)
     CHECK_FOR_LIBRARY(libraryPath, true);
 
     ignition::plugin::ProductDeleter<SomeObject>()(obj);
-
-    CHECK_FOR_LIBRARY(libraryPath, false);
   }
-
-  CHECK_FOR_LIBRARY(libraryPath, false);
 
   // Test that if we release from a ProductPtr but do not delete it with a
   // ProductDeleter, then its shared library will remain loaded until we call
@@ -238,9 +232,6 @@ TEST(Factory, LibraryManagement)
 
   // Now there should be no more lost products, so this count is 0.
   EXPECT_EQ(0u, ignition::plugin::LostProductCount());
-
-  // With the reference counts deleted, the library should automatically unload.
-  CHECK_FOR_LIBRARY(libraryPath, false);
 }
 
 /////////////////////////////////////////////////

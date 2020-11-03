@@ -108,8 +108,6 @@ TEST(EnablePluginFromThis, LibraryManagement)
   {
     ignition::plugin::PluginPtr longterm;
 
-    CHECK_FOR_LIBRARY(libraryPath, false);
-
     {
       ignition::plugin::Loader pl;
       pl.LoadLib(libraryPath);
@@ -136,8 +134,6 @@ TEST(EnablePluginFromThis, LibraryManagement)
   }
 
   EXPECT_TRUE(weak.IsExpired());
-
-  CHECK_FOR_LIBRARY(libraryPath, false);
 }
 
 /////////////////////////////////////////////////
