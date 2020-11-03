@@ -368,7 +368,7 @@ namespace ignition
 #endif
 
       void *dlHandle = dlopen(_pathToLibrary.c_str(),
-                              RTLD_NOLOAD | RTLD_LAZY | RTLD_LOCAL);
+                              RTLD_NOLOAD | RTLD_LAZY | RTLD_GLOBAL);
 
       if (!dlHandle)
         return false;
@@ -454,7 +454,9 @@ namespace ignition
 
       // NOTE: We are using RTLD_GLOBAL, this may overwrite the symbols of
       // different libraries.
-      void * dlHandle = dlopen(_full_path.c_str(), RTLD_LAZY | RTLD_GLOBAL);
+      void * dlHandle = dlopen(
+          _full_path.c_str(),
+          RTLD_LAZY | RTLD_GLOBAL | RTLD_NODELETE);
 
       const char *loadError = dlerror();
       if (nullptr == dlHandle || nullptr != loadError)
@@ -632,7 +634,9 @@ namespace ignition
 
       if (loadedPlugins.size() == 0)
       {
-        return LoadPlugins(nullptr, _pathToLibrary);
+        if (_dlHandle != nullptr) {
+          return LoadPlugins(nullptr, _pathToLibrary);
+        }
       }
 
       return loadedPlugins;
