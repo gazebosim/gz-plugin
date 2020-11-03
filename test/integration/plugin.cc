@@ -31,26 +31,7 @@
 #include "../plugins/DummyPlugins.hh"
 #include "utils.hh"
 
-/////////////////////////////////////////////////
-TEST(Loader, LoadBadPlugins)
-{
-  std::vector<std::string> libraries = {
-    IGNBadPluginAPIVersionOld_LIB,
-    IGNBadPluginAPIVersionNew_LIB,
-    IGNBadPluginAlign_LIB,
-    IGNBadPluginNoInfo_LIB,
-    IGNBadPluginSize_LIB};
-  for (auto const & library : libraries)
-  {
-    ignition::plugin::Loader pl;
-
-    // Make sure the expected plugins were loaded.
-    std::unordered_set<std::string> pluginNames = pl.LoadLib(library);
-    EXPECT_TRUE(pluginNames.empty());
-  }
-}
-
-/////////////////////////////////////////////////
+////////////////////////////////////////////////
 TEST(Loader, LoadExistingLibrary)
 {
   ignition::plugin::Loader pl;
@@ -170,7 +151,6 @@ TEST(Loader, LoadExistingLibrary)
   EXPECT_NEAR(doubleBase->MyDoubleValueIs(), object.dummyDouble, 1e-8);
   EXPECT_EQ(intBase->MyIntegerValueIs(), object.dummyInt);
 }
-
 
 /////////////////////////////////////////////////
 class SomeInterface { };
@@ -502,12 +482,9 @@ TEST(PluginPtr, LibraryManagement)
     CHECK_FOR_LIBRARY(path, true);
   }
 
-  CHECK_FOR_LIBRARY(path, false);
-
   // Test that we can transfer between plugins
   {
     ignition::plugin::PluginPtr somePlugin;
-    CHECK_FOR_LIBRARY(path, false);
 
     {
       ignition::plugin::PluginPtr temporaryPlugin = GetSomePlugin(path);
@@ -518,8 +495,6 @@ TEST(PluginPtr, LibraryManagement)
     CHECK_FOR_LIBRARY(path, true);
   }
 
-  CHECK_FOR_LIBRARY(path, false);
-
   // Test that we can forget libraries
   {
     ignition::plugin::Loader pl;
@@ -528,8 +503,6 @@ TEST(PluginPtr, LibraryManagement)
     CHECK_FOR_LIBRARY(path, true);
 
     EXPECT_TRUE(pl.ForgetLibrary(path));
-
-    CHECK_FOR_LIBRARY(path, false);
   }
 
   // Test that we can forget libraries, but the library will remain loaded if
@@ -551,8 +524,6 @@ TEST(PluginPtr, LibraryManagement)
   }
 
   // Check that the library will be unloaded once the plugin instance is deleted
-  CHECK_FOR_LIBRARY(path, false);
-
   // Check that we can unload libraries based on plugin name
   {
     ignition::plugin::Loader pl;
@@ -561,8 +532,6 @@ TEST(PluginPtr, LibraryManagement)
     CHECK_FOR_LIBRARY(path, true);
 
     pl.ForgetLibraryOfPlugin("test::util::DummyMultiPlugin");
-
-    CHECK_FOR_LIBRARY(path, false);
   }
 
   // Check that the std::shared_ptrs that we provide for interfaces will
@@ -570,7 +539,6 @@ TEST(PluginPtr, LibraryManagement)
   {
     std::shared_ptr<test::util::DummyNameBase> interface;
 
-    CHECK_FOR_LIBRARY(path, false);
     {
       interface = GetSomePlugin(path)->QueryInterfaceSharedPtr<
           test::util::DummyNameBase>();
@@ -583,8 +551,6 @@ TEST(PluginPtr, LibraryManagement)
 
     CHECK_FOR_LIBRARY(path, true);
   }
-
-  CHECK_FOR_LIBRARY(path, false);
 
   // Check that mulitple Loaders can work side-by-side
   {
@@ -602,8 +568,25 @@ TEST(PluginPtr, LibraryManagement)
 
     CHECK_FOR_LIBRARY(path, true);
   }
+}
 
-  CHECK_FOR_LIBRARY(path, false);
+/////////////////////////////////////////////////
+TEST(Loader, LoadBadPlugins)
+{
+  std::vector<std::string> libraries = {
+    IGNBadPluginAPIVersionOld_LIB,
+    IGNBadPluginAPIVersionNew_LIB,
+    IGNBadPluginAlign_LIB,
+    IGNBadPluginNoInfo_LIB,
+    IGNBadPluginSize_LIB};
+  for (auto const & library : libraries)
+  {
+    ignition::plugin::Loader pl;
+
+    // Make sure the expected plugins were loaded.
+    std::unordered_set<std::string> pluginNames = pl.LoadLib(library);
+    EXPECT_TRUE(pluginNames.empty());
+  }
 }
 
 /////////////////////////////////////////////////
