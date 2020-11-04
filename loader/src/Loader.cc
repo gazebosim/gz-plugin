@@ -452,6 +452,13 @@ namespace ignition
       // state gets cleared each time it is called.
       dlerror();
 
+#ifndef RTLD_NODELETE
+// This macro is not part of the POSIX standard, and is a custom addition to
+// glibc-2.2, so we need create a no-op stand-in flag for it if we are not
+// using glibc-2.2.
+#define RTLD_NODELETE 0
+#endif
+
       // NOTE: We are using RTLD_GLOBAL, this may overwrite the symbols of
       // different libraries.
       void * dlHandle = dlopen(
