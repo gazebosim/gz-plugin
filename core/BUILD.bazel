@@ -11,10 +11,12 @@ load(
     "ign_export_header",
 )
 
-
 PROJECT_NAME = "ignition-plugin"
+
 PROJECT_MAJOR = 2
+
 PROJECT_MINOR = 0
+
 PROJECT_PATCH = 0
 
 # Generates config.hh based on the version numbers in CMake code.
@@ -24,23 +26,23 @@ cmake_configure_file(
     out = "include/ignition/plugin/config.hh",
     cmakelists = ["CMakeLists.txt"],
     defines = [
-        "PROJECT_VERSION_MAJOR=%d" % (PROJECT_MAJOR),
-        "PROJECT_VERSION_MINOR=%d" % (PROJECT_MINOR),
-        "PROJECT_VERSION_PATCH=%d" % (PROJECT_PATCH),
-        "PROJECT_MAJOR_VERSION=%d" % (PROJECT_MAJOR),
-        "PROJECT_MINOR_VERSION=%d" % (PROJECT_MINOR),
-        "PROJECT_PATCH_VERSION=%d" % (PROJECT_PATCH),
+        "PROJECT_VERSION_MAJOR=%d" % PROJECT_MAJOR,
+        "PROJECT_VERSION_MINOR=%d" % PROJECT_MINOR,
+        "PROJECT_VERSION_PATCH=%d" % PROJECT_PATCH,
+        "PROJECT_MAJOR_VERSION=%d" % PROJECT_MAJOR,
+        "PROJECT_MINOR_VERSION=%d" % PROJECT_MINOR,
+        "PROJECT_PATCH_VERSION=%d" % PROJECT_PATCH,
         "PROJECT_VERSION=%d.%d" % (PROJECT_MAJOR, PROJECT_MINOR),
         "PROJECT_VERSION_FULL=%d.%d.%d" % (PROJECT_MAJOR, PROJECT_MINOR, PROJECT_PATCH),  # noqa
-        "PROJECT_NAME_NO_VERSION=%s" % (PROJECT_NAME),
+        "PROJECT_NAME_NO_VERSION=%s" % PROJECT_NAME,
     ],
     visibility = ["//visibility:private"],
 )
 
 ign_export_header(
     name = "include/ignition/plugin/Export.hh",
-    lib_name = "ignition-plugin",
     export_base = "IGNITION_PLUGIN",
+    lib_name = "ignition-plugin",
     visibility = ["//visibility:private"],
 )
 
@@ -84,13 +86,13 @@ cc_binary(
         "src/Info.cc",
         "src/Plugin.cc",
         "src/utility.cc",
-        "src/WeakPluginPtr.cc"
+        "src/WeakPluginPtr.cc",
     ] + public_headers,
     includes = ["include"],
     linkopts = ["-Wl,-soname,libignition-plugin2.so"],
     linkshared = True,
     visibility = [],
-    deps = [ "//ign_bazel:utilities" ]
+    deps = ["//ign_bazel:utilities"],
 )
 
 cc_library(
@@ -104,7 +106,7 @@ cc_library(
 test_srcs = [
     "src/Factory_TEST.cc",
     "src/Info_TEST.cc",
-    "src/utility_TEST.cc"
+    "src/utility_TEST.cc",
 ]
 
 [cc_test(
@@ -113,8 +115,7 @@ test_srcs = [
     deps = [
         "//ign_bazel:utilities",
         "//ign_plugin/core:ign_plugin",
-        "@gtest//:gtest",
+        "@gtest",
         "@gtest//:gtest_main",
-    ]
+    ],
 ) for src in test_srcs]
-

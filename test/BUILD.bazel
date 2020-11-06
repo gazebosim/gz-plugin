@@ -13,17 +13,17 @@ headers = [
     "plugins/DummyMultiPlugin.hh",
     "plugins/FactoryPlugins.hh",
     "plugins/GenericExport.hh",
-    "plugins/TemplatedPlugins.hh"
+    "plugins/TemplatedPlugins.hh",
 ]
 
 [
     cc_binary(
-        name = 'IGN' + plugin.split('/')[1].replace('.cc', '') + '.so',
+        name = "IGN" + plugin.split("/")[1].replace(".cc", "") + ".so",
         srcs = [plugin] + headers,
-        deps = ["//ign_plugin/register"],
         includes = ["plugins"],
-        visibility = ["//visibility:public"],
         linkshared = True,
+        visibility = ["//visibility:public"],
+        deps = ["//ign_plugin/register"],
     )
     for plugin in plugin_sources
 ]
@@ -31,33 +31,39 @@ headers = [
 cc_binary(
     name = "IGNDummyPlugins.so",
     srcs = [
+        "plugins/DummyMultiPlugin.hh",
         "plugins/DummyPlugins.cc",
-        "plugins/DummyPluginsOtherTranslationUnit.cc",
         "plugins/DummyPlugins.hh",
-        "plugins/DummyMultiPlugin.hh"
+        "plugins/DummyPluginsOtherTranslationUnit.cc",
     ],
-    deps = ["//ign_plugin/register"],
     includes = ["plugins"],
-    visibility = ["//visibility:public"],
     linkshared = True,
+    visibility = ["//visibility:public"],
+    deps = ["//ign_plugin/register"],
 )
 
 [
     cc_test(
-        name = "INTEGRATION_" + test.split('/')[1].replace('.cc', ''),
-        srcs = [ test, "integration/utils.hh" ] + headers,
-        deps = [
-          "//ign_common",
-          "//ign_plugin/register",
-          "//ign_plugin/loader",
-          "@gtest//:gtest",
-          "@gtest//:gtest_main",
-          ":IGNDummyPlugins.so",
-          ":IGNFactoryPlugins.so",
-          ":IGNTemplatedPlugins.so",
+        name = "INTEGRATION_" + test.split("/")[1].replace(".cc", ""),
+        srcs = [
+            test,
+            "integration/utils.hh",
+        ] + headers,
+        includes = [
+            ".",
+            "integration",
+            "plugins",
         ],
-        includes = [".", "plugins", "integration"],
-    ) for test in glob(["integration/*.cc"])
+        deps = [
+            ":IGNDummyPlugins.so",
+            ":IGNFactoryPlugins.so",
+            ":IGNTemplatedPlugins.so",
+            "//ign_common",
+            "//ign_plugin/loader",
+            "//ign_plugin/register",
+            "@gtest",
+            "@gtest//:gtest_main",
+        ],
+    )
+    for test in glob(["integration/*.cc"])
 ]
-
-
