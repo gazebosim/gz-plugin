@@ -1,0 +1,115 @@
+load(
+    "//ign_bazel:build_defs.bzl",
+    "IGNITION_FEATURES",
+    "IGNITION_ROOT",
+    "IGNITION_VISIBILITY",
+    "generate_include_header",
+    "ign_config_header",
+    "ign_export_header",
+)
+
+package(
+    default_visibility = IGNITION_VISIBILITY,
+    features = IGNITION_FEATURES,
+)
+
+licenses(["notice"])
+
+exports_files(["LICENSE"])
+
+PROJECT_NAME = "ignition-plugin"
+
+PROJECT_MAJOR = 1
+
+PROJECT_MINOR = 1
+
+PROJECT_PATCH = 0
+
+# Generates config.hh based on the version numbers in CMake code.
+ign_config_header(
+    name = "config",
+    src = "core/include/ignition/plugin/config.hh.in",
+    cmakelists = ["CMakeLists.txt"],
+    project_name = PROJECT_NAME,
+    project_version = (PROJECT_MAJOR, PROJECT_MINOR, PROJECT_PATCH),
+)
+
+ign_export_header(
+    name = "core/include/ignition/plugin/Export.hh",
+    export_base = "IGNITION_PLUGIN",
+    lib_name = "ignition-plugin",
+    visibility = ["//visibility:private"],
+)
+
+public_headers_no_gen = [
+    "core/include/ignition/plugin/EnablePluginFromThis.hh",
+    "core/include/ignition/plugin/Factory.hh",
+    "core/include/ignition/plugin/Info.hh",
+    "core/include/ignition/plugin/Plugin.hh",
+    "core/include/ignition/plugin/PluginPtr.hh",
+    "core/include/ignition/plugin/SpecializedPlugin.hh",
+    "core/include/ignition/plugin/SpecializedPluginPtr.hh",
+    "core/include/ignition/plugin/utility.hh",
+    "core/include/ignition/plugin/WeakPluginPtr.hh",
+    "core/include/ignition/plugin/detail/Factory.hh",
+    "core/include/ignition/plugin/detail/Plugin.hh",
+    "core/include/ignition/plugin/detail/PluginPtr.hh",
+    "core/include/ignition/plugin/detail/SpecializedPlugin.hh",
+    "core/include/ignition/plugin/detail/utility.hh",
+]
+
+generate_include_header(
+    name = "corehh_genrule",
+    out = "core/include/ignition/plugin.hh",
+    hdrs = public_headers_no_gen + [
+        "core/include/ignition/plugin/config.hh",
+        "core/include/ignition/plugin/Export.hh",
+    ],
+)
+
+public_headers = public_headers_no_gen + [
+    "core/include/ignition/plugin/config.hh",
+    "core/include/ignition/plugin/Export.hh",
+    "core/include/ignition/plugin.hh",
+]
+
+cc_library(
+    name = "ign_plugin",
+    srcs = [
+        "core/src/EnablePluginFromThis.cc",
+        "core/src/Factory.cc",
+        "core/src/Info.cc",
+        "core/src/Plugin.cc",
+        "core/src/WeakPluginPtr.cc",
+        "core/src/utility.cc",
+    ],
+    hdrs = public_headers,
+    includes = ["core/include"],
+    deps = [
+        IGNITION_ROOT + "ign_bazel:utilities",
+    ],
+)
+
+cc_binary(
+    name = "libignition-plugin1.so",
+    includes = ["include"],
+    linkopts = ["-Wl,-soname,libignition-plugin1.so"],
+    linkshared = True,
+    deps = [":ign_plugin"],
+)
+
+test_srcs = [
+    "core/src/Factory_TEST.cc",
+    "core/src/Info_TEST.cc",
+    "core/src/utility_TEST.cc",
+]
+
+[cc_test(
+    name = src.replace("/", "_").replace(".cc", "").replace("src_", ""),
+    srcs = [src],
+    deps = [
+        ":ign_plugin",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+) for src in test_srcs]

@@ -1,10 +1,13 @@
 load(
-    "//ign_bazel:generate_include_header.bzl",
+    "//ign_bazel:build_defs.bzl",
+    "IGNITION_ROOT",
+    "IGNITION_VISIBILITY",
     "generate_include_header",
-)
-load(
-    "//ign_bazel:ign_export_header.bzl",
     "ign_export_header",
+)
+
+package(
+    default_visibility = IGNITION_VISIBILITY,
 )
 
 public_headers_no_gen = [
@@ -33,29 +36,12 @@ public_headers = public_headers_no_gen + [
     "include/ignition/plugin/register.hh",
 ]
 
-cc_binary(
-    name = "libignition-plugin2-register.so",
-    srcs = public_headers,
-    includes = ["include"],
-    linkopts = ["-Wl,-soname,libignition-plugin2-register.so"],
-    linkshared = True,
-    visibility = [],
-    deps = [
-        "//ign_bazel:utilities",
-        "//ign_plugin/core:ign_plugin",
-    ],
-)
-
 cc_library(
     name = "register",
-    srcs = ["libignition-plugin2-register.so"],
     hdrs = public_headers,
     includes = ["include"],
-    linkstatic = True,
-    visibility = ["//visibility:public"],
     deps = [
-        "//ign_bazel:utilities",
-        "//ign_plugin/core:ign_plugin",
+        IGNITION_ROOT + "ign_bazel:utilities",
+        IGNITION_ROOT + "ign_plugin",
     ],
-    alwayslink = 1,
 )

@@ -1,10 +1,13 @@
 load(
-    "//ign_bazel:generate_include_header.bzl",
+    "//ign_bazel:build_defs.bzl",
+    "IGNITION_ROOT",
+    "IGNITION_VISIBILITY",
     "generate_include_header",
-)
-load(
-    "//ign_bazel:ign_export_header.bzl",
     "ign_export_header",
+)
+
+package(
+    default_visibility = IGNITION_VISIBILITY,
 )
 
 public_headers_no_gen = [
@@ -40,32 +43,15 @@ public_headers = public_headers_no_gen + [
     "include/ignition/plugin/loader.hh",
 ]
 
-cc_binary(
-    name = "libignition-plugin2-loader.so",
-    srcs = sources + public_headers,
-    includes = ["include"],
-    linkopts = [
-        "-Wl,-soname,libignition-plugin2-loader.so",
-        "-ldl",
-    ],
-    linkshared = True,
-    visibility = [],
-    deps = [
-        "//ign_bazel:utilities",
-        "//ign_plugin/core:ign_plugin",
-    ],
-)
-
 cc_library(
     name = "loader",
-    srcs = ["libignition-plugin2-loader.so"],
+    srcs = sources,
     hdrs = public_headers,
     includes = ["include"],
-    linkopts = ["-ldl"],
-    visibility = ["//visibility:public"],
     deps = [
-        "//ign_bazel:utilities",
-        "//ign_plugin/core:ign_plugin",
+        "@dl",
+        IGNITION_ROOT + "ign_bazel:utilities",
+        IGNITION_ROOT + "ign_plugin",
     ],
 )
 
@@ -73,11 +59,9 @@ cc_library(
     name = src.replace("/", "_").replace(".cc", "").replace("src_", ""),
     srcs = [src],
     deps = [
-        "//ign_bazel:utilities",
-        "//ign_common",
-        "//ign_plugin/core:ign_plugin",
-        "//ign_plugin/loader",
-        "//ign_plugin/test:IGNDummyPlugins.so",
+        ":loader",
+        IGNITION_ROOT + "ign_common",
+        IGNITION_ROOT + "ign_plugin/test:IGNDummyPlugins.so",
         "@gtest",
         "@gtest//:gtest_main",
     ],

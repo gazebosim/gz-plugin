@@ -1,3 +1,15 @@
+load(
+    "//ign_bazel:build_defs.bzl",
+    "IGNITION_ROOT",
+    "IGNITION_VISIBILITY",
+    "generate_include_header",
+    "ign_export_header",
+)
+
+package(
+    default_visibility = IGNITION_VISIBILITY,
+)
+
 plugin_sources = [
     "plugins/BadPluginAlign.cc",
     "plugins/BadPluginAPIVersionNew.cc",
@@ -22,8 +34,9 @@ headers = [
         srcs = [plugin] + headers,
         includes = ["plugins"],
         linkshared = True,
-        visibility = ["//visibility:public"],
-        deps = ["//ign_plugin/register"],
+        deps = [
+            IGNITION_ROOT + "ign_plugin/register",
+        ],
     )
     for plugin in plugin_sources
 ]
@@ -38,8 +51,9 @@ cc_binary(
     ],
     includes = ["plugins"],
     linkshared = True,
-    visibility = ["//visibility:public"],
-    deps = ["//ign_plugin/register"],
+    deps = [
+        IGNITION_ROOT + "ign_plugin/register",
+    ],
 )
 
 [
@@ -49,18 +63,19 @@ cc_binary(
             test,
             "integration/utils.hh",
         ] + headers,
+        data = [
+            ":IGNDummyPlugins.so",
+            ":IGNFactoryPlugins.so",
+            ":IGNTemplatedPlugins.so",
+        ],
         includes = [
             ".",
             "integration",
             "plugins",
         ],
         deps = [
-            ":IGNDummyPlugins.so",
-            ":IGNFactoryPlugins.so",
-            ":IGNTemplatedPlugins.so",
-            "//ign_common",
-            "//ign_plugin/loader",
-            "//ign_plugin/register",
+            IGNITION_ROOT + "ign_common",
+            IGNITION_ROOT + "ign_plugin/loader",
             "@gtest",
             "@gtest//:gtest_main",
         ],

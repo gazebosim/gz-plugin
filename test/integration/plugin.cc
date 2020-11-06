@@ -110,8 +110,7 @@ TEST(Loader, LoadExistingLibrary)
   ASSERT_TRUE(IgnDummyPluginLib(libPath));
 
   // Make sure the expected plugins were loaded.
-  std::unordered_set<std::string> pluginNames =
-      pl.LoadLib(IGNDummyPlugins_LIB);
+  std::unordered_set<std::string> pluginNames = pl.LoadLib(libPath);
   ASSERT_EQ(3u, pluginNames.size());
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
