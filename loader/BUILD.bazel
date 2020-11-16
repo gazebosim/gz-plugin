@@ -48,8 +48,8 @@ cc_library(
     srcs = sources,
     hdrs = public_headers,
     includes = ["include"],
+    linkopts = ["-ldl"],
     deps = [
-        "@dl",
         IGNITION_ROOT + "ign_bazel:utilities",
         IGNITION_ROOT + "ign_plugin",
     ],
@@ -58,10 +58,10 @@ cc_library(
 [cc_test(
     name = src.replace("/", "_").replace(".cc", "").replace("src_", ""),
     srcs = [src],
+    data = [IGNITION_ROOT + "ign_plugin/test:IGNDummyPlugins.so"],
     deps = [
         ":loader",
         IGNITION_ROOT + "ign_common",
-        IGNITION_ROOT + "ign_plugin/test:IGNDummyPlugins.so",
         "@gtest",
         "@gtest//:gtest_main",
     ],
