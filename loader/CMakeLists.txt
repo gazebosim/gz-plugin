@@ -34,3 +34,9 @@ endforeach()
 install(
   DIRECTORY include/
   DESTINATION ${IGN_INCLUDE_INSTALL_DIR_FULL})
+
+#============================================================================
+# ign command line support
+#============================================================================
+add_subdirectory(conf)
+add_subdirectory(src)
