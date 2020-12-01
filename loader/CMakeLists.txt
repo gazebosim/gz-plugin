@@ -4,7 +4,7 @@
 ign_get_libsources_and_unittests(sources tests)
 
 # Disable ign_TEST if ignition-tools is not found
-if (WIN32 OR NOT IGNITION-TOOLS_BINARY_DIRS)
+if (MSVC OR NOT IGNITION-TOOLS_BINARY_DIRS)
   list(REMOVE_ITEM gtest_sources ign_TEST.cc)
 endif()
 
