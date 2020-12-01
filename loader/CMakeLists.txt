@@ -2,10 +2,10 @@
 # Collect source files into the "sources" variable and unit test files into the
 # "tests" variable
 ign_get_libsources_and_unittests(sources tests)
-
+message(STATUS "tests ${tests}")
 # Disable ign_TEST if ignition-tools is not found
 if (MSVC OR NOT IGNITION-TOOLS_BINARY_DIRS)
-  list(REMOVE_ITEM gtest_sources ign_TEST.cc)
+  list(REMOVE_ITEM gtest_sources src/ign_TEST.cc)
 endif()
 
 # Create the library target
