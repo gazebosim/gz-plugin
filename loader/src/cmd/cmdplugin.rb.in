@@ -43,7 +43,7 @@ COMMANDS = {  'plugin' =>
                     "  -i [ --info ]              Get info about a plugin.\n" +
                     "                             Requires the -p option.\n"  +
                     "\n"                                                      +
-                    "  -p [ --plugin ] arg        Name of a plugin.\n"        +
+                    "  -p [ --plugin ] arg        Path to a plugin.\n"        +
                     "                             Required with -i.\n"        +
                     "\n"                                                      +
                     "  -v [ --verbose ]           Print verbose info.\n"      +
