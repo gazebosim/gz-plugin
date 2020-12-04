@@ -82,7 +82,6 @@ class Cmd
         options['plugin'] = t
       end
 
-      options["verbose"] = 0
       opts.on('-v', '--verbose', 'Print verbose info') do
         options["verbose"] = 1
       end
@@ -158,6 +157,7 @@ class Cmd
             puts 'ign plugin --info: missing plugin name (-p <plugin>)'
             puts 'Try ign plugin --help'
           else
+            options["verbose"] = 0 if !options.key?('verbose')
             Importer.extern 'void cmdPluginInfo(const char *, int)'
             Importer.cmdPluginInfo(options['plugin'], options["verbose"])
           end
