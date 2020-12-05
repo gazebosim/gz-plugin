@@ -129,6 +129,14 @@ class Cmd
       Importer.dlload plugin
     rescue DLError
       puts "Library error: [#{plugin}] not found."
+      if plugin.end_with? ".dylib"
+        puts "If this script was executed with /usr/bin/ruby, this error may be caused by
+macOS System Integrity Protection. One workaround is to use a different
+version of ruby, for example:
+    brew install ruby
+and add the following line to your shell profile:
+    export PATH=/usr/local/opt/ruby/bin:$PATH"
+      end
       exit(-1)
     end
 
