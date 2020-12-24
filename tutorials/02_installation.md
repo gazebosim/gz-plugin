@@ -121,20 +121,6 @@ conda create -n ign-ws
 conda activate ign-ws
 ```
 
-Install Ignition dependencies:
-
-You can view the list of dependencies, replacing `<#>` with the desired version:
-
-```
-conda search libignition-plugin<#> --channel conda-forge --info
-```
-
-Install dependencies, replacing `<#>` with the desired versions:
-
-```
-conda install libignition-cmake<#> --channel conda-forge
-```
-
 ### Binary Install
 
 ```
@@ -145,6 +131,20 @@ Be sure to replace `<#>` with a number value, such as 1 or 2, depending on
 which version you need.
 
 ### Source Install
+
+1. Install Ignition dependencies:
+
+You can view available versions and their dependencies:
+
+```
+conda search libignition-plugin* --channel conda-forge --info
+```
+
+Install dependencies, replacing `<#>` with the desired version:
+
+```
+conda install libignition-cmake<#> --channel conda-forge
+```
 
 1. Navigate to where you would like to build the library, and clone the repository.
 
