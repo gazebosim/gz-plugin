@@ -22,13 +22,11 @@ sudo apt-get install lsb-release
 
 Setup your computer to accept software from
 [packages.osrfoundation.org](http://packages.osrfoundation.org):
-
 ```
 sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
 ```
 
 Setup keys:
-
 ```
 wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 ```
@@ -43,7 +41,7 @@ sudo apt install libignition-plugin-dev
 
 ## Source Installation
 
-1. Install Ignition dependencies:
+1. Install Ignition dependencies
   ```
   sudo apt-get install libignition-cmake2-dev
   ```
@@ -77,9 +75,9 @@ tap](https://github.com/osrf/homebrew-simulation). Ignition Plugin version 1
 requires macOS High Sierra (10.13) or later, while version 0 supports
 Sierra (10.12) or later.
 
-## Binary Installation Using Homebrew
+## Binary Installation
 
-1. Install homebrew, which should also prompt you to install the XCode command-line tools
+1. Install Homebrew, which should also prompt you to install the XCode command-line tools
   ```
   ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   ```
@@ -90,7 +88,7 @@ Sierra (10.12) or later.
   brew install ignition-plugin1
   ```
 
-## Source Installation Using Homebrew
+## Source Installation
 
 1. Install dependencies
   ```
@@ -119,10 +117,11 @@ Sierra (10.12) or later.
 
 # Windows
 
-## Binary Installation
+## Prerequisites
 
-Install [Conda package management system](https://docs.conda.io/projects/conda/en/latest/user-guide/install/download.html).
-Miniconda suffices.
+First, follow the [ign-cmake](https://github.com/ignitionrobotics/ign-cmake) tutorial for installing Conda, Visual Studio, CMake, and other prerequisites, and also for creating a Conda environment.
+
+Navigate to ``condabin`` if necessary to use the ``conda`` command (i.e., if Conda is not in your `PATH` environment variable. You can find the location of ``condabin`` in Anaconda Prompt, ``where conda``).
 
 Create if necessary, and activate a Conda environment:
 ```
@@ -130,7 +129,8 @@ conda create -n ign-ws
 conda activate ign-ws
 ```
 
-Install `ignition-plugin`:
+## Binary Installation
+
 ```
 conda install libignition-plugin<#> --channel conda-forge
 ```
@@ -140,40 +140,27 @@ which version you need.
 
 ## Source Installation
 
-### Prerequisites
-
-First, follow the [ign-cmake](https://github.com/ignitionrobotics/ign-cmake) tutorial for installing Conda, Visual Studio, CMake, etc., prerequisites, and creating a Conda environment.
-
-Navigate to ``condabin`` if necessary to use the ``conda`` command (i.e., if Conda is not in your `PATH` environment variable. You can find the location of ``condabin`` in Anaconda Prompt, ``where conda``).
-
-Activate the Conda environment:
-```
-conda activate ign-ws
-```
-
-Install Ignition dependencies:
-
-You can view available versions and their dependencies:
-```
-conda search libignition-plugin* --channel conda-forge --info
-```
-
-Install dependencies, replacing `<#>` with the desired version:
-```
-conda install libignition-cmake<#> --channel conda-forge
-```
-
-### Build from Source
-
 This assumes you have created and activated a Conda environment while installing the Prerequisites.
 
-1. Navigate to where you would like to build the library, and clone the repository.
+1. Install Ignition dependencies:
+
+  You can view available versions and their dependencies:
+  ```
+  conda search libignition-plugin* --channel conda-forge --info
+  ```
+
+  Install dependencies, replacing `<#>` with the desired version:
+  ```
+  conda install libignition-cmake<#> --channel conda-forge
+  ```
+
+2. Navigate to where you would like to build the library, and clone the repository.
   ```
   # Optionally, append `-b ign-plugin#` (replace # with a number) to check out a specific version
   git clone https://github.com/ignitionrobotics/ign-plugin.git
   ```
 
-2. Configure and build
+3. Configure and build
   ```
   cd ign-plugin
   mkdir build
@@ -182,7 +169,7 @@ This assumes you have created and activated a Conda environment while installing
   cmake --build . --config Release
   ```
 
-3. Optionally, install
+4. Optionally, install
   ```
   cmake --install . --config Release
   ```
