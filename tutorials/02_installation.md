@@ -1,10 +1,15 @@
 \page installation Installation
 
-This tutorial describes how to install Ignition Plugin via either a binary distribution or from source.
+These instructions are for installing only Ignition Plugin.
+If you're interested in using all the Ignition libraries, check out this [Ignition installation](https://ignitionrobotics.org/docs/latest/install).
 
-## Ubuntu
+We recommend following the Binary Installation instructions to get up and running as quickly and painlessly as possible.
 
-### Prerequisites
+The Source Installation instructions should be used if you need the very latest software improvements, you need to modify the code, or you plan to make a contribution.
+
+# Ubuntu
+
+## Prerequisites
 
 Ignition Plugin version 1 requires Ubuntu Bionic, while version 0
 can be used with Ubuntu Xenial.
@@ -28,38 +33,43 @@ Setup keys:
 wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 ```
 
-### Binary Install
+## Binary Installation
 
+On Ubuntu systems, `apt-get` can be used to install `ignition-plugin`:
 ```
 sudo apt-get update
-sudo apt-get install libignition-plugin-dev
+sudo apt install libignition-plugin-dev
 ```
 
-### Source Install
+## Source Installation
 
-Run the following to install dependencies
-```
-sudo apt-get install libignition-cmake2-dev
-```
+1. Install Ignition dependencies:
+  ```
+  sudo apt-get install libignition-cmake2-dev
+  ```
 
-Clone the ign-plugin repository from GitHub
-```
-git clone https://github.com/ignitionrobotics/ign-plugin
-```
+2. Clone the repository
+  ```
+  git clone https://github.com/ignitionrobotics/ign-plugin
+  ```
 
-Then build using CMake
-```
-cd ign-plugin
-mkdir build
-cd build
-cmake ..
-make
-sudo make install
-```
+3. Configure and build
+  ```
+  cd ign-plugin
+  mkdir build
+  cd build
+  cmake ..
+  make
+  ```
 
-## macOS
+4. Optionally, install
+  ```
+  sudo make install
+  ```
 
-### Prerequisites
+# macOS
+
+## Prerequisites
 
 Ignition Plugin and several of its dependencies can be installed on macOS
 with [Homebrew](http://brew.sh/) using the [osrf/simulation
@@ -67,46 +77,68 @@ tap](https://github.com/osrf/homebrew-simulation). Ignition Plugin version 1
 requires macOS High Sierra (10.13) or later, while version 0 supports
 Sierra (10.12) or later.
 
-### Install Binaries using Homebrew
+## Binary Installation Using Homebrew
 
-Install homebrew, which should also prompt you to install the XCode
-command-line tools:
+1. Install homebrew, which should also prompt you to install the XCode command-line tools
+  ```
+  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  ```
 
+2. Run the following commands
+  ```
+  brew tap osrf/simulation
+  brew install ignition-plugin1
+  ```
+
+## Source Installation Using Homebrew
+
+1. Install dependencies
+  ```
+  brew tap osrf/simulation
+  brew install ignition-plugin1 --only-dependencies
+  ```
+
+2. Clone the repository
+  ```
+  git clone https://github.com/ignitionrobotics/ign-plugin
+  ```
+
+3. Configure and build
+  ```
+  cd ign-plugin
+  mkdir build
+  cd build
+  cmake ..
+  make
+  ```
+
+4. Optionally, install
+  ```
+  sudo make install
+  ```
+
+# Windows
+
+## Binary Installation
+
+Install [Conda package management system](https://docs.conda.io/projects/conda/en/latest/user-guide/install/download.html).
+Miniconda suffices.
+
+Create if necessary, and activate a Conda environment:
 ```
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+conda create -n ign-ws
+conda activate ign-ws
 ```
 
-Run the following commands:
-
+Install `ignition-plugin`:
 ```
-brew tap osrf/simulation
-brew install ignition-plugin1
+conda install libignition-plugin<#> --channel conda-forge
 ```
 
-### Build from source using Homebrew
+Be sure to replace `<#>` with a number value, such as 2 or 3, depending on
+which version you need.
 
-Run the following to install dependencies
-```
-brew tap osrf/simulation
-brew install ignition-plugin1 --only-dependencies
-```
-
-Clone the ign-plugin repository from GitHub
-```
-git clone https://github.com/ignitionrobotics/ign-plugin
-```
-
-Then build using CMake
-```
-cd ign-plugin
-mkdir build
-cd build
-cmake ..
-make
-sudo make install
-```
-
-## Windows
+## Source Installation
 
 ### Prerequisites
 
@@ -114,57 +146,43 @@ First, follow the [ign-cmake](https://github.com/ignitionrobotics/ign-cmake) tut
 
 Navigate to ``condabin`` if necessary to use the ``conda`` command (i.e., if Conda is not in your `PATH` environment variable. You can find the location of ``condabin`` in Anaconda Prompt, ``where conda``).
 
-Create if necessary, and activate a Conda environment:
-
+Activate the Conda environment:
 ```
-conda create -n ign-ws
 conda activate ign-ws
 ```
 
-### Binary Install
-
-```
-conda install libignition-plugin<#> --channel conda-forge
-```
-
-Be sure to replace `<#>` with a number value, such as 1 or 2, depending on
-which version you need.
-
-### Source Install
-
-1. Install Ignition dependencies:
+Install Ignition dependencies:
 
 You can view available versions and their dependencies:
-
 ```
 conda search libignition-plugin* --channel conda-forge --info
 ```
 
 Install dependencies, replacing `<#>` with the desired version:
-
 ```
 conda install libignition-cmake<#> --channel conda-forge
 ```
 
+### Build from Source
+
+This assumes you have created and activated a Conda environment while installing the Prerequisites.
+
 1. Navigate to where you would like to build the library, and clone the repository.
+  ```
+  # Optionally, append `-b ign-plugin#` (replace # with a number) to check out a specific version
+  git clone https://github.com/ignitionrobotics/ign-plugin.git
+  ```
 
-    ```
-    # Optionally, append `-b ign-plugin#` (replace # with a number) to check out a specific version
-    git clone https://github.com/ignitionrobotics/ign-plugin.git
-    ```
+2. Configure and build
+  ```
+  cd ign-plugin
+  mkdir build
+  cd build
+  cmake .. -DBUILD_TESTING=OFF  # Optionally, -DCMAKE_INSTALL_PREFIX=path\to\install
+  cmake --build . --config Release
+  ```
 
-1. Configure and build
-
-    ```
-    cd ign-plugin
-    mkdir build
-    cd build
-    cmake .. -DBUILD_TESTING=OFF  # Optionally, -DCMAKE_INSTALL_PREFIX=path\to\install
-    cmake --build . --config Release
-    ```
-
-1. Optionally, install
-
-    ```
-    cmake --install . --config Release
-    ```
+3. Optionally, install
+  ```
+  cmake --install . --config Release
+  ```
