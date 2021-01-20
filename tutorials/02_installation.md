@@ -121,7 +121,7 @@ Sierra (10.12) or later.
 
 First, follow the [ign-cmake](https://github.com/ignitionrobotics/ign-cmake) tutorial for installing Conda, Visual Studio, CMake, and other prerequisites, and also for creating a Conda environment.
 
-Navigate to ``condabin`` if necessary to use the ``conda`` command (i.e., if Conda is not in your `PATH` environment variable. You can find the location of ``condabin`` in Anaconda Prompt, ``where conda``).
+Navigate to `condabin` if necessary to use the `conda` command (i.e., if Conda is not in your `PATH` environment variable. You can find the location of `condabin` in Anaconda Prompt, `where conda`).
 
 Create if necessary, and activate a Conda environment:
 ```
@@ -173,3 +173,84 @@ This assumes you have created and activated a Conda environment while installing
   ```
   cmake --install . --config Release
   ```
+
+# Documentation
+
+API documentation and tutorials can be accessed at
+[https://ignitionrobotics.org/libs/plugin](https://ignitionrobotics.org/libs/plugin)
+
+You can also generate the documentation from a clone of this repository by following these steps.
+
+1. You will need [Doxygen](http://www.doxygen.org/). On Ubuntu Doxygen can be installed using
+  ```
+  sudo apt-get install doxygen
+  ```
+
+2. Clone the repository
+
+  ```
+  git clone https://github.com/ignitionrobotics/ign-plugin
+  ```
+
+3. Configure and build the documentation.
+  ```
+  cd ign-plugin
+  mkdir build
+  cd build
+  cmake ..
+  make doc
+  ```
+
+4. View the documentation by running the following command from the `build` directory.
+  ```
+  firefox doxygen/html/index.html
+  ```
+
+**Note** Alternatively, documentation for `ignition-plugin` can be found within the source code, and also in the [MIGRATION.md guide](https://github.com/ignitionrobotics/ign-plugin/blob/master/MIGRATION.md).
+
+
+# Test
+
+Run tests as follows:
+```
+make test
+```
+
+Tests are automatically built. To disable them, run `cmake` as follows:
+```
+cmake .. -DBUILD_TESTING=false
+```
+
+## Test coverage
+
+To run test coverage:
+
+1. Install LCOV
+
+  ```
+  sudo apt-get install lcov
+  ```
+
+2. Build with coverage
+
+  ```
+  cd build/
+  cmake .. -DCMAKE_BUILD_TYPE=coverage
+  make
+  ```
+
+3. Run tests
+  ```
+  make test
+  ```
+
+4. Generate coverage
+  ```
+  make coverage
+  ```
+
+5. View results
+  ```
+  firefox coverage/index.html
+  ```
+
