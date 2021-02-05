@@ -56,6 +56,8 @@ TEST(WeakPluginPtr, Lifecycle)
     CHECK_FOR_LIBRARY(libraryPath, true);
   }
 
+  CHECK_FOR_LIBRARY(libraryPath, false);
+
   EXPECT_TRUE(weak.IsExpired());
 
   ignition::plugin::PluginPtr empty = weak.Lock();

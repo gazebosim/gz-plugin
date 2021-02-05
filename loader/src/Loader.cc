@@ -368,7 +368,7 @@ namespace ignition
 #endif
 
       void *dlHandle = dlopen(_pathToLibrary.c_str(),
-                              RTLD_NOLOAD | RTLD_LAZY | RTLD_GLOBAL);
+                              RTLD_NOLOAD | RTLD_LAZY | RTLD_LOCAL);
 
       if (!dlHandle)
         return false;
@@ -452,18 +452,9 @@ namespace ignition
       // state gets cleared each time it is called.
       dlerror();
 
-#ifndef RTLD_NODELETE
-// This macro is not part of the POSIX standard, and is a custom addition to
-// glibc-2.2, so we need create a no-op stand-in flag for it if we are not
-// using glibc-2.2.
-#define RTLD_NODELETE 0
-#endif
-
-      // NOTE: We are using RTLD_GLOBAL, this may overwrite the symbols of
-      // different libraries.
-      void * dlHandle = dlopen(
-          _full_path.c_str(),
-          RTLD_LAZY | RTLD_GLOBAL | RTLD_NODELETE);
+      // NOTE: We open using RTLD_LOCAL instead of RTLD_GLOBAL to prevent the
+      // symbols of different libraries from writing over each other.
+      void *dlHandle = dlopen(_full_path.c_str(), RTLD_LAZY | RTLD_LOCAL);
 
       const char *loadError = dlerror();
       if (nullptr == dlHandle || nullptr != loadError)
@@ -639,9 +630,11 @@ namespace ignition
         loadedPlugins.push_back(info.second);
       }
 
+      // If no plugins could be loaded, try passing a null handle to dlsym
       if (loadedPlugins.size() == 0)
       {
-        if (_dlHandle != nullptr) {
+        if (_dlHandle != nullptr)
+        {
           return LoadPlugins(nullptr, _pathToLibrary);
         }
       }
