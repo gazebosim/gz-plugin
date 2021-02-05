@@ -1,2 +1,4 @@
 # Command line support.
-add_subdirectory(cmd)
+if(NOT WIN32)
+  add_subdirectory(cmd)
+endif()
