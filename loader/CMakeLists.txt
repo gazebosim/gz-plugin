@@ -57,5 +57,7 @@ install(
 #============================================================================
 # ign command line support
 #============================================================================
-add_subdirectory(conf)
-add_subdirectory(src)
+if(NOT MSVC)
+  add_subdirectory(conf)
+  add_subdirectory(src)
+endif()
