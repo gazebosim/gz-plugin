@@ -311,6 +311,15 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
+    const std::string *Plugin::Name() const
+    {
+      if (!this->dataPtr->info)
+        return nullptr;
+
+      return &this->dataPtr->info->name;
+    }
+
+    //////////////////////////////////////////////////
     Plugin::Plugin()
       : dataPtr(new Implementation)
     {
