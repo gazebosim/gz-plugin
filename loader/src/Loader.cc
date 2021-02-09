@@ -122,6 +122,9 @@ namespace ignition
       /// \brief A map from the shared library handle to the names of the
       /// plugins that it provides.
       public: DlHandleToPluginMap dlHandleToPluginMap;
+
+      /// \brief Flags to dlopen.
+      public: int flags{RTLD_LAZY | RTLD_LOCAL};
     };
 
     /////////////////////////////////////////////////
@@ -199,6 +202,18 @@ namespace ignition
     Loader::~Loader()
     {
       // Do nothing.
+    }
+
+    /////////////////////////////////////////////////
+    void Loader::SetFlags(int _flags)
+    {
+      this->dataPtr->flags = _flags;
+    }
+
+    /////////////////////////////////////////////////
+    int Loader::Flags() const
+    {
+      return this->dataPtr->flags;
     }
 
     /////////////////////////////////////////////////
@@ -368,7 +383,7 @@ namespace ignition
 #endif
 
       void *dlHandle = dlopen(_pathToLibrary.c_str(),
-                              RTLD_NOLOAD | RTLD_LAZY | RTLD_LOCAL);
+                              RTLD_NOLOAD | this->dataPtr->flags);
 
       if (!dlHandle)
         return false;
@@ -454,7 +469,7 @@ namespace ignition
 
       // NOTE: We open using RTLD_LOCAL instead of RTLD_GLOBAL to prevent the
       // symbols of different libraries from writing over each other.
-      void *dlHandle = dlopen(_full_path.c_str(), RTLD_LAZY | RTLD_LOCAL);
+      void *dlHandle = dlopen(_full_path.c_str(), this->flags);
 
       const char *loadError = dlerror();
       if (nullptr == dlHandle || nullptr != loadError)
@@ -550,7 +565,7 @@ namespace ignition
       }
 
       using PluginLoadFunctionSignature =
-          void(*)(void * const, const void ** const,
+          void(*)(const void *, const void ** const,
                   int *, std::size_t *, std::size_t *);
 
       // Note: InfoHook (below) is a function with a signature that matches

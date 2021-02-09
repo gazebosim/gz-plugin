@@ -48,6 +48,17 @@ namespace ignition
       /// \returns A pretty string
       public: std::string PrettyStr() const;
 
+      /// \brief Set custom flags to be used to dlopen libraries.
+      /// Defaults to (RTLD_NOLOAD | RTLD_LAZY | RTLD_LOCAL).
+      ///
+      /// \param[in] _flags Flags for dlopen.
+      public: void SetFlags(int _flags);
+
+      /// \brief Get custom flags to be used to dlopen libraries.
+      ///
+      /// \return Flags for dlopen.
+      public: int Flags() const;
+
       /// \brief Get demangled names of interfaces that the loader has plugins
       /// for.
       ///
@@ -124,7 +135,7 @@ namespace ignition
       /// if no such plugin is known.
       public: std::string LookupPlugin(const std::string &_nameOrAlias) const;
 
-      /// \brief Load a library at the given path
+      /// \brief Load a library at the given path.
       ///
       /// \param[in] _pathToLibrary
       ///   The path to a library
