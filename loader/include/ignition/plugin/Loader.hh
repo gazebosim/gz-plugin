@@ -49,7 +49,7 @@ namespace ignition
       public: std::string PrettyStr() const;
 
       /// \brief Set custom flags to be used to dlopen libraries.
-      /// Defaults to (RTLD_NOLOAD | RTLD_LAZY | RTLD_LOCAL).
+      /// Defaults to (RTLD_LAZY | RTLD_LOCAL).
       ///
       /// \param[in] _flags Flags for dlopen.
       public: void SetFlags(int _flags);
