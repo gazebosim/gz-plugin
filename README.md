@@ -24,39 +24,3 @@ of libraries designed to rapidly develop robot applications.
 ## Installation
 
 See the [installation tutorial](https://ignitionrobotics.org/api/plugin/1.1/installation.html).
-
-## Test
-
-Run tests as follows:
-
-    make test
-
-> Tests are automatically built. To disable them, run `cmake` as follows:
-
-      cmake .. -DBUILD_TESTING=false
-
-### Test coverage
-
-To run test coverage:
-
-1. Install LCOV
-
-        sudo apt-get install lcov
-
-1. Build with coverage
-
-        cd build/
-        cmake .. -DCMAKE_BUILD_TYPE=coverage
-        make
-
-1. Run tests
-
-        make test
-
-1. Generate coverage
-
-        make coverage
-
-1. View results
-
-        firefox coverage/index.html

@@ -198,18 +198,11 @@ namespace ignition
             >::Specializer;
       };
 
-      /// \brief ComposePlugin provides a way for a multi-specialized Plugin
-      /// type to find its specializations within itself each time an
-      /// interface-querying function is called. The macro
-      /// DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH accomplishes this for each
-      /// of the different functions by doing a compile-time check on whether
-      /// Base2 contains the specialization, and then picks Base1 if it does
-      /// not.
-      template <class Base1, class Base2>
-      class ComposePlugin : public virtual Base1, public virtual Base2
+      template <class Base>
+      class SelectSpecializers : public virtual Base
       {
         /// \brief Default destructor
-        public: virtual ~ComposePlugin() = default;
+        public: virtual ~SelectSpecializers() = default;
 
         // Inherit function overloads
         using Plugin::QueryInterface;
@@ -217,7 +210,7 @@ namespace ignition
         using Plugin::HasInterface;
 
         // Used for template metaprogramming
-        using Specialization = ComposePlugin<Base1, Base2>;
+        using Specialization = Base;
 
         /// \brief Implement functions whose only roles are to dispatch their
         /// functionalities between two base classes, depending on which base is
@@ -228,7 +221,7 @@ namespace ignition
         /// specializes for the requested Interface, if such a type is availabe
         /// within its inheritance structure. Otherwise, we cast to the generic
         /// Plugin type.
-#define DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH( \
+        #define DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH( \
                       ReturnType, Function, Suffix, CastTo, Args) \
         public: \
         template <class T> \
@@ -256,12 +249,33 @@ namespace ignition
         DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH(
             bool, HasInterface, () const, const Specializer, ())
 
+        // Declare friendship
+        template <class...> friend class ignition::plugin::SpecializedPlugin;
+        template <class> friend class SelectSpecializers;
+        template <class, class> friend class ComposePlugin;
+
+        protected: SelectSpecializers() = default;
+      };
+
+      /// \brief ComposePlugin provides a way for a multi-specialized Plugin
+      /// type to find its specializations within itself each time an
+      /// interface-querying function is called. The macro
+      /// DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH accomplishes this for each
+      /// of the different functions by doing a compile-time check on whether
+      /// Base2 contains the specialization, and then picks Base1 if it does
+      /// not.
+      template <class Base1, class Base2>
+      class ComposePlugin : public virtual Base1, public virtual Base2
+      {
+        // Used for template metaprogramming
+        using Specialization = ComposePlugin<Base1, Base2>;
 
         // Declare friendship
         template <class...> friend class ignition::plugin::SpecializedPlugin;
+        template <class> friend class SelectSpecializers;
         template <class, class> friend class ComposePlugin;
 
-        private: ComposePlugin() = default;
+        protected: ComposePlugin() = default;
       };
 
       /// \brief This template specialization is used when Base1 and Base2 are
@@ -276,20 +290,24 @@ namespace ignition
     /// convoluting SpecializedPlugin types using ComposePlugin.
     template <class SpecInterface1, class... OtherSpecInterfaces>
     class SpecializedPlugin<SpecInterface1, OtherSpecInterfaces...> :
-        public virtual detail::ComposePlugin<
-          SpecializedPlugin<SpecInterface1>,
-          SpecializedPlugin<OtherSpecInterfaces...> >
+        public virtual detail::SelectSpecializers<
+            detail::ComposePlugin<
+              SpecializedPlugin<SpecInterface1>,
+              SpecializedPlugin<OtherSpecInterfaces...>
+            >
+          >
     {
       // Declare friendship
       template <class...> friend class SpecializedPlugin;
       template <class, class> friend class detail::ComposePlugin;
+      template <class> friend class detail::SelectSpecializers;
       template <class> friend class TemplatePluginPtr;
 
       /// \brief Virtual destructor
       public: virtual ~SpecializedPlugin() = default;
 
       /// \brief Default constructor
-      private: SpecializedPlugin() = default;
+      protected: SpecializedPlugin() = default;
     };
 
     /// \brief Allow empty specializations of SpecializedPlugin
