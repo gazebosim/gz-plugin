@@ -38,6 +38,11 @@ ign_find_package(DL
   PRETTY libdl PURPOSE "Required for loading plugins")
 
 
+#--------------------------------------
+# Find ignition-tools
+ign_find_package(ignition-tools QUIET)
+
+
 #============================================================================
 # Configure the build
 #============================================================================
@@ -60,4 +65,3 @@ ign_create_docs(
   API_MAINPAGE_MD "${CMAKE_BINARY_DIR}/api.md"
   TUTORIALS_MAINPAGE_MD "${CMAKE_BINARY_DIR}/tutorials.md"
   )
-
