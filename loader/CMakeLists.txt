@@ -3,6 +3,11 @@
 # "tests" variable
 ign_get_libsources_and_unittests(sources tests)
 
+# Disable ign_TEST if ignition-tools is not found
+if (MSVC OR NOT IGNITION-TOOLS_BINARY_DIRS)
+  list(REMOVE_ITEM tests src/ign_TEST.cc)
+endif()
+
 # Create the library target
 ign_add_component(loader
   SOURCES ${sources}
@@ -29,8 +34,28 @@ foreach(test ${test_targets})
   target_compile_definitions(${test} PRIVATE
     "IGNDummyPlugins_LIB=\"$<TARGET_FILE:IGNDummyPlugins>\"")
 
+  target_compile_definitions(${test} PRIVATE
+    "IGN_PATH=\"${IGNITION-TOOLS_BINARY_DIRS}\"")
+
+  target_compile_definitions(${test} PRIVATE
+    "IGN_VERSION_FULL=\"${PROJECT_VERSION_FULL}\"")
+
 endforeach()
+
+if(TARGET UNIT_ign_TEST)
+  set(_env_vars)
+  list(APPEND _env_vars "IGN_CONFIG_PATH=${CMAKE_BINARY_DIR}/test/conf")
+
+  set_tests_properties(UNIT_ign_TEST PROPERTIES
+    ENVIRONMENT "${_env_vars}")
+endif()
 
 install(
   DIRECTORY include/
   DESTINATION ${IGN_INCLUDE_INSTALL_DIR_FULL})
+
+#============================================================================
+# ign command line support
+#============================================================================
+add_subdirectory(conf)
+add_subdirectory(src)
