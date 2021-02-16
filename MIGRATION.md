@@ -77,7 +77,7 @@ you choose exactly one.
 
 # Loading a library
 
-The `ignition::common::SystemPaths` class was not ported into `ign-plugin` 
+The `ignition::common::SystemPaths` class was not ported into `ign-plugin`
 because it is more related to filesystem utilities than to plugins. If you are
 currently using `ignition::common::SystemPaths` to help with loading plugins,
 then you should continue to use it. It does not have a replacement in `ign-plugin`.
