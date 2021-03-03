@@ -10,6 +10,14 @@ add_library(IGNDummyPlugins SHARED
   DummyPlugins.cc
   DummyPluginsOtherTranslationUnit.cc)
 
+add_library(IGNLoadsAnotherPlugin SHARED
+  LoadsAnotherPlugin.cc)
+
+target_link_libraries(IGNLoadsAnotherPlugin PRIVATE
+  ${PROJECT_LIBRARY_TARGET_NAME}-loader)
+target_compile_definitions(IGNLoadsAnotherPlugin PRIVATE
+  "IGNDummyPlugins_LIB=\"$<TARGET_FILE:IGNDummyPlugins>\"")
+
 # Create a variable for the name of the header which will contain the dummy plugin path.
 # This variable gets put in the cache so that it is available at generation time.
 foreach(plugin_target
@@ -20,6 +28,7 @@ foreach(plugin_target
     IGNBadPluginSize
     IGNDummyPlugins
     IGNFactoryPlugins
+    IGNLoadsAnotherPlugin
     IGNTemplatedPlugins)
 
   target_link_libraries(${plugin_target} PRIVATE

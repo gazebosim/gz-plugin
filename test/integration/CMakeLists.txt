@@ -20,6 +20,7 @@ foreach(test ${test_targets})
       IGNBadPluginSize
       IGNDummyPlugins
       IGNFactoryPlugins
+      IGNLoadsAnotherPlugin
       IGNTemplatedPlugins)
 
     target_compile_definitions(${test} PRIVATE

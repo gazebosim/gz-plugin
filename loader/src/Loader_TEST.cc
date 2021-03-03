@@ -15,6 +15,8 @@
  *
 */
 
+#include <dlfcn.h>
+
 #include <gtest/gtest.h>
 
 #include <algorithm>
@@ -62,6 +64,15 @@ TEST(Loader, InstantiateUnloadedPlugin)
       loader.Instantiate("plugin::that::is::not::loaded");
   EXPECT_FALSE(plugin);
   EXPECT_FALSE(loader.ForgetLibraryOfPlugin("plugin::that::is::not::loaded"));
+}
+
+/////////////////////////////////////////////////
+TEST(Loader, SetFlags)
+{
+  ignition::plugin::Loader loader;
+  EXPECT_EQ((RTLD_LAZY | RTLD_LOCAL), loader.Flags());
+  loader.SetFlags(RTLD_LAZY | RTLD_GLOBAL);
+  EXPECT_EQ((RTLD_LAZY | RTLD_GLOBAL), loader.Flags());
 }
 
 class SomeInterface { };
