@@ -206,7 +206,7 @@ You can also generate the documentation from a clone of this repository by follo
   firefox doxygen/html/index.html
   ```
 
-**Note** Alternatively, documentation for `ignition-plugin` can be found within the source code, and also in the [MIGRATION.md guide](https://github.com/ignitionrobotics/ign-plugin/blob/master/MIGRATION.md).
+**Note** Alternatively, documentation for `ignition-plugin` can be found within the source code, and also in the [MIGRATION.md guide](https://github.com/ignitionrobotics/ign-plugin/blob/main/MIGRATION.md).
 
 
 # Test
