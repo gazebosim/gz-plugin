@@ -15,6 +15,7 @@
  *
 */
 
+#include <array>
 #include <cassert>
 #include <iostream>
 #include <set>
@@ -206,14 +207,14 @@ void Simulate(const EnvironmentPluginPtr &_environment,
     if (_printState)
     {
       std::cout << "Location: (" << x[0] << "m, " << x[1] << "m) | Yaw: "
-                << 180.0*theta/M_PI << "-degrees | Time: " << time
+                << 180.0*theta/IGN_PI << "-degrees | Time: " << time
                 << "s  |==|  Velocity output: " << vel << std::endl;
     }
   }
 
   std::cout << "The simulation has finished (time: " << time << "s).\n"
             << " -- Final robot location: (" << x[0] << "m, " << x[1] << "m)\n"
-            << " -- Yaw: " << 180.0*theta/M_PI << "-degrees\n" << std::endl;
+            << " -- Yaw: " << 180.0*theta/IGN_PI << "-degrees\n" << std::endl;
 }
 
 /////////////////////////////////////////////////
