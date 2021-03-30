@@ -8,8 +8,12 @@ set(IGN_PLUGIN_VER ${ignition-plugin1_VERSION_MAJOR})
 find_package(ignition-common2 QUIET)
 set(IGN_COMMON_VER ${ignition-common2_VERSION_MAJOR})
 if(NOT ignition-common2_FOUND)
-  find_package(ignition-common3 QUIET REQUIRED)
+  find_package(ignition-common3 QUIET)
   set(IGN_COMMON_VER ${ignition-common3_VERSION_MAJOR})
+endif()
+if(NOT ignition-common2_FOUND AND NOT ignition-common3_FOUND)
+  find_package(ignition-common4 QUIET REQUIRED)
+  set(IGN_COMMON_VER ${ignition-common4_VERSION_MAJOR})
 endif()
 
 find_package(ignition-math5 QUIET)
@@ -56,4 +60,3 @@ foreach(example_file ${example_files})
   endif()
 
 endforeach()
-
