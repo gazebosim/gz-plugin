@@ -1,6 +1,8 @@
 ## Ignition Plugin 1.x
 
-### Ignition Plugin 1.2.0 (20XX-XX-XX)
+### Ignition Plugin 1.X.X (20XX-XX-XX)
+
+### Ignition Plugin 1.2.0 (2021-03-30)
 
 1. Infrastructure
     * [Pull request #45](https://github.com/ignitionrobotics/ign-plugin/pull/45)
@@ -13,6 +15,10 @@
     * [Pull request #10](https://github.com/ignitionrobotics/ign-plugin/pull/10)
     * [Pull request #14](https://github.com/ignitionrobotics/ign-plugin/pull/14)
     * [Pull request #8](https://github.com/ignitionrobotics/ign-plugin/pull/8)
+    * [Pull request #47](https://github.com/ignitionrobotics/ign-plugin/pull/47)
+
+1. Include windows instructions in examples README.md and fix examples to compile them on Windows
+    * [Pull request #48](https://github.com/ignitionrobotics/ign-plugin/pull/48)
 
 1. Fix downstream Windows builds
     * [Pull request #38](https://github.com/ignitionrobotics/ign-plugin/pull/38)
