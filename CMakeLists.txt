@@ -8,7 +8,7 @@ project(ignition-plugin1 VERSION 1.2.0)
 #============================================================================
 # Find ignition-cmake
 #============================================================================
-find_package(ignition-cmake2 REQUIRED)
+find_package(ignition-cmake2 2.8.0 REQUIRED)
 set(IGN_CMAKE_VER ${ignition-cmake2_VERSION_MAJOR})
 
 #============================================================================
