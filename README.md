@@ -23,4 +23,4 @@ of libraries designed to rapidly develop robot applications.
 
 ## Installation
 
-See the [installation tutorial](https://ignitionrobotics.org/api/plugin/1.1/installation.html).
+See the [installation tutorial](https://ignitionrobotics.org/api/plugin/1.2/installation.html).
