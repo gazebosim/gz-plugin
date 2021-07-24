@@ -9,7 +9,7 @@ ign_create_core_library(
   CXX_STANDARD 17)
 
 target_link_libraries(${PROJECT_LIBRARY_TARGET_NAME}
-  PUBLIC ignition-cmake${IGN_CMAKE_VER}::utilities)
+  PUBLIC ignition-utils${IGN_UTILS_VER}::ignition-utils${IGN_UTILS_VER})
 
 # Build the unit tests
 ign_build_tests(

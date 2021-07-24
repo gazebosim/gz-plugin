@@ -25,7 +25,7 @@
 #include <typeinfo>
 #include <unordered_set>
 
-#include <ignition/utilities/SuppressWarning.hh>
+#include <ignition/utils/SuppressWarning.hh>
 
 #include <ignition/plugin/loader/Export.hh>
 #include <ignition/plugin/PluginPtr.hh>
