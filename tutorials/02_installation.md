@@ -43,7 +43,7 @@ sudo apt install libignition-plugin-dev
 
 1. Install Ignition dependencies
   ```
-  sudo apt-get install libignition-cmake2-dev
+  sudo apt-get install libignition-cmake2-dev libignition-tools-dev libignition-utils1-cli-dev
   ```
 
 2. Clone the repository

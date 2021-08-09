@@ -25,7 +25,7 @@
 #include <type_traits>
 #include <utility>
 
-#include <ignition/utilities/SuppressWarning.hh>
+#include <ignition/utils/SuppressWarning.hh>
 
 #include <ignition/plugin/EnablePluginFromThis.hh>
 #include <ignition/plugin/Info.hh>

@@ -23,7 +23,7 @@
 #include <map>
 #include <string>
 
-#include <ignition/utilities/SuppressWarning.hh>
+#include <ignition/utils/SuppressWarning.hh>
 
 #include <ignition/plugin/Export.hh>
 #include <ignition/plugin/Info.hh>
