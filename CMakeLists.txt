@@ -37,6 +37,11 @@ ign_find_package(DL
   PRETTY libdl PURPOSE "Required for loading plugins")
 
 
+#--------------------------------------
+# Find ignition-tools
+find_program(IGN_TOOLS_PROGRAM ign)
+
+
 #============================================================================
 # Configure the build
 #============================================================================
