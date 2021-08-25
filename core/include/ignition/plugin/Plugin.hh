@@ -93,8 +93,6 @@ namespace ignition
       /// errors. You must always call QueryInterfaceSharedPtr for a reference-
       /// counting pointer to an interface.
       ///
-      /// \param[in] _interfaceName The name of the desired interface, as a
-      /// string.
       /// \return A reference-counting pointer to the specified interface. This
       /// will keep the interface valid and the plugin instance alive, even if
       /// all Plugin objects that refer to this plugin instance are destructed.
