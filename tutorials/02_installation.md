@@ -157,7 +157,7 @@ This assumes you have created and activated a Conda environment while installing
 2. Navigate to where you would like to build the library, and clone the repository.
   ```
   # Optionally, append `-b ign-plugin#` (replace # with a number) to check out a specific version
-  git clone https://github.com/ignitionrobotics/ign-plugin.git
+  git clone https://github.com/ignitionrobotics/ign-plugin
   ```
 
 3. Configure and build
@@ -177,7 +177,7 @@ This assumes you have created and activated a Conda environment while installing
 # Documentation
 
 API documentation and tutorials can be accessed at
-[https://ignitionrobotics.org/libs/plugin](https://ignitionrobotics.org/libs/plugin)
+[Ignition Robotics website](https://ignitionrobotics.org/libs/plugin)
 
 You can also generate the documentation from a clone of this repository by following these steps.
 
@@ -253,4 +253,3 @@ To run test coverage:
   ```
   firefox coverage/index.html
   ```
-
