@@ -58,7 +58,7 @@ std::string custom_exec_str(std::string _cmd)
 TEST(ignTest, PluginInfoNonexistentLibrary)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH) + "/ign";
+  std::string ign = std::string(IGN_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
       "/path/to/libDoesNotExist.so");
@@ -76,7 +76,7 @@ TEST(ignTest, PluginInfoNonexistentLibrary)
 TEST(ignTest, PluginInfoNonLibrary)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH) + "/ign";
+  std::string ign = std::string(IGN_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
       std::string(IGN_PLUGIN_SOURCE_DIR) + "/core/src/Plugin.cc");
@@ -94,7 +94,7 @@ TEST(ignTest, PluginInfoNonLibrary)
 TEST(ignTest, PluginInfoNonPluginLibrary)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH) + "/ign";
+  std::string ign = std::string(IGN_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
       IGN_PLUGIN_LIB);
@@ -113,7 +113,7 @@ TEST(ignTest, PluginInfoNonPluginLibrary)
 TEST(ignTest, PluginInfoDummyPlugins)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH) + "/ign";
+  std::string ign = std::string(IGN_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
       IGNDummyPlugins_LIB);
@@ -152,7 +152,7 @@ TEST(ignTest, PluginInfoDummyPlugins)
 TEST(ignTest, PluginInfoVerboseDummyPlugins)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH) + "/ign";
+  std::string ign = std::string(IGN_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
       IGNDummyPlugins_LIB + " --verbose");

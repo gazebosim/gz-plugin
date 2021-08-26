@@ -39,7 +39,7 @@ ign_find_package(DL
 
 #--------------------------------------
 # Find ignition-tools
-ign_find_package(ignition-tools QUIET)
+find_program(IGN_TOOLS_PROGRAM ign)
 
 
 #============================================================================
