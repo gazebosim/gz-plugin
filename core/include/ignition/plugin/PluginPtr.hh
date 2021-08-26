@@ -112,8 +112,9 @@ namespace ignition
       public: TemplatePluginPtr &operator=(TemplatePluginPtr &&_other);
 
       /// \brief nullptr assignment operator. Same as calling Clear()
+      /// \param[in] _null nullptr object.
       /// \return A reference to this object.
-      public: TemplatePluginPtr &operator=(std::nullptr_t);
+      public: TemplatePluginPtr &operator=(std::nullptr_t _null);
 
       /// \brief Access the wrapper for the plugin instance and call one of its
       /// member functions.
