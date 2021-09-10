@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 #============================================================================
 # Initialize the project
 #============================================================================
-project(ignition-plugin1 VERSION 1.2.0)
+project(ignition-plugin1 VERSION 1.2.1)
 
 #============================================================================
 # Find ignition-cmake
@@ -14,15 +14,13 @@ set(IGN_CMAKE_VER ${ignition-cmake2_VERSION_MAJOR})
 #============================================================================
 # Configure the project
 #============================================================================
-ign_configure_project(VERSION_SUFFIX)
+ign_configure_project(VERSION_SUFFIX pre1)
 
 #============================================================================
 # Set project-specific options
 #============================================================================
 
 # No project-specific options yet for ign-plugin
-
-
 
 #============================================================================
 # Search for project-specific dependencies
