@@ -41,10 +41,14 @@ sudo apt install libignition-plugin-dev
 
 ## Source Installation
 
-1. Install Ignition dependencies
+1. Install required Ignition dependencies
   ```bash
   sudo apt-get install libignition-cmake2-dev
   ```
+
+1. Install Ignition Tools if you want to use the `ign plugin` command line tool:
+  ```bash
+  sudo apt-get install ignition-tools
 
 2. Clone the repository
   ```bash
@@ -187,7 +191,6 @@ You can also generate the documentation from a clone of this repository by follo
   ```
 
 2. Clone the repository
-
   ```bash
   git clone https://github.com/ignitionrobotics/ign-plugin
   ```
