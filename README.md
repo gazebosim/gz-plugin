@@ -23,11 +23,11 @@ of libraries designed to rapidly develop robot applications.
 
 ## Features
 
-* Registration of templated and non-templated classes from any translation unit.
-* Querying of interfaces by C++ type of name as string.
-* Dynamically load plugins at runtime according to the interfaces they provide.
-* Reference counting of plugin objects to unload libraries no longer in use.
-* Optional command line tool `ign plugin` to inspect plugins.
+* Registration of **templated and non-templated** classes from any translation unit.
+* Querying of interfaces **by C++ type or name string**.
+* **Dynamically load** plugins at runtime according to the interfaces they provide.
+* **Reference counting** of plugin objects to unload libraries no longer in use.
+* **Command line tool** `ign plugin` to inspect plugins.
 
 ## Installation
 
