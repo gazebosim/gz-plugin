@@ -12,7 +12,7 @@ Build | Status
 Test coverage | [![codecov](https://codecov.io/gh/ignitionrobotics/ign-plugin/branch/ign-plugin1/graph/badge.svg)](https://codecov.io/gh/ignitionrobotics/ign-plugin/branch/ign-plugin1)
 Ubuntu Bionic | [![Build Status](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-bionic-amd64/badge/icon)](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-bionic-amd64/)
 Homebrew      | [![Build Status](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-bionic-amd64/badge/icon)](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-bionic-amd64/)
-Windows 7     | [![Build Status](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-windows7-amd64/badge/icon)](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-windows7-amd64/)
+Windows       | [![Build Status](https://build.osrfoundation.org/buildStatus/icon?job=ign_plugin-ign-1-win)](https://build.osrfoundation.org/job/ign_plugin-ign-1-win/)
 
 **Library for registering plugin libraries and dynamically loading them at runtime.**
 
@@ -24,3 +24,7 @@ of libraries designed to rapidly develop robot applications.
 ## Installation
 
 See the [installation tutorial](https://ignitionrobotics.org/api/plugin/1.2/installation.html).
+
+# Documentation
+
+API documentation and tutorials can be accessed at [https://ignitionrobotics.org/libs/plugin](https://ignitionrobotics.org/libs/plugin)
