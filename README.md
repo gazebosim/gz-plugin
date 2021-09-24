@@ -21,6 +21,14 @@ of libraries designed to rapidly develop robot applications.
 
 [http://ignitionrobotics.org](http://ignitionrobotics.org)
 
+## Features
+
+* Registration of templated and non-templated classes from any translation unit.
+* Querying of interfaces by C++ type of name as string.
+* Dynamically load plugins at runtime according to the interfaces they provide.
+* Reference counting of plugin objects to unload libraries no longer in use.
+* Optional command line tool `ign plugin` to inspect plugins.
+
 ## Installation
 
 See the [installation tutorial](https://ignitionrobotics.org/api/plugin/1.2/installation.html).
