@@ -1,6 +1,6 @@
 ## Ignition Plugin 1.x
 
-### Ignition Plugin 1.2.1 (2021-09-XX)
+### Ignition Plugin 1.2.1 (2021-09-24)
 
 1. Add Doxygen documentation checks to CI
     * [Pull request #59](https://github.com/ignitionrobotics/ign-plugin/pull/59)
