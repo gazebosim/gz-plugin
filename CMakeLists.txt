@@ -28,6 +28,11 @@ ign_configure_project(VERSION_SUFFIX)
 message(STATUS "\n\n-- ====== Finding Dependencies ======")
 
 #--------------------------------------
+# Find ignition-utils
+ign_find_package(ignition-utils1 REQUIRED COMPONENTS cli)
+set(IGN_UTILS_VER ${ignition-utils1_VERSION_MAJOR})
+
+#--------------------------------------
 # Find libdl
 ign_find_package(DL
   REQUIRED_BY loader
