@@ -1,6 +1,20 @@
 ## Ignition Plugin 1.x
 
-### Ignition Plugin 1.X.X (20XX-XX-XX)
+### Ignition Plugin 1.2.1 (2021-09-24)
+
+1. Add Doxygen documentation checks to CI
+    * [Pull request #59](https://github.com/ignitionrobotics/ign-plugin/pull/59)
+
+1. Infrastructure
+    * [Pull request #58](https://github.com/ignitionrobotics/ign-plugin/pull/58)
+    * [Pull request #52](https://github.com/ignitionrobotics/ign-plugin/pull/52)
+    * [Pull request #51](https://github.com/ignitionrobotics/ign-plugin/pull/51)
+
+1. Find ign program instead of ignition-tools
+    * [Pull request #57](https://github.com/ignitionrobotics/ign-plugin/pull/57)
+
+1. Remove ign-tools from CMakeLists.txt. Not used
+    * [Pull request #56](https://github.com/ignitionrobotics/ign-plugin/pull/56)
 
 ### Ignition Plugin 1.2.0 (2021-03-30)
 

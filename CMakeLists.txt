@@ -23,8 +23,6 @@ ign_configure_project(VERSION_SUFFIX pre0)
 
 # No project-specific options yet for ign-plugin
 
-
-
 #============================================================================
 # Search for project-specific dependencies
 #============================================================================
@@ -40,7 +38,7 @@ ign_find_package(DL
 
 #--------------------------------------
 # Find ignition-tools
-ign_find_package(ignition-tools QUIET)
+find_program(IGN_TOOLS_PROGRAM ign)
 
 
 #--------------------------------------

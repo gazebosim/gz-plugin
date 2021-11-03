@@ -15,7 +15,7 @@ following concepts:
 * A "Library" may contain multiple plugins, which provides a convenient
   way to distribute different types of functionality in a single file.
 
-The loader component can dynamically load plugin interfaces at runtime
+The **loader** component can dynamically load plugin interfaces at runtime
 either by specifying a desired plugin or by listing plugins within a library
 file that provide a specific interface.
 There are highly performant ways to get direct access to a plugin interace
@@ -24,13 +24,13 @@ compile time.
 The loader also can use reference counting of plugin objects to unload
 libraries that are no longer in use.
 
-The register component provides macros for registering templated and
+The **register** component provides macros for registering templated and
 non-templated classes as plugins and/or interfaces.
 A plugin can be registered anywhere from within any translation unit.
 Interfaces can be queried by their C++ type, or they can be queried by
 name with a string.
 
-The [ignition-physics](https://ignitionrobotics.org/libs/physics) Feature
+The [Ignition Physics](https://ignitionrobotics.org/libs/physics) Feature
 system provides a good example of the use of these unique aspects of
 ignition-plugin.
 

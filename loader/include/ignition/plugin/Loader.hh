@@ -81,7 +81,7 @@ namespace ignition
       /// \returns Names of plugins that implement the interface
       public: std::unordered_set<std::string> PluginsImplementing(
           const std::string &_interface,
-          const bool demangled = true) const;
+          const bool _demangled = true) const;
 
       /// \brief Get a set of the names of all plugins that are currently known
       /// to this Loader.
