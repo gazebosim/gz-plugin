@@ -4,7 +4,7 @@
 ign_get_libsources_and_unittests(sources tests)
 
 # Disable ign_TEST if ignition-tools is not found
-if (MSVC OR NOT IGNITION-TOOLS_BINARY_DIRS)
+if (MSVC OR NOT IGN_TOOLS_PROGRAM)
   list(REMOVE_ITEM tests src/ign_TEST.cc)
 endif()
 
@@ -35,7 +35,7 @@ foreach(test ${test_targets})
     "IGNDummyPlugins_LIB=\"$<TARGET_FILE:IGNDummyPlugins>\"")
 
   target_compile_definitions(${test} PRIVATE
-    "IGN_PATH=\"${IGNITION-TOOLS_BINARY_DIRS}\"")
+    "IGN_PATH=\"${IGN_TOOLS_PROGRAM}\"")
 
   target_compile_definitions(${test} PRIVATE
     "IGN_VERSION_FULL=\"${PROJECT_VERSION_FULL}\"")
