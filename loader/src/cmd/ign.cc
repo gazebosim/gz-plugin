@@ -17,6 +17,8 @@
 
 #include <cstring>
 #include <iostream>
+#include <string>
+#include <unordered_set>
 
 #include "ignition/plugin/Loader.hh"
 #include "ignition/plugin/config.hh"
