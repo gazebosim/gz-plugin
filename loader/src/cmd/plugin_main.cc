@@ -33,7 +33,7 @@ struct PluginOptions
   /// \brief Command to execute
   PluginCommand command{PluginCommand::kNone};
 
-  int verboseLevel = 1;
+  int verboseLevel = 0;
 
   std::string pluginName;
 };
@@ -56,9 +56,10 @@ void addPluginFlags(CLI::App &_app)
 {
   auto opt = std::make_shared<PluginOptions>();
 
-  _app.add_option("-v,--verbose",
-                  opt->verboseLevel,
-                  "Verbose level");
+  _app.add_flag_callback("-v,--verbose",
+    [opt](){
+      opt->verboseLevel = 1;
+    }, "Verbose level");
 
   auto info = _app.add_flag_callback("-i,--info",
      [opt](){
