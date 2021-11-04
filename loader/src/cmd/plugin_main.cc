@@ -59,7 +59,7 @@ void addPluginFlags(CLI::App &_app)
   _app.add_flag_callback("-v,--verbose",
     [opt](){
       opt->verboseLevel = 1;
-    }, "Verbose level");
+    }, "Print verbose info.");
 
   auto info = _app.add_flag_callback("-i,--info",
      [opt](){
