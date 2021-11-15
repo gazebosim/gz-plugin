@@ -54,6 +54,21 @@ std::string custom_exec_str(std::string _cmd)
 }
 
 //////////////////////////////////////////////////
+/// \brief Check 'ign plugin --help'.
+TEST(ignTest, IgnPluginHelp)
+{
+  // Path to ign executable
+  std::string ign = std::string(IGN_PATH);
+  std::string output = custom_exec_str(ign + " plugin --help");
+  EXPECT_NE(std::string::npos,
+    output.find("-i,--info                   Get info about a plugin."))
+      << output;
+  EXPECT_NE(std::string::npos,
+    output.find("-p,--plugin TEXT Needs: --info"))
+      << output;
+}
+
+//////////////////////////////////////////////////
 /// \brief Check 'ign plugin --info' for a non-existent file.
 TEST(ignTest, PluginInfoNonexistentLibrary)
 {

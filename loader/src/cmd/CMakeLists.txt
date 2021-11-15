@@ -52,7 +52,7 @@ set(cmd_script_configured "${CMAKE_CURRENT_BINARY_DIR}/cmd${IGN_DESIGNATION}${PR
 
 # Set the library_location variable to the relative path to the library file
 # within the install directory structure.
-set(plugin_exe_location "${CMAKE_INSTALL_PREFIX}/${INSTALL_STANDALONE_EXECUTABLE}/$<TARGET_FILE_NAME:${plugin_executable}>")
+set(library_location "../../../${CMAKE_INSTALL_LIBDIR}/$<TARGET_FILE_NAME:${loader}>")
 
 configure_file(
   "cmd${IGN_DESIGNATION}.rb.in"
