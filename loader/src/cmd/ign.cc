@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Open Source Robotics Foundation
+ * Copyright (C) 2021 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
  *
 */
 
+#include <cstring>
 #include <iostream>
 #include <string>
+#include <unordered_set>
 
 #include "ignition/plugin/Loader.hh"
 #include "ignition/plugin/config.hh"
-
-using namespace ignition;
-using namespace plugin;
+#include "ign.hh"
 
 //////////////////////////////////////////////////
-extern "C" void IGNITION_PLUGIN_LOADER_VISIBLE cmdPluginInfo(
+extern "C" void cmdPluginInfo(
     const char *_plugin, int _verbose)
 {
   if (!_plugin || std::string(_plugin).empty())
@@ -73,7 +73,7 @@ extern "C" void IGNITION_PLUGIN_LOADER_VISIBLE cmdPluginInfo(
 }
 
 //////////////////////////////////////////////////
-extern "C" const char IGNITION_PLUGIN_LOADER_VISIBLE *ignitionVersion()
+extern "C" const char *ignitionVersion()
 {
-  return IGNITION_PLUGIN_VERSION_FULL;
+  return strdup(IGNITION_PLUGIN_VERSION_FULL);
 }
