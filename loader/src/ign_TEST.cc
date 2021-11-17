@@ -66,6 +66,14 @@ TEST(ignTest, IgnPluginHelp)
   EXPECT_NE(std::string::npos,
     output.find("-p,--plugin TEXT Needs: --info"))
       << output;
+
+  output = custom_exec_str(ign + " plugin");
+  EXPECT_NE(std::string::npos,
+    output.find("-i,--info                   Get info about a plugin."))
+      << output;
+  EXPECT_NE(std::string::npos,
+    output.find("-p,--plugin TEXT Needs: --info"))
+      << output;
 }
 
 //////////////////////////////////////////////////

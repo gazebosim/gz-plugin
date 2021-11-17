@@ -12,13 +12,13 @@ target_link_libraries(${plugin_executable}
   ${loader}
 )
 
-set(INSTALL_STANDALONE_EXECUTABLE "${IGN_LIB_INSTALL_DIR}/ignition/${IGN_DESIGNATION}${PROJECT_VERSION_MAJOR}")
+set(EXE_INSTALL_DIR "${IGN_LIB_INSTALL_DIR}/ignition/${IGN_DESIGNATION}${PROJECT_VERSION_MAJOR}")
 
 install(
   TARGETS
   ${plugin_executable}
   DESTINATION
-  ${INSTALL_STANDALONE_EXECUTABLE}
+  ${EXE_INSTALL_DIR}
 )
 
 #===============================================================================
@@ -52,7 +52,7 @@ set(cmd_script_configured "${CMAKE_CURRENT_BINARY_DIR}/cmd${IGN_DESIGNATION}${PR
 
 # Set the library_location variable to the relative path to the library file
 # within the install directory structure.
-set(library_location "../../../${CMAKE_INSTALL_LIBDIR}/$<TARGET_FILE_NAME:${loader}>")
+set(plugin_exe_location "../../../${EXE_INSTALL_DIR}/$<TARGET_FILE_NAME:${plugin_executable}>")
 
 configure_file(
   "cmd${IGN_DESIGNATION}.rb.in"
