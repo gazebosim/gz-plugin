@@ -15,6 +15,7 @@
  *
  */
 #include <ignition/utils/cli/CLI.hpp>
+#include <ignition/utils/cli/IgnitionFormatter.hpp>
 
 #include "ign.hh"
 
@@ -52,6 +53,7 @@ void runPluginCommand(const PluginOptions &_opt)
   }
 }
 
+//////////////////////////////////////////////////
 void addPluginFlags(CLI::App &_app)
 {
   auto opt = std::make_shared<PluginOptions>();
@@ -61,15 +63,14 @@ void addPluginFlags(CLI::App &_app)
       opt->verboseLevel = 1;
     }, "Print verbose info.");
 
-  auto info = _app.add_flag_callback("-i,--info",
+  auto plugin = _app.add_option("-p,--plugin",
+                  opt->pluginName,
+                  "Path to a plugin.");
+
+  _app.add_flag_callback("-i,--info",
      [opt](){
        opt->command = PluginCommand::kPluginInfo;
-     }, "Get info about a plugin.\nRequires the -p option.");
-
- _app.add_option("-p,--plugin",
-                  opt->pluginName,
-                  "Path to a plugin.\n"
-                  "Required with -i.")->needs(info);
+     }, "Get info about a plugin.")->needs(plugin);
 
   _app.callback([&_app, opt](){
     runPluginCommand(*opt);
@@ -79,15 +80,15 @@ void addPluginFlags(CLI::App &_app)
 //////////////////////////////////////////////////
 int main(int argc, char** argv)
 {
-  CLI::App app{"Introspect Ignition plugin"};
-
-  app.set_help_all_flag("--help-all", "Show all help");
+  CLI::App app{"Print information about plugins.\n"};
 
   app.add_flag_callback("--version", [](){
       std::cout << ignitionVersion() << std::endl;
       throw CLI::Success();
-  });
+  }, "Print version number");
 
   addPluginFlags(app);
+
+  app.formatter(std::make_shared<IgnitionFormatter>(&app));
   CLI11_PARSE(app, argc, argv);
 }
