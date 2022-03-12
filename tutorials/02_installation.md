@@ -11,8 +11,7 @@ The Source Installation instructions should be used if you need the very latest 
 
 ## Prerequisites
 
-Ignition Plugin versions 1+ require Ubuntu Bionic, while version 0
-can be used with Ubuntu Xenial.
+Ubuntu Focal or higher.
 
 If you don't already have the `lsb-release` package installed, please do so now:
 ```bash
