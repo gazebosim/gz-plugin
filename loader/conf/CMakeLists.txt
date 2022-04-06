@@ -3,7 +3,7 @@ set(ign_library_path "${CMAKE_BINARY_DIR}/test/lib/$<CONFIG>/ruby/ignition/cmd${
 
 # Generate a configuration file for internal testing.
 # Note that the major version of the library is included in the name.
-# Ex: plugin1.yaml
+# Ex: plugin2.yaml
 configure_file(
   "${IGN_DESIGNATION}.yaml.in"
   "${CMAKE_CURRENT_BINARY_DIR}/${IGN_DESIGNATION}${PROJECT_VERSION_MAJOR}.yaml.configured" @ONLY)
@@ -17,7 +17,7 @@ set(ign_library_path "${CMAKE_INSTALL_PREFIX}/lib/ruby/ignition/cmd${IGN_DESIGNA
 
 # Generate the configuration file that is installed.
 # Note that the major version of the library is included in the name.
-# Ex: plugin1.yaml
+# Ex: plugin2.yaml
 configure_file(
   "${IGN_DESIGNATION}.yaml.in"
   "${CMAKE_CURRENT_BINARY_DIR}/${IGN_DESIGNATION}${PROJECT_VERSION_MAJOR}.yaml" @ONLY)
