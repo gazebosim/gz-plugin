@@ -2,26 +2,14 @@ cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 
 project(examples)
 
-# Find the ignition-plugin library
 find_package(ignition-plugin2 QUIET REQUIRED COMPONENTS all)
 set(IGN_PLUGIN_VER ${ignition-plugin2_VERSION_MAJOR})
-find_package(ignition-common2 QUIET)
-set(IGN_COMMON_VER ${ignition-common2_VERSION_MAJOR})
-if(NOT ignition-common2_FOUND)
-  find_package(ignition-common3 QUIET)
-  set(IGN_COMMON_VER ${ignition-common3_VERSION_MAJOR})
-endif()
-if(NOT ignition-common2_FOUND AND NOT ignition-common3_FOUND)
-  find_package(ignition-common5 QUIET REQUIRED)
-  set(IGN_COMMON_VER ${ignition-common5_VERSION_MAJOR})
-endif()
 
-find_package(ignition-math5 QUIET)
-set(IGN_MATH_VER ${ignition-math5_VERSION_MAJOR})
-if(NOT ignition-math5_FOUND)
-  find_package(ignition-math7 QUIET REQUIRED)
-  set(IGN_MATH_VER ${ignition-math7_VERSION_MAJOR})
-endif()
+find_package(ignition-common5 QUIET)
+set(IGN_COMMON_VER ${ignition-common5_VERSION_MAJOR})
+
+find_package(ignition-math7 QUIET)
+set(IGN_MATH_VER ${ignition-math7_VERSION_MAJOR})
 
 add_subdirectory(plugins)
 
