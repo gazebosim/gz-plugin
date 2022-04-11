@@ -42,7 +42,7 @@ sudo apt install libignition-plugin-dev
 
 1. Install Ignition dependencies
   ```
-  sudo apt-get install libignition-cmake2-dev libignition-tools-dev libignition-utils1-cli-dev
+  sudo apt-get install libignition-cmake3-dev libignition-tools-dev libignition-utils2-cli-dev
   ```
 
 1. Install Ignition Tools if you want to use the `ign plugin` command line tool:
@@ -88,7 +88,7 @@ Sierra (10.12) or later.
 2. Run the following commands
   ```bash
   brew tap osrf/simulation
-  brew install ignition-plugin1
+  brew install ignition-plugin2
   ```
 
 ## Source Installation
@@ -96,7 +96,7 @@ Sierra (10.12) or later.
 1. Install dependencies
   ```bash
   brew tap osrf/simulation
-  brew install ignition-plugin1 --only-dependencies
+  brew install ignition-plugin2 --only-dependencies
   ```
 
 2. Clone the repository

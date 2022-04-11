@@ -8,8 +8,8 @@ project(ignition-plugin2 VERSION 2.0.0)
 #============================================================================
 # Find ignition-cmake
 #============================================================================
-find_package(ignition-cmake2 2.8.0 REQUIRED)
-set(IGN_CMAKE_VER ${ignition-cmake2_VERSION_MAJOR})
+find_package(ignition-cmake3 REQUIRED)
+set(IGN_CMAKE_VER ${ignition-cmake3_VERSION_MAJOR})
 
 #============================================================================
 # Configure the project
@@ -43,8 +43,8 @@ find_program(IGN_TOOLS_PROGRAM ign)
 
 #--------------------------------------
 # Find ignition-utils
-ign_find_package(ignition-utils1 REQUIRED COMPONENTS cli)
-set(IGN_UTILS_VER ${ignition-utils1_VERSION_MAJOR})
+ign_find_package(ignition-utils2 REQUIRED COMPONENTS cli)
+set(IGN_UTILS_VER ${ignition-utils2_VERSION_MAJOR})
 
 
 #============================================================================
