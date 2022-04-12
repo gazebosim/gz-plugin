@@ -18,7 +18,7 @@
 #include <ignition/plugin/EnablePluginFromThis.hh>
 #include <ignition/plugin/WeakPluginPtr.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

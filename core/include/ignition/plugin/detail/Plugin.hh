@@ -23,7 +23,7 @@
 #include <string>
 #include <ignition/plugin/Plugin.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

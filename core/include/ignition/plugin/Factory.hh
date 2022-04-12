@@ -23,9 +23,10 @@
 #include <memory>
 #include <tuple>
 
+#include <ignition/plugin/config.hh>
 #include <ignition/plugin/EnablePluginFromThis.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

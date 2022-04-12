@@ -27,10 +27,11 @@
 
 #include <ignition/utils/SuppressWarning.hh>
 
+#include <ignition/plugin/config.hh>
 #include <ignition/plugin/loader/Export.hh>
 #include <ignition/plugin/PluginPtr.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

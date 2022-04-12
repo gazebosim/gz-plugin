@@ -14,3 +14,10 @@
 #define IGNITION_PLUGIN_VERSION_HEADER "Ignition Plugin, version ${PROJECT_VERSION_FULL}\nCopyright (C) 2017 Open Source Robotics Foundation.\nReleased under the Apache 2.0 License.\n\n"
 
 #endif
+
+namespace gz
+{
+}
+
+// TODO(chapulina) Add deprecation warnings when using "ignition".
+namespace ignition = gz;

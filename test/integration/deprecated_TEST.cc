@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Open Source Robotics Foundation
+ * Copyright (C) 2022 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,12 @@
  *
 */
 
-#include <ignition/plugin/Info.hh>
+#include <gtest/gtest.h>
 
-#include "GenericExport.hh"
+#include <ignition/plugin/Loader.hh>
 
-extern "C" void EXPORT IgnitionPluginHook(
-    const void *,
-    const void ** const,
-    int *,
-    std::size_t *,
-    std::size_t *_inputAndOutputInfoAlign)
+/////////////////////////////////////////////////
+TEST(Deprecated, IgnitionNamespace)
 {
-  *_inputAndOutputInfoAlign = alignof(gz::plugin::Info)+1;
+  ignition::plugin::Loader loader;
 }

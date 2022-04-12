@@ -34,7 +34,7 @@ extern "C" void cmdPluginInfo(
     return;
   }
 
-  ignition::plugin::Loader pl;
+  gz::plugin::Loader pl;
   std::cout << "Loading plugin library file [" << _plugin << "]\n";
 
   // Print names of plugins exported by library file

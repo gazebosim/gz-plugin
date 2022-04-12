@@ -1,4 +1,4 @@
-# Migration Instructions
+# Migration Instructions (from common::Plugin)
 
 This file provides migration instructions for `ignition` library developers to
 replace the `ignition-common` plugin framework with the `ignition-plugin`
