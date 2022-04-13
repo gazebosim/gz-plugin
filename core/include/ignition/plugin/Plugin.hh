@@ -66,19 +66,6 @@ namespace ignition
       public: template <class Interface>
               const Interface *QueryInterface() const;
 
-      /// \brief This function has been deprecated in favor of the version of
-      /// QueryInterface which does not take a std::string argument.
-      public: template <class Interface>
-              IGN_DEPRECATED(0.0)
-              Interface *QueryInterface(const std::string &/*_interfaceName*/);
-
-      /// \brief const-qualified version of
-      /// QueryInterface<Interface>(std::string)
-      public: template <class Interface>
-              IGN_DEPRECATED(0.0)
-              const Interface *QueryInterface(
-                  const std::string &/*_interfaceName*/) const;
-
       /// \brief Get the requested interface as a std::shared_ptr. The template
       /// argument Interface must exactly match the underlying type associated
       /// with _interfaceName, or else the behavior of this function is
@@ -103,20 +90,6 @@ namespace ignition
       /// std::shared_ptr to a const-qualified Interface.
       public: template <class Interface>
               std::shared_ptr<const Interface> QueryInterfaceSharedPtr() const;
-
-      /// \brief This version of QueryInterfaceSharedPtr has been deprecated in
-      /// favor of the version that does not take a std::string argument.
-      public: template <class Interface>
-              IGN_DEPRECATED(0.0)
-              std::shared_ptr<Interface> QueryInterfaceSharedPtr(
-                  const std::string &/*_interfaceName*/);
-
-      /// \brief Same as QueryInterfaceSharedPtr<Interface>(std::string), but
-      /// it returns a std::shared_ptr to a const-qualified Interface.
-      public: template <class Interface>
-              IGN_DEPRECATED(0.0)
-              std::shared_ptr<const Interface> QueryInterfaceSharedPtr(
-                  const std::string &/*_interfaceName*/) const;
 
       /// \brief Checks if this Plugin has the specified type of interface.
       /// \return Returns true if this Plugin has the specified type of
