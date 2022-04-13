@@ -35,7 +35,7 @@ wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 On Ubuntu systems, `apt-get` can be used to install `ignition-plugin`:
 ```bash
 sudo apt-get update
-sudo apt install libignition-plugin-dev
+sudo apt install libignition-plugin2-dev
 ```
 
 ## Source Installation
