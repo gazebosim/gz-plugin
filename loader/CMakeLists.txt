@@ -14,7 +14,6 @@ ign_add_component(loader
   GET_TARGET_NAME loader)
 
 target_link_libraries(${loader}
-  PUBLIC ignition-cmake${IGN_CMAKE_VER}::utilities
   PRIVATE ${DL_TARGET})
 
 ign_build_tests(
