@@ -45,21 +45,6 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <class Interface>
-    Interface *Plugin::QueryInterface(const std::string &/*_interfaceName*/)
-    {
-      return this->template QueryInterface<Interface>();
-    }
-
-    //////////////////////////////////////////////////
-    template <class Interface>
-    const Interface *Plugin::QueryInterface(
-        const std::string &/*_interfaceName*/) const
-    {
-      return this->template QueryInterface<Interface>();
-    }
-
-    //////////////////////////////////////////////////
-    template <class Interface>
     std::shared_ptr<Interface> Plugin::QueryInterfaceSharedPtr()
     {
       Interface *ptr = this->QueryInterface<Interface>();
@@ -81,22 +66,6 @@ namespace ignition
       }
 
       return nullptr;
-    }
-
-    //////////////////////////////////////////////////
-    template <class Interface>
-    std::shared_ptr<Interface> Plugin::QueryInterfaceSharedPtr(
-        const std::string &/*_interfaceName*/)
-    {
-      return this->template QueryInterfaceSharedPtr<Interface>();
-    }
-
-    //////////////////////////////////////////////////
-    template <class Interface>
-    std::shared_ptr<const Interface> Plugin::QueryInterfaceSharedPtr(
-        const std::string &/*_interfaceName*/) const
-    {
-      return this->template QueryInterfaceSharedPtr<Interface>();
     }
 
     //////////////////////////////////////////////////
