@@ -15,15 +15,15 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_FACTORY_HH_
-#define IGNITION_PLUGIN_FACTORY_HH_
+#ifndef GZ_PLUGIN_FACTORY_HH_
+#define GZ_PLUGIN_FACTORY_HH_
 
 #include <chrono>
 #include <functional>
 #include <memory>
 #include <tuple>
 
-#include <ignition/plugin/EnablePluginFromThis.hh>
+#include <gz/plugin/EnablePluginFromThis.hh>
 
 namespace ignition
 {
@@ -143,6 +143,6 @@ namespace ignition
   }
 }
 
-#include <ignition/plugin/detail/Factory.hh>
+#include <gz/plugin/detail/Factory.hh>
 
 #endif

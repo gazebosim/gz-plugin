@@ -16,14 +16,14 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_PLUGINPTR_HH_
-#define IGNITION_PLUGIN_PLUGINPTR_HH_
+#ifndef GZ_PLUGIN_PLUGINPTR_HH_
+#define GZ_PLUGIN_PLUGINPTR_HH_
 
 #include <map>
 #include <string>
 #include <memory>
 
-#include <ignition/plugin/Plugin.hh>
+#include <gz/plugin/Plugin.hh>
 
 namespace ignition
 {
@@ -218,6 +218,6 @@ namespace ignition
   }
 }
 
-#include "ignition/plugin/detail/PluginPtr.hh"
+#include "gz/plugin/detail/PluginPtr.hh"
 
 #endif

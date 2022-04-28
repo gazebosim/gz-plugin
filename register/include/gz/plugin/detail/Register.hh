@@ -16,8 +16,8 @@
 */
 
 
-#ifndef IGNITION_PLUGIN_DETAIL_REGISTER_HH_
-#define IGNITION_PLUGIN_DETAIL_REGISTER_HH_
+#ifndef GZ_PLUGIN_DETAIL_REGISTER_HH_
+#define GZ_PLUGIN_DETAIL_REGISTER_HH_
 
 #include <set>
 #include <string>
@@ -25,11 +25,11 @@
 #include <type_traits>
 #include <utility>
 
-#include <ignition/utils/SuppressWarning.hh>
+#include <gz/utils/SuppressWarning.hh>
 
-#include <ignition/plugin/EnablePluginFromThis.hh>
-#include <ignition/plugin/Info.hh>
-#include <ignition/plugin/utility.hh>
+#include <gz/plugin/EnablePluginFromThis.hh>
+#include <gz/plugin/Info.hh>
+#include <gz/plugin/utility.hh>
 
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -113,8 +113,8 @@ extern "C"
   // multiple definitions of IgnitionPluginHook,
   // then make sure that all but one of your
   // library's translation units (.cpp files) includes the
-  // <ignition/plugin/RegisterMore.hh> header instead of
-  // <ignition/plugin/Register.hh>.
+  // <gz/plugin/RegisterMore.hh> header instead of
+  // <gz/plugin/Register.hh>.
   //
   // Only ONE and exactly ONE .cpp file in your library should include
   // Register.hh. All the rest should include RegisterMore.hh. It does not
