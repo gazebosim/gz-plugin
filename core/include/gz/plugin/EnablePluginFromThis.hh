@@ -15,12 +15,12 @@
  *
  */
 
-#ifndef IGNITION_PLUGIN_ENABLEPLUGINFROMTHIS_HH_
-#define IGNITION_PLUGIN_ENABLEPLUGINFROMTHIS_HH_
+#ifndef GZ_PLUGIN_ENABLEPLUGINFROMTHIS_HH_
+#define GZ_PLUGIN_ENABLEPLUGINFROMTHIS_HH_
 
 #include <memory>
 
-#include <ignition/plugin/PluginPtr.hh>
+#include <gz/plugin/PluginPtr.hh>
 
 namespace ignition
 {

@@ -16,11 +16,11 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_DETAIL_SPECIALIZEDPLUGIN_HH_
-#define IGNITION_PLUGIN_DETAIL_SPECIALIZEDPLUGIN_HH_
+#ifndef GZ_PLUGIN_DETAIL_SPECIALIZEDPLUGIN_HH_
+#define GZ_PLUGIN_DETAIL_SPECIALIZEDPLUGIN_HH_
 
 #include <memory>
-#include "ignition/plugin/SpecializedPlugin.hh"
+#include "gz/plugin/SpecializedPlugin.hh"
 
 // This preprocessor token should only be used by the unittest that is
 // responsible for checking that the specialized routines are being used to

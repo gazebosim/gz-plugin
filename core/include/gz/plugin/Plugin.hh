@@ -16,17 +16,17 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_PLUGIN_HH_
-#define IGNITION_PLUGIN_PLUGIN_HH_
+#ifndef GZ_PLUGIN_PLUGIN_HH_
+#define GZ_PLUGIN_PLUGIN_HH_
 
 #include <memory>
 #include <map>
 #include <string>
 
-#include <ignition/utils/SuppressWarning.hh>
+#include <gz/utils/SuppressWarning.hh>
 
-#include <ignition/plugin/Export.hh>
-#include <ignition/plugin/Info.hh>
+#include <gz/plugin/Export.hh>
+#include <gz/plugin/Info.hh>
 
 namespace ignition
 {
@@ -188,6 +188,6 @@ namespace ignition
   }
 }
 
-#include "ignition/plugin/detail/Plugin.hh"
+#include "gz/plugin/detail/Plugin.hh"
 
 #endif

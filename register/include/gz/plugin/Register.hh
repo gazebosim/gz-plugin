@@ -16,10 +16,10 @@
 */
 
 
-#ifndef IGNITION_PLUGIN_REGISTER_HH_
-#define IGNITION_PLUGIN_REGISTER_HH_
+#ifndef GZ_PLUGIN_REGISTER_HH_
+#define GZ_PLUGIN_REGISTER_HH_
 
-#include <ignition/plugin/detail/Register.hh>
+#include <gz/plugin/detail/Register.hh>
 
 
 // ------------- Add a set of plugins or a set of interfaces ------------------
@@ -47,8 +47,8 @@
 ///
 /// If your library has multiple translation units (.cpp files) and you want to
 /// register plugins in multiple translation units, use this
-/// ignition/plugin/Register.hh header in ONE of the translation units, and then
-/// the ignition/plugin/RegisterMore.hh header in all of the rest of the
+/// gz/plugin/Register.hh header in ONE of the translation units, and then
+/// the gz/plugin/RegisterMore.hh header in all of the rest of the
 /// translation units.
 #define IGNITION_ADD_PLUGIN(PluginClass, ...) \
   DETAIL_IGNITION_ADD_PLUGIN(PluginClass, __VA_ARGS__)
@@ -85,7 +85,7 @@
 /// memory management system the consumer prefers.
 ///
 /// The inputs and output of a factory are defined using the
-/// ignition::plugin::Factory class in the ignition/plugin/Factory.hh header.
+/// ignition::plugin::Factory class in the gz/plugin/Factory.hh header.
 ///
 /// The first argument of this macro should be the class that implements the
 /// factory's output interface. The second argument should be the factory

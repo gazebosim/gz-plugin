@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_INFO_HH_
-#define IGNITION_PLUGIN_INFO_HH_
+#ifndef GZ_PLUGIN_INFO_HH_
+#define GZ_PLUGIN_INFO_HH_
 
 #include <functional>
 #include <memory>
@@ -25,9 +25,9 @@
 #include <string>
 #include <unordered_map>
 
-#include <ignition/utils/SuppressWarning.hh>
+#include <gz/utils/SuppressWarning.hh>
 
-#include <ignition/plugin/Export.hh>
+#include <gz/plugin/Export.hh>
 
 namespace ignition
 {
