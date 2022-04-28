@@ -17,4 +17,5 @@ ign_build_tests(
   SOURCES ${tests})
 
 
-add_subdirectory(include/ignition/plugin)
+add_subdirectory(include/gz/plugin)
+install(DIRECTORY include/ignition DESTINATION ${IGN_INCLUDE_INSTALL_DIR_FULL})
