@@ -5,7 +5,7 @@
 # This is a per-library function definition, used in conjunction with the
 # top-level entry point in ign-tools.
 
-function _ign_plugin
+function _gz_plugin
 {
   if [[ ${COMP_WORDS[COMP_CWORD]} == -* ]]; then
     # Specify options (-*) word list for this subcommand
