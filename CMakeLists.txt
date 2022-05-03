@@ -63,3 +63,4 @@ ign_create_docs(
   TUTORIALS_MAINPAGE_MD "${CMAKE_BINARY_DIR}/tutorials.md"
   )
 
+add_subdirectory(cmd)
