@@ -8,7 +8,7 @@ set(plugin_executable ign-plugin)
 add_executable(${plugin_executable} plugin_main.cc)
 target_link_libraries(${plugin_executable}
   gz
-  ignition-utils${IGN_UTILS_VER}::cli
+  gz-utils${GZ_UTILS_VER}::cli
   ${loader}
 )
 
