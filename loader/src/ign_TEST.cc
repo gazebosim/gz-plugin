@@ -194,10 +194,10 @@ TEST(ignTest, PluginHelpVsCompletionFlags)
 
   // Flags in help message
   std::string output = custom_exec_str(ign + " plugin --help");
-  EXPECT_NE(std::string::npos, output.find("-i [ --info ]")) << output;
-  EXPECT_NE(std::string::npos, output.find("-p [ --plugin ]")) << output;
-  EXPECT_NE(std::string::npos, output.find("-v [ --verbose ]")) << output;
-  EXPECT_NE(std::string::npos, output.find("-h [ --help ]")) << output;
+  EXPECT_NE(std::string::npos, output.find("--info")) << output;
+  EXPECT_NE(std::string::npos, output.find("--plugin")) << output;
+  EXPECT_NE(std::string::npos, output.find("--verbose")) << output;
+  EXPECT_NE(std::string::npos, output.find("--help")) << output;
 
   // Flags in bash completion
   std::ifstream scriptFile(std::string(IGN_PLUGIN_SOURCE_DIR) +
