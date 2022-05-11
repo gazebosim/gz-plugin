@@ -16,6 +16,7 @@
 */
 
 #include <iostream>
+#include <fstream>
 #include <string>
 
 #include "gtest/gtest.h"
@@ -182,4 +183,30 @@ TEST(ignTest, PluginInfoVerboseDummyPlugins)
   EXPECT_NE(std::string::npos,
             output.find("There are 2 aliases with a name collision"))
       << output;
+}
+
+//////////////////////////////////////////////////
+/// \brief Check --help message and bash completion script for consistent flags
+TEST(ignTest, PluginHelpVsCompletionFlags)
+{
+  // Path to ign executable
+  std::string ign = std::string(IGN_PATH);
+
+  // Flags in help message
+  std::string output = custom_exec_str(ign + " plugin --help");
+  EXPECT_NE(std::string::npos, output.find("-i [ --info ]")) << output;
+  EXPECT_NE(std::string::npos, output.find("-p [ --plugin ]")) << output;
+  EXPECT_NE(std::string::npos, output.find("-v [ --verbose ]")) << output;
+  EXPECT_NE(std::string::npos, output.find("-h [ --help ]")) << output;
+
+  // Flags in bash completion
+  std::ifstream scriptFile(std::string(IGN_PLUGIN_SOURCE_DIR) +
+    "/loader/conf/plugin.bash_completion.sh");
+  std::string script((std::istreambuf_iterator<char>(scriptFile)),
+      std::istreambuf_iterator<char>());
+
+  EXPECT_NE(std::string::npos, script.find("--info")) << script;
+  EXPECT_NE(std::string::npos, script.find("--plugin")) << script;
+  EXPECT_NE(std::string::npos, script.find("--verbose")) << script;
+  EXPECT_NE(std::string::npos, script.find("--help")) << script;
 }
