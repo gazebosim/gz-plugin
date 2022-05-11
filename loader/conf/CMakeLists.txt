@@ -25,3 +25,7 @@ configure_file(
 # Install the yaml configuration files in an unversioned location.
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${IGN_DESIGNATION}${PROJECT_VERSION_MAJOR}.yaml
   DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/ignition/)
+
+# Install the bash completion script in an unversioned location.
+install(FILES plugin.bash_completion.sh
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/gz/gz.completion.d/)
