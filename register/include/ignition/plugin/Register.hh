@@ -16,8 +16,8 @@
 */
 
 
-#ifndef IGNITION_PLUGIN_REGISTER_HH_
-#define IGNITION_PLUGIN_REGISTER_HH_
+#ifndef GZ_PLUGIN_REGISTER_HH_
+#define GZ_PLUGIN_REGISTER_HH_
 
 #include <ignition/plugin/detail/Register.hh>
 

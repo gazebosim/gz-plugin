@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_PLUGINPTR_HH_
-#define IGNITION_PLUGIN_PLUGINPTR_HH_
+#ifndef GZ_PLUGIN_PLUGINPTR_HH_
+#define GZ_PLUGIN_PLUGINPTR_HH_
 
 #include <map>
 #include <string>

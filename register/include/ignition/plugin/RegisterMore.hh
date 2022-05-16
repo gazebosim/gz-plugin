@@ -16,8 +16,8 @@
 */
 
 
-#ifndef IGNITION_PLUGIN_REGISTERMORE_HH_
-#define IGNITION_PLUGIN_REGISTERMORE_HH_
+#ifndef GZ_PLUGIN_REGISTERMORE_HH_
+#define GZ_PLUGIN_REGISTERMORE_HH_
 
 /// If your library already has a translation unit (.cpp file) containing
 /// \code

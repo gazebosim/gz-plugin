@@ -15,8 +15,8 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_DETAIL_FACTORY_HH_
-#define IGNITION_PLUGIN_DETAIL_FACTORY_HH_
+#ifndef GZ_PLUGIN_DETAIL_FACTORY_HH_
+#define GZ_PLUGIN_DETAIL_FACTORY_HH_
 
 #include <memory>
 #include <utility>

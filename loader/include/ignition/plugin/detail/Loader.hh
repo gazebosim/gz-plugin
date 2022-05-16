@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_DETAIL_LOADER_HH_
-#define IGNITION_PLUGIN_DETAIL_LOADER_HH_
+#ifndef GZ_PLUGIN_DETAIL_LOADER_HH_
+#define GZ_PLUGIN_DETAIL_LOADER_HH_
 
 #include <memory>
 #include <string>

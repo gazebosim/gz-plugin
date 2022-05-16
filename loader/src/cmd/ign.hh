@@ -15,8 +15,8 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_IGN_HH_
-#define IGNITION_PLUGIN_IGN_HH_
+#ifndef GZ_PLUGIN_GZ_HH_
+#define GZ_PLUGIN_GZ_HH_
 
 #include "ignition/plugin/Export.hh"
 
