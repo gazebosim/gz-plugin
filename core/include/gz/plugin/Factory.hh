@@ -25,7 +25,7 @@
 
 #include <gz/plugin/EnablePluginFromThis.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
