@@ -32,13 +32,7 @@
 
 #endif
 
-namespace gz
+namespace [[deprecated("Use gz namespace.")]]  ignition
 {
+  using namespace gz;
 }
-
-// TODO(chapulina) Turn on warnings after entire stack has migrated to gz
-// namespace [[deprecated("Use gz namespace.")]]  ignition
-// {
-//   using namespace gz;
-// }
-namespace ignition = gz;
