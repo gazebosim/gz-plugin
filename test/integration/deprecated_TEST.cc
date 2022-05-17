@@ -13,6 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */
+*/
 
-#include <gz/plugin.hh>
+#include <gtest/gtest.h>
+
+#include <ignition/plugin/Loader.hh>
+#include <ignition/utils/SuppressWarning.hh>
+
+IGN_UTILS_WARN_IGNORE__DEPRECATED_DECLARATION
+
+/////////////////////////////////////////////////
+// Make sure the ignition namespace still works
+TEST(Deprecated, IgnitionNamespace)
+{
+  ignition::plugin::Loader loader;
+}
+
+IGN_UTILS_WARN_RESUME__DEPRECATED_DECLARATION
