@@ -1,4 +1,4 @@
-# Migration Instructions
+# Migration Instructions (from common::Plugin)
 
 This file provides migration instructions for `ignition` library developers to
 replace the `ignition-common` plugin framework with the `ignition-plugin`
@@ -164,4 +164,3 @@ In general, plugin names that get passed to a `Loader` should not be hard-coded.
 They should be selected by either inspecting what interfaces they provide, or by
 having a user specify the plugin name. This rule of thumb applies to both
 template-based classes and to regular classes.
-
