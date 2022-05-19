@@ -21,18 +21,13 @@
 #ifndef GZ_PLUGIN_CONFIG_HH_
 
 /* Version number */
-#define IGNITION_PLUGIN_MAJOR_VERSION ${PROJECT_VERSION_MAJOR}
-#define IGNITION_PLUGIN_MINOR_VERSION ${PROJECT_VERSION_MINOR}
-#define IGNITION_PLUGIN_PATCH_VERSION ${PROJECT_VERSION_PATCH}
+#define GZ_PLUGIN_MAJOR_VERSION ${PROJECT_VERSION_MAJOR}
+#define GZ_PLUGIN_MINOR_VERSION ${PROJECT_VERSION_MINOR}
+#define GZ_PLUGIN_PATCH_VERSION ${PROJECT_VERSION_PATCH}
 
-#define IGNITION_PLUGIN_VERSION "${PROJECT_VERSION}"
-#define IGNITION_PLUGIN_VERSION_FULL "${PROJECT_VERSION_FULL}"
+#define GZ_PLUGIN_VERSION "${PROJECT_VERSION}"
+#define GZ_PLUGIN_VERSION_FULL "${PROJECT_VERSION_FULL}"
 
-#define IGNITION_PLUGIN_VERSION_HEADER "Ignition Plugin, version ${PROJECT_VERSION_FULL}\nCopyright (C) 2017 Open Source Robotics Foundation.\nReleased under the Apache 2.0 License.\n\n"
-
-namespace [[deprecated("Use gz namespace.")]]  ignition
-{
-   using namespace gz;
-}
+#define GZ_PLUGIN_VERSION_HEADER "Gazebo Plugin, version ${PROJECT_VERSION_FULL}\nCopyright (C) 2017 Open Source Robotics Foundation.\nReleased under the Apache 2.0 License.\n\n"
 
 #endif
