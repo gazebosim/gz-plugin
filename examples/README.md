@@ -7,7 +7,7 @@ These examples demonstrate various Ignition Plugin features.
 After installing Ignition Plugin, from source or from binaries, build with:
 
 ```
-git clone https://github.com/ignitionrobotics/ign-plugin/
+git clone https://github.com/gazebosim/gz-plugin/
 cd ign-plugin/examples
 mkdir build
 cd build

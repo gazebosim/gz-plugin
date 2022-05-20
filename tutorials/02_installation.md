@@ -51,7 +51,7 @@ sudo apt install libignition-plugin2-dev
 
 2. Clone the repository
   ```bash
-  git clone https://github.com/ignitionrobotics/ign-plugin
+  git clone https://github.com/gazebosim/gz-plugin
   ```
 
 3. Configure and build
@@ -101,7 +101,7 @@ Sierra (10.12) or later.
 
 2. Clone the repository
   ```bash
-  git clone https://github.com/ignitionrobotics/ign-plugin
+  git clone https://github.com/gazebosim/gz-plugin
   ```
 
 3. Configure and build
@@ -122,7 +122,7 @@ Sierra (10.12) or later.
 
 ## Prerequisites
 
-First, follow the [ign-cmake](https://github.com/ignitionrobotics/ign-cmake) tutorial for installing Conda, Visual Studio, CMake, and other prerequisites, and also for creating a Conda environment.
+First, follow the [ign-cmake](https://github.com/gazebosim/gz-cmake) tutorial for installing Conda, Visual Studio, CMake, and other prerequisites, and also for creating a Conda environment.
 
 Navigate to `condabin` if necessary to use the `conda` command (i.e., if Conda is not in your `PATH` environment variable. You can find the location of `condabin` in Anaconda Prompt, `where conda`).
 
@@ -160,7 +160,7 @@ This assumes you have created and activated a Conda environment while installing
 2. Navigate to where you would like to build the library, and clone the repository.
   ```bash
   # Optionally, append `-b ign-plugin#` (replace # with a number) to check out a specific version
-  git clone https://github.com/ignitionrobotics/ign-plugin
+  git clone https://github.com/gazebosim/gz-plugin
   ```
 
 3. Configure and build
@@ -191,7 +191,7 @@ You can also generate the documentation from a clone of this repository by follo
 
 2. Clone the repository
   ```bash
-  git clone https://github.com/ignitionrobotics/ign-plugin
+  git clone https://github.com/gazebosim/gz-plugin
   ```
 
 3. Configure and build the documentation.
