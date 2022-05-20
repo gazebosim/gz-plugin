@@ -16,5 +16,5 @@ ign_build_tests(
 
 foreach(test ${test_targets})
   target_compile_definitions(${test} PRIVATE
-    "IGNDummyPlugin_LIB=\"$<TARGET_FILE:IGNDummyPlugins>\"")
+    "IGNDummyPlugin_LIB=\"$<TARGET_FILE:GzDummyPlugins>\"")
 endforeach()

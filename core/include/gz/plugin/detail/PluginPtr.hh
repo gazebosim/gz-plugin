@@ -122,7 +122,7 @@ namespace gz
     }
 
     //////////////////////////////////////////////////
-    #define DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR(op)\
+    #define DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR(op)\
       template <typename PluginType>\
       bool TemplatePluginPtr<PluginType>::operator op (\
             const TemplatePluginPtr &_other) const\
@@ -131,12 +131,12 @@ namespace gz
                 _other.dataPtr->PrivateGetInstancePtr() );\
       }
 
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( == )  // NOLINT
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( < )   // NOLINT
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( > )   // NOLINT
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( != )  // NOLINT
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( <= )  // NOLINT
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( >= )  // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( == )  // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( < )   // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( > )   // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( != )  // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( <= )  // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( >= )  // NOLINT
 
     //////////////////////////////////////////////////
     template <typename PluginType>

@@ -29,7 +29,7 @@
 using namespace gz;
 
 static const std::string g_ignVersion("--force-version " + // NOLINT(*)
-  std::string(IGN_VERSION_FULL));
+  std::string(GZ_VERSION_FULL));
 
 /////////////////////////////////////////////////
 std::string custom_exec_str(std::string _cmd)
@@ -58,7 +58,7 @@ std::string custom_exec_str(std::string _cmd)
 TEST(ignTest, IgnPluginHelp)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH);
+  std::string ign = std::string(GZ_PATH);
   std::string output = custom_exec_str(ign + " plugin --help");
   EXPECT_NE(std::string::npos,
     output.find("-i,--info                   Get info about a plugin."))
@@ -81,7 +81,7 @@ TEST(ignTest, IgnPluginHelp)
 TEST(ignTest, PluginInfoNonexistentLibrary)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH);
+  std::string ign = std::string(GZ_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
       "/path/to/libDoesNotExist.so");
@@ -99,10 +99,10 @@ TEST(ignTest, PluginInfoNonexistentLibrary)
 TEST(ignTest, PluginInfoNonLibrary)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH);
+  std::string ign = std::string(GZ_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
-      std::string(IGN_PLUGIN_SOURCE_DIR) + "/core/src/Plugin.cc");
+      std::string(GZ_PLUGIN_SOURCE_DIR) + "/core/src/Plugin.cc");
 
   EXPECT_NE(std::string::npos, output.find("Error while loading the library"))
       << output;
@@ -117,10 +117,10 @@ TEST(ignTest, PluginInfoNonLibrary)
 TEST(ignTest, PluginInfoNonPluginLibrary)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH);
+  std::string ign = std::string(GZ_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
-      IGN_PLUGIN_LIB);
+      GZ_PLUGIN_LIB);
 
   EXPECT_NE(std::string::npos, output.find("does not export any plugins. The "
     "symbol [IgnitionPluginHook] is missing, or it is not externally visible."))
@@ -136,10 +136,10 @@ TEST(ignTest, PluginInfoNonPluginLibrary)
 TEST(ignTest, PluginInfoDummyPlugins)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH);
+  std::string ign = std::string(GZ_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
-      IGNDummyPlugins_LIB);
+      GzDummyPlugins_LIB);
 
   EXPECT_NE(std::string::npos, output.find("Found 3 plugins in library file"))
       << output;
@@ -175,10 +175,10 @@ TEST(ignTest, PluginInfoDummyPlugins)
 TEST(ignTest, PluginInfoVerboseDummyPlugins)
 {
   // Path to ign executable
-  std::string ign = std::string(IGN_PATH);
+  std::string ign = std::string(GZ_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
-      IGNDummyPlugins_LIB + " --verbose");
+      GzDummyPlugins_LIB + " --verbose");
 
   EXPECT_NE(std::string::npos, output.find("Known Interfaces: 7"))
       << output;

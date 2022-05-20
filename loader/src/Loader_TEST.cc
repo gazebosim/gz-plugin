@@ -43,7 +43,7 @@ TEST(Loader, LoadNonexistantLibrary)
 TEST(Loader, LoadNonLibrary)
 {
   gz::plugin::Loader loader;
-  EXPECT_TRUE(loader.LoadLib(std::string(IGN_PLUGIN_SOURCE_DIR)
+  EXPECT_TRUE(loader.LoadLib(std::string(GZ_PLUGIN_SOURCE_DIR)
                              + "/core/src/Plugin.cc").empty());
 }
 
@@ -51,7 +51,7 @@ TEST(Loader, LoadNonLibrary)
 TEST(Loader, LoadNonPluginLibrary)
 {
   gz::plugin::Loader loader;
-  EXPECT_TRUE(loader.LoadLib(IGN_PLUGIN_LIB).empty());
+  EXPECT_TRUE(loader.LoadLib(GZ_PLUGIN_LIB).empty());
 }
 
 /////////////////////////////////////////////////
@@ -84,11 +84,11 @@ TEST(Loader, DoubleLoad)
   // when a user asks for a library to be loaded twice.
   gz::plugin::Loader loader;
 
-  loader.LoadLib(IGNDummyPlugins_LIB);
+  loader.LoadLib(GzDummyPlugins_LIB);
   const std::size_t interfaceCount = loader.InterfacesImplemented().size();
   EXPECT_LT(0u, interfaceCount);
 
-  loader.LoadLib(IGNDummyPlugins_LIB);
+  loader.LoadLib(GzDummyPlugins_LIB);
   EXPECT_EQ(interfaceCount, loader.InterfacesImplemented().size());
 }
 
@@ -101,15 +101,15 @@ TEST(Loader, ForgetUnloadedLibrary)
   //   1. A library is not loaded, and
   //   2. We tell a loader to forget the library
   gz::plugin::Loader loader;
-  EXPECT_FALSE(loader.ForgetLibrary(IGNDummyPlugins_LIB));
+  EXPECT_FALSE(loader.ForgetLibrary(GzDummyPlugins_LIB));
 
   // This next test triggers lines for the case that:
   //   1. A library is loaded by some loader in the application, and
   //   2. We tell a *different* loader to forget the library
   gz::plugin::Loader hasTheLibrary;
-  EXPECT_LT(0u, hasTheLibrary.LoadLib(IGNDummyPlugins_LIB).size());
+  EXPECT_LT(0u, hasTheLibrary.LoadLib(GzDummyPlugins_LIB).size());
 
-  EXPECT_FALSE(loader.ForgetLibrary(IGNDummyPlugins_LIB));
+  EXPECT_FALSE(loader.ForgetLibrary(GzDummyPlugins_LIB));
 }
 
 /////////////////////////////////////////////////

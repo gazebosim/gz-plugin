@@ -26,7 +26,7 @@
 /////////////////////////////////////////////////
 TEST(WeakPluginPtr, Lifecycle)
 {
-  const std::string &libraryPath = IGNDummyPlugins_LIB;
+  const std::string &libraryPath = GzDummyPlugins_LIB;
 
   gz::plugin::WeakPluginPtr weak;
 
@@ -69,7 +69,7 @@ TEST(WeakPluginPtr, Lifecycle)
 TEST(WeakPluginPtr, CopyMove)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  pl.LoadLib(GzDummyPlugins_LIB);
 
   gz::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");

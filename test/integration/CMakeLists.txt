@@ -18,7 +18,7 @@ foreach(test ${test_targets})
       IGNBadPluginAPIVersionOld
       IGNBadPluginNoInfo
       IGNBadPluginSize
-      IGNDummyPlugins
+      GzDummyPlugins
       IGNFactoryPlugins
       IGNTemplatedPlugins)
 

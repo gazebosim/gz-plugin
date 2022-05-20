@@ -221,7 +221,7 @@ namespace gz
         /// specializes for the requested Interface, if such a type is availabe
         /// within its inheritance structure. Otherwise, we cast to the generic
         /// Plugin type.
-        #define DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH( \
+        #define DETAIL_GZ_PLUGIN_COMPOSEPLUGIN_DISPATCH( \
                       ReturnType, Function, Suffix, CastTo, Args) \
         public: \
         template <class T> \
@@ -233,20 +233,20 @@ namespace gz
         }
 
 
-        DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH(
+        DETAIL_GZ_PLUGIN_COMPOSEPLUGIN_DISPATCH(
             T*, QueryInterface, (), Specializer, ())
 
-        DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH(
+        DETAIL_GZ_PLUGIN_COMPOSEPLUGIN_DISPATCH(
             const T*, QueryInterface, () const, const Specializer, ())
 
-        DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH(
+        DETAIL_GZ_PLUGIN_COMPOSEPLUGIN_DISPATCH(
             std::shared_ptr<T>, QueryInterfaceSharedPtr, (), Specializer, ())
 
-        DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH(
+        DETAIL_GZ_PLUGIN_COMPOSEPLUGIN_DISPATCH(
             std::shared_ptr<const T>, QueryInterfaceSharedPtr,
             () const, const Specializer, ())
 
-        DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH(
+        DETAIL_GZ_PLUGIN_COMPOSEPLUGIN_DISPATCH(
             bool, HasInterface, () const, const Specializer, ())
 
         // Declare friendship
@@ -260,7 +260,7 @@ namespace gz
       /// \brief ComposePlugin provides a way for a multi-specialized Plugin
       /// type to find its specializations within itself each time an
       /// interface-querying function is called. The macro
-      /// DETAIL_IGN_PLUGIN_COMPOSEPLUGIN_DISPATCH accomplishes this for each
+      /// DETAIL_GZ_PLUGIN_COMPOSEPLUGIN_DISPATCH accomplishes this for each
       /// of the different functions by doing a compile-time check on whether
       /// Base2 contains the specialization, and then picks Base1 if it does
       /// not.
