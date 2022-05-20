@@ -75,5 +75,5 @@ extern "C" void cmdPluginInfo(
 //////////////////////////////////////////////////
 extern "C" const char *ignitionVersion()
 {
-  return strdup(IGNITION_PLUGIN_VERSION_FULL);
+  return strdup(GZ_PLUGIN_VERSION_FULL);
 }

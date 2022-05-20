@@ -18,7 +18,7 @@
  */
 
 #ifndef GZ_PLUGIN_CONFIG_HH_
-#ifndef GZ_PLUGIN_CONFIG_HH_
+#define GZ_PLUGIN_CONFIG_HH_
 
 /* Version number */
 #define GZ_PLUGIN_MAJOR_VERSION ${PROJECT_VERSION_MAJOR}
