@@ -1,6 +1,6 @@
-## Ignition Plugin 1.x
+## Gazebo Plugin 1.x
 
-### Ignition Plugin 1.2.1 (2021-09-24)
+### Gazebo Plugin 1.2.1 (2021-09-24)
 
 1. Add Doxygen documentation checks to CI
     * [Pull request #59](https://github.com/gazebosim/gz-plugin/pull/59)
@@ -16,7 +16,7 @@
 1. Remove ign-tools from CMakeLists.txt. Not used
     * [Pull request #56](https://github.com/gazebosim/gz-plugin/pull/56)
 
-### Ignition Plugin 1.2.0 (2021-03-30)
+### Gazebo Plugin 1.2.0 (2021-03-30)
 
 1. Infrastructure
     * [Pull request #45](https://github.com/gazebosim/gz-plugin/pull/45)
@@ -46,12 +46,12 @@
 1. Add plugin name accessor
     * [Pull request #29](https://github.com/gazebosim/gz-plugin/pull/29)
 
-### Ignition Plugin 1.1.0 (2019-11-21)
+### Gazebo Plugin 1.1.0 (2019-11-21)
 
 1. Add SelectSpecializers to allow ign-physics to improve compilation time.
     * [BitBucket pull request 32](https://osrf-migration.github.io/ignition-gh-pages/#!/gazebosim/gz-physics/pull-requests/32)
 
-### Ignition Plugin 1.0.0 (2019-02-05)
+### Gazebo Plugin 1.0.0 (2019-02-05)
 
 1. Initial release
 

@@ -1,6 +1,6 @@
 \page installation Installation
 
-These instructions are for installing only Ignition Plugin.
+These instructions are for installing only Gazebo Plugin.
 If you're interested in using all the Ignition libraries, check out this [Ignition installation](https://ignitionrobotics.org/docs/latest/install).
 
 We recommend following the Binary Installation instructions to get up and running as quickly and painlessly as possible.
@@ -45,7 +45,7 @@ sudo apt install libignition-plugin2-dev
   sudo apt-get install libignition-cmake3-dev libignition-tools-dev libignition-utils2-cli-dev
   ```
 
-1. Install Ignition Tools if you want to use the `ign plugin` command line tool:
+1. Install Gazebo Tools if you want to use the `ign plugin` command line tool:
   ```bash
   sudo apt-get install ignition-tools
 
@@ -72,9 +72,9 @@ sudo apt install libignition-plugin2-dev
 
 ## Prerequisites
 
-Ignition Plugin and several of its dependencies can be installed on macOS
+Gazebo Plugin and several of its dependencies can be installed on macOS
 with [Homebrew](http://brew.sh/) using the [osrf/simulation
-tap](https://github.com/osrf/homebrew-simulation). Ignition Plugin versions 1+
+tap](https://github.com/osrf/homebrew-simulation). Gazebo Plugin versions 1+
 require macOS High Sierra (10.13) or later, while version 0 supports
 Sierra (10.12) or later.
 
@@ -180,7 +180,7 @@ This assumes you have created and activated a Conda environment while installing
 # Documentation
 
 API documentation and tutorials can be accessed at
-[Ignition Robotics website](https://ignitionrobotics.org/libs/plugin)
+[Gazebo Robotics website](https://ignitionrobotics.org/libs/plugin)
 
 You can also generate the documentation from a clone of this repository by following these steps.
 
