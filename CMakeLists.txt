@@ -38,6 +38,9 @@ ign_find_package(DL
 #--------------------------------------
 # Find ignition-tools
 find_program(IGN_TOOLS_PROGRAM ign)
+if (IGN_TOOLS_PROGRAM)
+  set(IGN_TOOLS_VER 1)
+endif()
 
 
 #============================================================================

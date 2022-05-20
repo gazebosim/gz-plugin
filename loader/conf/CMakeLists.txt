@@ -26,6 +26,14 @@ configure_file(
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${IGN_DESIGNATION}${PROJECT_VERSION_MAJOR}.yaml
   DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/ignition/)
 
-# Install the bash completion script in an unversioned location.
-install(FILES plugin.bash_completion.sh
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/gz/gz.completion.d/)
+# Tack version onto and install the bash completion script
+configure_file(
+  "plugin.bash_completion.sh"
+    "${CMAKE_CURRENT_BINARY_DIR}/plugin${PROJECT_VERSION_MAJOR}.bash_completion.sh" @ONLY)
+if (IGN_TOOLS_PROGRAM)
+  install(
+    FILES
+      ${CMAKE_CURRENT_BINARY_DIR}/plugin${PROJECT_VERSION_MAJOR}.bash_completion.sh
+    DESTINATION
+      ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/gz/gz${IGN_TOOLS_VER}.completion.d)
+endif()
