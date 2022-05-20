@@ -28,3 +28,5 @@ TEST(Deprecated, IgnitionNamespace)
 {
   ignition::plugin::Loader loader;
 }
+
+#undef SUPPRESS_IGNITION_HEADER_DEPRECATION

@@ -40,7 +40,7 @@ namespace gz
     class EnablePluginFromThis;
     class WeakPluginPtr;
 
-    class IGNITION_PLUGIN_VISIBLE Plugin
+    class GZ_PLUGIN_VISIBLE Plugin
     {
       // -------------------- Public API ---------------------
 
