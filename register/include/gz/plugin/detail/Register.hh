@@ -32,17 +32,19 @@
 #include <gz/plugin/utility.hh>
 
 
-#if defined _WIN32 || defined __CYGWIN__
-  #ifdef __GNUC__
-    #define DETAIL_GZ_PLUGIN_VISIBLE __attribute__ ((dllexport))
+#ifndef DETAIL_GZ_PLUGIN_VISIBLE
+  #if defined _WIN32 || defined __CYGWIN__
+    #ifdef __GNUC__
+      #define DETAIL_GZ_PLUGIN_VISIBLE __attribute__ ((dllexport))
+    #else
+      #define DETAIL_GZ_PLUGIN_VISIBLE __declspec(dllexport)
+    #endif
   #else
-    #define DETAIL_GZ_PLUGIN_VISIBLE __declspec(dllexport)
-  #endif
-#else
-  #if __GNUC__ >= 4
-    #define DETAIL_GZ_PLUGIN_VISIBLE __attribute__ ((visibility ("default")))
-  #else
-    #define DETAIL_GZ_PLUGIN_VISIBLE
+    #if __GNUC__ >= 4
+      #define DETAIL_GZ_PLUGIN_VISIBLE __attribute__ ((visibility ("default")))
+    #else
+      #define DETAIL_GZ_PLUGIN_VISIBLE
+    #endif
   #endif
 #endif
 
