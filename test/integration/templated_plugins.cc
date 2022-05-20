@@ -22,8 +22,8 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/Loader.hh>
-#include <ignition/plugin/SpecializedPluginPtr.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/plugin/SpecializedPluginPtr.hh>
 
 #include "../plugins/TemplatedPlugins.hh"
 

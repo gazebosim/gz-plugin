@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-#include <ignition/utils/cli/CLI.hpp>
+#include <gz/utils/cli/CLI.hpp>
 
 #include "ign.hh"
 

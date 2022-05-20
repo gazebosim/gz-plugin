@@ -1,7 +1,7 @@
 #ifndef GZ_PLUGIN_TEST_PLUGINS_DUMMYMULTIPLUGIN_HH_
 #define GZ_PLUGIN_TEST_PLUGINS_DUMMYMULTIPLUGIN_HH_
 
-#include <ignition/plugin/EnablePluginFromThis.hh>
+#include <gz/plugin/EnablePluginFromThis.hh>
 
 #include "DummyPlugins.hh"
 
