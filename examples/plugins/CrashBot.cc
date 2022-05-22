@@ -17,7 +17,7 @@
 
 #include "robot.hh"
 
-using namespace ignition::plugin::examples;
+using namespace gz::plugin::examples;
 
 namespace CrashBotLib {
 

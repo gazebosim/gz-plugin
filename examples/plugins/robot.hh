@@ -25,7 +25,7 @@
 
 #include <gz/plugin/Register.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

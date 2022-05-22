@@ -37,7 +37,7 @@ namespace bpo = boost::program_options;
 const std::string PluginLibDir = IGN_PLUGIN_EXAMPLES_LIBDIR;
 
 /////////////////////////////////////////////////
-using namespace ignition::plugin::examples;
+using namespace gz::plugin::examples;
 
 /////////////////////////////////////////////////
 using RobotPluginPtr = ignition::plugin::SpecializedPluginPtr<

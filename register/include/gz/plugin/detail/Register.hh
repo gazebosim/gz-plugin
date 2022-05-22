@@ -236,7 +236,7 @@ extern "C"
 #endif
 }
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -443,7 +443,7 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 /// library is loaded. When it is constructed, the Register function will
 /// be called.
 #define DETAIL_IGNITION_ADD_PLUGIN_HELPER(UniqueID, ...) \
-  namespace ignition \
+  namespace gz \
   { \
     namespace plugin \
     { \
@@ -485,7 +485,7 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 /// shared library is loaded. When it is constructed, the Register function will
 /// be called.
 #define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_HELPER(UniqueID, PluginClass, ...) \
-  namespace ignition \
+  namespace gz \
   { \
     namespace plugin \
     { \

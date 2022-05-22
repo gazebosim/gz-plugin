@@ -32,7 +32,7 @@
 
 #include <ignition/plugin/utility.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

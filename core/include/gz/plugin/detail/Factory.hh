@@ -25,7 +25,7 @@
 
 #include <gz/plugin/Factory.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

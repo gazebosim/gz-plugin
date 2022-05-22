@@ -30,7 +30,7 @@ bool usedSpecializedInterfaceAccess;
 #endif
 
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

@@ -19,7 +19,7 @@
 
 #include <ignition/plugin/utility.hh>
 
-using namespace ignition::plugin;
+using namespace gz::plugin;
 
 struct SomeType { };
 

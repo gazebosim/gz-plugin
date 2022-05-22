@@ -21,7 +21,7 @@
 
 #include "integrators.hh"
 
-namespace ignition {
+namespace gz {
 namespace plugin {
 namespace examples {
 namespace PolynomialODE {

@@ -26,7 +26,7 @@
 #    define pclose _pclose
 #endif
 
-using namespace ignition;
+using namespace gz;
 
 static const std::string g_ignVersion("--force-version " + // NOLINT(*)
   std::string(IGN_VERSION_FULL));
