@@ -17,7 +17,7 @@ class DummyMultiPlugin
       public DummySetterBase,
       public DummyGetObjectBase,
       public DummyGetPluginInstancePtr,
-      public ignition::plugin::EnablePluginFromThis
+      public gz::plugin::EnablePluginFromThis
 {
   public: virtual std::string MyNameIs() const override;
   public: virtual double MyDoubleValueIs() const override;

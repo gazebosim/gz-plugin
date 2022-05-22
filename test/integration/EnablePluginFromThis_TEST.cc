@@ -28,22 +28,22 @@
 /////////////////////////////////////////////////
 TEST(EnablePluginFromThis, BasicInstantiate)
 {
-  ignition::plugin::Loader pl;
+  gz::plugin::Loader pl;
   pl.LoadLib(IGNDummyPlugins_LIB);
 
-  ignition::plugin::PluginPtr plugin =
+  gz::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");
   ASSERT_TRUE(plugin);
 
   auto *fromThisInterface =
-      plugin->QueryInterface<ignition::plugin::EnablePluginFromThis>();
+      plugin->QueryInterface<gz::plugin::EnablePluginFromThis>();
   EXPECT_TRUE(fromThisInterface);
 
-  ignition::plugin::PluginPtr fromThis = fromThisInterface->PluginFromThis();
+  gz::plugin::PluginPtr fromThis = fromThisInterface->PluginFromThis();
   EXPECT_EQ(plugin, fromThis);
 
-  ignition::plugin::ConstPluginPtr constFromThis =
-      static_cast<const ignition::plugin::EnablePluginFromThis*>(
+  gz::plugin::ConstPluginPtr constFromThis =
+      static_cast<const gz::plugin::EnablePluginFromThis*>(
         fromThisInterface)->PluginFromThis();
   EXPECT_EQ(constFromThis, fromThis);
 
@@ -59,12 +59,12 @@ TEST(EnablePluginFromThis, BasicInstantiate)
   ASSERT_TRUE(plugin);
 
   fromThisInterface =
-      plugin->QueryInterface<ignition::plugin::EnablePluginFromThis>();
+      plugin->QueryInterface<gz::plugin::EnablePluginFromThis>();
   EXPECT_EQ(nullptr, fromThisInterface);
 }
 
 /////////////////////////////////////////////////
-using MySpecializedPluginPtr = ignition::plugin::SpecializedPluginPtr<
+using MySpecializedPluginPtr = gz::plugin::SpecializedPluginPtr<
   test::util::DummyNameBase,
   test::util::DummyDoubleBase,
   test::util::DummyIntBase
@@ -73,7 +73,7 @@ using MySpecializedPluginPtr = ignition::plugin::SpecializedPluginPtr<
 /////////////////////////////////////////////////
 TEST(EnablePluginFromThis, TemplatedInstantiate)
 {
-  ignition::plugin::Loader pl;
+  gz::plugin::Loader pl;
   pl.LoadLib(IGNDummyPlugins_LIB);
 
   MySpecializedPluginPtr plugin =
@@ -81,10 +81,10 @@ TEST(EnablePluginFromThis, TemplatedInstantiate)
   ASSERT_TRUE(plugin);
 
   auto *fromThisInterface =
-      plugin->QueryInterface<ignition::plugin::EnablePluginFromThis>();
+      plugin->QueryInterface<gz::plugin::EnablePluginFromThis>();
   EXPECT_TRUE(fromThisInterface);
 
-  ignition::plugin::PluginPtr fromThis = fromThisInterface->PluginFromThis();
+  gz::plugin::PluginPtr fromThis = fromThisInterface->PluginFromThis();
   EXPECT_EQ(plugin, fromThis);
 
 
@@ -94,7 +94,7 @@ TEST(EnablePluginFromThis, TemplatedInstantiate)
   ASSERT_TRUE(plugin);
 
   fromThisInterface =
-      plugin->QueryInterface<ignition::plugin::EnablePluginFromThis>();
+      plugin->QueryInterface<gz::plugin::EnablePluginFromThis>();
   EXPECT_EQ(nullptr, fromThisInterface);
 }
 
@@ -103,24 +103,24 @@ TEST(EnablePluginFromThis, LibraryManagement)
 {
   const std::string &libraryPath = IGNDummyPlugins_LIB;
 
-  ignition::plugin::WeakPluginPtr weak;
+  gz::plugin::WeakPluginPtr weak;
 
   {
-    ignition::plugin::PluginPtr longterm;
+    gz::plugin::PluginPtr longterm;
 
     CHECK_FOR_LIBRARY(libraryPath, false);
 
     {
-      ignition::plugin::Loader pl;
+      gz::plugin::Loader pl;
       pl.LoadLib(libraryPath);
 
       CHECK_FOR_LIBRARY(libraryPath, true);
 
-      ignition::plugin::PluginPtr temporary =
+      gz::plugin::PluginPtr temporary =
           pl.Instantiate("test::util::DummyMultiPlugin");
 
       auto fromThis =
-          temporary->QueryInterface<ignition::plugin::EnablePluginFromThis>();
+          temporary->QueryInterface<gz::plugin::EnablePluginFromThis>();
 
       longterm = fromThis->PluginFromThis();
       weak = fromThis->PluginFromThis();

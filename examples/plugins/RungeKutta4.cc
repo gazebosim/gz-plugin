@@ -53,7 +53,7 @@ std::vector<double> times(const double s,
 }
 
 /// \brief RK4 implementation of a numerical integrator
-class Integrator : public ignition::plugin::examples::NumericalIntegrator
+class Integrator : public gz::plugin::examples::NumericalIntegrator
 {
   // Documentation inherited
   public: void SetFunction(

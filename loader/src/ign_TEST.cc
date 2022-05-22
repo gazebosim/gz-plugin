@@ -166,7 +166,7 @@ TEST(ignTest, PluginInfoDummyPlugins)
   EXPECT_NE(std::string::npos, output.find("test::util::DummySetterBase"))
       << output;
   EXPECT_NE(std::string::npos,
-            output.find("ignition::plugin::EnablePluginFromThis"))
+            output.find("gz::plugin::EnablePluginFromThis"))
       << output;
 }
 
@@ -196,7 +196,7 @@ TEST(ignTest, PluginInfoVerboseDummyPlugins)
   EXPECT_NE(std::string::npos, output.find("test::util::DummySetterBase"))
       << output;
   EXPECT_NE(std::string::npos,
-            output.find("ignition::plugin::EnablePluginFromThis"))
+            output.find("gz::plugin::EnablePluginFromThis"))
       << output;
 
   EXPECT_NE(std::string::npos, output.find("Known Plugins: 3"))

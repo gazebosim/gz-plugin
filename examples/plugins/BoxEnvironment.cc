@@ -20,14 +20,14 @@
 namespace BoxEnvironment {
 
 /// \brief A plugin that creates a box environment
-class Plugin : public virtual ignition::plugin::examples::Environment
+class Plugin : public virtual gz::plugin::examples::Environment
 {
-  public: ignition::plugin::examples::Layout GenerateLayout() const override
+  public: gz::plugin::examples::Layout GenerateLayout() const override
   {
-    ignition::plugin::examples::Layout layout;
+    gz::plugin::examples::Layout layout;
     const double L = 5.0;
 
-    using ignition::math::Vector2d;
+    using gz::math::Vector2d;
 
     layout.push_back(std::make_pair(Vector2d(L, L), Vector2d(L, -L)));
     layout.push_back(std::make_pair(Vector2d(L, L), Vector2d(-L, L)));
@@ -42,4 +42,4 @@ class Plugin : public virtual ignition::plugin::examples::Environment
 
 IGNITION_ADD_PLUGIN(
     BoxEnvironment::Plugin,
-    ignition::plugin::examples::Environment)
+    gz::plugin::examples::Environment)

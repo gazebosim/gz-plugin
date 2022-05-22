@@ -19,5 +19,5 @@
 
 int main()
 {
-  ignition::plugin::PluginPtr ptr{ignition::plugin::ConstPluginPtr()};
+  gz::plugin::PluginPtr ptr{gz::plugin::ConstPluginPtr()};
 }

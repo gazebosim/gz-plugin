@@ -187,10 +187,10 @@ namespace std
   /// so that it can easily be used in STL objects like std::unordered_set and
   /// std::unordered_map
   template <typename PluginType>
-  struct hash<ignition::plugin::TemplatePluginPtr<PluginType>>
+  struct hash<gz::plugin::TemplatePluginPtr<PluginType>>
   {
     size_t operator()(
-        const ignition::plugin::TemplatePluginPtr<PluginType> &ptr) const
+        const gz::plugin::TemplatePluginPtr<PluginType> &ptr) const
     {
       return ptr.Hash();
     }

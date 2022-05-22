@@ -50,8 +50,8 @@ namespace gz
         public: virtual ~FactoryCounter();
 
         // friendship declaration
-        template <typename, typename...> friend class ignition::plugin::Factory;
-        template <typename> friend class ignition::plugin::ProductDeleter;
+        template <typename, typename...> friend class gz::plugin::Factory;
+        template <typename> friend class gz::plugin::ProductDeleter;
       };
     }
 

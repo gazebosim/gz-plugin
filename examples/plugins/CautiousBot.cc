@@ -32,14 +32,14 @@ class CautiousBot
   }
 
   // Documentation inherited
-  public: ignition::math::Vector3d Velocity() const override
+  public: gz::math::Vector3d Velocity() const override
   {
     const double MaxDist = 10.0;
 
     // Try to stay 0.1 meters away from any obstacle
     const double d = (std::min(distance, MaxDist) - 0.1);
 
-    return ignition::math::Vector3d(0.1*d, 0.0, 0.0);
+    return gz::math::Vector3d(0.1*d, 0.0, 0.0);
   }
 
   // Documentation inherited

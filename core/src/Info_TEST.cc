@@ -29,7 +29,7 @@ struct SomePlugin : public SomeInterface
 
 TEST(Info, Clear)
 {
-  ignition::plugin::Info info;
+  gz::plugin::Info info;
   info.name = typeid(SomePlugin).name();
 
   info.factory = [=]()

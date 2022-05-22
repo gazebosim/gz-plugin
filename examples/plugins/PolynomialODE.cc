@@ -204,10 +204,10 @@ class CubicFactory : public ODESystemFactory
 
 // Register multiple plugins for this library
 IGNITION_ADD_PLUGIN(
-    ignition::plugin::examples::PolynomialODE::ParabolicFactory,
-    ignition::plugin::examples::ODESystemFactory)
+    gz::plugin::examples::PolynomialODE::ParabolicFactory,
+    gz::plugin::examples::ODESystemFactory)
 
 IGNITION_ADD_PLUGIN(
-    ignition::plugin::examples::PolynomialODE::CubicFactory,
-    ignition::plugin::examples::ODESystemFactory)
+    gz::plugin::examples::PolynomialODE::CubicFactory,
+    gz::plugin::examples::ODESystemFactory)
 
