@@ -16,3 +16,4 @@
  */
 
 #include <gz/plugin/detail/Register.hh>
+#include <ignition/plugin/config.hh>
