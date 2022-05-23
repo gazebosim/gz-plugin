@@ -15,4 +15,21 @@
  *
  */
 
+#ifndef IGNITION_PLUGIN__CONFIG_HH_
+#define IGNITION_PLUGIN__CONFIG_HH_
+
 #include <gz/plugin/config.hh>
+
+namespace gz
+{
+}
+
+namespace ignition
+{
+  #ifndef SUPPRESS_IGNITION_HEADER_DEPRECATION
+    #pragma message("ignition namespace is deprecated! Use gz instead!")
+  #endif
+  using namespace gz;
+}
+
+#endif
