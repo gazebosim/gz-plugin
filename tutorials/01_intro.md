@@ -2,7 +2,7 @@
 
 Next Tutorial: \ref installation
 
-Gazebo Plugin is a component in Gazebo Robotics, a set of libraries
+Gazebo Plugin is a component in Gazebo, a set of libraries
 designed to rapidly develop robot and simulation applications. The main
 goal of the library is to simplify the process of registering plugin
 libraries and dynamically loading them at runtime. It is based on the

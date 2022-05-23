@@ -180,7 +180,7 @@ This assumes you have created and activated a Conda environment while installing
 # Documentation
 
 API documentation and tutorials can be accessed at
-[Gazebo Robotics website](https://ignitionrobotics.org/libs/plugin)
+[Gazebo website](https://ignitionrobotics.org/libs/plugin)
 
 You can also generate the documentation from a clone of this repository by following these steps.
 
