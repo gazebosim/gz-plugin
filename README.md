@@ -19,7 +19,7 @@ Windows 7     | [![Build Status](https://build.osrfoundation.org/job/ignition_pl
 Gazebo Plugin is a component in the ignition framework, a set
 of libraries designed to rapidly develop robot applications.
 
-[http://ignitionrobotics.org](http://ignitionrobotics.org)
+[http://gazebosim.org](http://gazebosim.org)
 
 ## Features
 
@@ -31,8 +31,8 @@ of libraries designed to rapidly develop robot applications.
 
 ## Installation
 
-See the [installation tutorial](https://ignitionrobotics.org/api/plugin/1.2/installation.html).
+See the [installation tutorial](https://gazebosim.org/api/plugin/1.2/installation.html).
 
 # Documentation
 
-API documentation and tutorials can be accessed at [https://ignitionrobotics.org/libs/plugin](https://ignitionrobotics.org/libs/plugin)
+API documentation and tutorials can be accessed at [https://gazebosim.org/libs/plugin](https://gazebosim.org/libs/plugin)

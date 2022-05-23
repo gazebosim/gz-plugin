@@ -1,7 +1,7 @@
 \page installation Installation
 
 These instructions are for installing only Gazebo Plugin.
-If you're interested in using all the Ignition libraries, check out this [Ignition installation](https://ignitionrobotics.org/docs/latest/install).
+If you're interested in using all the Ignition libraries, check out this [Ignition installation](https://gazebosim.org/docs/latest/install).
 
 We recommend following the Binary Installation instructions to get up and running as quickly and painlessly as possible.
 
@@ -180,7 +180,7 @@ This assumes you have created and activated a Conda environment while installing
 # Documentation
 
 API documentation and tutorials can be accessed at
-[Gazebo website](https://ignitionrobotics.org/libs/plugin)
+[Gazebo website](https://gazebosim.org/libs/plugin)
 
 You can also generate the documentation from a clone of this repository by following these steps.
 
