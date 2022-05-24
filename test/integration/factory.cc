@@ -115,7 +115,7 @@ TEST(Factory, Alias)
 
   EXPECT_FALSE(symbolName.empty());
 
-  for (const std::string &alias : {
+  for (auto alias : {
        symbolName.c_str(),
        "test::util::SomeObjectAddTwo",
        "This factory has an alias",
