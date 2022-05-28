@@ -42,12 +42,12 @@ sudo apt install libignition-plugin2-dev
 
 1. Install Ignition dependencies
   ```
-  sudo apt-get install libignition-cmake3-dev libignition-tools-dev libignition-utils2-cli-dev
+  sudo apt-get install libignition-cmake3-dev libignition-tools2-dev libignition-utils2-cli-dev
   ```
 
 1. Install Gazebo Tools if you want to use the `ign plugin` command line tool:
   ```bash
-  sudo apt-get install ignition-tools
+  sudo apt-get install ignition-tools2
 
 2. Clone the repository
   ```bash
