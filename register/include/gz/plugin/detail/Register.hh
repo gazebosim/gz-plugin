@@ -32,6 +32,9 @@
 #include <gz/plugin/utility.hh>
 
 
+#ifdef DETAIL_GZ_PLUGIN_VISIBLE
+  #undef DETAIL_GZ_PLUGIN_VISIBLE
+#endif
 
 #if defined _WIN32 || defined __CYGWIN__
   #ifdef __GNUC__
