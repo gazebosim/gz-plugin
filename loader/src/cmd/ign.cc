@@ -20,8 +20,8 @@
 #include <string>
 #include <unordered_set>
 
-#include "ignition/plugin/Loader.hh"
-#include "ignition/plugin/config.hh"
+#include "gz/plugin/Loader.hh"
+#include "gz/plugin/config.hh"
 #include "ign.hh"
 
 //////////////////////////////////////////////////
@@ -75,5 +75,5 @@ extern "C" void cmdPluginInfo(
 //////////////////////////////////////////////////
 extern "C" const char *ignitionVersion()
 {
-  return strdup(IGNITION_PLUGIN_VERSION_FULL);
+  return strdup(GZ_PLUGIN_VERSION_FULL);
 }

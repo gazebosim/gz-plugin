@@ -56,7 +56,7 @@ namespace gz
     /// \param[in] _symbol
     ///   Pass in the result of typeid(T).name()
     /// \return The demangled (human-readable) version of the symbol name
-    std::string IGNITION_PLUGIN_VISIBLE DemangleSymbol(
+    std::string GZ_PLUGIN_VISIBLE DemangleSymbol(
         const std::string &_symbol);
   }
 }

@@ -17,10 +17,10 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/EnablePluginFromThis.hh>
-#include <ignition/plugin/Loader.hh>
-#include <ignition/plugin/SpecializedPluginPtr.hh>
-#include <ignition/plugin/WeakPluginPtr.hh>
+#include <gz/plugin/EnablePluginFromThis.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/plugin/SpecializedPluginPtr.hh>
+#include <gz/plugin/WeakPluginPtr.hh>
 
 #include "../plugins/DummyPlugins.hh"
 #include "utils.hh"
@@ -29,7 +29,7 @@
 TEST(EnablePluginFromThis, BasicInstantiate)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  pl.LoadLib(GzDummyPlugins_LIB);
 
   gz::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");
@@ -74,7 +74,7 @@ using MySpecializedPluginPtr = gz::plugin::SpecializedPluginPtr<
 TEST(EnablePluginFromThis, TemplatedInstantiate)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  pl.LoadLib(GzDummyPlugins_LIB);
 
   MySpecializedPluginPtr plugin =
       pl.Instantiate<MySpecializedPluginPtr>("test::util::DummyMultiPlugin");
@@ -101,7 +101,7 @@ TEST(EnablePluginFromThis, TemplatedInstantiate)
 /////////////////////////////////////////////////
 TEST(EnablePluginFromThis, LibraryManagement)
 {
-  const std::string &libraryPath = IGNDummyPlugins_LIB;
+  const std::string &libraryPath = GzDummyPlugins_LIB;
 
   gz::plugin::WeakPluginPtr weak;
 

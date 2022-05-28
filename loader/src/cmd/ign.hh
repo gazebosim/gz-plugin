@@ -15,10 +15,10 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_IGN_HH_
-#define IGNITION_PLUGIN_IGN_HH_
+#ifndef GZ_PLUGIN_IGN_HH_
+#define GZ_PLUGIN_IGN_HH_
 
-#include "ignition/plugin/Export.hh"
+#include "gz/plugin/Export.hh"
 
 /// \brief External hook to read the library version.
 /// \return C-string representing the version. Ex.: 0.1.2

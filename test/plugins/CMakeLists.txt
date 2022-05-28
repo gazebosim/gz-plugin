@@ -6,7 +6,7 @@ add_library(IGNBadPluginSize          SHARED BadPluginSize.cc)
 add_library(IGNFactoryPlugins         SHARED FactoryPlugins.cc)
 add_library(IGNTemplatedPlugins       SHARED TemplatedPlugins.cc)
 
-add_library(IGNDummyPlugins SHARED
+add_library(GzDummyPlugins SHARED
   DummyPlugins.cc
   DummyPluginsOtherTranslationUnit.cc)
 
@@ -18,7 +18,7 @@ foreach(plugin_target
     IGNBadPluginAPIVersionOld
     IGNBadPluginNoInfo
     IGNBadPluginSize
-    IGNDummyPlugins
+    GzDummyPlugins
     IGNFactoryPlugins
     IGNTemplatedPlugins)
 

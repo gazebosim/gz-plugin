@@ -24,9 +24,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "ignition/plugin/Loader.hh"
-#include "ignition/plugin/PluginPtr.hh"
-#include "ignition/plugin/SpecializedPluginPtr.hh"
+#include "gz/plugin/Loader.hh"
+#include "gz/plugin/PluginPtr.hh"
+#include "gz/plugin/SpecializedPluginPtr.hh"
 
 #include "../plugins/DummyPlugins.hh"
 #include "utils.hh"
@@ -57,7 +57,7 @@ TEST(Loader, LoadExistingLibrary)
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLib(IGNDummyPlugins_LIB);
+      pl.LoadLib(GzDummyPlugins_LIB);
   ASSERT_EQ(3u, pluginNames.size());
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
@@ -185,7 +185,7 @@ using SomeSpecializedPluginPtr =
 TEST(SpecializedPluginPtr, Construction)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  pl.LoadLib(GzDummyPlugins_LIB);
 
   SomeSpecializedPluginPtr plugin(
       pl.Instantiate("test::util::DummyMultiPlugin"));
@@ -330,7 +330,7 @@ TEST(PluginPtr, CopyMoveSemantics)
   EXPECT_TRUE(plugin.IsEmpty());
 
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  pl.LoadLib(GzDummyPlugins_LIB);
 
   plugin = pl.Instantiate("test::util::DummySinglePlugin");
   EXPECT_FALSE(plugin.IsEmpty());
@@ -411,7 +411,7 @@ void CheckSomeValues(
 TEST(PluginPtr, QueryInterfaceSharedPtr)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  pl.LoadLib(GzDummyPlugins_LIB);
 
   // QueryInterfaceSharedPtr without specialization
   {
@@ -492,7 +492,7 @@ gz::plugin::PluginPtr GetSomePlugin(const std::string &path)
 /////////////////////////////////////////////////
 TEST(PluginPtr, LibraryManagement)
 {
-  const std::string &path = IGNDummyPlugins_LIB;
+  const std::string &path = GzDummyPlugins_LIB;
 
   // Use scoping to destroy somePlugin
   {

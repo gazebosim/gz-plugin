@@ -17,7 +17,7 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/Info.hh>
+#include <gz/plugin/Info.hh>
 
 struct SomeInterface
 {

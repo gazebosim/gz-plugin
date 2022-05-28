@@ -20,7 +20,7 @@
 #include <thread>
 #include <vector>
 
-#include <ignition/plugin/Factory.hh>
+#include <gz/plugin/Factory.hh>
 
 namespace
 {

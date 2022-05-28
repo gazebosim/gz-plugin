@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Open Source Robotics Foundation
+ * Copyright (C) 2022 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
-*/
+ */
 
-#include <limits>
+#include <gtest/gtest.h>
 
-#include <gz/plugin/Info.hh>
+#define SUPPRESS_IGNITION_HEADER_DEPRECATION
 
-#include "GenericExport.hh"
+#include <ignition/plugin/Loader.hh>
+#include <ignition/utils/SuppressWarning.hh>
 
-extern "C" void EXPORT IgnitionPluginHook(
-    const void *,
-    const void ** const,
-    int *_inputAndOutputAPIVersion,
-    std::size_t *,
-    std::size_t *)
+/////////////////////////////////////////////////
+// Make sure the ignition namespace still works
+TEST(Deprecated, IgnitionNamespace)
 {
-  // Note: We have never supported an Info API version 0.
-  *_inputAndOutputAPIVersion = 0;
+  ignition::plugin::Loader loader;
 }
+
+#undef SUPPRESS_IGNITION_HEADER_DEPRECATION

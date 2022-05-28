@@ -35,7 +35,7 @@ namespace gz
   namespace plugin
   {
     /// \brief Class for loading plugins
-    class IGNITION_PLUGIN_LOADER_VISIBLE Loader
+    class GZ_PLUGIN_LOADER_VISIBLE Loader
     {
       /// \brief Constructor
       public: Loader();

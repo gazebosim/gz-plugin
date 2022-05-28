@@ -21,8 +21,8 @@
 #include <iomanip>
 #include <cmath>
 
-#include <ignition/plugin/Loader.hh>
-#include <ignition/plugin/SpecializedPluginPtr.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/plugin/SpecializedPluginPtr.hh>
 
 #include "../plugins/DummyPlugins.hh"
 
@@ -128,7 +128,7 @@ double RunPerformanceTest(const PluginType &plugin)
 TEST(PluginSpecialization, AccessTime)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugin_LIB);
+  pl.LoadLib(GzDummyPlugin_LIB);
 
   // Load up the generic plugin
   gz::plugin::PluginPtr plugin =

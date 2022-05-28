@@ -17,7 +17,7 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/Loader.hh>
+#include <gz/plugin/Loader.hh>
 
 #include "../plugins/DummyPlugins.hh"
 
@@ -28,7 +28,7 @@ TEST(Alias, InspectAliases)
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLib(IGNDummyPlugins_LIB);
+      pl.LoadLib(GzDummyPlugins_LIB);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));
@@ -53,7 +53,7 @@ TEST(Alias, ConflictingAlias)
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLib(IGNDummyPlugins_LIB);
+      pl.LoadLib(GzDummyPlugins_LIB);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));

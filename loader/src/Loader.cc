@@ -26,11 +26,11 @@
 #include <unordered_map>
 #include <vector>
 
-#include <ignition/plugin/Info.hh>
-#include <ignition/plugin/Loader.hh>
-#include <ignition/plugin/Plugin.hh>
+#include <gz/plugin/Info.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/plugin/Plugin.hh>
 
-#include <ignition/plugin/utility.hh>
+#include <gz/plugin/utility.hh>
 
 namespace gz
 {

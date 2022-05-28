@@ -17,8 +17,8 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/Factory.hh>
-#include <ignition/plugin/Loader.hh>
+#include <gz/plugin/Factory.hh>
+#include <gz/plugin/Loader.hh>
 
 #include "../plugins/FactoryPlugins.hh"
 #include "utils.hh"
@@ -115,7 +115,7 @@ TEST(Factory, Alias)
 
   EXPECT_FALSE(symbolName.empty());
 
-  for (const std::string &alias : {
+  for (auto alias : {
        symbolName.c_str(),
        "test::util::SomeObjectAddTwo",
        "This factory has an alias",

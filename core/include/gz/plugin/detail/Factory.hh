@@ -38,7 +38,7 @@ namespace gz
       /// might get unloaded while the Product is still alive, and then the
       /// application will experience a segmentation fault as soon as it tries
       /// to do anything with the Product (including deleting it).
-      class IGNITION_PLUGIN_VISIBLE FactoryCounter
+      class GZ_PLUGIN_VISIBLE FactoryCounter
       {
         IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
         /// \brief A reference to the factory that created this product
