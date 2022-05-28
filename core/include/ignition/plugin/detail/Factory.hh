@@ -16,3 +16,4 @@
  */
 
 #include <gz/plugin/detail/Factory.hh>
+#include <ignition/plugin/config.hh>

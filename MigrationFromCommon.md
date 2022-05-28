@@ -1,4 +1,4 @@
-# Migration Instructions
+# Migration Instructions (from common::Plugin)
 
 This file provides migration instructions for `ignition` library developers to
 replace the `ignition-common` plugin framework with the `ignition-plugin`
@@ -16,13 +16,13 @@ target_link_libraries(my_target PUBLIC ignition-plugin2::core)
 
 However, if your code wants to be able to load plugins, it should link to the
 `loader` component. In most cases, it should probably link privately, unless you
-need the `ignition::plugin::Loader` class to be part of your library's API:
+need the `gz::plugin::Loader` class to be part of your library's API:
 
 ```
 target_link_libraries(my_target PRIVATE ignition-plugin2::loader)
 ```
 
-If `ignition::plugin::PluginPtr` objects are part of your library's API, then
+If `gz::plugin::PluginPtr` objects are part of your library's API, then
 you may want `loader` to be private while `core` is public:
 
 ```
@@ -77,15 +77,15 @@ you choose exactly one.
 
 # Loading a library
 
-The `ignition::common::SystemPaths` class was not ported into `ign-plugin`
+The `gz::common::SystemPaths` class was not ported into `ign-plugin`
 because it is more related to filesystem utilities than to plugins. If you are
-currently using `ignition::common::SystemPaths` to help with loading plugins,
+currently using `gz::common::SystemPaths` to help with loading plugins,
 then you should continue to use it. It does not have a replacement in `ign-plugin`.
 
 Here is a list of things that you *should* replace:
 
 * `#include <ignition/common/PluginLoader.hh>` should be replaced with `#include <ignition/plugin/Loader.hh>`
-* `ignition::common::PluginLoader` should be replaced with `ignition::plugin::Loader`
+* `gz::common::PluginLoader` should be replaced with `gz::plugin::Loader`
 * When calling `Loader::Instantiate("....")` do **NOT** prefix the class name with `::`. E.g. `"::some_namespace::MyClass"` should now be `"some_namespace::MyClass"`.
 
 
@@ -164,4 +164,3 @@ In general, plugin names that get passed to a `Loader` should not be hard-coded.
 They should be selected by either inspecting what interfaces they provide, or by
 having a user specify the plugin name. This rule of thumb applies to both
 template-based classes and to regular classes.
-

@@ -51,7 +51,7 @@
 /// the gz/plugin/RegisterMore.hh header in all of the rest of the
 /// translation units.
 #define IGNITION_ADD_PLUGIN(PluginClass, ...) \
-  DETAIL_IGNITION_ADD_PLUGIN(PluginClass, __VA_ARGS__)
+  DETAIL_GZ_ADD_PLUGIN(PluginClass, __VA_ARGS__)
 
 /// \brief Add an alias for one of your plugins.
 ///
@@ -72,7 +72,7 @@
 /// of another plugin, then the Loader will always prefer to instantiate the
 /// plugin whose symbol name matches that string.
 #define IGNITION_ADD_PLUGIN_ALIAS(PluginClass, ...) \
-  DETAIL_IGNITION_ADD_PLUGIN_ALIAS(PluginClass, __VA_ARGS__)
+  DETAIL_GZ_ADD_PLUGIN_ALIAS(PluginClass, __VA_ARGS__)
 
 
 /// \brief Add a plugin factory.
@@ -85,7 +85,7 @@
 /// memory management system the consumer prefers.
 ///
 /// The inputs and output of a factory are defined using the
-/// ignition::plugin::Factory class in the gz/plugin/Factory.hh header.
+/// gz::plugin::Factory class in the gz/plugin/Factory.hh header.
 ///
 /// The first argument of this macro should be the class that implements the
 /// factory's output interface. The second argument should be the factory
@@ -109,15 +109,15 @@
 /// };
 ///
 /// /* BAD! Will not compile:
-/// IGNITION_ADD_FACTORY(MyType, ignition::plugin::Factory<MyBase, double>);
+/// IGNITION_ADD_FACTORY(MyType, gz::plugin::Factory<MyBase, double>);
 /// */
 ///
 /// // Instead do this:
-/// using MyFactory = ignition::plugin::Factory<MyBase, double>;
+/// using MyFactory = gz::plugin::Factory<MyBase, double>;
 /// IGNITION_ADD_FACTORY(MyType, MyFactory);
 /// \endcode
 #define IGNITION_ADD_FACTORY(ProductType, FactoryType) \
-  DETAIL_IGNITION_ADD_FACTORY(ProductType, FactoryType)
+  DETAIL_GZ_ADD_FACTORY(ProductType, FactoryType)
 
 /// \brief Add an alias for a factory.
 ///
@@ -134,7 +134,7 @@
 /// IGNITION_ADD_FACTORY(), but there is nothing wrong with calling both (except
 /// it might imperceptibly increase your compile time).
 #define IGNITION_ADD_FACTORY_ALIAS(ProductType, FactoryType, ...) \
-  DETAIL_IGNITION_ADD_FACTORY_ALIAS(ProductType, FactoryType, __VA_ARGS__)
+  DETAIL_GZ_ADD_FACTORY_ALIAS(ProductType, FactoryType, __VA_ARGS__)
 
 
 #endif

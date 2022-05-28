@@ -16,3 +16,4 @@
  */
 
 #include <gz/plugin/PluginPtr.hh>
+#include <ignition/plugin/config.hh>

@@ -22,7 +22,7 @@
 
 #include <type_traits>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

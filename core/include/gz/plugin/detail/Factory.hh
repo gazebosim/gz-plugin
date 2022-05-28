@@ -25,7 +25,7 @@
 
 #include <gz/plugin/Factory.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -38,7 +38,7 @@ namespace ignition
       /// might get unloaded while the Product is still alive, and then the
       /// application will experience a segmentation fault as soon as it tries
       /// to do anything with the Product (including deleting it).
-      class IGNITION_PLUGIN_VISIBLE FactoryCounter
+      class GZ_PLUGIN_VISIBLE FactoryCounter
       {
         IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
         /// \brief A reference to the factory that created this product
@@ -50,8 +50,8 @@ namespace ignition
         public: virtual ~FactoryCounter();
 
         // friendship declaration
-        template <typename, typename...> friend class ignition::plugin::Factory;
-        template <typename> friend class ignition::plugin::ProductDeleter;
+        template <typename, typename...> friend class gz::plugin::Factory;
+        template <typename> friend class gz::plugin::ProductDeleter;
       };
     }
 

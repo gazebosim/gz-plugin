@@ -28,7 +28,7 @@
 #include <gz/plugin/Export.hh>
 #include <gz/plugin/Info.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -40,7 +40,7 @@ namespace ignition
     class EnablePluginFromThis;
     class WeakPluginPtr;
 
-    class IGNITION_PLUGIN_VISIBLE Plugin
+    class GZ_PLUGIN_VISIBLE Plugin
     {
       // -------------------- Public API ---------------------
 

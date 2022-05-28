@@ -22,7 +22,7 @@
 
 #include <gz/plugin/PluginPtr.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -37,7 +37,7 @@ namespace ignition
     /// `instance->QueryInterface<EnablePluginFromThis>()`
     ///
     /// \remark This class is analogous to std::enable_shared_from_this
-    class IGNITION_PLUGIN_VISIBLE EnablePluginFromThis
+    class GZ_PLUGIN_VISIBLE EnablePluginFromThis
     {
       /// \brief Default constructor
       public: EnablePluginFromThis();

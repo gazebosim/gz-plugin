@@ -16,3 +16,4 @@
  */
 
 #include <gz/plugin/Loader.hh>
+#include <ignition/plugin/config.hh>

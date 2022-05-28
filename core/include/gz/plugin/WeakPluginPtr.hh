@@ -22,7 +22,7 @@
 
 #include <gz/plugin/PluginPtr.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -36,7 +36,7 @@ namespace ignition
     /// If the Plugin is deleted while this WeakPluginPtr is referring to it,
     /// then Lock() will return an empty PluginPtr, and IsExpired() will return
     /// true.
-    class IGNITION_PLUGIN_VISIBLE WeakPluginPtr
+    class GZ_PLUGIN_VISIBLE WeakPluginPtr
     {
       /// \brief Default constructor
       public: WeakPluginPtr();

@@ -1,13 +1,13 @@
 # Examples
 
-These examples demonstrate various Ignition Plugin features.
+These examples demonstrate various Gazebo Plugin features.
 
 ## Build
 
-After installing Ignition Plugin, from source or from binaries, build with:
+After installing Gazebo Plugin, from source or from binaries, build with:
 
 ```
-git clone https://github.com/ignitionrobotics/ign-plugin/
+git clone https://github.com/gazebosim/gz-plugin/
 cd ign-plugin/examples
 mkdir build
 cd build

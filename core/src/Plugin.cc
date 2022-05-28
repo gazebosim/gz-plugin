@@ -19,10 +19,10 @@
 #include <cassert>
 #include <iostream>
 
-#include "ignition/plugin/Plugin.hh"
-#include "ignition/plugin/Info.hh"
+#include "gz/plugin/Plugin.hh"
+#include "gz/plugin/Info.hh"
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

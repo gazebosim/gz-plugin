@@ -21,8 +21,8 @@
 #include <iomanip>
 #include <cmath>
 
-#include <ignition/plugin/Loader.hh>
-#include <ignition/plugin/SpecializedPluginPtr.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/plugin/SpecializedPluginPtr.hh>
 
 #include "../plugins/DummyPlugins.hh"
 
@@ -52,26 +52,26 @@ IGN_CREATE_INTERFACE(Interface19)
 
 // Specialize for only 1 type
 using Specialize1Type =
-    ignition::plugin::SpecializedPluginPtr<test::util::DummySetterBase>;
+    gz::plugin::SpecializedPluginPtr<test::util::DummySetterBase>;
 
 // Specialize for 3 different types, and put the type we care about first in
 // the list.
 using Specialize3Types_Leading =
-    ignition::plugin::SpecializedPluginPtr<
+    gz::plugin::SpecializedPluginPtr<
         test::util::DummySetterBase,
         Interface1, Interface2>;
 
 // Specialize for 3 different types, and put the type we care about last in
 // the list.
 using Specialize3Types_Trailing =
-    ignition::plugin::SpecializedPluginPtr<
+    gz::plugin::SpecializedPluginPtr<
         Interface1, Interface2,
         test::util::DummySetterBase>;
 
 // Specialize for 10 different types, and put the type we care about first in
 // the list.
 using Specialize10Types_Leading =
-    ignition::plugin::SpecializedPluginPtr<
+    gz::plugin::SpecializedPluginPtr<
         test::util::DummySetterBase,
         Interface1, Interface2, Interface3, Interface4, Interface5,
         Interface6, Interface7, Interface8, Interface9>;
@@ -79,7 +79,7 @@ using Specialize10Types_Leading =
 // Specialize for 10 different types, and put the type we care about last in
 // the list.
 using Specialize10Types_Trailing =
-    ignition::plugin::SpecializedPluginPtr<
+    gz::plugin::SpecializedPluginPtr<
         Interface1, Interface2, Interface3, Interface4, Interface5,
         Interface6, Interface7, Interface8, Interface9,
         test::util::DummySetterBase>;
@@ -87,7 +87,7 @@ using Specialize10Types_Trailing =
 // Specialize for 20 different types, and put the type we care about first in
 // the list.
 using Specialize20Types_Leading =
-    ignition::plugin::SpecializedPluginPtr<
+    gz::plugin::SpecializedPluginPtr<
         test::util::DummySetterBase,
         Interface1, Interface2, Interface3, Interface4, Interface5,
         Interface6, Interface7, Interface8, Interface9, Interface10,
@@ -97,7 +97,7 @@ using Specialize20Types_Leading =
 // Specialize for 20 different types, and put the type we care about last in
 // the list.
 using Specialize20Types_Trailing =
-    ignition::plugin::SpecializedPluginPtr<
+    gz::plugin::SpecializedPluginPtr<
         Interface1, Interface2, Interface3, Interface4, Interface5,
         Interface6, Interface7, Interface8, Interface9, Interface10,
         Interface11, Interface12, Interface13, Interface14, Interface15,
@@ -127,11 +127,11 @@ double RunPerformanceTest(const PluginType &plugin)
 /////////////////////////////////////////////////
 TEST(PluginSpecialization, AccessTime)
 {
-  ignition::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugin_LIB);
+  gz::plugin::Loader pl;
+  pl.LoadLib(GzDummyPlugin_LIB);
 
   // Load up the generic plugin
-  ignition::plugin::PluginPtr plugin =
+  gz::plugin::PluginPtr plugin =
       pl.Instantiate("::test::util::DummyMultiPlugin");
 
   // Create specialized versions

@@ -32,17 +32,21 @@
 #include <gz/plugin/utility.hh>
 
 
+#ifdef DETAIL_GZ_PLUGIN_VISIBLE
+  #undef DETAIL_GZ_PLUGIN_VISIBLE
+#endif
+
 #if defined _WIN32 || defined __CYGWIN__
   #ifdef __GNUC__
-    #define DETAIL_IGN_PLUGIN_VISIBLE __attribute__ ((dllexport))
+    #define DETAIL_GZ_PLUGIN_VISIBLE __attribute__ ((dllexport))
   #else
-    #define DETAIL_IGN_PLUGIN_VISIBLE __declspec(dllexport)
+    #define DETAIL_GZ_PLUGIN_VISIBLE __declspec(dllexport)
   #endif
 #else
   #if __GNUC__ >= 4
-    #define DETAIL_IGN_PLUGIN_VISIBLE __attribute__ ((visibility ("default")))
+    #define DETAIL_GZ_PLUGIN_VISIBLE __attribute__ ((visibility ("default")))
   #else
-    #define DETAIL_IGN_PLUGIN_VISIBLE
+    #define DETAIL_GZ_PLUGIN_VISIBLE
   #endif
 #endif
 
@@ -55,7 +59,7 @@ extern "C"
   /// retrieve Info from a shared library that provides plugins.
   ///
   /// The symbol is explicitly exported (visibility is turned on) using
-  /// DETAIL_IGN_PLUGIN_VISIBLE to ensure that dlsym(~) is able to find it.
+  /// DETAIL_GZ_PLUGIN_VISIBLE to ensure that dlsym(~) is able to find it.
   ///
   /// DO NOT CALL THIS FUNCTION DIRECTLY OR CREATE YOUR OWN IMPLEMENTATION OF IT
   /// This function is used by the Registrar and Loader classes. Nothing else
@@ -100,7 +104,7 @@ extern "C"
   ///   Similar to _inputAndOutputInfoSize, this is used for sanity checking. It
   ///   inspects and returns the alignof(Info) value instead of the sizeof(Info)
   ///   value.
-  DETAIL_IGN_PLUGIN_VISIBLE void IgnitionPluginHook(
+  DETAIL_GZ_PLUGIN_VISIBLE void IgnitionPluginHook(
       const void *_inputSingleInfo,
       const void ** const _outputAllInfo,
       int *_inputAndOutputAPIVersion,
@@ -122,7 +126,7 @@ extern "C"
   // plugin library.
   // ^^^^^^^^^^^^^^^^^^^^^ READ ABOVE FOR LINKING ERRORS ^^^^^^^^^^^^^^^^^^^^^
   {
-    using InfoMap = ignition::plugin::InfoMap;
+    using InfoMap = gz::plugin::InfoMap;
     // We use a static variable here so that we can accumulate multiple
     // Info objects from multiple plugin registration calls within one
     // shared library, and then provide it all to the Loader through this
@@ -133,8 +137,8 @@ extern "C"
     {
       // When _inputSingleInfo is not a nullptr, it means that one of the plugin
       // registration macros is providing us with some Info.
-      const ignition::plugin::Info *input =
-          static_cast<const ignition::plugin::Info*>(_inputSingleInfo);
+      const gz::plugin::Info *input =
+          static_cast<const gz::plugin::Info*>(_inputSingleInfo);
 
       InfoMap::iterator it;
       bool inserted;
@@ -153,7 +157,7 @@ extern "C"
         // user to specify different interfaces and aliases for the same plugin
         // type using different macros in different locations or across multiple
         // translation units.
-        ignition::plugin::Info &entry = it->second;
+        gz::plugin::Info &entry = it->second;
 
         for (const auto &interfaceMapEntry : input->interfaces)
           entry.interfaces.insert(interfaceMapEntry);
@@ -182,21 +186,21 @@ extern "C"
 
       bool agreement = true;
 
-      if (ignition::plugin::INFO_API_VERSION != *_inputAndOutputAPIVersion)
+      if (gz::plugin::INFO_API_VERSION != *_inputAndOutputAPIVersion)
       {
         // LCOV_EXCL_START
         agreement = false;
         // LCOV_EXCL_STOP
       }
 
-      if (sizeof(ignition::plugin::Info) != *_inputAndOutputInfoSize)
+      if (sizeof(gz::plugin::Info) != *_inputAndOutputInfoSize)
       {
         // LCOV_EXCL_START
         agreement = false;
         // LCOV_EXCL_STOP
       }
 
-      if (alignof(ignition::plugin::Info) != *_inputAndOutputInfoAlign)
+      if (alignof(gz::plugin::Info) != *_inputAndOutputInfoAlign)
       {
         // LCOV_EXCL_START
         agreement = false;
@@ -212,9 +216,9 @@ extern "C"
       // This implementation might change when new API versions are introduced,
       // but this current implementation will still be forward compatible with
       // new API versions.
-      *_inputAndOutputAPIVersion = ignition::plugin::INFO_API_VERSION;
-      *_inputAndOutputInfoSize = sizeof(ignition::plugin::Info);
-      *_inputAndOutputInfoAlign = alignof(ignition::plugin::Info);
+      *_inputAndOutputAPIVersion = gz::plugin::INFO_API_VERSION;
+      *_inputAndOutputInfoSize = sizeof(gz::plugin::Info);
+      *_inputAndOutputInfoAlign = alignof(gz::plugin::Info);
 
       // If the size, alignment, or API do not agree, we should return without
       // outputting any of the plugin info; otherwise, we could get a
@@ -236,7 +240,7 @@ extern "C"
 #endif
 }
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -437,13 +441,13 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 
 //////////////////////////////////////////////////
 /// This macro creates a uniquely-named class whose constructor calls the
-/// ignition::plugin::detail::Registrar::Register function. It then declares a
+/// gz::plugin::detail::Registrar::Register function. It then declares a
 /// uniquely-named instance of the class with static lifetime. Since the class
 /// instance has a static lifetime, it will be constructed when the shared
 /// library is loaded. When it is constructed, the Register function will
 /// be called.
-#define DETAIL_IGNITION_ADD_PLUGIN_HELPER(UniqueID, ...) \
-  namespace ignition \
+#define DETAIL_GZ_ADD_PLUGIN_HELPER(UniqueID, ...) \
+  namespace gz \
   { \
     namespace plugin \
     { \
@@ -453,7 +457,7 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
         { \
           ExecuteWhenLoadingLibrary##UniqueID() \
           { \
-            ::ignition::plugin::detail::Registrar<__VA_ARGS__>::Register(); \
+            ::gz::plugin::detail::Registrar<__VA_ARGS__>::Register(); \
           } \
         }; \
   \
@@ -466,26 +470,26 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 //////////////////////////////////////////////////
 /// This macro is needed to force the __COUNTER__ macro to expand to a value
 /// before being passed to the *_HELPER macro.
-#define DETAIL_IGNITION_ADD_PLUGIN_WITH_COUNTER(UniqueID, ...) \
-  DETAIL_IGNITION_ADD_PLUGIN_HELPER(UniqueID, __VA_ARGS__)
+#define DETAIL_GZ_ADD_PLUGIN_WITH_COUNTER(UniqueID, ...) \
+  DETAIL_GZ_ADD_PLUGIN_HELPER(UniqueID, __VA_ARGS__)
 
 
 //////////////////////////////////////////////////
 /// We use the __COUNTER__ here to give each plugin registration its own unique
 /// name, which is required in order to statically initialize each one.
-#define DETAIL_IGNITION_ADD_PLUGIN(...) \
-  DETAIL_IGNITION_ADD_PLUGIN_WITH_COUNTER(__COUNTER__, __VA_ARGS__)
+#define DETAIL_GZ_ADD_PLUGIN(...) \
+  DETAIL_GZ_ADD_PLUGIN_WITH_COUNTER(__COUNTER__, __VA_ARGS__)
 
 
 //////////////////////////////////////////////////
 /// This macro creates a uniquely-named class whose constructor calls the
-/// ignition::plugin::detail::Registrar::RegisterAlias function. It then
+/// gz::plugin::detail::Registrar::RegisterAlias function. It then
 /// declares a uniquely-named instance of the class with static lifetime. Since
 /// the class instance has a static lifetime, it will be constructed when the
 /// shared library is loaded. When it is constructed, the Register function will
 /// be called.
-#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_HELPER(UniqueID, PluginClass, ...) \
-  namespace ignition \
+#define DETAIL_GZ_ADD_PLUGIN_ALIAS_HELPER(UniqueID, PluginClass, ...) \
+  namespace gz \
   { \
     namespace plugin \
     { \
@@ -495,7 +499,7 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
         { \
           ExecuteWhenLoadingLibrary##UniqueID() \
           { \
-            ::ignition::plugin::detail::Registrar<PluginClass>::RegisterAlias( \
+            ::gz::plugin::detail::Registrar<PluginClass>::RegisterAlias( \
                 __VA_ARGS__); \
           } \
         }; \
@@ -509,31 +513,31 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 //////////////////////////////////////////////////
 /// This macro is needed to force the __COUNTER__ macro to expand to a value
 /// before being passed to the *_HELPER macro.
-#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER( \
+#define DETAIL_GZ_ADD_PLUGIN_ALIAS_WITH_COUNTER( \
   UniqueID, PluginClass, ...) \
-  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_HELPER(UniqueID, PluginClass, __VA_ARGS__)
+  DETAIL_GZ_ADD_PLUGIN_ALIAS_HELPER(UniqueID, PluginClass, __VA_ARGS__)
 
 
 //////////////////////////////////////////////////
 /// We use the __COUNTER__ here to give each plugin registration its own unique
 /// name, which is required in order to statically initialize each one.
-#define DETAIL_IGNITION_ADD_PLUGIN_ALIAS(PluginClass, ...) \
-  DETAIL_IGNITION_ADD_PLUGIN_ALIAS_WITH_COUNTER( \
+#define DETAIL_GZ_ADD_PLUGIN_ALIAS(PluginClass, ...) \
+  DETAIL_GZ_ADD_PLUGIN_ALIAS_WITH_COUNTER( \
   __COUNTER__, PluginClass, __VA_ARGS__)
 
 
 //////////////////////////////////////////////////
-#define DETAIL_IGNITION_ADD_FACTORY(ProductType, FactoryType) \
-  DETAIL_IGNITION_ADD_PLUGIN(FactoryType::Producing<ProductType>, FactoryType) \
-  DETAIL_IGNITION_ADD_PLUGIN_ALIAS( \
+#define DETAIL_GZ_ADD_FACTORY(ProductType, FactoryType) \
+  DETAIL_GZ_ADD_PLUGIN(FactoryType::Producing<ProductType>, FactoryType) \
+  DETAIL_GZ_ADD_PLUGIN_ALIAS( \
       FactoryType::Producing<ProductType>, \
-      ::ignition::plugin::DemangleSymbol(typeid(ProductType).name()))
+      ::gz::plugin::DemangleSymbol(typeid(ProductType).name()))
 
 
 //////////////////////////////////////////////////
-#define DETAIL_IGNITION_ADD_FACTORY_ALIAS(ProductType, FactoryType, ...) \
-  DETAIL_IGNITION_ADD_FACTORY(ProductType, FactoryType) \
-  DETAIL_IGNITION_ADD_PLUGIN_ALIAS(FactoryType::Producing<ProductType>, \
+#define DETAIL_GZ_ADD_FACTORY_ALIAS(ProductType, FactoryType, ...) \
+  DETAIL_GZ_ADD_FACTORY(ProductType, FactoryType) \
+  DETAIL_GZ_ADD_PLUGIN_ALIAS(FactoryType::Producing<ProductType>, \
       __VA_ARGS__)
 
 #endif

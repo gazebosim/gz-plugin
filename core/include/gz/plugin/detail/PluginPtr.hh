@@ -24,7 +24,7 @@
 #include <gz/plugin/PluginPtr.hh>
 #include <gz/plugin/utility.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -122,7 +122,7 @@ namespace ignition
     }
 
     //////////////////////////////////////////////////
-    #define DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR(op)\
+    #define DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR(op)\
       template <typename PluginType>\
       bool TemplatePluginPtr<PluginType>::operator op (\
             const TemplatePluginPtr &_other) const\
@@ -131,12 +131,12 @@ namespace ignition
                 _other.dataPtr->PrivateGetInstancePtr() );\
       }
 
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( == )  // NOLINT
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( < )   // NOLINT
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( > )   // NOLINT
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( != )  // NOLINT
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( <= )  // NOLINT
-    DETAIL_IGN_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( >= )  // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( == )  // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( < )   // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( > )   // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( != )  // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( <= )  // NOLINT
+    DETAIL_GZ_PLUGIN_PLUGINPTR_IMPLEMENT_OPERATOR( >= )  // NOLINT
 
     //////////////////////////////////////////////////
     template <typename PluginType>
@@ -187,10 +187,10 @@ namespace std
   /// so that it can easily be used in STL objects like std::unordered_set and
   /// std::unordered_map
   template <typename PluginType>
-  struct hash<ignition::plugin::TemplatePluginPtr<PluginType>>
+  struct hash<gz::plugin::TemplatePluginPtr<PluginType>>
   {
     size_t operator()(
-        const ignition::plugin::TemplatePluginPtr<PluginType> &ptr) const
+        const gz::plugin::TemplatePluginPtr<PluginType> &ptr) const
     {
       return ptr.Hash();
     }

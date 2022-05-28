@@ -15,10 +15,10 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_TEST_PLUGINS_FACTORYPLUGINS_HH_
-#define IGNITION_PLUGIN_TEST_PLUGINS_FACTORYPLUGINS_HH_
+#ifndef GZ_PLUGIN_TEST_PLUGINS_FACTORYPLUGINS_HH_
+#define GZ_PLUGIN_TEST_PLUGINS_FACTORYPLUGINS_HH_
 
-#include <ignition/plugin/Factory.hh>
+#include <gz/plugin/Factory.hh>
 
 #include "DummyPlugins.hh"
 
@@ -29,15 +29,15 @@ namespace util
 /// \brief A signature for factories that take a std::string and return a
 /// DummyNameBase implementation
 using NameFactory =
-    ignition::plugin::Factory<DummyNameBase, const std::string&>;
+    gz::plugin::Factory<DummyNameBase, const std::string&>;
 
 /// \brief A signature for factories that take a double and return a
 /// DummyDoubleBase implementation
-using DoubleFactory = ignition::plugin::Factory<DummyDoubleBase, double>;
+using DoubleFactory = gz::plugin::Factory<DummyDoubleBase, double>;
 
 /// \brief A signature for factories that take an int and return a DummyIntBase
 /// implementation
-using IntFactory = ignition::plugin::Factory<DummyIntBase, int>;
+using IntFactory = gz::plugin::Factory<DummyIntBase, int>;
 
 /// \brief A class whose constructor takes in arguments
 class SomeObject
@@ -59,7 +59,7 @@ class SomeObject
 
 /// \brief A signature for factories that take an int and double and then return
 /// a SomeObject instance
-using SomeObjectFactory = ignition::plugin::Factory<SomeObject, int, double>;
+using SomeObjectFactory = gz::plugin::Factory<SomeObject, int, double>;
 }
 }
 

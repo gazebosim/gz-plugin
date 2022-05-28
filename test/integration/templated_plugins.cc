@@ -22,8 +22,8 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/Loader.hh>
-#include <ignition/plugin/SpecializedPluginPtr.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/plugin/SpecializedPluginPtr.hh>
 
 #include "../plugins/TemplatedPlugins.hh"
 
@@ -32,7 +32,7 @@ using namespace test::plugins;
 /////////////////////////////////////////////////
 TEST(TemplatedPlugins, InterfaceCount)
 {
-  ignition::plugin::Loader pl;
+  gz::plugin::Loader pl;
   pl.LoadLib(IGNTemplatedPlugins_LIB);
 
   const std::size_t getIntCount =
@@ -62,13 +62,13 @@ TEST(TemplatedPlugins, InterfaceCount)
 
 /////////////////////////////////////////////////
 template<typename T>
-using SetAndGetPluginPtr = ignition::plugin::SpecializedPluginPtr<
+using SetAndGetPluginPtr = gz::plugin::SpecializedPluginPtr<
     TemplatedGetInterface<T>,
     TemplatedSetInterface<T> >;
 
 /////////////////////////////////////////////////
 template <typename T>
-void TestSetAndGet(const ignition::plugin::Loader &_pl,
+void TestSetAndGet(const gz::plugin::Loader &_pl,
                    const T &_valueToUse)
 {
   using GetInterface = TemplatedGetInterface<T>;
@@ -106,7 +106,7 @@ void TestSetAndGet(const ignition::plugin::Loader &_pl,
 /////////////////////////////////////////////////
 TEST(TemplatedPlugins, SetAndGet)
 {
-  ignition::plugin::Loader pl;
+  gz::plugin::Loader pl;
   pl.LoadLib(IGNTemplatedPlugins_LIB);
 
   TestSetAndGet<int>(pl, 120);

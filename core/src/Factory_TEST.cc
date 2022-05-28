@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include <ignition/plugin/Factory.hh>
+#include <gz/plugin/Factory.hh>
 
 // Dev Note (MXG): These tests are just here to make sure that the template and
 // inheritance schemes for Factories are working as expected. If the
@@ -51,13 +51,13 @@ struct SomeDerived : public SomeBase
   }
 };
 
-using NoArgFactory = ignition::plugin::Factory<SomeBase>;
+using NoArgFactory = gz::plugin::Factory<SomeBase>;
 using NoArgProducer = NoArgFactory::Producing<SomeDerived>;
 
-using DoubleIntFactory = ignition::plugin::Factory<SomeBase, double, int>;
+using DoubleIntFactory = gz::plugin::Factory<SomeBase, double, int>;
 using DoubleIntProducer = DoubleIntFactory::Producing<SomeDerived>;
 
-using VectorFactory = ignition::plugin::Factory<
+using VectorFactory = gz::plugin::Factory<
     SomeBase, const std::vector<double>&>;
 using VectorProducer = VectorFactory::Producing<SomeDerived>;
 

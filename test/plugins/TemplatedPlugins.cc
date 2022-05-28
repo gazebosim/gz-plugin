@@ -19,7 +19,7 @@
 
 #include "TemplatedPlugins.hh"
 
-#include <ignition/plugin/Register.hh>
+#include <gz/plugin/Register.hh>
 
 namespace test
 {

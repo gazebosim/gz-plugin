@@ -15,4 +15,30 @@
  *
  */
 
+#ifndef IGNITION_PLUGIN__CONFIG_HH_
+#define IGNITION_PLUGIN__CONFIG_HH_
+
 #include <gz/plugin/config.hh>
+
+#define IGNITION_PLUGIN_MAJOR_VERSION GZ_PLUGIN_MAJOR_VERSION
+#define IGNITION_PLUGIN_MINOR_VERSION GZ_PLUGIN_MINOR_VERSION
+#define IGNITION_PLUGIN_PATCH_VERSION GZ_PLUGIN_PATCH_VERSION
+
+#define IGNITION_PLUGIN_VERSION GZ_PLUGIN_VERSION
+#define IGNITION_PLUGIN_VERSION_FULL GZ_PLUGIN_VERSION_FULL
+
+#define IGNITION_PLUGIN_VERSION_HEADER GZ_PLUGIN_VERSION_HEADER
+
+namespace gz
+{
+}
+
+namespace ignition
+{
+  #ifndef SUPPRESS_IGNITION_HEADER_DEPRECATION
+    #pragma message("ignition namespace is deprecated! Use gz instead!")
+  #endif
+  using namespace gz;
+}
+
+#endif
