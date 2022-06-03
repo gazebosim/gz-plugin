@@ -15,6 +15,7 @@
  *
 */
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -200,8 +201,10 @@ TEST(ignTest, PluginHelpVsCompletionFlags)
   EXPECT_NE(std::string::npos, output.find("--help")) << output;
 
   // Flags in bash completion
-  std::ifstream scriptFile(std::string(IGN_PLUGIN_SOURCE_DIR) +
-    "/loader/conf/plugin.bash_completion.sh");
+  std::filesystem::path scriptPath = IGN_PLUGIN_SOURCE_DIR;
+  scriptPath = scriptPath / "loader" / "conf" / "plugin.bash_completion.sh";
+  std::ifstream scriptFile(scriptPath);
+
   std::string script((std::istreambuf_iterator<char>(scriptFile)),
       std::istreambuf_iterator<char>());
 
