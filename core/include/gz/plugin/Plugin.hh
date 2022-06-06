@@ -177,10 +177,10 @@ namespace gz
           const std::string &_interfaceName);
 
       class Implementation;
-      IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
+      GZ_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
       /// \brief PIMPL pointer to the implementation of this class.
       private: const std::unique_ptr<Implementation> dataPtr;
-      IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
+      GZ_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
 
       /// \brief Virtual destructor
       public: virtual ~Plugin();

@@ -76,9 +76,9 @@ namespace gz
       private: void PrivateSetPluginFromThis(const PluginPtr &_ptr);
 
       private: class Implementation;
-      IGN_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
+      GZ_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
       private: std::unique_ptr<Implementation> pimpl;
-      IGN_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
+      GZ_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }

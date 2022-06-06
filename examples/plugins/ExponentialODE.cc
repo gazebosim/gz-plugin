@@ -136,7 +136,7 @@ class Factory : public ODESystemFactory
   }
 };
 
-IGNITION_ADD_PLUGIN(Factory, ODESystemFactory)
+GZ_ADD_PLUGIN(Factory, ODESystemFactory)
 
 }
 }

@@ -203,11 +203,11 @@ class CubicFactory : public ODESystemFactory
 }
 
 // Register multiple plugins for this library
-IGNITION_ADD_PLUGIN(
+GZ_ADD_PLUGIN(
     gz::plugin::examples::PolynomialODE::ParabolicFactory,
     gz::plugin::examples::ODESystemFactory)
 
-IGNITION_ADD_PLUGIN(
+GZ_ADD_PLUGIN(
     gz::plugin::examples::PolynomialODE::CubicFactory,
     gz::plugin::examples::ODESystemFactory)
 

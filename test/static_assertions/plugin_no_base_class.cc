@@ -28,4 +28,4 @@ class NotBase
   int test3;
 };
 
-IGNITION_ADD_PLUGIN(A, NotBase)
+GZ_ADD_PLUGIN(A, NotBase)

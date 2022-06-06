@@ -63,10 +63,10 @@ namespace gz
     /// defines a factory that can produce a `std::unique_ptr<InterfaceClass>`
     /// given arguments of `InputType1` and `InputType2`.
     ///
-    /// To register a factory, use the `IGNITION_ADD_FACTORY` macro, e.g.:
+    /// To register a factory, use the `GZ_ADD_FACTORY` macro, e.g.:
     ///
     /// \code
-    /// IGNITION_ADD_FACTORY(ImplementedClass, MyFactory)
+    /// GZ_ADD_FACTORY(ImplementedClass, MyFactory)
     /// \endcode
     ///
     /// where `ImplementedClass` is the name of the class that your plugin

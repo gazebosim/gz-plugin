@@ -17,3 +17,6 @@
 
 #include <gz/plugin/RegisterMore.hh>
 #include <ignition/plugin/config.hh>
+
+#define IGN_PLUGIN_REGISTER_MORE_TRANS_UNITS \
+  GZ_PLUGIN_REGISTER_MORE_TRANS_UNITS

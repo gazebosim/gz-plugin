@@ -41,7 +41,7 @@ class CrashBot
       return gz::math::Vector3d(1.0, 0.0, 0.0);
 
     // If we have not detected a wall, drive in a spiral, searching for a wall
-    return gz::math::Vector3d(0.5, 0.0, 20.0*IGN_PI/180.0);
+    return gz::math::Vector3d(0.5, 0.0, 20.0*GZ_PI/180.0);
   }
 
   // Documentation inherited
@@ -60,6 +60,6 @@ class CrashBot
   public: bool detectedWall;
 };
 
-IGNITION_ADD_PLUGIN(CrashBot, Drive, ProximitySensor)
+GZ_ADD_PLUGIN(CrashBot, Drive, ProximitySensor)
 
 }

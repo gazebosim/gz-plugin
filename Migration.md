@@ -12,3 +12,15 @@ release will remove the deprecated code.
 
 * Header files under `ignition/...` are deprecated and will be removed in future versions.
   Use `gz/...` instead.
+  
+* The following `IGN_` / `IGNITION_` prefixed macros are deprecated and will be removed in future versions.
+  Use the `GZ_` prefix instead.
+  * `IGN_PLUGIN_REGISTER_MORE_TRANS_UNITS`
+  
+  * `IGNITION_ADD_PLUGIN`
+  * `IGNITION_ADD_PLUGIN_ALIAS`
+  * `IGNITION_ADD_FACTORY`
+  * `IGNITION_ADD_FACTORY_ALIAS`
+  *  `IGN_CREATE_INTERFACE`
+  *  `IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS`
+  

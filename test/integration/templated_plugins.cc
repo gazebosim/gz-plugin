@@ -18,7 +18,7 @@
 // Defining this macro before including ignition/plugin/SpecializedPluginPtr.hh
 // allows us to test that the high-speed routines are being used to access the
 // specialized plugin interfaces.
-#define IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
+#define GZ_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
 
 #include <gtest/gtest.h>
 

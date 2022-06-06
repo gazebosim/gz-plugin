@@ -57,7 +57,7 @@ class CautiousBot
   public: double distance = std::numeric_limits<double>::infinity();
 };
 
-IGNITION_ADD_PLUGIN(CautiousBot,
+GZ_ADD_PLUGIN(CautiousBot,
     CautiousBot::Drive,
     CautiousBot::ProximitySensor)
 

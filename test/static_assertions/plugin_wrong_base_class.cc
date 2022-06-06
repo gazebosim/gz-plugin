@@ -38,4 +38,4 @@ class A : public Base
 
 }
 
-IGNITION_ADD_PLUGIN(ns::A, ns::WrongBase)
+GZ_ADD_PLUGIN(ns::A, ns::WrongBase)

@@ -110,7 +110,7 @@ extern "C"
       int *_inputAndOutputAPIVersion,
       std::size_t *_inputAndOutputInfoSize,
       std::size_t *_inputAndOutputInfoAlign)
-#ifdef IGN_PLUGIN_REGISTER_MORE_TRANS_UNITS
+#ifdef GZ_PLUGIN_REGISTER_MORE_TRANS_UNITS
   ; /* NOLINT */
 #else
   // ATTENTION: If you get a linking error complaining about
@@ -348,7 +348,7 @@ namespace gz
 
       //////////////////////////////////////////////////
       /// \brief This specialization of the Register class will be called when
-      /// one or more arguments are provided to the IGNITION_ADD_PLUGIN(~)
+      /// one or more arguments are provided to the GZ_ADD_PLUGIN(~)
       /// macro. This is the only version of the Registrar class that is allowed
       /// to compile.
       template <typename PluginClass, typename... Interfaces>
@@ -377,13 +377,13 @@ namespace gz
             return static_cast<void*>(new PluginClass);
           };
 
-IGN_UTILS_WARN_IGNORE__NON_VIRTUAL_DESTRUCTOR
+GZ_UTILS_WARN_IGNORE__NON_VIRTUAL_DESTRUCTOR
           // Create a deleter to clean up destroyed instances
           info.deleter = [=](void *ptr)
           {
             delete static_cast<PluginClass*>(ptr);
           };
-IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
+GZ_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 
           // Construct a map from the plugin to its interfaces
           InterfaceHelper<PluginClass, Interfaces...>
@@ -413,7 +413,7 @@ IGN_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
         static void RegisterAlias(Aliases&&... aliases)
         {
           // Dev note (MXG): We expect the RegisterAlias function to be called
-          // using the IGNITION_ADD_PLUGIN_ALIAS(~) macro, which should never
+          // using the GZ_ADD_PLUGIN_ALIAS(~) macro, which should never
           // contain any interfaces. Therefore, this parameter pack should be
           // empty.
           //
