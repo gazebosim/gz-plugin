@@ -19,13 +19,13 @@
 #include <ignition/plugin/config.hh>
 
 #define IGNITION_ADD_PLUGIN(PluginClass, ...) \
-  GZ_ADD_PLUGIN(PluginClass, ...)
+  GZ_ADD_PLUGIN(PluginClass, __VA_ARGS__)
 
 #define IGNITION_ADD_PLUGIN_ALIAS(PluginClass, ...) \
-  GZ_ADD_PLUGIN_ALIAS(PluginClass, ...)
+  GZ_ADD_PLUGIN_ALIAS(PluginClass, __VA_ARGS__)
 
 #define IGNITION_ADD_FACTORY(ProductType, FactoryType) \
   GZ_ADD_FACTORY(ProductType, FactoryType)
 
 #define IGNITION_ADD_FACTORY_ALIAS(ProductType, FactoryType, ...) \
-  GZ_ADD_FACTORY_ALIAS(ProductType, FactoryType, ...)
+  GZ_ADD_FACTORY_ALIAS(ProductType, FactoryType, __VA_ARGS__)
