@@ -78,7 +78,7 @@ extern "C" const char *gzVersion()
   return strdup(GZ_PLUGIN_VERSION_FULL);
 }
 
-extern "C" const char GZ_DEPRECATED(2) *ignitionVersion()
+extern "C" const char *ignitionVersion()
 {
   return gzVersion();
 }

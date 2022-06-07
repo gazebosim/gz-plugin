@@ -24,3 +24,6 @@ release will remove the deprecated code.
   * `IGNITION_ADD_FACTORY_ALIAS`
   *  `IGN_CREATE_INTERFACE`
   *  `IGNITION_UNITTEST_SPECIALIZED_PLUGIN_ACCESS`
+
+* `ignitionVersion()` is deprecated and will be removed in future versions.
+  Use `gzVersion()` instead.
