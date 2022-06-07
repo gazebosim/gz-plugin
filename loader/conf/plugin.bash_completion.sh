@@ -20,18 +20,21 @@
 # This is a per-library function definition, used in conjunction with the
 # top-level entry point in ign-tools.
 
+GZ_PLUGIN_COMPLETION_LIST="
+  -h --help
+  --help-all
+  --version
+  -v --verbose
+  -i --info
+  -p --plugin
+"
+
 function _gz_plugin
 {
   if [[ ${COMP_WORDS[COMP_CWORD]} == -* ]]; then
     # Specify options (-*) word list for this subcommand
-    COMPREPLY=($(compgen -W "
-      -h --help
-      --help-all
-      --version
-      -v --verbose
-      -i --info
-      -p --plugin
-      " -- "${COMP_WORDS[COMP_CWORD]}" ))
+    COMPREPLY=($(compgen -W "$GZ_PLUGIN_COMPLETION_LIST" \
+      -- "${COMP_WORDS[COMP_CWORD]}" ))
     return
   else
     # Just use bash default auto-complete, because we never have two
@@ -40,4 +43,11 @@ function _gz_plugin
     COMPREPLY=($(compgen -o default -- "${COMP_WORDS[COMP_CWORD]}"))
     return
   fi
+}
+
+function _gz_plugin_flags
+{
+  for word in $GZ_PLUGIN_COMPLETION_LIST; do
+    echo "$word"
+  done
 }

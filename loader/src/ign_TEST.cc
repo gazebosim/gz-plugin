@@ -194,22 +194,28 @@ TEST(ignTest, PluginHelpVsCompletionFlags)
   std::string ign = std::string(IGN_PATH);
 
   // Flags in help message
-  std::string output = custom_exec_str(ign + " plugin --help");
-  EXPECT_NE(std::string::npos, output.find("--info")) << output;
-  EXPECT_NE(std::string::npos, output.find("--plugin")) << output;
-  EXPECT_NE(std::string::npos, output.find("--verbose")) << output;
-  EXPECT_NE(std::string::npos, output.find("--help")) << output;
+  std::string helpOutput = custom_exec_str(ign + " plugin --help");
 
-  // Flags in bash completion
+  // Call the output function in the bash completion script
   std::filesystem::path scriptPath = IGN_PLUGIN_SOURCE_DIR;
   scriptPath = scriptPath / "loader" / "conf" / "plugin.bash_completion.sh";
-  std::ifstream scriptFile(scriptPath);
 
-  std::string script((std::istreambuf_iterator<char>(scriptFile)),
-      std::istreambuf_iterator<char>());
+  // Equivalent to:
+  // sh -c "bash -c \". /path/to/plugin.bash_completion.sh; _gz_plugin_flags\""
+  std::string cmd = "bash -c \". " + scriptPath.string() +
+    "; _gz_plugin_flags\"";
+  std::string scriptOutput = custom_exec_str(cmd);
 
-  EXPECT_NE(std::string::npos, script.find("--info")) << script;
-  EXPECT_NE(std::string::npos, script.find("--plugin")) << script;
-  EXPECT_NE(std::string::npos, script.find("--verbose")) << script;
-  EXPECT_NE(std::string::npos, script.find("--help")) << script;
+  // Tokenize script output
+  std::istringstream iss(scriptOutput);
+  std::vector<std::string> flags((std::istream_iterator<std::string>(iss)),
+    std::istream_iterator<std::string>());
+
+  EXPECT_GT(flags.size(), 0u);
+
+  // Match each flag in script output with help message
+  for (std::string flag : flags)
+  {
+    EXPECT_NE(std::string::npos, helpOutput.find(flag)) << helpOutput;
+  }
 }
