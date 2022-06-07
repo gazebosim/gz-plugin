@@ -20,13 +20,15 @@
 # This is a per-library function definition, used in conjunction with the
 # top-level entry point in ign-tools.
 
+# TODO(anyone): Update for ign-plugin2, add --help-all and --version. Remove
+# --versions and --force-version
 GZ_PLUGIN_COMPLETION_LIST="
-  -h --help
-  --help-all
-  --version
-  -v --verbose
   -i --info
   -p --plugin
+  -v --verbose
+  -h --help
+  --force-version
+  --versions
 "
 
 function _gz_plugin

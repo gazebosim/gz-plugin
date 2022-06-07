@@ -194,7 +194,8 @@ TEST(ignTest, PluginHelpVsCompletionFlags)
   std::string ign = std::string(IGN_PATH);
 
   // Flags in help message
-  std::string helpOutput = custom_exec_str(ign + " plugin --help");
+  std::string helpOutput = custom_exec_str(ign + " plugin --help " +
+    g_ignVersion);
 
   // Call the output function in the bash completion script
   std::filesystem::path scriptPath = IGN_PLUGIN_SOURCE_DIR;
