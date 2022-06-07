@@ -20,7 +20,9 @@ target_link_libraries(${loader}
 ign_build_tests(
   TYPE UNIT
   SOURCES ${tests}
-  LIB_DEPS ${loader}
+  LIB_DEPS
+    ${loader}
+    ${EXTRA_TEST_LIB_DEPS}
   TEST_LIST test_targets)
 
 foreach(test ${test_targets})

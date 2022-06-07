@@ -22,6 +22,12 @@ ign_configure_project(VERSION_SUFFIX)
 
 # No project-specific options yet for ign-plugin
 
+if (UNIX AND NOT APPLE)
+  set (EXTRA_TEST_LIB_DEPS stdc++fs)
+else()
+  set (EXTRA_TEST_LIB_DEPS)
+endif()
+
 #============================================================================
 # Search for project-specific dependencies
 #============================================================================
