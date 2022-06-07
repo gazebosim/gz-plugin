@@ -123,7 +123,7 @@ TEST(ignTest, PluginInfoNonPluginLibrary)
       GZ_PLUGIN_LIB);
 
   EXPECT_NE(std::string::npos, output.find("does not export any plugins. The "
-    "symbol [IgnitionPluginHook] is missing, or it is not externally visible."))
+    "symbol [GzPluginHook] is missing, or it is not externally visible."))
       << output;
   EXPECT_NE(std::string::npos, output.find("Found 0 plugins in library file"))
       << output;

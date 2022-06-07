@@ -21,7 +21,7 @@
 
 #include "GenericExport.hh"
 
-extern "C" void EXPORT IgnitionPluginHook(
+extern "C" void EXPORT GzPluginHook(
     const void *,
     const void ** const,
     int *_inputAndOutputAPIVersion,

@@ -50,12 +50,12 @@
   #endif
 #endif
 
-// extern "C" ensures that the symbol name of IgnitionPluginHook
+// extern "C" ensures that the symbol name of GzPluginHook
 // does not get mangled by the compiler, so we can easily use dlsym(~) to
 // retrieve it.
 extern "C"
 {
-  /// \private IgnitionPluginHook is the hook that's used by the Loader to
+  /// \private GzPluginHook is the hook that's used by the Loader to
   /// retrieve Info from a shared library that provides plugins.
   ///
   /// The symbol is explicitly exported (visibility is turned on) using
@@ -72,39 +72,39 @@ extern "C"
   ///
   /// \param[out] _outputAllInfo
   ///   Loader will pass in a pointer to a pointer of an InfoMap pertaining to
-  ///   the highest API version that it knows of. If this IgnitionPluginHook was
+  ///   the highest API version that it knows of. If this GzPluginHook was
   ///   built against a version of ign-plugin that provides an equal or greater
-  ///   API version, then IgnitionPluginHook will modify *_outputAllInfo to
+  ///   API version, then GzPluginHook will modify *_outputAllInfo to
   ///   point at its internal &InfoMap that corresponds to the requested API
   ///   version, which is identified by _inputAndOutputAPIVersion.
   ///
   ///   If _inputAndOutputAPIVersion is greater than the highest API version
-  ///   known by this IgnitionPluginHook, then IgnitionPluginHook will not
+  ///   known by this GzPluginHook, then GzPluginHook will not
   ///   modify _outputAllInfo, and instead it will change the value pointed to
   ///   by _inputAndOutputAPIVersion so that it points to the highest API
-  ///   version known by this IgnitionPluginHook. At that point, Loader can call
+  ///   version known by this GzPluginHook. At that point, Loader can call
   ///   this function again, but using the older API version which known by this
-  ///   IgnitionPluginHook.
+  ///   GzPluginHook.
   ///
   /// \param[in,out] _inputAndOutputAPIVersion
   ///   Loader will pass in a pointer to the highest API version that it knows.
-  ///   If that API version is higher than what this IgnitionPluginHook is
-  ///   compatible with, then this IgnitionPluginHook will change the value
+  ///   If that API version is higher than what this GzPluginHook is
+  ///   compatible with, then this GzPluginHook will change the value
   ///   pointed to by _inputAndOutputAPIVersion to the value of the highest API
   ///   version that it knows.
   ///
   /// \param[in,out] _inputAndOutputInfoSize
   ///   This input/output parameter is used for sanity checking. The Loader
   ///   inputs a pointer to the size that it expects for the Info data
-  ///   structure, and IgnitionPluginHook verifies that this expectation matches
-  ///   its own Info size. Then, IgnitionPluginHook will overwrite the value
+  ///   structure, and GzPluginHook verifies that this expectation matches
+  ///   its own Info size. Then, GzPluginHook will overwrite the value
   ///   pointed to so that it matches its own Info size value.
   ///
   /// \param[in,out] _inputAndOutputInfoAlign
   ///   Similar to _inputAndOutputInfoSize, this is used for sanity checking. It
   ///   inspects and returns the alignof(Info) value instead of the sizeof(Info)
   ///   value.
-  DETAIL_GZ_PLUGIN_VISIBLE void IgnitionPluginHook(
+  DETAIL_GZ_PLUGIN_VISIBLE void GzPluginHook(
       const void *_inputSingleInfo,
       const void ** const _outputAllInfo,
       int *_inputAndOutputAPIVersion,
@@ -114,7 +114,7 @@ extern "C"
   ; /* NOLINT */
 #else
   // ATTENTION: If you get a linking error complaining about
-  // multiple definitions of IgnitionPluginHook,
+  // multiple definitions of GzPluginHook,
   // then make sure that all but one of your
   // library's translation units (.cpp files) includes the
   // <gz/plugin/RegisterMore.hh> header instead of
@@ -405,7 +405,7 @@ GZ_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 
           // Send this information as input to this library's global repository
           // of plugins.
-          IgnitionPluginHook(&info, nullptr, nullptr, nullptr, nullptr);
+          GzPluginHook(&info, nullptr, nullptr, nullptr, nullptr);
         }
 
 
@@ -432,7 +432,7 @@ GZ_UTILS_WARN_RESUME__NON_VIRTUAL_DESTRUCTOR
 
           // Send this information as input to this library's global repository
           // of plugins.
-          IgnitionPluginHook(&info, nullptr, nullptr, nullptr, nullptr);
+          GzPluginHook(&info, nullptr, nullptr, nullptr, nullptr);
         }
       };
     }
