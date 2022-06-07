@@ -62,7 +62,7 @@
 /// \code
 /// GZ_ADD_PLUGIN_ALIAS(PluginClass, "PluginClass")
 /// GZ_ADD_PLUGIN_ALIAS(PluginClass, "SomeOtherName", "Yet another name")
-/// IGNOTION_ADD_PLUGIN_ALIAS(AnotherPluginClass, "Foo", "Bar", "Baz")
+/// GZ_ADD_PLUGIN_ALIAS(AnotherPluginClass, "Foo", "Bar", "Baz")
 /// \endcode
 ///
 /// You can give the same alias to multiple plugins, but then that alias can no
