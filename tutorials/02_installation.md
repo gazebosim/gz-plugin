@@ -45,7 +45,7 @@ sudo apt install libignition-plugin2-dev
   sudo apt-get install libignition-cmake3-dev libignition-tools2-dev libignition-utils2-cli-dev
   ```
 
-1. Install Gazebo Tools if you want to use the `ign plugin` command line tool:
+1. Install Gazebo Tools if you want to use the `gz plugin` command line tool:
   ```bash
   sudo apt-get install ignition-tools2
 
@@ -128,8 +128,8 @@ Navigate to `condabin` if necessary to use the `conda` command (i.e., if Conda i
 
 Create if necessary, and activate a Conda environment:
 ```bash
-conda create -n ign-ws
-conda activate ign-ws
+conda create -n gz-ws
+conda activate gz-ws
 ```
 
 ## Binary Installation

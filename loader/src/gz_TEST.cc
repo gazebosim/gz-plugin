@@ -54,10 +54,10 @@ std::string custom_exec_str(std::string _cmd)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --help'.
+/// \brief Check 'gz plugin --help'.
 TEST(ignTest, IgnPluginHelp)
 {
-  // Path to ign executable
+  // Path to gz executable
   std::string ign = std::string(GZ_PATH);
   std::string output = custom_exec_str(ign + " plugin --help");
   EXPECT_NE(std::string::npos,
@@ -77,10 +77,10 @@ TEST(ignTest, IgnPluginHelp)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --info' for a non-existent file.
+/// \brief Check 'gz plugin --info' for a non-existent file.
 TEST(ignTest, PluginInfoNonexistentLibrary)
 {
-  // Path to ign executable
+  // Path to gz executable
   std::string ign = std::string(GZ_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
@@ -95,10 +95,10 @@ TEST(ignTest, PluginInfoNonexistentLibrary)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --info' for a file that isn't a shared library.
+/// \brief Check 'gz plugin --info' for a file that isn't a shared library.
 TEST(ignTest, PluginInfoNonLibrary)
 {
-  // Path to ign executable
+  // Path to gz executable
   std::string ign = std::string(GZ_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
@@ -113,10 +113,10 @@ TEST(ignTest, PluginInfoNonLibrary)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --info' for a library that has no plugins.
+/// \brief Check 'gz plugin --info' for a library that has no plugins.
 TEST(ignTest, PluginInfoNonPluginLibrary)
 {
-  // Path to ign executable
+  // Path to gz executable
   std::string ign = std::string(GZ_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
@@ -132,10 +132,10 @@ TEST(ignTest, PluginInfoNonPluginLibrary)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --info' for a library with plugins.
+/// \brief Check 'gz plugin --info' for a library with plugins.
 TEST(ignTest, PluginInfoDummyPlugins)
 {
-  // Path to ign executable
+  // Path to gz executable
   std::string ign = std::string(GZ_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +
@@ -171,10 +171,10 @@ TEST(ignTest, PluginInfoDummyPlugins)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --info' with verbose output.
+/// \brief Check 'gz plugin --info' with verbose output.
 TEST(ignTest, PluginInfoVerboseDummyPlugins)
 {
-  // Path to ign executable
+  // Path to gz executable
   std::string ign = std::string(GZ_PATH);
 
   std::string output = custom_exec_str(ign + " plugin --info --plugin " +

@@ -22,7 +22,7 @@
 
 #include "gz/plugin/Loader.hh"
 #include "gz/plugin/config.hh"
-#include "ign.hh"
+#include "gz.hh"
 
 //////////////////////////////////////////////////
 extern "C" void cmdPluginInfo(

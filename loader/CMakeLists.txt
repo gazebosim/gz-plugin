@@ -2,9 +2,9 @@
 # "tests" variable
 gz_get_libsources_and_unittests(sources tests)
 
-# Disable ign_TEST if ignition-tools is not found
+# Disable gz_TEST if ignition-tools is not found
 if (MSVC OR NOT GZ_TOOLS_PROGRAM)
-  list(REMOVE_ITEM tests src/ign_TEST.cc)
+  list(REMOVE_ITEM tests src/gz_TEST.cc)
 endif()
 
 # Create the library target
@@ -40,11 +40,11 @@ foreach(test ${test_targets})
 
 endforeach()
 
-if(TARGET UNIT_ign_TEST)
+if(TARGET UNIT_gz_TEST)
   set(_env_vars)
   list(APPEND _env_vars "GZ_CONFIG_PATH=${CMAKE_BINARY_DIR}/test/conf/$<CONFIG>")
 
-  set_tests_properties(UNIT_ign_TEST PROPERTIES
+  set_tests_properties(UNIT_gz_TEST PROPERTIES
     ENVIRONMENT "${_env_vars}")
 endif()
 
@@ -53,7 +53,7 @@ install(
   DESTINATION ${IGN_INCLUDE_INSTALL_DIR_FULL})
 
 #============================================================================
-# ign command line support
+# gz command line support
 #============================================================================
 add_subdirectory(conf)
 add_subdirectory(src)
