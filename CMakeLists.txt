@@ -43,11 +43,11 @@ ign_find_package(DL
 
 #--------------------------------------
 # Find ignition-tools
+# Find if command is available. This is used to enable tests.
+# Note that CLI files are installed regardless of whether the dependency is
+# available during build time
 find_program(IGN_TOOLS_PROGRAM ign)
-if (IGN_TOOLS_PROGRAM)
-  set(IGN_TOOLS_VER 1)
-endif()
-
+set(IGN_TOOLS_VER 1)
 
 #============================================================================
 # Configure the build
