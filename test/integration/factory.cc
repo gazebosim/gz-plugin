@@ -29,7 +29,7 @@ using namespace test::util;
 TEST(Factory, Inspect)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNFactoryPlugins_LIB);
+  pl.LoadLib(GzFactoryPlugins_LIB);
 
   std::cout << pl.PrettyStr() << std::endl;
 
@@ -43,7 +43,7 @@ TEST(Factory, Inspect)
 TEST(Factory, Construct)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNFactoryPlugins_LIB);
+  pl.LoadLib(GzFactoryPlugins_LIB);
 
   auto nameFactory = pl.Factory<NameFactory>("test::util::DummyNameForward");
   ASSERT_NE(nullptr, nameFactory);
@@ -100,7 +100,7 @@ TEST(Factory, Construct)
 TEST(Factory, Alias)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNFactoryPlugins_LIB);
+  pl.LoadLib(GzFactoryPlugins_LIB);
 
   std::string symbolName;
   for (const std::string &name : pl.AllPlugins())
@@ -137,7 +137,7 @@ TEST(Factory, Alias)
 /////////////////////////////////////////////////
 TEST(Factory, LibraryManagement)
 {
-  const std::string &libraryPath = IGNFactoryPlugins_LIB;
+  const std::string &libraryPath = GzFactoryPlugins_LIB;
 
   // Test that a single ProductPtr will keep the library loaded and correctly
   // manage the lifecycle of the product.

@@ -33,7 +33,7 @@ using namespace test::plugins;
 TEST(TemplatedPlugins, InterfaceCount)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNTemplatedPlugins_LIB);
+  pl.LoadLib(GzTemplatedPlugins_LIB);
 
   const std::size_t getIntCount =
        pl.PluginsImplementing< TemplatedGetInterface<int> >().size();
@@ -107,7 +107,7 @@ void TestSetAndGet(const gz::plugin::Loader &_pl,
 TEST(TemplatedPlugins, SetAndGet)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(IGNTemplatedPlugins_LIB);
+  pl.LoadLib(GzTemplatedPlugins_LIB);
 
   TestSetAndGet<int>(pl, 120);
   TestSetAndGet<std::string>(pl, "some amazing string");

@@ -15,7 +15,6 @@
  *
 */
 
-
 #ifndef GZ_PLUGIN_REGISTERMORE_HH_
 #define GZ_PLUGIN_REGISTERMORE_HH_
 
@@ -30,7 +29,7 @@
 /// \endcode
 ///
 /// But at least one translation unit of your library must contain Register.hh.
-#define IGN_PLUGIN_REGISTER_MORE_TRANS_UNITS
+#define GZ_PLUGIN_REGISTER_MORE_TRANS_UNITS
 #include <gz/plugin/Register.hh>
 
 #endif

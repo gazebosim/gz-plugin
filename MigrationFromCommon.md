@@ -49,21 +49,21 @@ The name of the header for registering plugins has changed:
 * `<ignition/common/PluginMacros.hh>` should be replaced by `<ignition/plugin/Register.hh>`
 
 The old `ign-common` plugin registration method had numerous macros for registering
-plugins. Those have all been replaced with `IGNITION_ADD_PLUGIN`. Specifically:
+plugins. Those have all been replaced with `GZ_ADD_PLUGIN`. Specifically:
 
-* `IGN_COMMON_REGISTER_SINGLE_MACRO` can be directly replaced with `IGNITION_ADD_PLUGIN`.
-* `IGN_COMMON_ADD_PLUGIN` can be directly replaced with `IGNITION_ADD_PLUGIN`.
+* `IGN_COMMON_REGISTER_SINGLE_MACRO` can be directly replaced with `GZ_ADD_PLUGIN`.
+* `IGN_COMMON_ADD_PLUGIN` can be directly replaced with `GZ_ADD_PLUGIN`.
 * All uses of `IGN_COMMON_BEGIN_ADDING_PLUGINS` can simply be removed.
 * All uses of `IGN_COMMON_FINISH_ADDING_PLUGINS` can simply be removed.
 * All uses of `IGN_COMMON_SPECIALIZE_INTERFACE` can simply be removed. Interfaces no longer need to be "specialized" in order to have specialized plugins.
 
-You can also register multiple interfaces with a single call to `IGNITION_ADD_PLUGIN`, e.g.:
+You can also register multiple interfaces with a single call to `GZ_ADD_PLUGIN`, e.g.:
 
 ```
-IGNITION_ADD_PLUGIN(MyPluginClass, MyInterface1, MyInterface2, MyInterface3)
+GZ_ADD_PLUGIN(MyPluginClass, MyInterface1, MyInterface2, MyInterface3)
 ```
 
-You may also place the `IGNITION_ADD_PLUGIN` macro into **any namespace**. You
+You may also place the `GZ_ADD_PLUGIN` macro into **any namespace**. You
 simply need to make sure that the compiler can resolve the names of the classes
 that you pass to it (and there will be a compilation error if it cannot).
 
@@ -127,7 +127,7 @@ public:
   }
 };
 
-IGNITION_ADD_PLUGIN(MyGetT_Plugin<double>, GetT_Interface<double>)
+GZ_ADD_PLUGIN(MyGetT_Plugin<double>, GetT_Interface<double>)
 ```
 
 When using the loader, you would call

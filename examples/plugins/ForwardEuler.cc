@@ -97,7 +97,7 @@ class Integrator : public gz::plugin::examples::NumericalIntegrator
 
 };
 
-IGNITION_ADD_PLUGIN(Integrator, NumericalIntegrator)
+GZ_ADD_PLUGIN(Integrator, NumericalIntegrator)
 
 }
 }

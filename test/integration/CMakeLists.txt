@@ -13,14 +13,14 @@ gz_build_tests(
 foreach(test ${test_targets})
 
   foreach(plugin_target
-      IGNBadPluginAlign
-      IGNBadPluginAPIVersionNew
-      IGNBadPluginAPIVersionOld
-      IGNBadPluginNoInfo
-      IGNBadPluginSize
+      GzBadPluginAlign
+      GzBadPluginAPIVersionNew
+      GzBadPluginAPIVersionOld
+      GzBadPluginNoInfo
+      GzBadPluginSize
       GzDummyPlugins
-      IGNFactoryPlugins
-      IGNTemplatedPlugins)
+      GzFactoryPlugins
+      GzTemplatedPlugins)
 
     target_compile_definitions(${test} PRIVATE
       "${plugin_target}_LIB=\"$<TARGET_FILE:${plugin_target}>\"")

@@ -35,11 +35,11 @@
 TEST(Loader, LoadBadPlugins)
 {
   std::vector<std::string> libraries = {
-    IGNBadPluginAPIVersionOld_LIB,
-    IGNBadPluginAPIVersionNew_LIB,
-    IGNBadPluginAlign_LIB,
-    IGNBadPluginNoInfo_LIB,
-    IGNBadPluginSize_LIB};
+    GzBadPluginAPIVersionOld_LIB,
+    GzBadPluginAPIVersionNew_LIB,
+    GzBadPluginAlign_LIB,
+    GzBadPluginNoInfo_LIB,
+    GzBadPluginSize_LIB};
   for (auto const & library : libraries)
   {
     gz::plugin::Loader pl;

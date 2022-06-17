@@ -542,7 +542,7 @@ namespace gz
              "Bug in code: Loader::Implementation::LoadPlugins was called with "
              "a nullptr value for _dlHandle.");
 
-      const std::string infoSymbol = "IgnitionPluginHook";
+      const std::string infoSymbol = "GzPluginHook";
       void *infoFuncPtr = dlsym(_dlHandle.get(), infoSymbol.c_str());
 
       // Does the library have the right symbol?
@@ -584,7 +584,7 @@ namespace gz
       // pointer gets used, so we do not need to worry about its memory address
       // being filled with a non-compatible type. The only risk would be if a
       // user decides to implement their own version of
-      // IgnitionPluginHook, but they surely would have no
+      // GzPluginHook, but they surely would have no
       // incentive in doing that.
       //
       // Also note that the main reason we jump through these hoops is in order
@@ -599,7 +599,7 @@ namespace gz
       {
         // TODO(anyone): When we need to support multiple API versions,
         // put the logic for it into here.
-        // We can call IgnitionPluginHook(~) again with the
+        // We can call GzPluginHook(~) again with the
         // API version that it expects.
 
         std::cerr << "The library [" << _pathToLibrary << "] is using an "

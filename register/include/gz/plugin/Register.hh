@@ -31,18 +31,18 @@
 /// register multiple interfaces, e.g.:
 ///
 /// \code
-/// IGNITION_ADD_PLUGIN(PluginClass, Interface1)
-/// IGNITION_ADD_PLUGIN(PluginClass, Interface2)
+/// GZ_ADD_PLUGIN(PluginClass, Interface1)
+/// GZ_ADD_PLUGIN(PluginClass, Interface2)
 ///
 /// /* Some other code */
 ///
-/// IGNITION_ADD_PLUGIN(PluginClass, Interface3)
+/// GZ_ADD_PLUGIN(PluginClass, Interface3)
 /// \endcode
 ///
 /// Or you can list multiple interfaces in a single call to the macro, e.g.:
 ///
 /// \code
-/// IGNITION_ADD_PLUGIN(PluginClass, Interface1, Interface2, Interface3)
+/// GZ_ADD_PLUGIN(PluginClass, Interface1, Interface2, Interface3)
 /// \endcode
 ///
 /// If your library has multiple translation units (.cpp files) and you want to
@@ -50,7 +50,7 @@
 /// gz/plugin/Register.hh header in ONE of the translation units, and then
 /// the gz/plugin/RegisterMore.hh header in all of the rest of the
 /// translation units.
-#define IGNITION_ADD_PLUGIN(PluginClass, ...) \
+#define GZ_ADD_PLUGIN(PluginClass, ...) \
   DETAIL_GZ_ADD_PLUGIN(PluginClass, __VA_ARGS__)
 
 /// \brief Add an alias for one of your plugins.
@@ -60,9 +60,9 @@
 /// register multiple aliases, e.g.:
 ///
 /// \code
-/// IGNITION_ADD_PLUGIN_ALIAS(PluginClass, "PluginClass")
-/// IGNITION_ADD_PLUGIN_ALIAS(PluginClass, "SomeOtherName", "Yet another name")
-/// IGNOTION_ADD_PLUGIN_ALIAS(AnotherPluginClass, "Foo", "Bar", "Baz")
+/// GZ_ADD_PLUGIN_ALIAS(PluginClass, "PluginClass")
+/// GZ_ADD_PLUGIN_ALIAS(PluginClass, "SomeOtherName", "Yet another name")
+/// GZ_ADD_PLUGIN_ALIAS(AnotherPluginClass, "Foo", "Bar", "Baz")
 /// \endcode
 ///
 /// You can give the same alias to multiple plugins, but then that alias can no
@@ -71,7 +71,7 @@
 /// If you give a plugin an alias string that matches the demangled symbol name
 /// of another plugin, then the Loader will always prefer to instantiate the
 /// plugin whose symbol name matches that string.
-#define IGNITION_ADD_PLUGIN_ALIAS(PluginClass, ...) \
+#define GZ_ADD_PLUGIN_ALIAS(PluginClass, ...) \
   DETAIL_GZ_ADD_PLUGIN_ALIAS(PluginClass, __VA_ARGS__)
 
 
@@ -109,31 +109,31 @@
 /// };
 ///
 /// /* BAD! Will not compile:
-/// IGNITION_ADD_FACTORY(MyType, gz::plugin::Factory<MyBase, double>);
+/// GZ_ADD_FACTORY(MyType, gz::plugin::Factory<MyBase, double>);
 /// */
 ///
 /// // Instead do this:
 /// using MyFactory = gz::plugin::Factory<MyBase, double>;
-/// IGNITION_ADD_FACTORY(MyType, MyFactory);
+/// GZ_ADD_FACTORY(MyType, MyFactory);
 /// \endcode
-#define IGNITION_ADD_FACTORY(ProductType, FactoryType) \
+#define GZ_ADD_FACTORY(ProductType, FactoryType) \
   DETAIL_GZ_ADD_FACTORY(ProductType, FactoryType)
 
 /// \brief Add an alias for a factory.
 ///
-/// This will do the same as IGNITION_ADD_FACTORY(), but you may also add in
+/// This will do the same as GZ_ADD_FACTORY(), but you may also add in
 /// any number of strings which can then be used as aliases for this factory.
 /// For example:
 ///
 /// \code
-/// IGNITION_ADD_FACTORY_ALIAS(MyType, MyFactory, "Foo", "My favorite factory")
+/// GZ_ADD_FACTORY_ALIAS(MyType, MyFactory, "Foo", "My favorite factory")
 /// \endcode
 ///
 /// This macro can be called any number of times for the same factory or for
 /// different factories. If you call this macro, you do not need to call
-/// IGNITION_ADD_FACTORY(), but there is nothing wrong with calling both (except
+/// GZ_ADD_FACTORY(), but there is nothing wrong with calling both (except
 /// it might imperceptibly increase your compile time).
-#define IGNITION_ADD_FACTORY_ALIAS(ProductType, FactoryType, ...) \
+#define GZ_ADD_FACTORY_ALIAS(ProductType, FactoryType, ...) \
   DETAIL_GZ_ADD_FACTORY_ALIAS(ProductType, FactoryType, __VA_ARGS__)
 
 

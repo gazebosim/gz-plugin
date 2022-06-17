@@ -84,7 +84,7 @@ int main(int argc, char** argv)
   app.set_help_all_flag("--help-all", "Show all help");
 
   app.add_flag_callback("--version", [](){
-      std::cout << ignitionVersion() << std::endl;
+      std::cout << gzVersion() << std::endl;
       throw CLI::Success();
   });
 

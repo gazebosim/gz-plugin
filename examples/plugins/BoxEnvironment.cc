@@ -40,6 +40,6 @@ class Plugin : public virtual gz::plugin::examples::Environment
 
 }
 
-IGNITION_ADD_PLUGIN(
+GZ_ADD_PLUGIN(
     BoxEnvironment::Plugin,
     gz::plugin::examples::Environment)
