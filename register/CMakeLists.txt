@@ -1,5 +1,4 @@
-
-ign_add_component(register INTERFACE)
+gz_add_component(register INTERFACE)
 
 install(
   DIRECTORY include/

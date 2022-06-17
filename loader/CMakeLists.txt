@@ -1,7 +1,6 @@
-
 # Collect source files into the "sources" variable and unit test files into the
 # "tests" variable
-ign_get_libsources_and_unittests(sources tests)
+gz_get_libsources_and_unittests(sources tests)
 
 # Disable ign_TEST if ignition-tools is not found
 if (MSVC OR NOT GZ_TOOLS_PROGRAM)
@@ -9,14 +8,14 @@ if (MSVC OR NOT GZ_TOOLS_PROGRAM)
 endif()
 
 # Create the library target
-ign_add_component(loader
+gz_add_component(loader
   SOURCES ${sources}
   GET_TARGET_NAME loader)
 
 target_link_libraries(${loader}
   PRIVATE ${DL_TARGET})
 
-ign_build_tests(
+gz_build_tests(
   TYPE UNIT
   SOURCES ${tests}
   LIB_DEPS ${loader}

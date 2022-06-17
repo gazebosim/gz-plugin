@@ -14,7 +14,7 @@ set(IGN_CMAKE_VER ${ignition-cmake3_VERSION_MAJOR})
 #============================================================================
 # Configure the project
 #============================================================================
-ign_configure_project(
+gz_configure_project(
   REPLACE_IGNITION_INCLUDE_PATH gz/plugin
   VERSION_SUFFIX pre0)
 
@@ -32,7 +32,7 @@ message(STATUS "\n\n-- ====== Finding Dependencies ======")
 
 #--------------------------------------
 # Find libdl
-ign_find_package(DL
+gz_find_package(DL
   REQUIRED_BY loader
   PRIVATE_FOR loader
   PRETTY libdl PURPOSE "Required for loading plugins")
@@ -45,21 +45,21 @@ find_program(GZ_TOOLS_PROGRAM ign)
 
 #--------------------------------------
 # Find ignition-utils
-ign_find_package(ignition-utils2 REQUIRED COMPONENTS cli)
+gz_find_package(ignition-utils2 REQUIRED COMPONENTS cli)
 set(IGN_UTILS_VER ${ignition-utils2_VERSION_MAJOR})
 
 
 #============================================================================
 # Configure the build
 #============================================================================
-ign_configure_build(QUIT_IF_BUILD_ERRORS
+gz_configure_build(QUIT_IF_BUILD_ERRORS
   COMPONENTS loader register)
 
 
 #============================================================================
 # Create package information
 #============================================================================
-ign_create_packages()
+gz_create_packages()
 
 #============================================================================
 # Configure documentation
@@ -67,7 +67,7 @@ ign_create_packages()
 configure_file(${CMAKE_SOURCE_DIR}/api.md.in ${CMAKE_BINARY_DIR}/api.md)
 configure_file(${CMAKE_SOURCE_DIR}/tutorials.md.in ${CMAKE_BINARY_DIR}/tutorials.md)
 
-ign_create_docs(
+gz_create_docs(
   API_MAINPAGE_MD "${CMAKE_BINARY_DIR}/api.md"
   TUTORIALS_MAINPAGE_MD "${CMAKE_BINARY_DIR}/tutorials.md"
   )
