@@ -10,7 +10,7 @@
     * [Pull request #52](https://github.com/gazebosim/gz-plugin/pull/52)
     * [Pull request #51](https://github.com/gazebosim/gz-plugin/pull/51)
 
-1. Find ign program instead of ignition-tools
+1. Find gz program instead of ignition-tools
     * [Pull request #57](https://github.com/gazebosim/gz-plugin/pull/57)
 
 1. Remove ign-tools from CMakeLists.txt. Not used
@@ -37,7 +37,7 @@
 1. Fix downstream Windows builds
     * [Pull request #38](https://github.com/gazebosim/gz-plugin/pull/38)
 
-1. Add `ign plugin --info` to print plugin info
+1. Add `gz plugin --info` to print plugin info
     * [Pull request #32](https://github.com/gazebosim/gz-plugin/pull/32)
 
 1. Add Windows installation

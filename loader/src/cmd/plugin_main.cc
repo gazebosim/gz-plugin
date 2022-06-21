@@ -16,7 +16,7 @@
  */
 #include <gz/utils/cli/CLI.hpp>
 
-#include "ign.hh"
+#include "gz.hh"
 
 //////////////////////////////////////////////////
 /// \brief Enumeration of available commands

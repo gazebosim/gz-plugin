@@ -27,7 +27,7 @@ of libraries designed to rapidly develop robot applications.
 * Querying of interfaces **by C++ type or name string**.
 * **Dynamically load** plugins at runtime according to the interfaces they provide.
 * **Reference counting** of plugin objects to unload libraries no longer in use.
-* **Command line tool** `ign plugin` to inspect plugins.
+* **Command line tool** `gz plugin` to inspect plugins.
 
 ## Installation
 

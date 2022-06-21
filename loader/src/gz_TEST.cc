@@ -28,7 +28,7 @@
 
 using namespace gz;
 
-static const std::string g_ignVersion("--force-version " + // NOLINT(*)
+static const std::string g_gzVersion("--force-version " + // NOLINT(*)
   std::string(GZ_VERSION_FULL));
 
 /////////////////////////////////////////////////
@@ -54,12 +54,12 @@ std::string custom_exec_str(std::string _cmd)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --help'.
-TEST(ignTest, IgnPluginHelp)
+/// \brief Check 'gz plugin --help'.
+TEST(gzTest, IgnPluginHelp)
 {
-  // Path to ign executable
-  std::string ign = std::string(GZ_PATH);
-  std::string output = custom_exec_str(ign + " plugin --help");
+  // Path to gz executable
+  std::string gz = std::string(GZ_PATH);
+  std::string output = custom_exec_str(gz + " plugin --help");
   EXPECT_NE(std::string::npos,
     output.find("-i,--info                   Get info about a plugin."))
       << output;
@@ -67,7 +67,7 @@ TEST(ignTest, IgnPluginHelp)
     output.find("-p,--plugin TEXT Needs: --info"))
       << output;
 
-  output = custom_exec_str(ign + " plugin");
+  output = custom_exec_str(gz + " plugin");
   EXPECT_NE(std::string::npos,
     output.find("-i,--info                   Get info about a plugin."))
       << output;
@@ -77,13 +77,13 @@ TEST(ignTest, IgnPluginHelp)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --info' for a non-existent file.
-TEST(ignTest, PluginInfoNonexistentLibrary)
+/// \brief Check 'gz plugin --info' for a non-existent file.
+TEST(gzTest, PluginInfoNonexistentLibrary)
 {
-  // Path to ign executable
-  std::string ign = std::string(GZ_PATH);
+  // Path to gz executable
+  std::string gz = std::string(GZ_PATH);
 
-  std::string output = custom_exec_str(ign + " plugin --info --plugin " +
+  std::string output = custom_exec_str(gz + " plugin --info --plugin " +
       "/path/to/libDoesNotExist.so");
 
   EXPECT_NE(std::string::npos, output.find("Error while loading the library"))
@@ -95,13 +95,13 @@ TEST(ignTest, PluginInfoNonexistentLibrary)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --info' for a file that isn't a shared library.
-TEST(ignTest, PluginInfoNonLibrary)
+/// \brief Check 'gz plugin --info' for a file that isn't a shared library.
+TEST(gzTest, PluginInfoNonLibrary)
 {
-  // Path to ign executable
-  std::string ign = std::string(GZ_PATH);
+  // Path to gz executable
+  std::string gz = std::string(GZ_PATH);
 
-  std::string output = custom_exec_str(ign + " plugin --info --plugin " +
+  std::string output = custom_exec_str(gz + " plugin --info --plugin " +
       std::string(GZ_PLUGIN_SOURCE_DIR) + "/core/src/Plugin.cc");
 
   EXPECT_NE(std::string::npos, output.find("Error while loading the library"))
@@ -113,13 +113,13 @@ TEST(ignTest, PluginInfoNonLibrary)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --info' for a library that has no plugins.
-TEST(ignTest, PluginInfoNonPluginLibrary)
+/// \brief Check 'gz plugin --info' for a library that has no plugins.
+TEST(gzTest, PluginInfoNonPluginLibrary)
 {
-  // Path to ign executable
-  std::string ign = std::string(GZ_PATH);
+  // Path to gz executable
+  std::string gz = std::string(GZ_PATH);
 
-  std::string output = custom_exec_str(ign + " plugin --info --plugin " +
+  std::string output = custom_exec_str(gz + " plugin --info --plugin " +
       GZ_PLUGIN_LIB);
 
   EXPECT_NE(std::string::npos, output.find("does not export any plugins. The "
@@ -132,13 +132,13 @@ TEST(ignTest, PluginInfoNonPluginLibrary)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --info' for a library with plugins.
-TEST(ignTest, PluginInfoDummyPlugins)
+/// \brief Check 'gz plugin --info' for a library with plugins.
+TEST(gzTest, PluginInfoDummyPlugins)
 {
-  // Path to ign executable
-  std::string ign = std::string(GZ_PATH);
+  // Path to gz executable
+  std::string gz = std::string(GZ_PATH);
 
-  std::string output = custom_exec_str(ign + " plugin --info --plugin " +
+  std::string output = custom_exec_str(gz + " plugin --info --plugin " +
       GzDummyPlugins_LIB);
 
   EXPECT_NE(std::string::npos, output.find("Found 3 plugins in library file"))
@@ -171,13 +171,13 @@ TEST(ignTest, PluginInfoDummyPlugins)
 }
 
 //////////////////////////////////////////////////
-/// \brief Check 'ign plugin --info' with verbose output.
-TEST(ignTest, PluginInfoVerboseDummyPlugins)
+/// \brief Check 'gz plugin --info' with verbose output.
+TEST(gzTest, PluginInfoVerboseDummyPlugins)
 {
-  // Path to ign executable
-  std::string ign = std::string(GZ_PATH);
+  // Path to gz executable
+  std::string gz = std::string(GZ_PATH);
 
-  std::string output = custom_exec_str(ign + " plugin --info --plugin " +
+  std::string output = custom_exec_str(gz + " plugin --info --plugin " +
       GzDummyPlugins_LIB + " --verbose");
 
   EXPECT_NE(std::string::npos, output.find("Known Interfaces: 7"))
