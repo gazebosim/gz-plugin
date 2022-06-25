@@ -2,14 +2,14 @@ cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 
 project(examples)
 
-find_package(ignition-plugin2 QUIET REQUIRED COMPONENTS all)
-set(IGN_PLUGIN_VER ${ignition-plugin2_VERSION_MAJOR})
+find_package(gz-plugin2 QUIET REQUIRED COMPONENTS all)
+set(GZ_PLUGIN_VER ${gz-plugin2_VERSION_MAJOR})
 
-find_package(ignition-common5 QUIET)
-set(IGN_COMMON_VER ${ignition-common5_VERSION_MAJOR})
+find_package(gz-common5 QUIET)
+set(GZ_COMMON_VER ${gz-common5_VERSION_MAJOR})
 
-find_package(ignition-math7 QUIET)
-set(IGN_MATH_VER ${ignition-math7_VERSION_MAJOR})
+find_package(gz-math7 QUIET)
+set(GZ_MATH_VER ${gz-math7_VERSION_MAJOR})
 
 add_subdirectory(plugins)
 
@@ -30,9 +30,9 @@ foreach(example_file ${example_files})
 
   target_link_libraries(${example}
     PRIVATE
-      ignition-plugin${IGN_PLUGIN_VER}::loader
-      ignition-common${IGN_COMMON_VER}::core
-      ignition-math${IGN_MATH_VER}::core
+      gz-plugin${GZ_PLUGIN_VER}::loader
+      gz-common${GZ_COMMON_VER}::core
+      gz-math${GZ_MATH_VER}::core
   )
 
   # This is only needed for the examples that use plugins, but it doesn't hurt
