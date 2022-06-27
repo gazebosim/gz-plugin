@@ -1,13 +1,13 @@
 # Migration Instructions (from common::Plugin)
 
 This file provides migration instructions for `ignition` library developers to
-replace the `ignition-common` plugin framework with the `ignition-plugin`
+replace the `gz-common` plugin framework with the `gz-plugin`
 framework. Some of the instructions here may also be useful to new adopters of
-`ignition-plugin`.
+`gz-plugin`.
 
 # Linking to ignition-plugin
 
-`ign-plugin` has three components: `core`, `loader`, and `register`. Code that
+`gz-plugin` has three components: `core`, `loader`, and `register`. Code that
 just wants to use `PluginPtr` objects can link to `core`, e.g.:
 
 ```
@@ -48,7 +48,7 @@ The name of the header for registering plugins has changed:
 
 * `<ignition/common/PluginMacros.hh>` should be replaced by `<ignition/plugin/Register.hh>`
 
-The old `ign-common` plugin registration method had numerous macros for registering
+The old `gz-common` plugin registration method had numerous macros for registering
 plugins. Those have all been replaced with `GZ_ADD_PLUGIN`. Specifically:
 
 * `IGN_COMMON_REGISTER_SINGLE_MACRO` can be directly replaced with `GZ_ADD_PLUGIN`.
@@ -77,10 +77,10 @@ you choose exactly one.
 
 # Loading a library
 
-The `gz::common::SystemPaths` class was not ported into `ign-plugin`
+The `gz::common::SystemPaths` class was not ported into `gz-plugin`
 because it is more related to filesystem utilities than to plugins. If you are
 currently using `gz::common::SystemPaths` to help with loading plugins,
-then you should continue to use it. It does not have a replacement in `ign-plugin`.
+then you should continue to use it. It does not have a replacement in `gz-plugin`.
 
 Here is a list of things that you *should* replace:
 
@@ -94,7 +94,7 @@ Here is a list of things that you *should* replace:
 Functions like `Plugin::QueryInterface()` and `Plugin::QueryInterfaceSharedPtr()`
 used to require a `std::string` argument with the name of the interface. This is
 no longer necessary, ever. Functions that accept `std::string` arguments will
-remain in the initial release 0 of `ign-plugin`, but they are marked as
+remain in the initial release 0 of `gz-plugin`, but they are marked as
 deprecated and will be removed by release 1. All interfaces can now be queried
 by simply passing the class as a template argument to a query function. This is
 a much safer method than relying on users to spell a string correctly.
