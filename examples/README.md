@@ -8,7 +8,7 @@ After installing Gazebo Plugin, from source or from binaries, build with:
 
 ```
 git clone https://github.com/gazebosim/gz-plugin/
-cd ign-plugin/examples
+cd gz-plugin/examples
 mkdir build
 cd build
 cmake ..

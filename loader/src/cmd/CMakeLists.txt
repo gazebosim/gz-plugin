@@ -4,7 +4,7 @@ target_link_libraries(gz PUBLIC
   ${PROJECT_LIBRARY_TARGET_NAME}
 )
 
-set(plugin_executable ign-plugin)
+set(plugin_executable gz-plugin)
 add_executable(${plugin_executable} plugin_main.cc)
 target_link_libraries(${plugin_executable}
   gz
@@ -12,7 +12,7 @@ target_link_libraries(${plugin_executable}
   ${loader}
 )
 
-set(EXE_INSTALL_DIR "${CMAKE_INSTALL_LIBEXECDIR}/ignition/${IGN_DESIGNATION}${PROJECT_VERSION_MAJOR}")
+set(EXE_INSTALL_DIR "${CMAKE_INSTALL_LIBEXECDIR}/gz/${IGN_DESIGNATION}${PROJECT_VERSION_MAJOR}")
 
 install(
   TARGETS

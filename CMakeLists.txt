@@ -39,7 +39,7 @@ gz_find_package(DL
 
 
 #--------------------------------------
-# Find ignition-tools
+# Find gz-tools
 find_program(GZ_TOOLS_PROGRAM gz)
 
 
