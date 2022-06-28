@@ -10,10 +10,10 @@
     * [Pull request #52](https://github.com/gazebosim/gz-plugin/pull/52)
     * [Pull request #51](https://github.com/gazebosim/gz-plugin/pull/51)
 
-1. Find gz program instead of ignition-tools
+1. Find gz program instead of gz-tools
     * [Pull request #57](https://github.com/gazebosim/gz-plugin/pull/57)
 
-1. Remove ign-tools from CMakeLists.txt. Not used
+1. Remove gz-tools from CMakeLists.txt. Not used
     * [Pull request #56](https://github.com/gazebosim/gz-plugin/pull/56)
 
 ### Gazebo Plugin 1.2.0 (2021-03-30)
@@ -48,7 +48,7 @@
 
 ### Gazebo Plugin 1.1.0 (2019-11-21)
 
-1. Add SelectSpecializers to allow ign-physics to improve compilation time.
+1. Add SelectSpecializers to allow gz-physics to improve compilation time.
     * [BitBucket pull request 32](https://osrf-migration.github.io/ignition-gh-pages/#!/ignitionrobotics/ign-physics/pull-requests/32)
 
 ### Gazebo Plugin 1.0.0 (2019-02-05)
