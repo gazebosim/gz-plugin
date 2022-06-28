@@ -14,16 +14,16 @@ set(GZ_CMAKE_VER ${gz-cmake3_VERSION_MAJOR})
 #============================================================================
 # Configure the project
 #============================================================================
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 gz_configure_project(
   REPLACE_IGNITION_INCLUDE_PATH gz/plugin
   VERSION_SUFFIX pre0)
 
-
 #============================================================================
 # Set project-specific options
 #============================================================================
-
-# No project-specific options yet for ign-plugin
 
 #============================================================================
 # Search for project-specific dependencies

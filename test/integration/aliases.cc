@@ -85,11 +85,3 @@ TEST(Alias, ConflictingAlias)
   attempt = pl.Instantiate("not a plugin");
   EXPECT_TRUE(attempt.IsEmpty());
 }
-
-
-/////////////////////////////////////////////////
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}

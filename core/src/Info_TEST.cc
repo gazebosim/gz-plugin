@@ -75,9 +75,3 @@ TEST(Info, Clear)
   EXPECT_FALSE(static_cast<bool>(info.factory));
   EXPECT_FALSE(static_cast<bool>(info.deleter));
 }
-
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}

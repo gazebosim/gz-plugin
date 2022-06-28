@@ -97,10 +97,3 @@ TEST(WeakPluginPtr, CopyMove)
   weakAssignFromPlugin = plugin;
   EXPECT_EQ(plugin, weakAssignFromPlugin.Lock());
 }
-
-/////////////////////////////////////////////////
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}

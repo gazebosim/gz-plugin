@@ -81,10 +81,3 @@ TEST(Factory, ProducerWithVector)
   VectorProducer producer;
   EXPECT_NE(nullptr, producer.Construct(std::vector<double>()));
 }
-
-/////////////////////////////////////////////////
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
