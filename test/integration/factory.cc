@@ -242,10 +242,3 @@ TEST(Factory, LibraryManagement)
   // With the reference counts deleted, the library should automatically unload.
   CHECK_FOR_LIBRARY(libraryPath, false);
 }
-
-/////////////////////////////////////////////////
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
