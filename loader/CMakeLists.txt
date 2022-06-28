@@ -2,7 +2,7 @@
 # "tests" variable
 gz_get_libsources_and_unittests(sources tests)
 
-# Disable gz_TEST if ignition-tools is not found
+# Disable gz_TEST if gz-tools is not found
 if (MSVC OR NOT GZ_TOOLS_PROGRAM)
   list(REMOVE_ITEM tests src/gz_TEST.cc)
 endif()

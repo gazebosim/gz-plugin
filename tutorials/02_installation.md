@@ -1,7 +1,7 @@
 \page installation Installation
 
 These instructions are for installing only Gazebo Plugin.
-If you're interested in using all the Ignition libraries, check out this [Ignition installation](https://gazebosim.org/docs/latest/install).
+If you're interested in using all the Gazebo libraries, check out this [Gazebo installation](https://gazebosim.org/docs/latest/install).
 
 We recommend following the Binary Installation instructions to get up and running as quickly and painlessly as possible.
 
@@ -32,7 +32,7 @@ wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 
 ## Binary Installation
 
-On Ubuntu systems, `apt-get` can be used to install `ignition-plugin`:
+On Ubuntu systems, `apt-get` can be used to install `gz-plugin`:
 ```bash
 sudo apt-get update
 sudo apt install libignition-plugin2-dev
@@ -40,7 +40,7 @@ sudo apt install libignition-plugin2-dev
 
 ## Source Installation
 
-1. Install Ignition dependencies
+1. Install Gazebo dependencies
   ```
   sudo apt-get install libignition-cmake3-dev libignition-tools2-dev libignition-utils2-cli-dev
   ```
@@ -56,7 +56,7 @@ sudo apt install libignition-plugin2-dev
 
 3. Configure and build
   ```bash
-  cd ign-plugin
+  cd gz-plugin
   mkdir build
   cd build
   cmake ..
@@ -106,7 +106,7 @@ Sierra (10.12) or later.
 
 3. Configure and build
   ```bash
-  cd ign-plugin
+  cd gz-plugin
   mkdir build
   cd build
   cmake ..
@@ -122,7 +122,7 @@ Sierra (10.12) or later.
 
 ## Prerequisites
 
-First, follow the [ign-cmake](https://github.com/gazebosim/gz-cmake) tutorial for installing Conda, Visual Studio, CMake, and other prerequisites, and also for creating a Conda environment.
+First, follow the [gz-cmake](https://github.com/gazebosim/gz-cmake) tutorial for installing Conda, Visual Studio, CMake, and other prerequisites, and also for creating a Conda environment.
 
 Navigate to `condabin` if necessary to use the `conda` command (i.e., if Conda is not in your `PATH` environment variable. You can find the location of `condabin` in Anaconda Prompt, `where conda`).
 
@@ -145,7 +145,7 @@ which version you need.
 
 This assumes you have created and activated a Conda environment while installing the Prerequisites.
 
-1. Install Ignition dependencies:
+1. Install Gazebo dependencies:
 
   You can view available versions and their dependencies:
   ```bash
@@ -165,7 +165,7 @@ This assumes you have created and activated a Conda environment while installing
 
 3. Configure and build
   ```bash
-  cd ign-plugin
+  cd gz-plugin
   mkdir build
   cd build
   cmake .. -DBUILD_TESTING=OFF  # Optionally, -DCMAKE_INSTALL_PREFIX=path\to\install
@@ -196,7 +196,7 @@ You can also generate the documentation from a clone of this repository by follo
 
 3. Configure and build the documentation.
   ```bash
-  cd ign-plugin
+  cd gz-plugin
   mkdir build
   cd build
   cmake ..
@@ -208,7 +208,7 @@ You can also generate the documentation from a clone of this repository by follo
   firefox doxygen/html/index.html
   ```
 
-**Note** Alternatively, documentation for `ignition-plugin` can be found within the source code, and also in the MIGRATION.md guide.
+**Note** Alternatively, documentation for `gz-plugin` can be found within the source code, and also in the MIGRATION.md guide.
 
 
 # Test
