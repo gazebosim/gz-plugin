@@ -61,18 +61,18 @@ TEST(gzTest, IgnPluginHelp)
   std::string gz = std::string(GZ_PATH);
   std::string output = custom_exec_str(gz + " plugin --help");
   EXPECT_NE(std::string::npos,
-    output.find("-i,--info                   Get info about a plugin."))
+    output.find("-i [--info]                 Get info about a plugin."))
       << output;
   EXPECT_NE(std::string::npos,
-    output.find("-p,--plugin TEXT Needs: --info"))
+    output.find("-p [--plugin] TEXT          Path to a plugin."))
       << output;
 
   output = custom_exec_str(gz + " plugin");
   EXPECT_NE(std::string::npos,
-    output.find("-i,--info                   Get info about a plugin."))
+    output.find("-i [--info]                 Get info about a plugin."))
       << output;
   EXPECT_NE(std::string::npos,
-    output.find("-p,--plugin TEXT Needs: --info"))
+    output.find("-p [--plugin] TEXT          Path to a plugin."))
       << output;
 }
 
