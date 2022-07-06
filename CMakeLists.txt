@@ -48,7 +48,6 @@ find_program(GZ_TOOLS_PROGRAM gz)
 gz_find_package(gz-utils2 REQUIRED COMPONENTS cli)
 set(GZ_UTILS_VER ${gz-utils2_VERSION_MAJOR})
 
-
 #============================================================================
 # Configure the build
 #============================================================================
