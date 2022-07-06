@@ -13,24 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
-*/
+ */
 
+#include <gz/plugin/RegisterMore.hh>
+#include <ignition/plugin/config.hh>
 
-#ifndef IGNITION_PLUGIN_REGISTERMORE_HH_
-#define IGNITION_PLUGIN_REGISTERMORE_HH_
-
-/// If your library already has a translation unit (.cpp file) containing
-/// \code
-///     #include <ignition/plugin/Register.hh>
-/// \endcode
-///
-/// then any other translation units that want to register plugins should use
-/// \code
-///     #include <ignition/plugin/RegisterMore.hh>
-/// \endcode
-///
-/// But at least one translation unit of your library must contain Register.hh.
-#define IGN_PLUGIN_REGISTER_MORE_TRANS_UNITS
-#include <ignition/plugin/Register.hh>
-
-#endif
+#define IGN_PLUGIN_REGISTER_MORE_TRANS_UNITS \
+  GZ_PLUGIN_REGISTER_MORE_TRANS_UNITS

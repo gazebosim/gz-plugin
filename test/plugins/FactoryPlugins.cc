@@ -15,7 +15,7 @@
  *
 */
 
-#include <ignition/plugin/Register.hh>
+#include <gz/plugin/Register.hh>
 
 #include "FactoryPlugins.hh"
 
@@ -40,7 +40,7 @@ class DummyNameForward : public DummyNameBase
 
   private: const std::string name;
 };
-IGNITION_ADD_FACTORY(DummyNameForward, NameFactory)
+GZ_ADD_FACTORY(DummyNameForward, NameFactory)
 
 /// \brief An implementation that takes in a std::string and says hello to it.
 class DummyNameSayHello : public DummyNameBase
@@ -58,7 +58,7 @@ class DummyNameSayHello : public DummyNameBase
 
   private: const std::string name;
 };
-IGNITION_ADD_FACTORY(DummyNameSayHello, NameFactory)
+GZ_ADD_FACTORY(DummyNameSayHello, NameFactory)
 
 /// \brief An implementation that takes in a double and returns that same value.
 class DummyDoubleForward : public DummyDoubleBase
@@ -76,7 +76,7 @@ class DummyDoubleForward : public DummyDoubleBase
 
   private: const double value;
 };
-IGNITION_ADD_FACTORY(DummyDoubleForward, DoubleFactory)
+GZ_ADD_FACTORY(DummyDoubleForward, DoubleFactory)
 
 /// \brief An implementation takes in a double and returns that same value plus
 /// one-half.
@@ -95,7 +95,7 @@ class DummyDoubleAddOneHalf : public DummyDoubleBase
 
   private: const double value;
 };
-IGNITION_ADD_FACTORY(DummyDoubleAddOneHalf, DoubleFactory)
+GZ_ADD_FACTORY(DummyDoubleAddOneHalf, DoubleFactory)
 
 /// \brief An implementation that takes in an int and returns that same value.
 class DummyIntForward : public DummyIntBase
@@ -113,7 +113,7 @@ class DummyIntForward : public DummyIntBase
 
   private: const int value;
 };
-IGNITION_ADD_FACTORY(DummyIntForward, IntFactory)
+GZ_ADD_FACTORY(DummyIntForward, IntFactory)
 
 /// \brief An implementation takes in an int and returns that same value plus
 /// one.
@@ -132,7 +132,7 @@ class DummyIntAddOne : public DummyIntBase
 
   private: const int value;
 };
-IGNITION_ADD_FACTORY(DummyIntAddOne, IntFactory)
+GZ_ADD_FACTORY(DummyIntAddOne, IntFactory)
 
 /// \brief An implementation of SomeObject that just sets the values that get
 /// passed to it.
@@ -149,7 +149,7 @@ class SomeObjectForward : public SomeObject
     return this->someInt + this->someDouble;
   }
 };
-IGNITION_ADD_FACTORY(SomeObjectForward, SomeObjectFactory)
+GZ_ADD_FACTORY(SomeObjectForward, SomeObjectFactory)
 
 /// \brief An implementation of SomeObject that adds two to each value that gets
 /// passed to it.
@@ -166,9 +166,9 @@ class SomeObjectAddTwo : public SomeObject
     return this->someInt + this->someDouble + 2;
   }
 };
-IGNITION_ADD_FACTORY(SomeObjectAddTwo, SomeObjectFactory)
+GZ_ADD_FACTORY(SomeObjectAddTwo, SomeObjectFactory)
 
-IGNITION_ADD_FACTORY_ALIAS(
+GZ_ADD_FACTORY_ALIAS(
     SomeObjectAddTwo, SomeObjectFactory,
     "This factory has an alias", "and also a second alias")
 

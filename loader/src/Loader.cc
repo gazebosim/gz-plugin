@@ -26,13 +26,13 @@
 #include <unordered_map>
 #include <vector>
 
-#include <ignition/plugin/Info.hh>
-#include <ignition/plugin/Loader.hh>
-#include <ignition/plugin/Plugin.hh>
+#include <gz/plugin/Info.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/plugin/Plugin.hh>
 
-#include <ignition/plugin/utility.hh>
+#include <gz/plugin/utility.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -408,7 +408,7 @@ namespace ignition
       if (this->dataPtr->plugins.end() == it)
       {
         // LCOV_EXCL_START
-        std::cerr << "[ignition::Loader::PrivateGetInfo] A resolved name ["
+        std::cerr << "[gz::Loader::PrivateGetInfo] A resolved name ["
                   << _resolvedName << "] could not be found in the PluginMap. "
                   << "This should not be possible! Please report this bug!\n";
         assert(false);
@@ -429,7 +429,7 @@ namespace ignition
       if (this->dataPtr->pluginToDlHandlePtrs.end() == it)
       {
         // LCOV_EXCL_START
-        std::cerr << "[ignition::Loader::PrivateGetInfo] A resolved name ["
+        std::cerr << "[gz::Loader::PrivateGetInfo] A resolved name ["
                   << _resolvedName << "] could not be found in the "
                   << "PluginToDlHandleMap. This should not be possible! Please "
                   << "report this bug!\n";
@@ -542,7 +542,7 @@ namespace ignition
              "Bug in code: Loader::Implementation::LoadPlugins was called with "
              "a nullptr value for _dlHandle.");
 
-      const std::string infoSymbol = "IgnitionPluginHook";
+      const std::string infoSymbol = "GzPluginHook";
       void *infoFuncPtr = dlsym(_dlHandle.get(), infoSymbol.c_str());
 
       // Does the library have the right symbol?
@@ -584,7 +584,7 @@ namespace ignition
       // pointer gets used, so we do not need to worry about its memory address
       // being filled with a non-compatible type. The only risk would be if a
       // user decides to implement their own version of
-      // IgnitionPluginHook, but they surely would have no
+      // GzPluginHook, but they surely would have no
       // incentive in doing that.
       //
       // Also note that the main reason we jump through these hoops is in order
@@ -595,16 +595,16 @@ namespace ignition
       InfoHook(nullptr, reinterpret_cast<const void**>(&allInfo),
            &version, &size, &alignment);
 
-      if (ignition::plugin::INFO_API_VERSION != version)
+      if (gz::plugin::INFO_API_VERSION != version)
       {
         // TODO(anyone): When we need to support multiple API versions,
         // put the logic for it into here.
-        // We can call IgnitionPluginHook(~) again with the
+        // We can call GzPluginHook(~) again with the
         // API version that it expects.
 
         std::cerr << "The library [" << _pathToLibrary << "] is using an "
                   << "incompatible version [" << version << "] of the "
-                  << "ignition::plugin Info API. The version in this library "
+                  << "gz::plugin Info API. The version in this library "
                   << "is [" << INFO_API_VERSION << "].\n";
         return loadedPlugins;
       }
@@ -625,7 +625,7 @@ namespace ignition
       if (!allInfo)
       {
         std::cerr << "The library [" << _pathToLibrary << "] failed to provide "
-                  << "ignition::plugin Info for unknown reasons. Please report "
+                  << "gz::plugin Info for unknown reasons. Please report "
                   << "this error as a bug!\n";
 
         return loadedPlugins;
@@ -659,7 +659,7 @@ namespace ignition
         // buffering.
         std::stringstream ss;
 
-        ss << "[ignition::plugin::Loader::LookupPlugin] Failed to resolve the "
+        ss << "[gz::plugin::Loader::LookupPlugin] Failed to resolve the "
            << "alias [" << _nameOrAlias << "] because it refers to multiple "
            << "plugins:\n";
         for (const std::string &plugin : alias->second)
@@ -670,7 +670,7 @@ namespace ignition
         return "";
       }
 
-      std::cerr << "[ignition::plugin::Loader::LookupPlugin] Failed to get "
+      std::cerr << "[gz::plugin::Loader::LookupPlugin] Failed to get "
                 << "info for [" << _nameOrAlias << "]. Could not find a plugin "
                 << "with that name or alias.\n";
 

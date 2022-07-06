@@ -1,9 +1,9 @@
 # This is to make test_config.h visible
 include_directories("${CMAKE_BINARY_DIR}")
 
-ign_get_sources(tests)
+gz_get_sources(tests)
 
-ign_build_tests(
+gz_build_tests(
   TYPE INTEGRATION
   SOURCES ${tests}
   LIB_DEPS
@@ -13,14 +13,14 @@ ign_build_tests(
 foreach(test ${test_targets})
 
   foreach(plugin_target
-      IGNBadPluginAlign
-      IGNBadPluginAPIVersionNew
-      IGNBadPluginAPIVersionOld
-      IGNBadPluginNoInfo
-      IGNBadPluginSize
-      IGNDummyPlugins
-      IGNFactoryPlugins
-      IGNTemplatedPlugins)
+      GzBadPluginAlign
+      GzBadPluginAPIVersionNew
+      GzBadPluginAPIVersionOld
+      GzBadPluginNoInfo
+      GzBadPluginSize
+      GzDummyPlugins
+      GzFactoryPlugins
+      GzTemplatedPlugins)
 
     target_compile_definitions(${test} PRIVATE
       "${plugin_target}_LIB=\"$<TARGET_FILE:${plugin_target}>\"")

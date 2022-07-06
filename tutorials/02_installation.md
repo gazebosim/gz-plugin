@@ -1,7 +1,7 @@
 \page installation Installation
 
-These instructions are for installing only Ignition Plugin.
-If you're interested in using all the Ignition libraries, check out this [Ignition installation](https://ignitionrobotics.org/docs/latest/install).
+These instructions are for installing only Gazebo Plugin.
+If you're interested in using all the Gazebo libraries, check out this [Gazebo installation](https://gazebosim.org/docs/latest/install).
 
 We recommend following the Binary Installation instructions to get up and running as quickly and painlessly as possible.
 
@@ -32,31 +32,31 @@ wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 
 ## Binary Installation
 
-On Ubuntu systems, `apt-get` can be used to install `ignition-plugin`:
+On Ubuntu systems, `apt-get` can be used to install `gz-plugin`:
 ```bash
 sudo apt-get update
-sudo apt install libignition-plugin-dev
+sudo apt install libignition-plugin2-dev
 ```
 
 ## Source Installation
 
-1. Install Ignition dependencies
+1. Install Gazebo dependencies
   ```
-  sudo apt-get install libignition-cmake2-dev libignition-tools-dev libignition-utils1-cli-dev
+  sudo apt-get install libignition-cmake3-dev libignition-tools2-dev libignition-utils2-cli-dev
   ```
 
-1. Install Ignition Tools if you want to use the `ign plugin` command line tool:
+1. Install Gazebo Tools if you want to use the `gz plugin` command line tool:
   ```bash
-  sudo apt-get install ignition-tools
+  sudo apt-get install ignition-tools2
 
 2. Clone the repository
   ```bash
-  git clone https://github.com/ignitionrobotics/ign-plugin
+  git clone https://github.com/gazebosim/gz-plugin
   ```
 
 3. Configure and build
   ```bash
-  cd ign-plugin
+  cd gz-plugin
   mkdir build
   cd build
   cmake ..
@@ -72,9 +72,9 @@ sudo apt install libignition-plugin-dev
 
 ## Prerequisites
 
-Ignition Plugin and several of its dependencies can be installed on macOS
+Gazebo Plugin and several of its dependencies can be installed on macOS
 with [Homebrew](http://brew.sh/) using the [osrf/simulation
-tap](https://github.com/osrf/homebrew-simulation). Ignition Plugin versions 1+
+tap](https://github.com/osrf/homebrew-simulation). Gazebo Plugin versions 1+
 require macOS High Sierra (10.13) or later, while version 0 supports
 Sierra (10.12) or later.
 
@@ -88,7 +88,7 @@ Sierra (10.12) or later.
 2. Run the following commands
   ```bash
   brew tap osrf/simulation
-  brew install ignition-plugin1
+  brew install ignition-plugin2
   ```
 
 ## Source Installation
@@ -96,17 +96,17 @@ Sierra (10.12) or later.
 1. Install dependencies
   ```bash
   brew tap osrf/simulation
-  brew install ignition-plugin1 --only-dependencies
+  brew install ignition-plugin2 --only-dependencies
   ```
 
 2. Clone the repository
   ```bash
-  git clone https://github.com/ignitionrobotics/ign-plugin
+  git clone https://github.com/gazebosim/gz-plugin
   ```
 
 3. Configure and build
   ```bash
-  cd ign-plugin
+  cd gz-plugin
   mkdir build
   cd build
   cmake ..
@@ -122,14 +122,14 @@ Sierra (10.12) or later.
 
 ## Prerequisites
 
-First, follow the [ign-cmake](https://github.com/ignitionrobotics/ign-cmake) tutorial for installing Conda, Visual Studio, CMake, and other prerequisites, and also for creating a Conda environment.
+First, follow the [gz-cmake](https://github.com/gazebosim/gz-cmake) tutorial for installing Conda, Visual Studio, CMake, and other prerequisites, and also for creating a Conda environment.
 
 Navigate to `condabin` if necessary to use the `conda` command (i.e., if Conda is not in your `PATH` environment variable. You can find the location of `condabin` in Anaconda Prompt, `where conda`).
 
 Create if necessary, and activate a Conda environment:
 ```bash
-conda create -n ign-ws
-conda activate ign-ws
+conda create -n gz-ws
+conda activate gz-ws
 ```
 
 ## Binary Installation
@@ -145,7 +145,7 @@ which version you need.
 
 This assumes you have created and activated a Conda environment while installing the Prerequisites.
 
-1. Install Ignition dependencies:
+1. Install Gazebo dependencies:
 
   You can view available versions and their dependencies:
   ```bash
@@ -160,12 +160,12 @@ This assumes you have created and activated a Conda environment while installing
 2. Navigate to where you would like to build the library, and clone the repository.
   ```bash
   # Optionally, append `-b ign-plugin#` (replace # with a number) to check out a specific version
-  git clone https://github.com/ignitionrobotics/ign-plugin
+  git clone https://github.com/gazebosim/gz-plugin
   ```
 
 3. Configure and build
   ```bash
-  cd ign-plugin
+  cd gz-plugin
   mkdir build
   cd build
   cmake .. -DBUILD_TESTING=OFF  # Optionally, -DCMAKE_INSTALL_PREFIX=path\to\install
@@ -180,7 +180,7 @@ This assumes you have created and activated a Conda environment while installing
 # Documentation
 
 API documentation and tutorials can be accessed at
-[Ignition Robotics website](https://ignitionrobotics.org/libs/plugin)
+[Gazebo website](https://gazebosim.org/libs/plugin)
 
 You can also generate the documentation from a clone of this repository by following these steps.
 
@@ -191,12 +191,12 @@ You can also generate the documentation from a clone of this repository by follo
 
 2. Clone the repository
   ```bash
-  git clone https://github.com/ignitionrobotics/ign-plugin
+  git clone https://github.com/gazebosim/gz-plugin
   ```
 
 3. Configure and build the documentation.
   ```bash
-  cd ign-plugin
+  cd gz-plugin
   mkdir build
   cd build
   cmake ..
@@ -208,7 +208,7 @@ You can also generate the documentation from a clone of this repository by follo
   firefox doxygen/html/index.html
   ```
 
-**Note** Alternatively, documentation for `ignition-plugin` can be found within the source code, and also in the MIGRATION.md guide.
+**Note** Alternatively, documentation for `gz-plugin` can be found within the source code, and also in the MIGRATION.md guide.
 
 
 # Test

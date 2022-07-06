@@ -24,9 +24,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "ignition/plugin/Loader.hh"
-#include "ignition/plugin/PluginPtr.hh"
-#include "ignition/plugin/SpecializedPluginPtr.hh"
+#include "gz/plugin/Loader.hh"
+#include "gz/plugin/PluginPtr.hh"
+#include "gz/plugin/SpecializedPluginPtr.hh"
 
 #include "../plugins/DummyPlugins.hh"
 #include "utils.hh"
@@ -35,14 +35,14 @@
 TEST(Loader, LoadBadPlugins)
 {
   std::vector<std::string> libraries = {
-    IGNBadPluginAPIVersionOld_LIB,
-    IGNBadPluginAPIVersionNew_LIB,
-    IGNBadPluginAlign_LIB,
-    IGNBadPluginNoInfo_LIB,
-    IGNBadPluginSize_LIB};
+    GzBadPluginAPIVersionOld_LIB,
+    GzBadPluginAPIVersionNew_LIB,
+    GzBadPluginAlign_LIB,
+    GzBadPluginNoInfo_LIB,
+    GzBadPluginSize_LIB};
   for (auto const & library : libraries)
   {
-    ignition::plugin::Loader pl;
+    gz::plugin::Loader pl;
 
     // Make sure the expected plugins were loaded.
     std::unordered_set<std::string> pluginNames = pl.LoadLib(library);
@@ -53,11 +53,11 @@ TEST(Loader, LoadBadPlugins)
 /////////////////////////////////////////////////
 TEST(Loader, LoadExistingLibrary)
 {
-  ignition::plugin::Loader pl;
+  gz::plugin::Loader pl;
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLib(IGNDummyPlugins_LIB);
+      pl.LoadLib(GzDummyPlugins_LIB);
   ASSERT_EQ(3u, pluginNames.size());
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
@@ -75,7 +75,7 @@ TEST(Loader, LoadExistingLibrary)
   EXPECT_EQ(1u, pl.InterfacesImplemented().count(
                     "test::util::DummySetterBase"));
   EXPECT_EQ(1u, pl.InterfacesImplemented().count(
-                    "ignition::plugin::EnablePluginFromThis"));
+                    "gz::plugin::EnablePluginFromThis"));
   EXPECT_EQ(1u, pl.InterfacesImplemented().count(
                     "test::util::DummyGetPluginInstancePtr"));
   EXPECT_EQ(1u, pl.InterfacesImplemented().count("test::util::DummyNameBase"));
@@ -95,7 +95,7 @@ TEST(Loader, LoadExistingLibrary)
   EXPECT_EQ(3u, pl.AllPlugins().size());
 
   // Check DummySinglePlugin.
-  ignition::plugin::PluginPtr firstPlugin =
+  gz::plugin::PluginPtr firstPlugin =
       pl.Instantiate("test::util::DummySinglePlugin");
   EXPECT_FALSE(firstPlugin.IsEmpty());
   EXPECT_TRUE(static_cast<bool>(firstPlugin));
@@ -115,7 +115,7 @@ TEST(Loader, LoadExistingLibrary)
   EXPECT_FALSE(firstPlugin->HasInterface("test::util::DummySetterBase"));
 
   // Check DummyMultiPlugin.
-  ignition::plugin::PluginPtr secondPlugin =
+  gz::plugin::PluginPtr secondPlugin =
       pl.Instantiate("test::util::DummyMultiPlugin");
   EXPECT_FALSE(secondPlugin.IsEmpty());
 
@@ -176,7 +176,7 @@ TEST(Loader, LoadExistingLibrary)
 class SomeInterface { };
 
 using SomeSpecializedPluginPtr =
-    ignition::plugin::SpecializedPluginPtr<
+    gz::plugin::SpecializedPluginPtr<
         SomeInterface,
         test::util::DummyIntBase,
         test::util::DummySetterBase>;
@@ -184,8 +184,8 @@ using SomeSpecializedPluginPtr =
 /////////////////////////////////////////////////
 TEST(SpecializedPluginPtr, Construction)
 {
-  ignition::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  gz::plugin::Loader pl;
+  pl.LoadLib(GzDummyPlugins_LIB);
 
   SomeSpecializedPluginPtr plugin(
       pl.Instantiate("test::util::DummyMultiPlugin"));
@@ -240,21 +240,21 @@ TEST(SpecializedPluginPtr, Construction)
 
 TEST(PluginPtr, Empty)
 {
-  ignition::plugin::PluginPtr empty;
+  gz::plugin::PluginPtr empty;
   EXPECT_TRUE(empty.IsEmpty());
   EXPECT_EQ(nullptr, empty->Name());
   EXPECT_FALSE(empty->HasInterface<SomeInterface>());
   EXPECT_FALSE(static_cast<bool>(empty));
   EXPECT_EQ(nullptr, empty->QueryInterfaceSharedPtr<SomeInterface>());
-  ignition::plugin::ConstPluginPtr constEmpty;
+  gz::plugin::ConstPluginPtr constEmpty;
   EXPECT_EQ(nullptr, constEmpty->QueryInterfaceSharedPtr<SomeInterface>());
 }
 
 /////////////////////////////////////////////////
 template <typename PluginPtrType1, typename PluginPtrType2>
 void TestSetAndMapUsage(
-    const ignition::plugin::Loader &loader,
-    const ignition::plugin::PluginPtr &plugin)
+    const gz::plugin::Loader &loader,
+    const gz::plugin::PluginPtr &plugin)
 {
   PluginPtrType1 plugin1 = plugin;
   PluginPtrType2 plugin2 = plugin1;
@@ -267,22 +267,22 @@ void TestSetAndMapUsage(
   EXPECT_TRUE(plugin2 == plugin1);
   EXPECT_FALSE(plugin2 != plugin1);
 
-  std::set<ignition::plugin::PluginPtr> orderedSet;
+  std::set<gz::plugin::PluginPtr> orderedSet;
   EXPECT_TRUE(orderedSet.insert(plugin1).second);
   EXPECT_FALSE(orderedSet.insert(plugin1).second);
   EXPECT_FALSE(orderedSet.insert(plugin2).second);
 
-  std::unordered_set<ignition::plugin::PluginPtr> unorderedSet;
+  std::unordered_set<gz::plugin::PluginPtr> unorderedSet;
   EXPECT_TRUE(unorderedSet.insert(plugin1).second);
   EXPECT_FALSE(unorderedSet.insert(plugin1).second);
   EXPECT_FALSE(unorderedSet.insert(plugin2).second);
 
-  std::map<ignition::plugin::PluginPtr, std::string> orderedMap;
+  std::map<gz::plugin::PluginPtr, std::string> orderedMap;
   EXPECT_TRUE(orderedMap.insert(std::make_pair(plugin1, "some string")).second);
   EXPECT_FALSE(orderedMap.insert(std::make_pair(plugin1, "a string")).second);
   EXPECT_FALSE(orderedMap.insert(std::make_pair(plugin2, "chars")).second);
 
-  std::unordered_map<ignition::plugin::PluginPtr, std::string> unorderedMap;
+  std::unordered_map<gz::plugin::PluginPtr, std::string> unorderedMap;
   EXPECT_TRUE(unorderedMap.insert(std::make_pair(plugin1, "strings")).second);
   EXPECT_FALSE(unorderedMap.insert(std::make_pair(plugin1, "letters")).second);
   EXPECT_FALSE(unorderedMap.insert(std::make_pair(plugin2, "")).second);
@@ -309,33 +309,33 @@ void TestSetAndMapUsage(
 
 /////////////////////////////////////////////////
 using EmptySpecializedPluginPtr =
-    ignition::plugin::SpecializedPluginPtr<>;
+    gz::plugin::SpecializedPluginPtr<>;
 
 using SingleSpecializedPluginPtr =
-    ignition::plugin::SpecializedPluginPtr<SomeInterface>;
+    gz::plugin::SpecializedPluginPtr<SomeInterface>;
 
 using AnotherSpecializedPluginPtr =
-    ignition::plugin::SpecializedPluginPtr<
+    gz::plugin::SpecializedPluginPtr<
         SomeInterface,
         test::util::DummyIntBase>;
 
 using DuplicatedInterfaceSpecializedPluginPtr =
-    ignition::plugin::SpecializedPluginPtr<
+    gz::plugin::SpecializedPluginPtr<
         SomeInterface, SomeInterface>;
 
 /////////////////////////////////////////////////
 TEST(PluginPtr, CopyMoveSemantics)
 {
-  ignition::plugin::PluginPtr plugin;
+  gz::plugin::PluginPtr plugin;
   EXPECT_TRUE(plugin.IsEmpty());
 
-  ignition::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  gz::plugin::Loader pl;
+  pl.LoadLib(GzDummyPlugins_LIB);
 
   plugin = pl.Instantiate("test::util::DummySinglePlugin");
   EXPECT_FALSE(plugin.IsEmpty());
 
-  ignition::plugin::PluginPtr otherPlugin =
+  gz::plugin::PluginPtr otherPlugin =
       pl.Instantiate("test::util::DummySinglePlugin");
   EXPECT_FALSE(otherPlugin.IsEmpty());
 
@@ -347,17 +347,17 @@ TEST(PluginPtr, CopyMoveSemantics)
   EXPECT_FALSE(plugin != otherPlugin);
 
   TestSetAndMapUsage<
-      ignition::plugin::PluginPtr,
-      ignition::plugin::PluginPtr>(
+      gz::plugin::PluginPtr,
+      gz::plugin::PluginPtr>(
         pl, plugin);
 
   TestSetAndMapUsage<
-      ignition::plugin::PluginPtr,
+      gz::plugin::PluginPtr,
       EmptySpecializedPluginPtr>(
         pl, plugin);
 
   TestSetAndMapUsage<
-      ignition::plugin::PluginPtr,
+      gz::plugin::PluginPtr,
       SomeSpecializedPluginPtr>(
         pl, plugin);
 
@@ -376,7 +376,7 @@ TEST(PluginPtr, CopyMoveSemantics)
       DuplicatedInterfaceSpecializedPluginPtr>(
         pl, plugin);
 
-  ignition::plugin::ConstPluginPtr c_plugin(plugin);
+  gz::plugin::ConstPluginPtr c_plugin(plugin);
   EXPECT_FALSE(c_plugin.IsEmpty());
   EXPECT_TRUE(c_plugin == plugin);
 
@@ -410,12 +410,12 @@ void CheckSomeValues(
 /////////////////////////////////////////////////
 TEST(PluginPtr, QueryInterfaceSharedPtr)
 {
-  ignition::plugin::Loader pl;
-  pl.LoadLib(IGNDummyPlugins_LIB);
+  gz::plugin::Loader pl;
+  pl.LoadLib(GzDummyPlugins_LIB);
 
   // QueryInterfaceSharedPtr without specialization
   {
-    ignition::plugin::PluginPtr plugin =
+    gz::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");
 
     std::shared_ptr<test::util::DummyIntBase> int_ptr =
@@ -424,7 +424,7 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
     EXPECT_EQ(5, int_ptr->MyIntegerValueIs());
 
     std::shared_ptr<const test::util::DummyIntBase> const_int_ptr =
-        ignition::plugin::ConstPluginPtr(plugin)
+        gz::plugin::ConstPluginPtr(plugin)
         ->QueryInterfaceSharedPtr<test::util::DummyIntBase>();
     EXPECT_TRUE(const_int_ptr.get());
     EXPECT_EQ(5, int_ptr->MyIntegerValueIs());
@@ -435,7 +435,7 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
     EXPECT_FALSE(some_ptr.get());
 
     std::shared_ptr<const SomeInterface> const_some_ptr =
-        ignition::plugin::ConstPluginPtr(plugin)
+        gz::plugin::ConstPluginPtr(plugin)
         ->QueryInterfaceSharedPtr<SomeInterface>();
     EXPECT_FALSE(const_some_ptr.get());
   }
@@ -481,9 +481,9 @@ TEST(PluginPtr, QueryInterfaceSharedPtr)
 }
 
 /////////////////////////////////////////////////
-ignition::plugin::PluginPtr GetSomePlugin(const std::string &path)
+gz::plugin::PluginPtr GetSomePlugin(const std::string &path)
 {
-  ignition::plugin::Loader pl;
+  gz::plugin::Loader pl;
   pl.LoadLib(path);
 
   return pl.Instantiate("test::util::DummyMultiPlugin");
@@ -492,11 +492,11 @@ ignition::plugin::PluginPtr GetSomePlugin(const std::string &path)
 /////////////////////////////////////////////////
 TEST(PluginPtr, LibraryManagement)
 {
-  const std::string &path = IGNDummyPlugins_LIB;
+  const std::string &path = GzDummyPlugins_LIB;
 
   // Use scoping to destroy somePlugin
   {
-    ignition::plugin::PluginPtr somePlugin = GetSomePlugin(path);
+    gz::plugin::PluginPtr somePlugin = GetSomePlugin(path);
     EXPECT_TRUE(somePlugin);
 
     CHECK_FOR_LIBRARY(path, true);
@@ -506,11 +506,11 @@ TEST(PluginPtr, LibraryManagement)
 
   // Test that we can transfer between plugins
   {
-    ignition::plugin::PluginPtr somePlugin;
+    gz::plugin::PluginPtr somePlugin;
     CHECK_FOR_LIBRARY(path, false);
 
     {
-      ignition::plugin::PluginPtr temporaryPlugin = GetSomePlugin(path);
+      gz::plugin::PluginPtr temporaryPlugin = GetSomePlugin(path);
       CHECK_FOR_LIBRARY(path, true);
       somePlugin = temporaryPlugin;
     }
@@ -522,7 +522,7 @@ TEST(PluginPtr, LibraryManagement)
 
   // Test that we can forget libraries
   {
-    ignition::plugin::Loader pl;
+    gz::plugin::Loader pl;
     pl.LoadLib(path);
 
     CHECK_FOR_LIBRARY(path, true);
@@ -535,9 +535,9 @@ TEST(PluginPtr, LibraryManagement)
   // Test that we can forget libraries, but the library will remain loaded if
   // a plugin instance is still using it.
   {
-    ignition::plugin::PluginPtr plugin;
+    gz::plugin::PluginPtr plugin;
 
-    ignition::plugin::Loader pl;
+    gz::plugin::Loader pl;
     pl.LoadLib(path);
 
     CHECK_FOR_LIBRARY(path, true);
@@ -555,7 +555,7 @@ TEST(PluginPtr, LibraryManagement)
 
   // Check that we can unload libraries based on plugin name
   {
-    ignition::plugin::Loader pl;
+    gz::plugin::Loader pl;
     pl.LoadLib(path);
 
     CHECK_FOR_LIBRARY(path, true);
@@ -588,13 +588,13 @@ TEST(PluginPtr, LibraryManagement)
 
   // Check that mulitple Loaders can work side-by-side
   {
-    ignition::plugin::Loader pl1;
+    gz::plugin::Loader pl1;
     pl1.LoadLib(path);
 
     CHECK_FOR_LIBRARY(path, true);
 
     {
-      ignition::plugin::Loader pl2;
+      gz::plugin::Loader pl2;
       pl2.LoadLib(path);
 
       CHECK_FOR_LIBRARY(path, true);
@@ -604,11 +604,4 @@ TEST(PluginPtr, LibraryManagement)
   }
 
   CHECK_FOR_LIBRARY(path, false);
-}
-
-/////////////////////////////////////////////////
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

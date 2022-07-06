@@ -17,18 +17,18 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/Loader.hh>
+#include <gz/plugin/Loader.hh>
 
 #include "../plugins/DummyPlugins.hh"
 
 /////////////////////////////////////////////////
 TEST(Alias, InspectAliases)
 {
-  ignition::plugin::Loader pl;
+  gz::plugin::Loader pl;
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLib(IGNDummyPlugins_LIB);
+      pl.LoadLib(GzDummyPlugins_LIB);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));
@@ -49,17 +49,17 @@ TEST(Alias, InspectAliases)
 /////////////////////////////////////////////////
 TEST(Alias, ConflictingAlias)
 {
-  ignition::plugin::Loader pl;
+  gz::plugin::Loader pl;
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
-      pl.LoadLib(IGNDummyPlugins_LIB);
+      pl.LoadLib(GzDummyPlugins_LIB);
   ASSERT_EQ(1u, pluginNames.count("test::util::DummySinglePlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyMultiPlugin"));
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));
 
   // This alias conflicts between DummySinglePlugin and DummyMultiPlugin
-  ignition::plugin::PluginPtr attempt = pl.Instantiate("Bar");
+  gz::plugin::PluginPtr attempt = pl.Instantiate("Bar");
   EXPECT_TRUE(attempt.IsEmpty());
 
   // This alias conflicts between DummySinglePlugin and DummyMultiPlugin
@@ -84,12 +84,4 @@ TEST(Alias, ConflictingAlias)
 
   attempt = pl.Instantiate("not a plugin");
   EXPECT_TRUE(attempt.IsEmpty());
-}
-
-
-/////////////////////////////////////////////////
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

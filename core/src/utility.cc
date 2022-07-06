@@ -25,9 +25,9 @@
 #include <cxxabi.h>
 #endif
 
-#include <ignition/plugin/utility.hh>
+#include <gz/plugin/utility.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

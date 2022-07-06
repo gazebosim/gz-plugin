@@ -15,11 +15,11 @@
  *
 */
 
-#include "ignition/plugin/PluginPtr.hh"
+#include "gz/plugin/PluginPtr.hh"
 
 int main()
 {
-  ignition::plugin::ConstPluginPtr const_ptr;
-  ignition::plugin::PluginPtr ptr;
+  gz::plugin::ConstPluginPtr const_ptr;
+  gz::plugin::PluginPtr ptr;
   ptr = const_ptr;
 }

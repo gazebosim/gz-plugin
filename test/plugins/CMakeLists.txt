@@ -1,26 +1,26 @@
-add_library(IGNBadPluginAlign         SHARED BadPluginAlign.cc)
-add_library(IGNBadPluginAPIVersionNew SHARED BadPluginAPIVersionNew.cc)
-add_library(IGNBadPluginAPIVersionOld SHARED BadPluginAPIVersionOld.cc)
-add_library(IGNBadPluginNoInfo        SHARED BadPluginNoInfo.cc)
-add_library(IGNBadPluginSize          SHARED BadPluginSize.cc)
-add_library(IGNFactoryPlugins         SHARED FactoryPlugins.cc)
-add_library(IGNTemplatedPlugins       SHARED TemplatedPlugins.cc)
+add_library(GzBadPluginAlign         SHARED BadPluginAlign.cc)
+add_library(GzBadPluginAPIVersionNew SHARED BadPluginAPIVersionNew.cc)
+add_library(GzBadPluginAPIVersionOld SHARED BadPluginAPIVersionOld.cc)
+add_library(GzBadPluginNoInfo        SHARED BadPluginNoInfo.cc)
+add_library(GzBadPluginSize          SHARED BadPluginSize.cc)
+add_library(GzFactoryPlugins         SHARED FactoryPlugins.cc)
+add_library(GzTemplatedPlugins       SHARED TemplatedPlugins.cc)
 
-add_library(IGNDummyPlugins SHARED
+add_library(GzDummyPlugins SHARED
   DummyPlugins.cc
   DummyPluginsOtherTranslationUnit.cc)
 
 # Create a variable for the name of the header which will contain the dummy plugin path.
 # This variable gets put in the cache so that it is available at generation time.
 foreach(plugin_target
-    IGNBadPluginAlign
-    IGNBadPluginAPIVersionNew
-    IGNBadPluginAPIVersionOld
-    IGNBadPluginNoInfo
-    IGNBadPluginSize
-    IGNDummyPlugins
-    IGNFactoryPlugins
-    IGNTemplatedPlugins)
+    GzBadPluginAlign
+    GzBadPluginAPIVersionNew
+    GzBadPluginAPIVersionOld
+    GzBadPluginNoInfo
+    GzBadPluginSize
+    GzDummyPlugins
+    GzFactoryPlugins
+    GzTemplatedPlugins)
 
   target_link_libraries(${plugin_target} PRIVATE
     ${PROJECT_LIBRARY_TARGET_NAME}-register)

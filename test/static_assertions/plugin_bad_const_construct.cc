@@ -15,9 +15,9 @@
  *
 */
 
-#include "ignition/plugin/PluginPtr.hh"
+#include "gz/plugin/PluginPtr.hh"
 
 int main()
 {
-  ignition::plugin::PluginPtr ptr{ignition::plugin::ConstPluginPtr()};
+  gz::plugin::PluginPtr ptr{gz::plugin::ConstPluginPtr()};
 }

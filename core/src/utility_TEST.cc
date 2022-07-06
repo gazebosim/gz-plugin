@@ -17,9 +17,9 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/utility.hh>
+#include <gz/plugin/utility.hh>
 
-using namespace ignition::plugin;
+using namespace gz::plugin;
 
 struct SomeType { };
 
@@ -79,11 +79,4 @@ TEST(Demangle, FakeSymbol)
   // If NDEBUG is not defined, we expect an assertion to be triggered, so we
   // will skip this test.
 #endif
-}
-
-/////////////////////////////////////////////////
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

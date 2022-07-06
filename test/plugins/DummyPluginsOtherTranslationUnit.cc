@@ -15,17 +15,17 @@
  *
 */
 
-#include <ignition/plugin/RegisterMore.hh>
+#include <gz/plugin/RegisterMore.hh>
 #include "DummyPlugins.hh"
 #include "DummyMultiPlugin.hh"
 
-// We use this file to test that the IGNITION_ADD_PLUGIN macro can be used in
+// We use this file to test that the GZ_ADD_PLUGIN macro can be used in
 // multiple translation units for the same plugin without any issues.
 
 // This also tests that we can add multiple interfaces for a plugin with one
 // macro call.
 
-IGNITION_ADD_PLUGIN(test::util::DummyMultiPlugin,
+GZ_ADD_PLUGIN(test::util::DummyMultiPlugin,
                     test::util::DummyDoubleBase,
                     test::util::DummyIntBase,
                     test::util::DummySetterBase)

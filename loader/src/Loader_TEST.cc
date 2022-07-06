@@ -19,22 +19,22 @@
 
 #include <algorithm>
 
-#include <ignition/plugin/Loader.hh>
-#include <ignition/plugin/config.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/plugin/config.hh>
 
-#include <ignition/plugin/SpecializedPluginPtr.hh>
+#include <gz/plugin/SpecializedPluginPtr.hh>
 
 /////////////////////////////////////////////////
 TEST(Loader, InitialNoInterfacesImplemented)
 {
-  ignition::plugin::Loader loader;
+  gz::plugin::Loader loader;
   EXPECT_EQ(0u, loader.InterfacesImplemented().size());
 }
 
 /////////////////////////////////////////////////
 TEST(Loader, LoadNonexistantLibrary)
 {
-  ignition::plugin::Loader loader;
+  gz::plugin::Loader loader;
   EXPECT_TRUE(loader.LoadLib("/path/to/libDoesNotExist.so").empty());
   EXPECT_FALSE(loader.ForgetLibrary("/path/to/libDoesNotExist.so"));
 }
@@ -42,23 +42,23 @@ TEST(Loader, LoadNonexistantLibrary)
 /////////////////////////////////////////////////
 TEST(Loader, LoadNonLibrary)
 {
-  ignition::plugin::Loader loader;
-  EXPECT_TRUE(loader.LoadLib(std::string(IGN_PLUGIN_SOURCE_DIR)
+  gz::plugin::Loader loader;
+  EXPECT_TRUE(loader.LoadLib(std::string(GZ_PLUGIN_SOURCE_DIR)
                              + "/core/src/Plugin.cc").empty());
 }
 
 /////////////////////////////////////////////////
 TEST(Loader, LoadNonPluginLibrary)
 {
-  ignition::plugin::Loader loader;
-  EXPECT_TRUE(loader.LoadLib(IGN_PLUGIN_LIB).empty());
+  gz::plugin::Loader loader;
+  EXPECT_TRUE(loader.LoadLib(GZ_PLUGIN_LIB).empty());
 }
 
 /////////////////////////////////////////////////
 TEST(Loader, InstantiateUnloadedPlugin)
 {
-  ignition::plugin::Loader loader;
-  ignition::plugin::PluginPtr plugin =
+  gz::plugin::Loader loader;
+  gz::plugin::PluginPtr plugin =
       loader.Instantiate("plugin::that::is::not::loaded");
   EXPECT_FALSE(plugin);
   EXPECT_FALSE(loader.ForgetLibraryOfPlugin("plugin::that::is::not::loaded"));
@@ -69,11 +69,11 @@ class SomeInterface { };
 /////////////////////////////////////////////////
 TEST(Loader, InstantiateSpecializedPlugin)
 {
-  ignition::plugin::Loader loader;
+  gz::plugin::Loader loader;
 
   // This makes sure that Loader::Instantiate can compile
   auto plugin = loader.Instantiate<
-      ignition::plugin::SpecializedPluginPtr<SomeInterface> >("fake::plugin");
+      gz::plugin::SpecializedPluginPtr<SomeInterface> >("fake::plugin");
   EXPECT_FALSE(plugin);
 }
 
@@ -82,13 +82,13 @@ TEST(Loader, DoubleLoad)
 {
   // We do this test for code coverage, to test the lines of code that get run
   // when a user asks for a library to be loaded twice.
-  ignition::plugin::Loader loader;
+  gz::plugin::Loader loader;
 
-  loader.LoadLib(IGNDummyPlugins_LIB);
+  loader.LoadLib(GzDummyPlugins_LIB);
   const std::size_t interfaceCount = loader.InterfacesImplemented().size();
   EXPECT_LT(0u, interfaceCount);
 
-  loader.LoadLib(IGNDummyPlugins_LIB);
+  loader.LoadLib(GzDummyPlugins_LIB);
   EXPECT_EQ(interfaceCount, loader.InterfacesImplemented().size());
 }
 
@@ -100,21 +100,14 @@ TEST(Loader, ForgetUnloadedLibrary)
   // This first test triggers lines for the case that:
   //   1. A library is not loaded, and
   //   2. We tell a loader to forget the library
-  ignition::plugin::Loader loader;
-  EXPECT_FALSE(loader.ForgetLibrary(IGNDummyPlugins_LIB));
+  gz::plugin::Loader loader;
+  EXPECT_FALSE(loader.ForgetLibrary(GzDummyPlugins_LIB));
 
   // This next test triggers lines for the case that:
   //   1. A library is loaded by some loader in the application, and
   //   2. We tell a *different* loader to forget the library
-  ignition::plugin::Loader hasTheLibrary;
-  EXPECT_LT(0u, hasTheLibrary.LoadLib(IGNDummyPlugins_LIB).size());
+  gz::plugin::Loader hasTheLibrary;
+  EXPECT_LT(0u, hasTheLibrary.LoadLib(GzDummyPlugins_LIB).size());
 
-  EXPECT_FALSE(loader.ForgetLibrary(IGNDummyPlugins_LIB));
-}
-
-/////////////////////////////////////////////////
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  EXPECT_FALSE(loader.ForgetLibrary(GzDummyPlugins_LIB));
 }

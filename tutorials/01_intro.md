@@ -2,7 +2,7 @@
 
 Next Tutorial: \ref installation
 
-Ignition Plugin is a component in Ignition Robotics, a set of libraries
+Gazebo Plugin is a component in Gazebo, a set of libraries
 designed to rapidly develop robot and simulation applications. The main
 goal of the library is to simplify the process of registering plugin
 libraries and dynamically loading them at runtime. It is based on the
@@ -30,7 +30,6 @@ A plugin can be registered anywhere from within any translation unit.
 Interfaces can be queried by their C++ type, or they can be queried by
 name with a string.
 
-The [Ignition Physics](https://ignitionrobotics.org/libs/physics) Feature
+The [Gazebo Physics](https://gazebosim.org/libs/physics) Feature
 system provides a good example of the use of these unique aspects of
-ignition-plugin.
-
+gz-plugin.

@@ -17,7 +17,7 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/Info.hh>
+#include <gz/plugin/Info.hh>
 
 struct SomeInterface
 {
@@ -29,7 +29,7 @@ struct SomePlugin : public SomeInterface
 
 TEST(Info, Clear)
 {
-  ignition::plugin::Info info;
+  gz::plugin::Info info;
   info.name = typeid(SomePlugin).name();
 
   info.factory = [=]()
@@ -74,10 +74,4 @@ TEST(Info, Clear)
   EXPECT_TRUE(info.demangledInterfaces.empty());
   EXPECT_FALSE(static_cast<bool>(info.factory));
   EXPECT_FALSE(static_cast<bool>(info.deleter));
-}
-
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

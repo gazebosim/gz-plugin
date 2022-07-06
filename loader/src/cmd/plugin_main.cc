@@ -14,10 +14,10 @@
  * limitations under the License.
  *
  */
-#include <ignition/utils/cli/CLI.hpp>
-#include <ignition/utils/cli/IgnitionFormatter.hpp>
+#include <gz/utils/cli/CLI.hpp>
+#include <gz/utils/cli/IgnitionFormatter.hpp>
 
-#include "ign.hh"
+#include "gz.hh"
 
 //////////////////////////////////////////////////
 /// \brief Enumeration of available commands
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
   CLI::App app{"Print information about plugins.\n"};
 
   app.add_flag_callback("--version", [](){
-      std::cout << ignitionVersion() << std::endl;
+      std::cout << gzVersion() << std::endl;
       throw CLI::Success();
   }, "Print version number");
 

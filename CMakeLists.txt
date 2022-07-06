@@ -3,25 +3,27 @@ cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 #============================================================================
 # Initialize the project
 #============================================================================
-project(ignition-plugin2 VERSION 2.0.0)
+project(gz-plugin2 VERSION 2.0.0)
 
 #============================================================================
-# Find ignition-cmake
+# Find gz-cmake
 #============================================================================
-find_package(ignition-cmake2 2.8.0 REQUIRED)
-set(IGN_CMAKE_VER ${ignition-cmake2_VERSION_MAJOR})
+find_package(gz-cmake3 REQUIRED)
+set(GZ_CMAKE_VER ${gz-cmake3_VERSION_MAJOR})
 
 #============================================================================
 # Configure the project
 #============================================================================
-ign_configure_project(VERSION_SUFFIX pre0)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+gz_configure_project(
+  REPLACE_IGNITION_INCLUDE_PATH gz/plugin
+  VERSION_SUFFIX pre0)
 
 #============================================================================
 # Set project-specific options
 #============================================================================
-
-# No project-specific options yet for ign-plugin
 
 #============================================================================
 # Search for project-specific dependencies
@@ -30,34 +32,33 @@ message(STATUS "\n\n-- ====== Finding Dependencies ======")
 
 #--------------------------------------
 # Find libdl
-ign_find_package(DL
+gz_find_package(DL
   REQUIRED_BY loader
   PRIVATE_FOR loader
   PRETTY libdl PURPOSE "Required for loading plugins")
 
 
 #--------------------------------------
-# Find ignition-tools
-find_program(IGN_TOOLS_PROGRAM ign)
+# Find gz-tools
+find_program(GZ_TOOLS_PROGRAM gz)
 
 
 #--------------------------------------
-# Find ignition-utils
-ign_find_package(ignition-utils1 REQUIRED COMPONENTS cli VERSION 1.4)
-set(IGN_UTILS_VER ${ignition-utils1_VERSION_MAJOR})
-
+# Find gz-utils
+gz_find_package(gz-utils2 REQUIRED COMPONENTS cli)
+set(GZ_UTILS_VER ${gz-utils2_VERSION_MAJOR})
 
 #============================================================================
 # Configure the build
 #============================================================================
-ign_configure_build(QUIT_IF_BUILD_ERRORS
+gz_configure_build(QUIT_IF_BUILD_ERRORS
   COMPONENTS loader register)
 
 
 #============================================================================
 # Create package information
 #============================================================================
-ign_create_packages()
+gz_create_packages()
 
 #============================================================================
 # Configure documentation
@@ -65,7 +66,7 @@ ign_create_packages()
 configure_file(${CMAKE_SOURCE_DIR}/api.md.in ${CMAKE_BINARY_DIR}/api.md)
 configure_file(${CMAKE_SOURCE_DIR}/tutorials.md.in ${CMAKE_BINARY_DIR}/tutorials.md)
 
-ign_create_docs(
+gz_create_docs(
   API_MAINPAGE_MD "${CMAKE_BINARY_DIR}/api.md"
   TUTORIALS_MAINPAGE_MD "${CMAKE_BINARY_DIR}/tutorials.md"
   )

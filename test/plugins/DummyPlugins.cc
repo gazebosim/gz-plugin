@@ -15,7 +15,7 @@
  *
 */
 
-#include "ignition/plugin/Register.hh"
+#include "gz/plugin/Register.hh"
 #include "DummyPlugins.hh"
 #include "DummyMultiPlugin.hh"
 
@@ -39,7 +39,7 @@ class DummyNoAliasPlugin : public DummyNameBase
     return std::string("DummyNoAliasPlugin");
   }
 };
-IGNITION_ADD_PLUGIN(DummyNoAliasPlugin, DummyNameBase)
+GZ_ADD_PLUGIN(DummyNoAliasPlugin, DummyNameBase)
 
 std::string DummyMultiPlugin::MyNameIs() const
 {
@@ -90,7 +90,7 @@ DummyMultiPlugin::DummyMultiPlugin()
 }
 
 // Show that we can add plugins from within a namespace
-IGNITION_ADD_PLUGIN(
+GZ_ADD_PLUGIN(
     DummyMultiPlugin,
     DummyGetObjectBase,
     DummyGetPluginInstancePtr)
@@ -98,9 +98,9 @@ IGNITION_ADD_PLUGIN(
 }
 }
 
-IGNITION_ADD_PLUGIN(test::util::DummySinglePlugin, test::util::DummyNameBase)
-IGNITION_ADD_PLUGIN_ALIAS(test::util::DummySinglePlugin, "Alternative name")
-IGNITION_ADD_PLUGIN_ALIAS(test::util::DummySinglePlugin, "Bar", "Baz")
+GZ_ADD_PLUGIN(test::util::DummySinglePlugin, test::util::DummyNameBase)
+GZ_ADD_PLUGIN_ALIAS(test::util::DummySinglePlugin, "Alternative name")
+GZ_ADD_PLUGIN_ALIAS(test::util::DummySinglePlugin, "Bar", "Baz")
 
-IGNITION_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyNameBase)
-IGNITION_ADD_PLUGIN_ALIAS(test::util::DummyMultiPlugin, "Foo", "Bar", "Baz")
+GZ_ADD_PLUGIN(test::util::DummyMultiPlugin, test::util::DummyNameBase)
+GZ_ADD_PLUGIN_ALIAS(test::util::DummyMultiPlugin, "Foo", "Bar", "Baz")

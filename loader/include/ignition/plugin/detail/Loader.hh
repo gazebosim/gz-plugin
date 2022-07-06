@@ -15,52 +15,5 @@
  *
  */
 
-
-#ifndef IGNITION_PLUGIN_DETAIL_LOADER_HH_
-#define IGNITION_PLUGIN_DETAIL_LOADER_HH_
-
-#include <memory>
-#include <string>
-#include <unordered_set>
-#include <ignition/plugin/EnablePluginFromThis.hh>
-#include <ignition/plugin/Loader.hh>
-
-namespace ignition
-{
-  namespace plugin
-  {
-    template <typename Interface>
-    std::unordered_set<std::string> Loader::PluginsImplementing() const
-    {
-      return this->PluginsImplementing(typeid(Interface).name(), false);
-    }
-
-    template <typename PluginPtrType>
-    PluginPtrType Loader::Instantiate(
-        const std::string &_pluginNameOrAlias) const
-    {
-      const std::string &resolvedName = this->LookupPlugin(_pluginNameOrAlias);
-      if (resolvedName.empty())
-        return PluginPtr();
-
-       PluginPtrType ptr(this->PrivateGetInfo(resolvedName),
-                         this->PrivateGetPluginDlHandlePtr(resolvedName));
-
-       if (auto *enableFromThis =
-              ptr->template QueryInterface<EnablePluginFromThis>())
-         enableFromThis->PrivateSetPluginFromThis(ptr);
-
-       return ptr;
-    }
-
-    template <typename InterfaceType>
-    std::shared_ptr<InterfaceType> Loader::Factory(
-        const std::string &_pluginNameOrAlias) const
-    {
-      return this->Instantiate(_pluginNameOrAlias)
-          ->template QueryInterfaceSharedPtr<InterfaceType>();
-    }
-  }
-}
-
-#endif
+#include <gz/plugin/detail/Loader.hh>
+#include <ignition/plugin/config.hh>

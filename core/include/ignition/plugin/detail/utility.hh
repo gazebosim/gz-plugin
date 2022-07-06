@@ -15,33 +15,5 @@
  *
  */
 
-
-#ifndef IGNITION_PLUGIN_DETAIL_UTILITY_HH_
-#define IGNITION_PLUGIN_DETAIL_UTILITY_HH_
-
-
-#include <type_traits>
-
-namespace ignition
-{
-  namespace plugin
-  {
-    namespace detail
-    {
-      //////////////////////////////////////////////////
-      template <typename To, typename From>
-      struct ConstCompatible : std::true_type
-      {
-      };
-
-      //////////////////////////////////////////////////
-      template <typename To, typename From>
-      struct ConstCompatible<To, const From>
-          : std::integral_constant<bool, std::is_const<To>::value>
-      {
-      };
-    }
-  }
-}
-
-#endif
+#include <gz/plugin/detail/utility.hh>
+#include <ignition/plugin/config.hh>

@@ -15,7 +15,7 @@
  *
 */
 
-#include <ignition/plugin/Register.hh>
+#include <gz/plugin/Register.hh>
 
 namespace ns
 {
@@ -38,4 +38,4 @@ class A : public Base
 
 }
 
-IGNITION_ADD_PLUGIN(ns::A, ns::WrongBase)
+GZ_ADD_PLUGIN(ns::A, ns::WrongBase)

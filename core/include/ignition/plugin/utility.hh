@@ -15,50 +15,5 @@
  *
  */
 
-
-#ifndef IGNITION_PLUGIN_UTILITY_HH_
-#define IGNITION_PLUGIN_UTILITY_HH_
-
-#include <string>
-
-#include <ignition/plugin/detail/utility.hh>
-#include <ignition/plugin/Export.hh>
-
-namespace ignition
-{
-  namespace plugin
-  {
-    /////////////////////////////////////////////////
-    /// \brief Contains a static constexpr field named `value` which will be
-    /// true if the type `From` has a const-quality less than or equal to the
-    /// type `To`.
-    ///
-    /// The following expressions will return true:
-    ///
-    /// \code
-    ///     ConstCompatible<T, T>::value
-    ///     ConstCompatible<const T, T>::value
-    /// \endcode
-    ///
-    /// The following expression will return false:
-    ///
-    /// \code
-    ///     ConstCompatible<T, const T>::value
-    /// \endcode
-    ///
-    template <typename To, typename From>
-    using ConstCompatible = detail::ConstCompatible<To, From>;
-
-
-    /////////////////////////////////////////////////
-    /// \brief Demangle the ABI typeinfo name of a symbol into a human-readable
-    /// version.
-    /// \param[in] _symbol
-    ///   Pass in the result of typeid(T).name()
-    /// \return The demangled (human-readable) version of the symbol name
-    std::string IGNITION_PLUGIN_VISIBLE DemangleSymbol(
-        const std::string &_symbol);
-  }
-}
-
-#endif
+#include <gz/plugin/utility.hh>
+#include <ignition/plugin/config.hh>

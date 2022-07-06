@@ -22,8 +22,8 @@
 #include <cmath>
 #include <set>
 
-#include <ignition/plugin/Loader.hh>
-#include <ignition/common/SystemPaths.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/common/SystemPaths.hh>
 
 #include "plugins/integrators.hh"
 
@@ -32,9 +32,9 @@
 namespace bpo = boost::program_options;
 #endif
 
-using NumericalIntegrator = ignition::plugin::examples::NumericalIntegrator;
-using ODESystem = ignition::plugin::examples::ODESystem;
-using ODESystemFactory = ignition::plugin::examples::ODESystemFactory;
+using NumericalIntegrator = gz::plugin::examples::NumericalIntegrator;
+using ODESystem = gz::plugin::examples::ODESystem;
+using ODESystemFactory = gz::plugin::examples::ODESystemFactory;
 
 // The macro that this uses is provided as a compile definition in the
 // examples/CMakeLists.txt file.
@@ -60,7 +60,7 @@ struct TestResult
 struct PluginHolder
 {
   std::string name;
-  ignition::plugin::PluginPtr plugin;
+  gz::plugin::PluginPtr plugin;
 };
 
 /// \brief Compute the component-wise percent error of the estimate produced by
@@ -88,7 +88,7 @@ TestResult TestIntegrator(
     const double _timeStep,
     const unsigned int _numSteps)
 {
-  const ignition::plugin::PluginPtr &plugin = _pluginHolder.plugin;
+  const gz::plugin::PluginPtr &plugin = _pluginHolder.plugin;
   NumericalIntegrator* integrator =
       plugin->QueryInterface<NumericalIntegrator>();
 
@@ -210,7 +210,7 @@ void TestPlugins(
 
 /// \brief Load all the plugins that implement _interface.
 std::vector<PluginHolder> LoadPlugins(
-    const ignition::plugin::Loader &_loader,
+    const gz::plugin::Loader &_loader,
     const std::string &_interface)
 {
   // Fill in the holders object with each plugin.
@@ -220,7 +220,7 @@ std::vector<PluginHolder> LoadPlugins(
 
   for (const std::string &name : pluginNames)
   {
-    ignition::plugin::PluginPtr plugin = _loader.Instantiate(name);
+    gz::plugin::PluginPtr plugin = _loader.Instantiate(name);
     if (!plugin)
     {
       std::cout << "Failed to load [" << name << "] as a class"
@@ -236,25 +236,25 @@ std::vector<PluginHolder> LoadPlugins(
 
 /// \brief Load all plugins that implement the NumericalIntegrator interface.
 std::vector<PluginHolder> LoadIntegratorPlugins(
-    const ignition::plugin::Loader &_loader)
+    const gz::plugin::Loader &_loader)
 {
   return LoadPlugins(
-        _loader, "ignition::plugin::examples::NumericalIntegrator");
+        _loader, "gz::plugin::examples::NumericalIntegrator");
 }
 
 /// \brief Load all plugins that implement the ODESystemFactory interface
 std::vector<PluginHolder> LoadSystemFactoryPlugins(
-    const ignition::plugin::Loader &_loader)
+    const gz::plugin::Loader &_loader)
 {
   return LoadPlugins(
-        _loader, "ignition::plugin::examples::ODESystemFactory");
+        _loader, "gz::plugin::examples::ODESystemFactory");
 }
 
 /// \brief Prime the plugin loader with the paths and library names that it
 /// should try to get plugins from.
 void PrimeTheLoader(
-    ignition::common::SystemPaths &_paths, /* TODO: This should be const */
-    ignition::plugin::Loader &_loader,
+    gz::common::SystemPaths &_paths, /* TODO: This should be const */
+    gz::plugin::Loader &_loader,
     const std::set<std::string> &_pluginNames)
 {
   for (const std::string &name : _pluginNames)
@@ -284,10 +284,10 @@ void PrimeTheLoader(
 int main(int argc, char *argv[])
 {
   // Create an object that can search the system paths for the plugin libraries.
-  ignition::common::SystemPaths paths;
+  gz::common::SystemPaths paths;
 
   // Create a plugin loader
-  ignition::plugin::Loader loader;
+  gz::plugin::Loader loader;
 
   // Add the build directory path for the plugin libraries so the SystemPaths
   // object will know to search through it.
@@ -311,7 +311,7 @@ int main(int argc, char *argv[])
       "\nNumerical integrator plugins must inherit the NumericalIntegrator \n"
       "interface, and differential equation plugins must inherit the \n"
       "ODESystemFactory interface. Both interfaces can be found in the header\n"
-      "ign-plugin/examples/plugins/Interfaces.hh.\n\n"
+      "gz-plugin/examples/plugins/Interfaces.hh.\n\n"
 
       "Custom plugins can be used by passing in the custom plugin library\n"
       "directory to the -I flag, and the library name(s) to the -p flag,\n"

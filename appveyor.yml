@@ -11,8 +11,8 @@ environment:
 install:
   - vcpkg install dlfcn-win32
   # ign-cmake
-  - git clone https://github.com/ignitionrobotics/ign-cmake -b gz11
-  - cd ign-cmake
+  - git clone https://github.com/gazebosim/gz-cmake -b gz11
+  - cd gz-cmake
   - md build
   - cd build
   - cmake .. -DBUILD_TESTING=OFF

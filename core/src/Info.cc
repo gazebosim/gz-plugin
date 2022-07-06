@@ -15,9 +15,9 @@
  *
  */
 
-#include <ignition/plugin/Info.hh>
+#include <gz/plugin/Info.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

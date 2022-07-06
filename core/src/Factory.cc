@@ -20,7 +20,7 @@
 #include <thread>
 #include <vector>
 
-#include <ignition/plugin/Factory.hh>
+#include <gz/plugin/Factory.hh>
 
 namespace
 {
@@ -51,7 +51,7 @@ namespace
   static LostProductManager lostProductManager;
 }  // namespace
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

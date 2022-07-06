@@ -15,7 +15,7 @@
  *
 */
 
-#include <ignition/plugin/Register.hh>
+#include <gz/plugin/Register.hh>
 
 class A
 {
@@ -28,4 +28,4 @@ class NotBase
   int test3;
 };
 
-IGNITION_ADD_PLUGIN(A, NotBase)
+GZ_ADD_PLUGIN(A, NotBase)
