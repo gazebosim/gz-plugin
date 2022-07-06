@@ -15,7 +15,7 @@
  *
  */
 #include <gz/utils/cli/CLI.hpp>
-#include <gz/utils/cli/IgnitionFormatter.hpp>
+#include <gz/utils/cli/GzFormatter.hpp>
 
 #include "gz.hh"
 
