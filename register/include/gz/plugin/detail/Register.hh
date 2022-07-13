@@ -32,21 +32,21 @@
 #include <gz/plugin/utility.hh>
 
 
-#ifdef DETAIL_GZ_PLUGIN_VISIBLE
-  #undef DETAIL_GZ_PLUGIN_VISIBLE
+#ifdef DETAIL_IGNITION_PLUGIN_VISIBLE
+  #undef DETAIL_IGNITION_PLUGIN_VISIBLE
 #endif
 
 #if defined _WIN32 || defined __CYGWIN__
   #ifdef __GNUC__
-    #define DETAIL_GZ_PLUGIN_VISIBLE __attribute__ ((dllexport))
+    #define DETAIL_IGNITION_PLUGIN_VISIBLE __attribute__ ((dllexport))
   #else
-    #define DETAIL_GZ_PLUGIN_VISIBLE __declspec(dllexport)
+    #define DETAIL_IGNITION_PLUGIN_VISIBLE __declspec(dllexport)
   #endif
 #else
   #if __GNUC__ >= 4
-    #define DETAIL_GZ_PLUGIN_VISIBLE __attribute__ ((visibility ("default")))
+    #define DETAIL_IGNITION_PLUGIN_VISIBLE __attribute__ ((visibility ("default")))
   #else
-    #define DETAIL_GZ_PLUGIN_VISIBLE
+    #define DETAIL_IGNITION_PLUGIN_VISIBLE
   #endif
 #endif
 
@@ -59,7 +59,7 @@ extern "C"
   /// retrieve Info from a shared library that provides plugins.
   ///
   /// The symbol is explicitly exported (visibility is turned on) using
-  /// DETAIL_GZ_PLUGIN_VISIBLE to ensure that dlsym(~) is able to find it.
+  /// DETAIL_IGNITION_PLUGIN_VISIBLE to ensure that dlsym(~) is able to find it.
   ///
   /// DO NOT CALL THIS FUNCTION DIRECTLY OR CREATE YOUR OWN IMPLEMENTATION OF IT
   /// This function is used by the Registrar and Loader classes. Nothing else
@@ -73,7 +73,7 @@ extern "C"
   /// \param[out] _outputAllInfo
   ///   Loader will pass in a pointer to a pointer of an InfoMap pertaining to
   ///   the highest API version that it knows of. If this GzPluginHook was
-  ///   built against a version of ign-plugin that provides an equal or greater
+  ///   built against a version of gz-plugin that provides an equal or greater
   ///   API version, then GzPluginHook will modify *_outputAllInfo to
   ///   point at its internal &InfoMap that corresponds to the requested API
   ///   version, which is identified by _inputAndOutputAPIVersion.
@@ -104,7 +104,7 @@ extern "C"
   ///   Similar to _inputAndOutputInfoSize, this is used for sanity checking. It
   ///   inspects and returns the alignof(Info) value instead of the sizeof(Info)
   ///   value.
-  DETAIL_GZ_PLUGIN_VISIBLE void GzPluginHook(
+  DETAIL_IGNITION_PLUGIN_VISIBLE void GzPluginHook(
       const void *_inputSingleInfo,
       const void ** const _outputAllInfo,
       int *_inputAndOutputAPIVersion,

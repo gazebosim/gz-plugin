@@ -16,7 +16,7 @@ Windows 7     | [![Build Status](https://build.osrfoundation.org/job/ignition_pl
 
 ** Library for registering plugin libraries and dynamically loading them at runtime.**
 
-Gazebo Plugin is a component in the ignition framework, a set
+Gazebo Plugin is a component in the Gazebo framework, a set
 of libraries designed to rapidly develop robot applications.
 
 [http://gazebosim.org](http://gazebosim.org)
