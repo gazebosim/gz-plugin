@@ -17,9 +17,7 @@ set(GZ_CMAKE_VER ${gz-cmake3_VERSION_MAJOR})
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-gz_configure_project(
-  REPLACE_IGNITION_INCLUDE_PATH gz/plugin
-  VERSION_SUFFIX pre0)
+gz_configure_project(VERSION_SUFFIX pre1)
 
 #============================================================================
 # Set project-specific options
