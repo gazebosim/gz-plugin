@@ -51,11 +51,11 @@ The name of the header for registering plugins has changed:
 The old `gz-common` plugin registration method had numerous macros for registering
 plugins. Those have all been replaced with `GZ_ADD_PLUGIN`. Specifically:
 
-* `IGNITION_COMMON_REGISTER_SINGLE_MACRO` can be directly replaced with `GZ_ADD_PLUGIN`.
-* `IGNITION_COMMON_ADD_PLUGIN` can be directly replaced with `GZ_ADD_PLUGIN`.
-* All uses of `IGNITION_COMMON_BEGIN_ADDING_PLUGINS` can simply be removed.
-* All uses of `IGNITION_COMMON_FINISH_ADDING_PLUGINS` can simply be removed.
-* All uses of `IGNITION_COMMON_SPECIALIZE_INTERFACE` can simply be removed. Interfaces no longer need to be "specialized" in order to have specialized plugins.
+* `IGN_COMMON_REGISTER_SINGLE_MACRO` can be directly replaced with `GZ_ADD_PLUGIN`.
+* `IGN_COMMON_ADD_PLUGIN` can be directly replaced with `GZ_ADD_PLUGIN`.
+* All uses of `IGN_COMMON_BEGIN_ADDING_PLUGINS` can simply be removed.
+* All uses of `IGN_COMMON_FINISH_ADDING_PLUGINS` can simply be removed.
+* All uses of `IGN_COMMON_SPECIALIZE_INTERFACE` can simply be removed. Interfaces no longer need to be "specialized" in order to have specialized plugins.
 
 You can also register multiple interfaces with a single call to `GZ_ADD_PLUGIN`, e.g.:
 

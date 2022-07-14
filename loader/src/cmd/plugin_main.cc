@@ -89,6 +89,6 @@ int main(int argc, char** argv)
 
   addPluginFlags(app);
 
-  app.formatter(std::make_shared<IgnitionFormatter>(&app));
+  app.formatter(std::make_shared<GzFormatter>(&app));
   CLI11_PARSE(app, argc, argv);
 }
