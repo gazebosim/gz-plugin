@@ -11,7 +11,7 @@ Build | Status
 -- | --
 Test coverage | [![codecov](https://codecov.io/gh/gazebosim/gz-plugin/branch/ign-plugin1/graph/badge.svg)](https://codecov.io/gh/gazebosim/gz-plugin/branch/ign-plugin1)
 Ubuntu Focal | [![Build Status](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-focal-amd64/badge/icon)](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-focal-amd64/)
-Homebrew      | [![Build Status](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-bionic-amd64/badge/icon)](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-bionic-amd64/)
+Homebrew      | [![Build Status](https://build.osrfoundation.org/buildStatus/icon?job=ignition_plugin-ci-ign-plugin1-homebrew-amd64)](https://build.osrfoundation.org/job/ignition_plugin-ci-ign-plugin1-homebrew-amd64)
 Windows       | [![Build Status](https://build.osrfoundation.org/buildStatus/icon?job=ign_plugin-ign-1-win)](https://build.osrfoundation.org/job/ign_plugin-ign-1-win/)
 
 **Library for registering plugin libraries and dynamically loading them at runtime.**
