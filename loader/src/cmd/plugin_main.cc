@@ -72,7 +72,7 @@ void addPluginFlags(CLI::App &_app)
        opt->command = PluginCommand::kPluginInfo;
      }, "Get info about a plugin.")->needs(plugin);
 
-  _app.callback([&_app, opt](){
+  _app.callback([opt](){
     runPluginCommand(*opt);
   });
 }
