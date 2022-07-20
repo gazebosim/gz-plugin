@@ -29,7 +29,7 @@
 #include <gz/plugin/Info.hh>
 #include <gz/plugin/Loader.hh>
 #include <gz/plugin/Plugin.hh>
-
+#include <gz/plugin/detail/Registry.hh>
 #include <gz/plugin/utility.hh>
 
 namespace gz
@@ -60,19 +60,6 @@ namespace gz
       /// \sa Loader::ForgetLibrary()
       public: bool ForgetLibrary(void *_dlHandle);
 
-      /// \brief Pass in a plugin name or alias, and this will give back the
-      /// plugin name that corresponds to it. If the name or alias could not be
-      /// found, this returns an empty string.
-      /// \return The demangled symbol name of the desired plugin, or an empty
-      /// string if no matching plugin could be found.
-      public: std::string LookupPlugin(const std::string &_nameOrAlias) const;
-
-      public: using AliasMap = std::map<std::string, std::set<std::string>>;
-      /// \brief A map from known alias names to the plugin names that they
-      /// correspond to. Since an alias might refer to more than one plugin, the
-      /// key of this map is a set.
-      public: AliasMap aliases;
-
       public: using PluginToDlHandleMap =
           std::unordered_map< std::string, std::shared_ptr<void> >;
       /// \brief A map from known plugin names to the handle of the library that
@@ -90,16 +77,13 @@ namespace gz
       /// maintain the ordering of these member variables.
       public: PluginToDlHandleMap pluginToDlHandlePtrs;
 
-      public: using PluginMap = std::unordered_map<std::string, ConstInfoPtr>;
-      /// \brief A map from known plugin names to their Info
-      ///
-      /// CRUCIAL DEV NOTE (MXG): `plugins` MUST come AFTER
+      /// CRUCIAL DEV NOTE (MXG): `filePlugins` MUST come AFTER
       /// `pluginToDlHandlePtrs` in this class definition. See the comment on
       /// pluginToDlHandlePtrs for an explanation.
       ///
       /// If you change this class definition for ANY reason, be sure to
       /// maintain the ordering of these member variables.
-      public: PluginMap plugins;
+      public: Registry filePlugins;
 
       using DlHandleMap = std::unordered_map< void*, std::weak_ptr<void> >;
       /// \brief A map which keeps track of which shared libraries have been
@@ -127,65 +111,7 @@ namespace gz
     /////////////////////////////////////////////////
     std::string Loader::PrettyStr() const
     {
-      auto interfaces = this->InterfacesImplemented();
-      std::stringstream pretty;
-      pretty << "Loader State" << std::endl;
-      pretty << "\tKnown Interfaces: " << interfaces.size() << std::endl;
-      for (auto const &interface : interfaces)
-        pretty << "\t\t" << interface << std::endl;
-
-      pretty << "\tKnown Plugins: " << dataPtr->plugins.size() << std::endl;
-      for (const auto &pair : dataPtr->plugins)
-      {
-        const ConstInfoPtr &plugin = pair.second;
-        const std::size_t aSize = plugin->aliases.size();
-
-        pretty << "\t\t[" << plugin->name << "]\n";
-        if (0 < aSize)
-        {
-          pretty << "\t\t\thas "
-                 << aSize << (aSize == 1? " alias" : " aliases") << ":\n";
-          for (const auto &alias : plugin->aliases)
-            pretty << "\t\t\t\t[" << alias << "]\n";
-        }
-        else
-        {
-          pretty << "\t\t\thas no aliases\n";
-        }
-
-        const std::size_t iSize = plugin->interfaces.size();
-        pretty << "\t\t\timplements " << iSize
-               << (iSize == 1? " interface" : " interfaces") << ":\n";
-        for (const auto &interface : plugin->demangledInterfaces)
-          pretty << "\t\t\t\t" << interface << "\n";
-      }
-
-      Implementation::AliasMap badAliases;
-      for (const auto &entry : this->dataPtr->aliases)
-      {
-        if (entry.second.size() > 1)
-        {
-          badAliases.insert(entry);
-        }
-      }
-
-      if (!badAliases.empty())
-      {
-        const std::size_t aSize = badAliases.size();
-        pretty << "\tThere " << (aSize == 1? "is " : "are ")  << aSize
-               << (aSize == 1? " alias" : " aliases") << " with a "
-               << "name collision:\n";
-        for (const auto &alias : badAliases)
-        {
-          pretty << "\t\t[" << alias.first << "] collides between:\n";
-          for (const auto &name : alias.second)
-            pretty << "\t\t\t[" << name << "]\n";
-        }
-      }
-
-      pretty << std::endl;
-
-      return pretty.str();
+      return this->dataPtr->filePlugins.PrettyStr();
     }
 
     /////////////////////////////////////////////////
@@ -225,17 +151,12 @@ namespace gz
         // Demangle the plugin name before creating an entry for it.
         plugin.name = DemangleSymbol(plugin.name);
 
-        // Add the plugin's aliases to the alias map
-        for (const std::string &alias : plugin.aliases)
-          this->dataPtr->aliases[alias].insert(plugin.name);
-
         // Make a list of the demangled interface names for later convenience.
         for (auto const &interface : plugin.interfaces)
           plugin.demangledInterfaces.insert(DemangleSymbol(interface.first));
 
         // Add the plugin to the map
-        this->dataPtr->plugins.insert(
-              std::make_pair(plugin.name, std::make_shared<Info>(plugin)));
+        this->dataPtr->filePlugins.AddInfo(plugin);
 
         // Add the plugin's name to the set of newPlugins
         newPlugins.insert(plugin.name);
@@ -252,93 +173,41 @@ namespace gz
     /////////////////////////////////////////////////
     std::unordered_set<std::string> Loader::InterfacesImplemented() const
     {
-      std::unordered_set<std::string> interfaces;
-      for (auto const &plugin : this->dataPtr->plugins)
-      {
-        for (auto const &interface : plugin.second->demangledInterfaces)
-          interfaces.insert(interface);
-      }
-      return interfaces;
+      return this->dataPtr->filePlugins.InterfacesImplemented();
     }
 
     /////////////////////////////////////////////////
     std::unordered_set<std::string> Loader::PluginsImplementing(
         const std::string &_interface,
-        const bool demangled) const
+        const bool _demangled) const
     {
-      std::unordered_set<std::string> plugins;
-
-      if (demangled)
-      {
-        for (auto const &plugin : this->dataPtr->plugins)
-        {
-          if (plugin.second->demangledInterfaces.find(_interface) !=
-              plugin.second->demangledInterfaces.end())
-            plugins.insert(plugin.second->name);
-        }
-      }
-      else
-      {
-        for (auto const &plugin : this->dataPtr->plugins)
-        {
-          if (plugin.second->interfaces.find(_interface) !=
-              plugin.second->interfaces.end())
-            plugins.insert(plugin.second->name);
-        }
-      }
-
-      return plugins;
+      return this->dataPtr->filePlugins.PluginsImplementing(_interface, _demangled);
     }
 
     /////////////////////////////////////////////////
     std::set<std::string> Loader::AllPlugins() const
     {
-      std::set<std::string> result;
-
-      for (const auto &entry : this->dataPtr->plugins)
-        result.insert(result.end(), entry.first);
-
-      return result;
+      return this->dataPtr->filePlugins.AllPlugins();
     }
 
     /////////////////////////////////////////////////
     std::set<std::string> Loader::PluginsWithAlias(
         const std::string &_alias) const
     {
-      std::set<std::string> result;
-
-      const Implementation::AliasMap::const_iterator names =
-          this->dataPtr->aliases.find(_alias);
-
-      if (names != this->dataPtr->aliases.end())
-        result = names->second;
-
-      const Implementation::PluginMap::const_iterator plugin =
-          this->dataPtr->plugins.find(_alias);
-
-      if (plugin != this->dataPtr->plugins.end())
-        result.insert(_alias);
-
-      return result;
+      return this->dataPtr->filePlugins.PluginsWithAlias(_alias);
     }
 
     /////////////////////////////////////////////////
     std::set<std::string> Loader::AliasesOfPlugin(
         const std::string &_pluginName) const
     {
-      const Implementation::PluginMap::const_iterator plugin =
-          this->dataPtr->plugins.find(_pluginName);
-
-      if (plugin != this->dataPtr->plugins.end())
-        return plugin->second->aliases;
-
-      return {};
+      return this->dataPtr->filePlugins.AliasesOfPlugin(_pluginName);
     }
 
     /////////////////////////////////////////////////
     std::string Loader::LookupPlugin(const std::string &_nameOrAlias) const
     {
-      return this->dataPtr->LookupPlugin(_nameOrAlias);
+      return this->dataPtr->filePlugins.LookupPlugin(_nameOrAlias);
     }
 
     /////////////////////////////////////////////////
@@ -402,10 +271,9 @@ namespace gz
     ConstInfoPtr Loader::PrivateGetInfo(
         const std::string &_resolvedName) const
     {
-      const Implementation::PluginMap::const_iterator it =
-          this->dataPtr->plugins.find(_resolvedName);
+      ConstInfoPtr info = this->dataPtr->filePlugins.GetInfo(_resolvedName);
 
-      if (this->dataPtr->plugins.end() == it)
+      if (info == nullptr)
       {
         // LCOV_EXCL_START
         std::cerr << "[gz::Loader::PrivateGetInfo] A resolved name ["
@@ -416,7 +284,7 @@ namespace gz
         // LCOV_EXCL_STOP
       }
 
-      return it->second;
+      return info;
     }
 
     /////////////////////////////////////////////////
@@ -640,44 +508,6 @@ namespace gz
     }
 
     /////////////////////////////////////////////////
-    std::string Loader::Implementation::LookupPlugin(
-        const std::string &_nameOrAlias) const
-    {
-      const PluginMap::const_iterator name = this->plugins.find(_nameOrAlias);
-
-      if (this->plugins.end() != name)
-        return _nameOrAlias;
-
-      const AliasMap::const_iterator alias = this->aliases.find(_nameOrAlias);
-      if (this->aliases.end() != alias && !alias->second.empty())
-      {
-        if (alias->second.size() == 1)
-          return *alias->second.begin();
-
-        // We use a stringstream because we're going to output to std::cerr, and
-        // we want it all to print at once, but std::cerr does not support
-        // buffering.
-        std::stringstream ss;
-
-        ss << "[gz::plugin::Loader::LookupPlugin] Failed to resolve the "
-           << "alias [" << _nameOrAlias << "] because it refers to multiple "
-           << "plugins:\n";
-        for (const std::string &plugin : alias->second)
-          ss << " -- [" << plugin << "]\n";
-
-        std::cerr << ss.str();
-
-        return "";
-      }
-
-      std::cerr << "[gz::plugin::Loader::LookupPlugin] Failed to get "
-                << "info for [" << _nameOrAlias << "]. Could not find a plugin "
-                << "with that name or alias.\n";
-
-      return "";
-    }
-
-    /////////////////////////////////////////////////
     bool Loader::Implementation::ForgetLibrary(void *_dlHandle)
     {
       DlHandleToPluginMap::iterator it = dlHandleToPluginMap.find(_dlHandle);
@@ -688,24 +518,16 @@ namespace gz
 
       for (const std::string &forget : forgottenPlugins)
       {
-        // Erase each alias entry corresponding to this plugin
-        const ConstInfoPtr &info = plugins.at(forget);
-        for (const std::string &alias : info->aliases)
-          this->aliases.at(alias).erase(info->name);
-      }
-
-      for (const std::string &forget : forgottenPlugins)
-      {
         // CRUCIAL DEV NOTE (MXG): Be sure to erase the Info from
         // `plugins` BEFORE erasing the plugin entry in `pluginToDlHandlePtrs`,
         // because the Info structs require the library to remain loaded
         // for the destructors of their `deleter` member variables.
 
         // This erase should come FIRST.
-        plugins.erase(forget);
+        this->filePlugins.ForgetInfo(forget);
 
         // This erase should come LAST.
-        pluginToDlHandlePtrs.erase(forget);
+        this->pluginToDlHandlePtrs.erase(forget);
       }
 
       // Dev note (MXG): We do not need to delete anything from `dlHandlePtrMap`
@@ -714,7 +536,7 @@ namespace gz
       // Dev note (MXG): This erase call should come at the very end of this
       // function to ensure that the `forgottenPlugins` reference remains valid
       // while it is being used.
-      dlHandleToPluginMap.erase(it);
+      this->dlHandleToPluginMap.erase(it);
 
       // Dev note (MXG): We do not need to call dlclose because that will be
       // taken care of automatically by the std::shared_ptr that manages the

@@ -8,8 +8,9 @@ if (MSVC OR NOT GZ_TOOLS_PROGRAM)
 endif()
 
 # Create the library target
+file(GLOB detail_sources RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "src/detail/*.cc")
 gz_add_component(loader
-  SOURCES ${sources}
+  SOURCES ${sources} ${detail_sources}
   GET_TARGET_NAME loader)
 
 target_link_libraries(${loader}
