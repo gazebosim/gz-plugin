@@ -10,6 +10,8 @@ add_library(GzDummyPlugins SHARED
   DummyPlugins.cc
   DummyPluginsOtherTranslationUnit.cc)
 
+add_library(GzDummyStaticPlugin       SHARED DummyStaticPlugin.cc)
+
 # Create a variable for the name of the header which will contain the dummy plugin path.
 # This variable gets put in the cache so that it is available at generation time.
 foreach(plugin_target
@@ -20,9 +22,14 @@ foreach(plugin_target
     GzBadPluginSize
     GzDummyPlugins
     GzFactoryPlugins
-    GzTemplatedPlugins)
+    GzTemplatedPlugins
+    GzDummyStaticPlugin)
 
   target_link_libraries(${plugin_target} PRIVATE
     ${PROJECT_LIBRARY_TARGET_NAME}-register)
 
 endforeach()
+
+# Need to link to the loader component to link static registry implementation.
+target_link_libraries(GzDummyStaticPlugin PRIVATE
+    ${PROJECT_LIBRARY_TARGET_NAME}-loader)
