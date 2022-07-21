@@ -176,6 +176,15 @@ namespace gz
     {
       dataPtr->PrivateCreatePluginInstance(_info, _dlHandlePtr);
     }
+
+    //////////////////////////////////////////////////
+    template <typename PluginType>
+    TemplatePluginPtr<PluginType>::TemplatePluginPtr(
+        const ConstInfoPtr &_info)
+      : dataPtr(new PluginType)
+    {
+      dataPtr->PrivateCreateStaticPluginInstance(_info);
+    }
   }
 }
 

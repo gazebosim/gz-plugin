@@ -157,6 +157,14 @@ namespace gz
                   const ConstInfoPtr &_info,
                   const std::shared_ptr<void> &_dlHandlePtr) const;
 
+      /// \brief Create a new plugin instance based on the info provided for a
+      /// plugin from the static plugin loader registry.
+      /// \param[in] _info
+      ///   Pointer to the Info for this plugin
+      private: void PrivateCreateStaticPluginInstance(
+                  const ConstInfoPtr &_info) const;
+
+
       /// \brief Get a reference to the abstract instance being managed by this
       /// wrapper
       private: const std::shared_ptr<void> &PrivateGetInstancePtr() const;
