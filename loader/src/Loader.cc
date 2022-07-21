@@ -279,12 +279,14 @@ namespace gz
 
       if (!resolvedNameForFilePlugin.empty())
       {
-        ptr = PluginPtr(this->PrivateGetInfoForFilePlugin(resolvedNameForFilePlugin),
-                        this->PrivateGetPluginDlHandlePtr(resolvedNameForFilePlugin));
+        ptr = PluginPtr(
+            this->PrivateGetInfoForFilePlugin(resolvedNameForFilePlugin),
+            this->PrivateGetPluginDlHandlePtr(resolvedNameForFilePlugin));
       }
       else if (!resolvedNameForStaticPlugin.empty())
       {
-        ptr = PluginPtr(this->PrivateGetInfoForStaticPlugin(resolvedNameForStaticPlugin));
+        ptr = PluginPtr(
+            this->PrivateGetInfoForStaticPlugin(resolvedNameForStaticPlugin));
       }
       else
       {
@@ -339,7 +341,8 @@ namespace gz
     }
 
     /////////////////////////////////////////////////
-    std::string Loader::PrivateLookupFilePlugin(const std::string &_nameOrAlias) const
+    std::string Loader::PrivateLookupFilePlugin(
+        const std::string &_nameOrAlias) const
     {
       return this->dataPtr->filePlugins.LookupPlugin(_nameOrAlias);
     }
@@ -366,7 +369,8 @@ namespace gz
     }
 
     /////////////////////////////////////////////////
-    std::string Loader::PrivateLookupStaticPlugin(const std::string &_nameOrAlias) const
+    std::string Loader::PrivateLookupStaticPlugin(
+        const std::string &_nameOrAlias) const
     {
       return this->dataPtr->staticPlugins->LookupPlugin(_nameOrAlias);
     }

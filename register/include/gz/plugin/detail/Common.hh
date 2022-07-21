@@ -23,6 +23,7 @@
 #include <string>
 #include <typeinfo>
 #include <type_traits>
+#include <utility>
 
 #include <gz/plugin/EnablePluginFromThis.hh>
 #include <gz/plugin/Info.hh>

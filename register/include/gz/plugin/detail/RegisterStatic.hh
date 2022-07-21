@@ -19,6 +19,8 @@
 #ifndef GZ_PLUGIN_DETAIL_REGISTERSTATIC_HH_
 #define GZ_PLUGIN_DETAIL_REGISTERSTATIC_HH_
 
+#include <utility>
+
 #include <gz/plugin/detail/StaticRegistry.hh>
 #include <gz/plugin/detail/Common.hh>
 

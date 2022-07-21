@@ -134,7 +134,7 @@ namespace gz
       public: void Create(
           const ConstInfoPtr &_info,
           const std::shared_ptr<void> &_dlHandlePtr,
-          bool _allowNullDlHandlePtr=false)
+          bool _allowNullDlHandlePtr = false)
       {
         this->Clear();
 

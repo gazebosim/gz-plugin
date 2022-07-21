@@ -20,6 +20,8 @@
 #define GZ_PLUGIN_DETAIL_STATICREGISTRY_HH_
 
 #include <memory>
+#include <set>
+#include <string>
 
 #include <gz/plugin/detail/Registry.hh>
 
@@ -33,16 +35,18 @@ namespace gz
       /// \brief Get a reference to the StaticRegistry instance.
       public: static StaticRegistry& GetInstance();
 
-      /// \brief Get a set of the names of all plugins that are in this registry.
+      /// \brief Get a set of the names of all plugins that are in this
+      /// registry.
       ///
       /// \return A set of all plugin names in this registry.
       public: virtual std::set<std::string> AllPlugins() const override;
-      
+
       /// \brief Get info as ConstInfoPtr.
       ///
       /// \param[in] _pluginName
       ///   Name of the plugin as returned by LookupPlugin(~).
-      public: virtual ConstInfoPtr GetInfo(const std::string &_pluginName) const override;
+      public: virtual ConstInfoPtr GetInfo(
+          const std::string &_pluginName) const override;
 
       /// \brief Register Info for a new plugin.
       ///
@@ -62,7 +66,8 @@ namespace gz
       ///
       /// \param[in] _pluginName
       ///   Name of the plugin as returned by LookupPlugin(~).
-      public: virtual void ForgetInfo(const std::string &_pluginName) override {}
+      public: virtual void ForgetInfo(
+          const std::string &_pluginName) override { }
 
       protected: StaticRegistry() = default;
 

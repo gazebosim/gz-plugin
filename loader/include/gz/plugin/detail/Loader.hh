@@ -51,12 +51,14 @@ namespace gz
 
       if (!resolvedNameForFilePlugin.empty())
       {
-        ptr = PluginPtr(this->PrivateGetInfoForFilePlugin(resolvedNameForFilePlugin),
-                        this->PrivateGetPluginDlHandlePtr(resolvedNameForFilePlugin));
+        ptr = PluginPtr(
+            this->PrivateGetInfoForFilePlugin(resolvedNameForFilePlugin),
+            this->PrivateGetPluginDlHandlePtr(resolvedNameForFilePlugin));
       }
       else if (!resolvedNameForStaticPlugin.empty())
       {
-        ptr = PluginPtr(this->PrivateGetInfoForStaticPlugin(resolvedNameForStaticPlugin));
+        ptr = PluginPtr(
+            this->PrivateGetInfoForStaticPlugin(resolvedNameForStaticPlugin));
       }
       else
       {

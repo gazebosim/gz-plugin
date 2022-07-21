@@ -86,7 +86,7 @@ namespace gz
 
       for (const std::string &alias : _info.aliases)
         this->aliases[alias].insert(pluginName);
-      
+
       return true;
     }
 

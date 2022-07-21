@@ -157,7 +157,7 @@ namespace gz
         const std::string &_pluginName) const
     {
       ConstInfoPtr plugin = this->GetInfo(_pluginName);
-      
+
       if (plugin != nullptr)
         return plugin->aliases;
 
@@ -168,7 +168,7 @@ namespace gz
     std::string Registry::LookupPlugin(const std::string &_nameOrAlias) const
     {
       ConstInfoPtr pluginPtr = this->GetInfo(_nameOrAlias);
-      
+
       if (pluginPtr != nullptr)
         return _nameOrAlias;
 
@@ -220,10 +220,10 @@ namespace gz
     bool Registry::AddInfo(const Info &_info) {
       for (const std::string &alias : _info.aliases)
         this->aliases[alias].insert(_info.name);
-      
+
       auto result = this->plugins.insert(
           std::make_pair(_info.name, std::make_shared<Info>(_info)));
-      
+
       return result.second;
     }
 

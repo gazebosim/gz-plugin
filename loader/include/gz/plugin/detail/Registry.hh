@@ -118,7 +118,8 @@ namespace gz
       /// if no such plugin is known.
       public: std::string LookupPlugin(const std::string &_nameOrAlias) const;
 
-      /// \brief Get a set of the names of all plugins that are in this registry.
+      /// \brief Get a set of the names of all plugins that are in this
+      /// registry.
       ///
       /// Method is virtual to allow other Info storage and memory management
       /// models.
@@ -133,7 +134,8 @@ namespace gz
       ///
       /// \param[in] _pluginName
       ///   Name of the plugin as returned by LookupPlugin(~).
-      public: virtual ConstInfoPtr GetInfo(const std::string &_pluginName) const;
+      public: virtual ConstInfoPtr GetInfo(
+          const std::string &_pluginName) const;
 
       /// \brief Add a new plugin info.
       ///
@@ -160,11 +162,12 @@ namespace gz
 
       protected: using AliasMap = std::map<std::string, std::set<std::string>>;
       /// \brief A map from known alias names to the plugin names that they
-      /// correspond to. Since an alias might refer to more than one plugin, the
-      /// key of this map is a set.
+      /// correspond to. Since an alias might refer to more than one plugin,
+      /// the key of this map is a set.
       protected: AliasMap aliases;
 
-      protected: using PluginMap = std::unordered_map<std::string, ConstInfoPtr>;
+      protected: using PluginMap =
+          std::unordered_map<std::string, ConstInfoPtr>;
       /// \brief A map from known plugin names to their Info.
       protected: PluginMap plugins;
     };
