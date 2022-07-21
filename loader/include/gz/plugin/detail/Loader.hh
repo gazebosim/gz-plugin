@@ -39,18 +39,34 @@ namespace gz
     PluginPtrType Loader::Instantiate(
         const std::string &_pluginNameOrAlias) const
     {
-      const std::string &resolvedName = this->LookupPlugin(_pluginNameOrAlias);
-      if (resolvedName.empty())
+      // Higher priority for plugins loaded from file than from the static
+      // registry.
+      const std::string &resolvedNameForFilePlugin =
+          this->PrivateLookupFilePlugin(_pluginNameOrAlias);
+
+      const std::string &resolvedNameForStaticPlugin =
+            this->PrivateLookupStaticPlugin(_pluginNameOrAlias);
+
+      PluginPtr ptr;
+
+      if (!resolvedNameForFilePlugin.empty())
+      {
+        ptr = PluginPtr(this->PrivateGetInfoForFilePlugin(resolvedNameForFilePlugin),
+                        this->PrivateGetPluginDlHandlePtr(resolvedNameForFilePlugin));
+      }
+      else if (!resolvedNameForStaticPlugin.empty())
+      {
+        ptr = PluginPtr(this->PrivateGetInfoForStaticPlugin(resolvedNameForStaticPlugin));
+      }
+      else
+      {
         return PluginPtr();
+      }
 
-       PluginPtrType ptr(this->PrivateGetInfo(resolvedName),
-                         this->PrivateGetPluginDlHandlePtr(resolvedName));
+      if (auto *enableFromThis = ptr->QueryInterface<EnablePluginFromThis>())
+        enableFromThis->PrivateSetPluginFromThis(ptr);
 
-       if (auto *enableFromThis =
-              ptr->template QueryInterface<EnablePluginFromThis>())
-         enableFromThis->PrivateSetPluginFromThis(ptr);
-
-       return ptr;
+      return ptr;
     }
 
     template <typename InterfaceType>

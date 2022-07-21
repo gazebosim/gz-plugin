@@ -30,6 +30,7 @@
 #include <gz/plugin/Loader.hh>
 #include <gz/plugin/Plugin.hh>
 #include <gz/plugin/detail/Registry.hh>
+#include <gz/plugin/detail/StaticRegistry.hh>
 #include <gz/plugin/utility.hh>
 
 namespace gz
@@ -106,19 +107,27 @@ namespace gz
       /// \brief A map from the shared library handle to the names of the
       /// plugins that it provides.
       public: DlHandleToPluginMap dlHandleToPluginMap;
+
+      /// \brief Pointer to the singleton StaticRegistry
+      public: StaticRegistry* staticPlugins;
     };
 
     /////////////////////////////////////////////////
     std::string Loader::PrettyStr() const
     {
-      return this->dataPtr->filePlugins.PrettyStr();
+      std::stringstream pretty;
+      pretty << "Loaded plugins registry: \n"
+             << this->dataPtr->filePlugins.PrettyStr();
+      pretty << "Static plugins registry: \n"
+             << this->dataPtr->staticPlugins->PrettyStr();
+      return pretty.str();
     }
 
     /////////////////////////////////////////////////
     Loader::Loader()
       : dataPtr(new Implementation())
     {
-      // Do nothing.
+      this->dataPtr->staticPlugins = &(StaticRegistry::GetInstance());
     }
 
     /////////////////////////////////////////////////
@@ -173,7 +182,13 @@ namespace gz
     /////////////////////////////////////////////////
     std::unordered_set<std::string> Loader::InterfacesImplemented() const
     {
-      return this->dataPtr->filePlugins.InterfacesImplemented();
+      std::unordered_set<std::string> allInterfaces =
+          this->dataPtr->filePlugins.InterfacesImplemented();
+      std::unordered_set<std::string> staticPluginInterfaces =
+          this->dataPtr->staticPlugins->InterfacesImplemented();
+      allInterfaces.insert(staticPluginInterfaces.begin(),
+          staticPluginInterfaces.end());
+      return allInterfaces;
     }
 
     /////////////////////////////////////////////////
@@ -181,44 +196,100 @@ namespace gz
         const std::string &_interface,
         const bool _demangled) const
     {
-      return this->dataPtr->filePlugins.PluginsImplementing(_interface, _demangled);
+      std::unordered_set<std::string> allPlugins =
+          this->dataPtr->filePlugins.PluginsImplementing(_interface,
+          _demangled);
+      std::unordered_set<std::string> staticPlugins =
+          this->dataPtr->staticPlugins->PluginsImplementing(_interface,
+          _demangled);
+      allPlugins.insert(staticPlugins.begin(), staticPlugins.end());
+      return allPlugins;
     }
 
     /////////////////////////////////////////////////
     std::set<std::string> Loader::AllPlugins() const
     {
-      return this->dataPtr->filePlugins.AllPlugins();
+      std::set<std::string> allPlugins =
+          this->dataPtr->filePlugins.AllPlugins();
+      std::set<std::string> staticPlugins =
+          this->dataPtr->staticPlugins->AllPlugins();
+      allPlugins.insert(staticPlugins.begin(), staticPlugins.end());
+      return allPlugins;
     }
 
     /////////////////////////////////////////////////
     std::set<std::string> Loader::PluginsWithAlias(
         const std::string &_alias) const
     {
-      return this->dataPtr->filePlugins.PluginsWithAlias(_alias);
+      std::set<std::string> allPlugins =
+          this->dataPtr->filePlugins.PluginsWithAlias(_alias);
+      std::set<std::string> staticPlugins =
+          this->dataPtr->staticPlugins->PluginsWithAlias(_alias);
+      allPlugins.insert(staticPlugins.begin(), staticPlugins.end());
+      return allPlugins;
     }
 
     /////////////////////////////////////////////////
     std::set<std::string> Loader::AliasesOfPlugin(
         const std::string &_pluginName) const
     {
-      return this->dataPtr->filePlugins.AliasesOfPlugin(_pluginName);
+      std::set<std::string> allAliases =
+          this->dataPtr->filePlugins.AliasesOfPlugin(_pluginName);
+      std::set<std::string> staticAliases =
+          this->dataPtr->staticPlugins->AliasesOfPlugin(_pluginName);
+      allAliases.insert(staticAliases.begin(), staticAliases.end());
+      return allAliases;
     }
 
     /////////////////////////////////////////////////
     std::string Loader::LookupPlugin(const std::string &_nameOrAlias) const
     {
-      return this->dataPtr->filePlugins.LookupPlugin(_nameOrAlias);
+      // Higher priority for plugins loaded from file than from the static
+      // registry.
+      std::string nameInFilePlugins =
+          this->dataPtr->filePlugins.LookupPlugin(_nameOrAlias);
+      if (!nameInFilePlugins.empty()) {
+        return nameInFilePlugins;
+      }
+
+      std::string nameInStaticPlugins =
+          this->dataPtr->staticPlugins->LookupPlugin(_nameOrAlias);
+      if (!nameInStaticPlugins.empty()) {
+        return nameInStaticPlugins;
+      }
+
+      std::cerr << "[gz::plugin::Loader::LookupPlugin] Failed to get "
+                << "info for [" << _nameOrAlias << "]. Could not find a plugin "
+                << "with that name or alias.\n";
+      return "";
     }
 
     /////////////////////////////////////////////////
     PluginPtr Loader::Instantiate(const std::string &_pluginNameOrAlias) const
     {
-      const std::string &resolvedName = this->LookupPlugin(_pluginNameOrAlias);
-      if (resolvedName.empty())
-        return PluginPtr();
+      // Higher priority for plugins loaded from file than from the static
+      // registry.
+      const std::string &resolvedNameForFilePlugin =
+          this->PrivateLookupFilePlugin(_pluginNameOrAlias);
 
-      PluginPtr ptr(this->PrivateGetInfo(resolvedName),
-                    this->PrivateGetPluginDlHandlePtr(resolvedName));
+      const std::string &resolvedNameForStaticPlugin =
+            this->PrivateLookupStaticPlugin(_pluginNameOrAlias);
+
+      PluginPtr ptr;
+
+      if (!resolvedNameForFilePlugin.empty())
+      {
+        ptr = PluginPtr(this->PrivateGetInfoForFilePlugin(resolvedNameForFilePlugin),
+                        this->PrivateGetPluginDlHandlePtr(resolvedNameForFilePlugin));
+      }
+      else if (!resolvedNameForStaticPlugin.empty())
+      {
+        ptr = PluginPtr(this->PrivateGetInfoForStaticPlugin(resolvedNameForStaticPlugin));
+      }
+      else
+      {
+        return PluginPtr();
+      }
 
       if (auto *enableFromThis = ptr->QueryInterface<EnablePluginFromThis>())
         enableFromThis->PrivateSetPluginFromThis(ptr);
@@ -268,7 +339,13 @@ namespace gz
     }
 
     /////////////////////////////////////////////////
-    ConstInfoPtr Loader::PrivateGetInfo(
+    std::string Loader::PrivateLookupFilePlugin(const std::string &_nameOrAlias) const
+    {
+      return this->dataPtr->filePlugins.LookupPlugin(_nameOrAlias);
+    }
+
+    /////////////////////////////////////////////////
+    ConstInfoPtr Loader::PrivateGetInfoForFilePlugin(
         const std::string &_resolvedName) const
     {
       ConstInfoPtr info = this->dataPtr->filePlugins.GetInfo(_resolvedName);
@@ -276,9 +353,37 @@ namespace gz
       if (info == nullptr)
       {
         // LCOV_EXCL_START
-        std::cerr << "[gz::Loader::PrivateGetInfo] A resolved name ["
-                  << _resolvedName << "] could not be found in the PluginMap. "
-                  << "This should not be possible! Please report this bug!\n";
+        std::cerr << "[gz::Loader::PrivateGetInfoForFilePlugin] A resolved "
+                  << "name [" << _resolvedName << "] could not be found in "
+                  << "the registry of loaded plugins. This should not be "
+                  << "possible! Please report this bug!\n";
+        assert(false);
+        return nullptr;
+        // LCOV_EXCL_STOP
+      }
+
+      return info;
+    }
+
+    /////////////////////////////////////////////////
+    std::string Loader::PrivateLookupStaticPlugin(const std::string &_nameOrAlias) const
+    {
+      return this->dataPtr->staticPlugins->LookupPlugin(_nameOrAlias);
+    }
+
+    /////////////////////////////////////////////////
+    ConstInfoPtr Loader::PrivateGetInfoForStaticPlugin(
+        const std::string &_resolvedName) const
+    {
+      ConstInfoPtr info = this->dataPtr->staticPlugins->GetInfo(_resolvedName);
+
+      if (info == nullptr)
+      {
+        // LCOV_EXCL_START
+        std::cerr << "[gz::Loader::PrivateGetInfoForStaticPlugin] A resolved "
+                  << "name [" << _resolvedName << "] could not be found in "
+                  << "the static plugin registry. This should not be "
+                  << "possible! Please report this bug!\n";
         assert(false);
         return nullptr;
         // LCOV_EXCL_STOP
