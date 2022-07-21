@@ -40,3 +40,9 @@ foreach(test
   endif()
 
 endforeach()
+
+# The linker option -force_load needs to be specified to ensure that the global
+# structs specified in the plugin module still get loaded even without any
+# explicit reference to the loaded symbols (only the interfaces are
+# referenced).
+target_link_libraries(INTEGRATION_static_plugins -force_load GzDummyStaticPlugin)
