@@ -34,7 +34,7 @@ namespace bpo = boost::program_options;
 /////////////////////////////////////////////////
 // The macro that this uses is provided as a compile definition in the
 // examples/CMakeLists.txt file.
-const std::string PluginLibDir = IGN_PLUGIN_EXAMPLES_LIBDIR;
+const std::string PluginLibDir = GZ_PLUGIN_EXAMPLES_LIBDIR;
 
 /////////////////////////////////////////////////
 using namespace gz::plugin::examples;

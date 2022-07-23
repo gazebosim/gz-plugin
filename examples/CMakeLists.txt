@@ -39,7 +39,7 @@ foreach(example_file ${example_files})
   # to set it for all the examples.
   target_compile_definitions(${example}
     PRIVATE
-      "IGN_PLUGIN_EXAMPLES_LIBDIR=\"${PLUGIN_LIBDIR}\"")
+      "GZ_PLUGIN_EXAMPLES_LIBDIR=\"${PLUGIN_LIBDIR}\"")
 
   if(Boost_PROGRAM_OPTIONS_FOUND)
     target_link_libraries(${example} PRIVATE ${Boost_PROGRAM_OPTIONS_LIBRARIES})

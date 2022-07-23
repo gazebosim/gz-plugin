@@ -35,19 +35,19 @@ wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 On Ubuntu systems, `apt-get` can be used to install `gz-plugin`:
 ```bash
 sudo apt-get update
-sudo apt install libignition-plugin2-dev
+sudo apt install libgz-plugin2-dev
 ```
 
 ## Source Installation
 
 1. Install Gazebo dependencies
   ```
-  sudo apt-get install libignition-cmake3-dev libignition-tools2-dev libignition-utils2-cli-dev
+  sudo apt-get install libgz-cmake3-dev libgz-tools2-dev libgz-utils2-cli-dev
   ```
 
 1. Install Gazebo Tools if you want to use the `gz plugin` command line tool:
   ```bash
-  sudo apt-get install ignition-tools2
+  sudo apt-get install gz-tools2
 
 2. Clone the repository
   ```bash
@@ -88,7 +88,7 @@ Sierra (10.12) or later.
 2. Run the following commands
   ```bash
   brew tap osrf/simulation
-  brew install ignition-plugin2
+  brew install gz-plugin2
   ```
 
 ## Source Installation
@@ -96,7 +96,7 @@ Sierra (10.12) or later.
 1. Install dependencies
   ```bash
   brew tap osrf/simulation
-  brew install ignition-plugin2 --only-dependencies
+  brew install gz-plugin2 --only-dependencies
   ```
 
 2. Clone the repository
@@ -135,7 +135,7 @@ conda activate gz-ws
 ## Binary Installation
 
 ```bash
-conda install libignition-plugin<#> --channel conda-forge
+conda install libgz-plugin<#> --channel conda-forge
 ```
 
 Be sure to replace `<#>` with a number value, such as 2 or 3, depending on
@@ -149,12 +149,12 @@ This assumes you have created and activated a Conda environment while installing
 
   You can view available versions and their dependencies:
   ```bash
-  conda search libignition-plugin* --channel conda-forge --info
+  conda search libgz-plugin* --channel conda-forge --info
   ```
 
   Install dependencies, replacing `<#>` with the desired version:
   ```bash
-  conda install libignition-cmake<#> --channel conda-forge
+  conda install libgz-cmake<#> --channel conda-forge
   ```
 
 2. Navigate to where you would like to build the library, and clone the repository.
