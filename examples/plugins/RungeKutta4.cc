@@ -86,7 +86,7 @@ class Integrator : public gz::plugin::examples::NumericalIntegrator
     const State &yn = _state;
 
     // TODO: If we ever start to leverage Eigen or another linear algebra
-    // library besides ign-math, then clean up these expressions.
+    // library besides gz-math, then clean up these expressions.
     const Derivative &k1 = function(tn, yn);
     const Derivative &k2 = function(tn + h/2.0, add(yn, times(h/2.0, k1)));
     const Derivative &k3 = function(tn + h/2.0, add(yn, times(h/2.0, k2)));

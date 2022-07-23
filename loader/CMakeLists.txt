@@ -51,7 +51,7 @@ endif()
 
 install(
   DIRECTORY include/
-  DESTINATION ${IGN_INCLUDE_INSTALL_DIR_FULL})
+  DESTINATION ${GZ_INCLUDE_INSTALL_DIR_FULL})
 
 #============================================================================
 # gz command line support

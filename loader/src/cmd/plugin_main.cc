@@ -72,7 +72,7 @@ void addPluginFlags(CLI::App &_app)
        opt->command = PluginCommand::kPluginInfo;
      }, "Get info about a plugin.")->needs(plugin);
 
-  _app.callback([&_app, opt](){
+  _app.callback([opt](){
     runPluginCommand(*opt);
   });
 }
@@ -89,6 +89,6 @@ int main(int argc, char** argv)
 
   addPluginFlags(app);
 
-  app.formatter(std::make_shared<IgnitionFormatter>(&app));
+  app.formatter(std::make_shared<GzFormatter>(&app));
   CLI11_PARSE(app, argc, argv);
 }

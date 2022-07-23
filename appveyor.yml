@@ -10,7 +10,7 @@ environment:
 
 install:
   - vcpkg install dlfcn-win32
-  # ign-cmake
+  # gz-cmake
   - git clone https://github.com/gazebosim/gz-cmake -b gz11
   - cd gz-cmake
   - md build

@@ -38,7 +38,7 @@ using ODESystemFactory = gz::plugin::examples::ODESystemFactory;
 
 // The macro that this uses is provided as a compile definition in the
 // examples/CMakeLists.txt file.
-const std::string PluginLibDir = IGN_PLUGIN_EXAMPLES_LIBDIR;
+const std::string PluginLibDir = GZ_PLUGIN_EXAMPLES_LIBDIR;
 
 /// \brief Return structure for numerical integration test results. If the name
 /// is blank, that means the test was not run.

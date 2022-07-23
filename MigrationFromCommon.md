@@ -1,17 +1,17 @@
 # Migration Instructions (from common::Plugin)
 
-This file provides migration instructions for `ignition` library developers to
+This file provides migration instructions for `gz` library developers to
 replace the `gz-common` plugin framework with the `gz-plugin`
 framework. Some of the instructions here may also be useful to new adopters of
 `gz-plugin`.
 
-# Linking to ignition-plugin
+# Linking to gz-plugin
 
 `gz-plugin` has three components: `core`, `loader`, and `register`. Code that
 just wants to use `PluginPtr` objects can link to `core`, e.g.:
 
 ```
-target_link_libraries(my_target PUBLIC ignition-plugin2::core)
+target_link_libraries(my_target PUBLIC gz-plugin2::core)
 ```
 
 However, if your code wants to be able to load plugins, it should link to the
@@ -19,7 +19,7 @@ However, if your code wants to be able to load plugins, it should link to the
 need the `gz::plugin::Loader` class to be part of your library's API:
 
 ```
-target_link_libraries(my_target PRIVATE ignition-plugin2::loader)
+target_link_libraries(my_target PRIVATE gz-plugin2::loader)
 ```
 
 If `gz::plugin::PluginPtr` objects are part of your library's API, then
@@ -28,9 +28,9 @@ you may want `loader` to be private while `core` is public:
 ```
 target_link_libraries(my_target
   PUBLIC
-    ignition-plugin2::core
+    gz-plugin2::core
   PRIVATE
-    ignition-plugin2::loader
+    gz-plugin2::loader
 )
 ```
 
@@ -39,14 +39,14 @@ then you should link against the `register` component. This should almost always
 be a private link, since plugin registration is purely internal for a library:
 
 ```
-target_link_libraries(my_plugin PRIVATE ignition-plugin2::register)
+target_link_libraries(my_plugin PRIVATE gz-plugin2::register)
 ```
 
 # Registering a plugin
 
 The name of the header for registering plugins has changed:
 
-* `<ignition/common/PluginMacros.hh>` should be replaced by `<ignition/plugin/Register.hh>`
+* `<gz/common/PluginMacros.hh>` should be replaced by `<gz/plugin/Register.hh>`
 
 The old `gz-common` plugin registration method had numerous macros for registering
 plugins. Those have all been replaced with `GZ_ADD_PLUGIN`. Specifically:
@@ -68,9 +68,9 @@ simply need to make sure that the compiler can resolve the names of the classes
 that you pass to it (and there will be a compilation error if it cannot).
 
 It is now possible to register plugins across **multiple translation units**
-within a single library. To do this, use `#include <ignition/plugin/Register.hh>`
+within a single library. To do this, use `#include <gz/plugin/Register.hh>`
 in **exactly one** of your library's translation units, and then use
-`#include <ignition/plugin/RegisterMore.hh>` in all other translation units. It
+`#include <gz/plugin/RegisterMore.hh>` in all other translation units. It
 does not matter which translation unit you choose to be the "first", as long as
 you choose exactly one.
 
@@ -84,7 +84,7 @@ then you should continue to use it. It does not have a replacement in `gz-plugin
 
 Here is a list of things that you *should* replace:
 
-* `#include <ignition/common/PluginLoader.hh>` should be replaced with `#include <ignition/plugin/Loader.hh>`
+* `#include <gz/common/PluginLoader.hh>` should be replaced with `#include <gz/plugin/Loader.hh>`
 * `gz::common::PluginLoader` should be replaced with `gz::plugin::Loader`
 * When calling `Loader::Instantiate("....")` do **NOT** prefix the class name with `::`. E.g. `"::some_namespace::MyClass"` should now be `"some_namespace::MyClass"`.
 

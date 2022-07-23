@@ -68,7 +68,7 @@ extern "C"
   /// \param[out] _outputAllInfo
   ///   Loader will pass in a pointer to a pointer of an InfoMap pertaining to
   ///   the highest API version that it knows of. If this GzPluginHook was
-  ///   built against a version of ign-plugin that provides an equal or greater
+  ///   built against a version of gz-plugin that provides an equal or greater
   ///   API version, then GzPluginHook will modify *_outputAllInfo to
   ///   point at its internal &InfoMap that corresponds to the requested API
   ///   version, which is identified by _inputAndOutputAPIVersion.

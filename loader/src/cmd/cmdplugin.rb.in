@@ -23,7 +23,7 @@ COMMANDS = {
 }
 
 #
-# Class for the Ignition @IGN_DESIGNATION@ command line tools.
+# Class for the Gazebo @GZ_DESIGNATION@ command line tools.
 #
 class Cmd
   def execute(args)
