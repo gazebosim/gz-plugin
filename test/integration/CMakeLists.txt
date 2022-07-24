@@ -45,4 +45,8 @@ endforeach()
 # structs specified in the plugin module still get loaded even without any
 # explicit reference to the loaded symbols (only the interfaces are
 # referenced).
-target_link_libraries(INTEGRATION_static_plugins -force_load GzDummyStaticPlugin)
+target_link_libraries(INTEGRATION_static_plugins GzDummyStaticPlugin)
+target_link_options(INTEGRATION_static_plugins PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:--whole-archive>
+    $<$<CXX_COMPILER_ID:Clang>:-force_load>
+  )
