@@ -41,12 +41,11 @@ foreach(test
 
 endforeach()
 
-# The linker option -force_load needs to be specified to ensure that the global
-# structs specified in the plugin module still get loaded even without any
-# explicit reference to the loaded symbols (only the interfaces are
-# referenced).
-target_link_libraries(INTEGRATION_static_plugins GzDummyStaticPlugin)
-target_link_options(INTEGRATION_static_plugins PRIVATE
-    $<$<CXX_COMPILER_ID:GNU>:--whole-archive>
-    $<$<CXX_COMPILER_ID:Clang>:-force_load>
-  )
+# The linker option -force_load (for Clang) or --whole-archive (for GNU) needs
+# to be specified to ensure that the global structs specified in the static
+# plugin module get loaded even without any explicit reference to the
+# loaded symbols (only the interfaces are referenced).
+target_link_libraries(INTEGRATION_static_plugins
+    $<$<CXX_COMPILER_ID:GNU>:-Wl,--whole-archive GzDummyStaticPlugin -Wl,--no-whole-archive>
+    $<$<CXX_COMPILER_ID:Clang>:-force_load GzDummyStaticPlugin>
+    $<$<CXX_COMPILER_ID:AppleClang>:-force_load GzDummyStaticPlugin>)

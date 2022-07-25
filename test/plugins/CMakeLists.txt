@@ -10,7 +10,7 @@ add_library(GzDummyPlugins SHARED
   DummyPlugins.cc
   DummyPluginsOtherTranslationUnit.cc)
 
-add_library(GzDummyStaticPlugin       SHARED DummyStaticPlugin.cc)
+add_library(GzDummyStaticPlugin       STATIC DummyStaticPlugin.cc)
 
 # Create a variable for the name of the header which will contain the dummy plugin path.
 # This variable gets put in the cache so that it is available at generation time.
