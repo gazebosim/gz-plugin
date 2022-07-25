@@ -46,6 +46,7 @@ endforeach()
 # plugin module get loaded even without any explicit reference to the
 # loaded symbols (only the interfaces are referenced).
 target_link_libraries(INTEGRATION_static_plugins
-    $<$<CXX_COMPILER_ID:GNU>:-Wl,--whole-archive GzDummyStaticPlugin -Wl,--no-whole-archive>
-    $<$<CXX_COMPILER_ID:Clang>:-force_load GzDummyStaticPlugin>
-    $<$<CXX_COMPILER_ID:AppleClang>:-force_load GzDummyStaticPlugin>)
+    $<$<CXX_COMPILER_ID:GNU>:-Wl,--whole-archive>
+    $<$<CXX_COMPILER_ID:Clang>:-force_load>
+    $<$<CXX_COMPILER_ID:AppleClang>:-force_load> GzDummyStaticPlugin
+    $<$<CXX_COMPILER_ID:GNU>:-Wl,--no-whole-archive>)
