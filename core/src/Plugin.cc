@@ -128,9 +128,13 @@ namespace gz
       /// \param[in] _info Information describing the plugin to initialize
       /// \param[in] _dlHandlePtr A reference to the dl handle that manages the
       ///            lifecycle of the plugin library.
+      /// \param[in] _allowNullDlHandlePtr Allow _dlHandlePtr to be null. Only
+      ///            set true for plugin instances created from the static
+      ///            registry.
       public: void Create(
           const ConstInfoPtr &_info,
-          const std::shared_ptr<void> &_dlHandlePtr)
+          const std::shared_ptr<void> &_dlHandlePtr,
+          bool _allowNullDlHandlePtr = false)
       {
         this->Clear();
 
@@ -139,7 +143,7 @@ namespace gz
 
         this->info = _info;
 
-        if (!_dlHandlePtr)
+        if (!_dlHandlePtr && !_allowNullDlHandlePtr)
         {
           // LCOV_EXCL_START
           std::cerr << "Received Info for [" << _info->name << "], "
@@ -148,6 +152,11 @@ namespace gz
           assert(false);
           return;
           // LCOV_EXCL_STOP
+        } else if (_dlHandlePtr != nullptr && _allowNullDlHandlePtr) {
+          std::cerr << "Trying to create a plugin from a static plugin, but "
+                    << "a shared library handle was provided. This should "
+                    << "never happen! Please report this bug!\n";
+          assert(false);
         }
 
         // Create a std::shared_ptr to a struct which ensures that the
@@ -357,6 +366,14 @@ namespace gz
         const std::shared_ptr<void> &_dlHandlePtr) const
     {
       this->dataPtr->Create(_info, _dlHandlePtr);
+    }
+
+    //////////////////////////////////////////////////
+    void Plugin::PrivateCreateStaticPluginInstance(
+        const ConstInfoPtr &_info) const
+    {
+      this->dataPtr->Create(_info, /*_dlHandlePtr=*/nullptr,
+          /*_allowNullDlHandlePtr=*/true);
     }
 
     //////////////////////////////////////////////////

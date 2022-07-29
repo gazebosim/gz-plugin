@@ -219,15 +219,50 @@ namespace gz
       /// \sa bool ForgetLibrary(const std::string &_pathToLibrary)
       public: bool ForgetLibraryOfPlugin(const std::string &_pluginNameOrAlias);
 
-      /// \brief Get a pointer to the Info corresponding to _pluginName.
+      /// \brief Specifically look up a plugin loaded from file.
+      ///
+      /// \param[in] _nameOrAlias
+      ///   The name or alias of the plugin of interest.
+      ///
+      /// \return The name of the plugin being referred to, or an empty string
+      /// if no such plugin is known.
+      private: std::string PrivateLookupFilePlugin(
+          const std::string &_nameOrAlias) const;
+
+      /// \brief Get a pointer to the Info corresponding to _pluginName for a
+      /// plugin loaded from file.
       ///
       /// \param[in] _resolvedName
       ///   The resolved name, i.e. the demangled class symbol name as returned
-      ///   by LookupPlugin(~), of the plugin that you want to instantiate.
+      ///   by PrivateLookupFilePlugin(~), of the plugin that you want to
+      ///   instantiate.
       ///
       /// \return Pointer to the corresponding Info, or nullptr if there
       /// is no info for the requested _pluginName.
-      private: ConstInfoPtr PrivateGetInfo(
+      private: ConstInfoPtr PrivateGetInfoForFilePlugin(
+          const std::string &_resolvedName) const;
+
+      /// \brief Specifically look up a plugin in the static registry.
+      ///
+      /// \param[in] _nameOrAlias
+      ///   The name or alias of the plugin of interest.
+      ///
+      /// \return The name of the plugin being referred to, or an empty string
+      /// if no such plugin is known.
+      private: std::string PrivateLookupStaticPlugin(
+          const std::string &_nameOrAlias) const;
+
+      /// \brief Get a pointer to the Info corresponding to _pluginName for a
+      /// plugin loaded from the static registry.
+      ///
+      /// \param[in] _resolvedName
+      ///   The resolved name, i.e. the demangled class symbol name as returned
+      ///   by PrivateLookupStaticPlugin(~), of the plugin that you want to
+      ///   instantiate.
+      ///
+      /// \return Pointer to the corresponding Info, or nullptr if there
+      /// is no info for the requested _pluginName.
+      private: ConstInfoPtr PrivateGetInfoForStaticPlugin(
           const std::string &_resolvedName) const;
 
       /// \brief Get a std::shared_ptr that manages the lifecycle of the shared
