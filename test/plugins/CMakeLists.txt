@@ -27,7 +27,6 @@ foreach(plugin_target
 
   target_link_libraries(${plugin_target} PRIVATE
     ${PROJECT_LIBRARY_TARGET_NAME}-register)
-
 endforeach()
 
 # Need to link to the loader component to link static registry implementation.

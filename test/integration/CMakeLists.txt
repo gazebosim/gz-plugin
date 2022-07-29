@@ -56,6 +56,6 @@ else()
   target_link_libraries(INTEGRATION_static_plugins
       $<$<CXX_COMPILER_ID:GNU>:-Wl,--whole-archive>
       $<$<CXX_COMPILER_ID:Clang>:-force_load>
-      $<$<CXX_COMPILER_ID:AppleClang>:-force_load> $<TARGET_FILE:GzDummyStaticPlugin>
+      $<$<CXX_COMPILER_ID:AppleClang>:-force_load> GzDummyStaticPlugin
       $<$<CXX_COMPILER_ID:GNU>:-Wl,--no-whole-archive>)
 endif()
