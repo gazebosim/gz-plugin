@@ -111,7 +111,7 @@ namespace gz
         const bool demangled) const
     {
       std::set<std::string> allPlugins = this->AllPlugins();
-      std::unordered_set<std::string> plugins;
+      std::unordered_set<std::string> availablePlugins;
 
       for (auto const &name : allPlugins)
       {
@@ -120,17 +120,17 @@ namespace gz
         {
           if (plugin->demangledInterfaces.find(_interface) !=
               plugin->demangledInterfaces.end())
-            plugins.insert(plugin->name);
+            availablePlugins.insert(plugin->name);
         }
         else
         {
           if (plugin->interfaces.find(_interface) !=
               plugin->interfaces.end())
-            plugins.insert(plugin->name);
+            availablePlugins.insert(plugin->name);
         }
       }
 
-      return plugins;
+      return availablePlugins;
     }
 
     /////////////////////////////////////////////////

@@ -23,7 +23,10 @@
 #include <set>
 #include <string>
 
+#include <gz/plugin/Info.hh>
 #include <gz/plugin/detail/Registry.hh>
+#include <gz/plugin/loader/Export.hh>
+#include <gz/utils/SuppressWarning.hh>
 
 namespace gz
 {
@@ -31,7 +34,7 @@ namespace gz
   {
     /// \brief Static registry of plugin classes populated from
     /// gz/plugin/RegisterStatic.hh
-    class StaticRegistry final: public Registry {
+    class GZ_PLUGIN_LOADER_VISIBLE StaticRegistry final: public Registry {
       /// \brief Get a reference to the StaticRegistry instance.
       public: static StaticRegistry& GetInstance();
 
@@ -67,11 +70,15 @@ namespace gz
       /// \param[in] _pluginName
       ///   Name of the plugin as returned by LookupPlugin(~).
       public: virtual void ForgetInfo(
-          const std::string &_pluginName) override { }
+          const std::string &/*_pluginName*/) override { }
 
+      /// \brief Construtor
       protected: StaticRegistry() = default;
 
+      /// \brief Holds info required to construct a plugin
+      GZ_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
       private: InfoMap infos;
+      GZ_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }

@@ -27,6 +27,8 @@
 #include <unordered_set>
 
 #include <gz/plugin/Info.hh>
+#include <gz/plugin/loader/Export.hh>
+#include <gz/utils/SuppressWarning.hh>
 
 namespace gz
 {
@@ -34,9 +36,11 @@ namespace gz
   {
     /// \brief Manages a set of plugin Infos and allows querying by name or
     /// by alias.
-    class Registry {
+    class GZ_PLUGIN_LOADER_VISIBLE Registry {
+      /// \brief Constructor
       public: Registry() = default;
 
+      /// \brief Destructor
       public: virtual ~Registry() = default;
 
       /// \brief Makes a printable string with info about plugins
@@ -156,10 +160,13 @@ namespace gz
       ///   Name of the plugin as returned by LookupPlugin(~).
       public: virtual void ForgetInfo(const std::string &_pluginName);
 
+      /// \brief Deleted copy constructor
       public: Registry(const Registry&) = delete;
 
+      /// \brief Deleted copy assignment operator
       public: Registry& operator=(Registry&) = delete;
 
+      GZ_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING
       protected: using AliasMap = std::map<std::string, std::set<std::string>>;
       /// \brief A map from known alias names to the plugin names that they
       /// correspond to. Since an alias might refer to more than one plugin,
@@ -170,6 +177,7 @@ namespace gz
           std::unordered_map<std::string, ConstInfoPtr>;
       /// \brief A map from known plugin names to their Info.
       protected: PluginMap plugins;
+      GZ_UTILS_WARN_RESUME__DLL_INTERFACE_MISSING
     };
   }
 }
