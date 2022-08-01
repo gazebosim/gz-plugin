@@ -15,6 +15,8 @@
  *
 */
 
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -205,4 +207,40 @@ TEST(gzTest, PluginInfoVerboseDummyPlugins)
   EXPECT_NE(std::string::npos,
             output.find("There are 2 aliases with a name collision"))
       << output;
+}
+
+//////////////////////////////////////////////////
+/// \brief Check --help message and bash completion script for consistent flags
+TEST(gzTest, PluginHelpVsCompletionFlags)
+{
+  // Path to gz executable
+  std::string gz = std::string(GZ_PATH);
+
+  // Flags in help message
+  std::string helpOutput = custom_exec_str(gz + " plugin --help " +
+    g_gzVersion);
+
+  // Call the output function in the bash completion script
+  std::filesystem::path scriptPath = GZ_PLUGIN_SOURCE_DIR;
+  scriptPath = scriptPath / "loader" / "conf" / "plugin.bash_completion.sh";
+
+  // Equivalent to:
+  // sh -c "bash -c \". /path/to/plugin.bash_completion.sh; _gz_plugin_flags\""
+  std::string cmd = "bash -c \". " + scriptPath.string() +
+    "; _gz_plugin_flags\"";
+  std::string scriptOutput = custom_exec_str(cmd);
+
+  // Tokenize script output
+  std::istringstream iss(scriptOutput);
+  std::vector<std::string> flags((std::istream_iterator<std::string>(iss)),
+    std::istream_iterator<std::string>());
+
+  EXPECT_GT(flags.size(), 0u);
+
+  // Match each flag in script output with help message
+  for (const auto &flag : flags)
+  {
+    EXPECT_NE(std::string::npos, helpOutput.find(flag)) << helpOutput
+        << std::endl << "Flag: " << flag;
+  }
 }
