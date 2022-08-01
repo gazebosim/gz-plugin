@@ -25,3 +25,13 @@ configure_file(
 # Install the yaml configuration files in an unversioned location.
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${GZ_DESIGNATION}${PROJECT_VERSION_MAJOR}.yaml
   DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/gz/)
+
+# Tack version onto and install the bash completion script
+configure_file(
+  "plugin.bash_completion.sh"
+    "${CMAKE_CURRENT_BINARY_DIR}/plugin${PROJECT_VERSION_MAJOR}.bash_completion.sh" @ONLY)
+install(
+  FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/plugin${PROJECT_VERSION_MAJOR}.bash_completion.sh
+  DESTINATION
+    ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/gz/gz${GZ_TOOLS_VER}.completion.d)

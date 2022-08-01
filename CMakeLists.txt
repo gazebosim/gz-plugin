@@ -23,6 +23,12 @@ gz_configure_project(VERSION_SUFFIX pre1)
 # Set project-specific options
 #============================================================================
 
+if (UNIX AND NOT APPLE)
+  set (EXTRA_TEST_LIB_DEPS stdc++fs)
+else()
+  set (EXTRA_TEST_LIB_DEPS)
+endif()
+
 #============================================================================
 # Search for project-specific dependencies
 #============================================================================
@@ -39,7 +45,7 @@ gz_find_package(DL
 #--------------------------------------
 # Find gz-tools
 find_program(GZ_TOOLS_PROGRAM gz)
-
+set(GZ_TOOLS_VER 2)
 
 #--------------------------------------
 # Find gz-utils
