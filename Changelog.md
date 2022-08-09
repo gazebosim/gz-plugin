@@ -1,3 +1,11 @@
+## Gazebo Plugin 3.x
+
+### Gazebo Plugin 3.X.X (202X-XX-XX)
+
+## Gazebo Plugin 2.x
+
+### Gazebo Plugin 2.X.X (202X-XX-XX)
+
 ## Gazebo Plugin 1.x
 
 ### Gazebo Plugin 1.2.1 (2021-09-24)
