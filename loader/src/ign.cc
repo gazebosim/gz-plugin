@@ -34,7 +34,7 @@ extern "C" void IGNITION_PLUGIN_LOADER_VISIBLE cmdPluginInfo(
     return;
   }
 
-  ignition::plugin::Loader pl;
+  Loader pl;
   std::cout << "Loading plugin library file [" << _plugin << "]\n";
 
   // Print names of plugins exported by library file
