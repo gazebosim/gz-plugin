@@ -74,3 +74,28 @@ gz_create_docs(
   API_MAINPAGE_MD "${CMAKE_BINARY_DIR}/api.md"
   TUTORIALS_MAINPAGE_MD "${CMAKE_BINARY_DIR}/tutorials.md"
   )
+
+#============================================================================
+# Build examples
+#============================================================================
+
+if (BUILD_TESTING)
+  # Find dependencies only used in examples
+  gz_find_package(gz-common5 QUIET)
+  set(GZ_COMMON_VER ${gz-common5_VERSION_MAJOR})
+
+  gz_find_package(gz-math7 QUIET)
+  set(GZ_MATH_VER ${gz-math7_VERSION_MAJOR})
+
+  gz_build_examples(
+    SOURCE_DIR ${PROJECT_SOURCE_DIR}/examples
+    BINARY_DIR ${PROJECT_BINARY_DIR}/examples
+    COMPONENTS
+      loader register
+    DEPENDENCIES
+      gz-cmake${GZ_CMAKE_VER}
+      gz-common${GZ_COMMON_VER}
+      gz-math${GZ_MATH_VER}
+      gz-utils${GZ_UTILS_VER}
+  )
+endif()

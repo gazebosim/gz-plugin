@@ -17,6 +17,8 @@
 
 #include "robot.hh"
 
+#include <gz/plugin/Register.hh>
+
 namespace BoxEnvironment {
 
 /// \brief A plugin that creates a box environment

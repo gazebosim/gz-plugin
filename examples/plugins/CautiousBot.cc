@@ -17,6 +17,8 @@
 
 #include "robot.hh"
 
+#include <gz/plugin/Register.hh>
+
 using namespace gz::plugin::examples;
 
 namespace CautiousBotLibrary {

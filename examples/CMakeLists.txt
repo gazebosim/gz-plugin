@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 
 project(examples)
 
-find_package(gz-plugin2 QUIET REQUIRED COMPONENTS all)
+find_package(gz-plugin2 QUIET REQUIRED COMPONENTS loader register)
 set(GZ_PLUGIN_VER ${gz-plugin2_VERSION_MAJOR})
 
 find_package(gz-common5 QUIET)
