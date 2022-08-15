@@ -1,4 +1,27 @@
-## Ignition Plugin 1.x
+## Gazebo Plugin 1.x
+
+### Gazebo Plugin 1.3.0 (2022-08-15)
+
+1. Remove redundant namespace references
+    * [Pull request #100](https://github.com/gazebosim/gz-plugin/pull/100)
+
+1. Change `IGN_DESIGNATION` to `GZ_DESIGNATION`
+    * [Pull request #96](https://github.com/gazebosim/gz-plugin/pull/96)
+
+1. Ignition -> Gazebo
+    * [Pull request #94](https://github.com/gazebosim/gz-plugin/pull/94)
+
+1. Bash completion for flags
+    * [Pull request #81](https://github.com/gazebosim/gz-plugin/pull/81)
+
+1. Add LICENSE file
+    * [Pull request #72](https://github.com/gazebosim/gz-plugin/pull/72)
+
+1. Add Ubuntu Jammy CI
+    * [Pull request #68](https://github.com/gazebosim/gz-plugin/pull/68)
+
+1. Install ruby commands on Windows
+    * [Pull request #63](https://github.com/gazebosim/gz-plugin/pull/63)
 
 ### Ignition Plugin 1.2.1 (2021-09-24)
 
