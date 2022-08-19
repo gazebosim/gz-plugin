@@ -22,9 +22,9 @@
 
 #include "plugins/robot.hh"
 
-#include <ignition/common/SystemPaths.hh>
-#include <ignition/plugin/SpecializedPluginPtr.hh>
-#include <ignition/plugin/Loader.hh>
+#include <gz/common/SystemPaths.hh>
+#include <gz/plugin/SpecializedPluginPtr.hh>
+#include <gz/plugin/Loader.hh>
 
 #ifdef HAVE_BOOST_PROGRAM_OPTIONS
 #include <boost/program_options.hpp>

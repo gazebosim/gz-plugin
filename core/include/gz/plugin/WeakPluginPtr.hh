@@ -20,7 +20,7 @@
 
 #include <memory>
 
-#include <ignition/plugin/PluginPtr.hh>
+#include <gz/plugin/PluginPtr.hh>
 
 namespace gz
 {

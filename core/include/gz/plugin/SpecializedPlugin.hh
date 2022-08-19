@@ -20,7 +20,7 @@
 #define GZ_PLUGIN_SPECIALIZEDPLUGIN_HH_
 
 #include <memory>
-#include "ignition/plugin/Plugin.hh"
+#include "gz/plugin/Plugin.hh"
 
 namespace gz
 {

@@ -68,9 +68,9 @@ simply need to make sure that the compiler can resolve the names of the classes
 that you pass to it (and there will be a compilation error if it cannot).
 
 It is now possible to register plugins across **multiple translation units**
-within a single library. To do this, use `#include <ignition/plugin/Register.hh>`
+within a single library. To do this, use `#include <gz/plugin/Register.hh>`
 in **exactly one** of your library's translation units, and then use
-`#include <ignition/plugin/RegisterMore.hh>` in all other translation units. It
+`#include <gz/plugin/RegisterMore.hh>` in all other translation units. It
 does not matter which translation unit you choose to be the "first", as long as
 you choose exactly one.
 
@@ -84,7 +84,7 @@ then you should continue to use it. It does not have a replacement in `ign-plugi
 
 Here is a list of things that you *should* replace:
 
-* `#include <gz/common/PluginLoader.hh>` should be replaced with `#include <ignition/plugin/Loader.hh>`
+* `#include <gz/common/PluginLoader.hh>` should be replaced with `#include <gz/plugin/Loader.hh>`
 * `gz::common::PluginLoader` should be replaced with `gz::plugin::Loader`
 * When calling `Loader::Instantiate("....")` do **NOT** prefix the class name with `::`. E.g. `"::some_namespace::MyClass"` should now be `"some_namespace::MyClass"`.
 

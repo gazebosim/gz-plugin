@@ -23,10 +23,10 @@
 #include <map>
 #include <string>
 
-#include <ignition/utilities/SuppressWarning.hh>
+#include <gz/utilities/SuppressWarning.hh>
 
-#include <ignition/plugin/Export.hh>
-#include <ignition/plugin/Info.hh>
+#include <gz/plugin/Export.hh>
+#include <gz/plugin/Info.hh>
 
 namespace gz
 {

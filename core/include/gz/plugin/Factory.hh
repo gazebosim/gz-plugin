@@ -23,7 +23,7 @@
 #include <memory>
 #include <tuple>
 
-#include <ignition/plugin/EnablePluginFromThis.hh>
+#include <gz/plugin/EnablePluginFromThis.hh>
 
 namespace gz
 {

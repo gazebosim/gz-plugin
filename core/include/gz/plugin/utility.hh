@@ -22,7 +22,7 @@
 #include <string>
 
 #include <gz/plugin/detail/utility.hh>
-#include <ignition/plugin/Export.hh>
+#include <gz/plugin/Export.hh>
 
 namespace gz
 {

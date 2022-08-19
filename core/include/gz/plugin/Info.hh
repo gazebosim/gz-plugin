@@ -25,9 +25,9 @@
 #include <string>
 #include <unordered_map>
 
-#include <ignition/utilities/SuppressWarning.hh>
+#include <gz/utilities/SuppressWarning.hh>
 
-#include <ignition/plugin/Export.hh>
+#include <gz/plugin/Export.hh>
 
 namespace gz
 {

@@ -22,8 +22,8 @@
 #include <memory>
 #include <string>
 #include <unordered_set>
-#include <ignition/plugin/EnablePluginFromThis.hh>
-#include <ignition/plugin/Loader.hh>
+#include <gz/plugin/EnablePluginFromThis.hh>
+#include <gz/plugin/Loader.hh>
 
 namespace gz
 {

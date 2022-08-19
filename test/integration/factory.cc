@@ -17,8 +17,8 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/Factory.hh>
-#include <ignition/plugin/Loader.hh>
+#include <gz/plugin/Factory.hh>
+#include <gz/plugin/Loader.hh>
 
 #include "../plugins/FactoryPlugins.hh"
 #include "utils.hh"

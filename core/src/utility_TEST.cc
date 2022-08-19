@@ -17,7 +17,7 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/utility.hh>
+#include <gz/plugin/utility.hh>
 
 using namespace gz::plugin;
 

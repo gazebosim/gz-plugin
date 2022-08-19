@@ -21,9 +21,9 @@
 #include <memory>
 #include <utility>
 
-#include <ignition/utilities/SuppressWarning.hh>
+#include <gz/utilities/SuppressWarning.hh>
 
-#include <ignition/plugin/Factory.hh>
+#include <gz/plugin/Factory.hh>
 
 namespace gz
 {

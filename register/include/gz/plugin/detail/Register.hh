@@ -25,11 +25,11 @@
 #include <type_traits>
 #include <utility>
 
-#include <ignition/utilities/SuppressWarning.hh>
+#include <gz/utilities/SuppressWarning.hh>
 
-#include <ignition/plugin/EnablePluginFromThis.hh>
-#include <ignition/plugin/Info.hh>
-#include <ignition/plugin/utility.hh>
+#include <gz/plugin/EnablePluginFromThis.hh>
+#include <gz/plugin/Info.hh>
+#include <gz/plugin/utility.hh>
 
 
 #if defined _WIN32 || defined __CYGWIN__

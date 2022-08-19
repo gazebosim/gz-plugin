@@ -25,10 +25,10 @@
 #include <typeinfo>
 #include <unordered_set>
 
-#include <ignition/utilities/SuppressWarning.hh>
+#include <gz/utilities/SuppressWarning.hh>
 
-#include <ignition/plugin/loader/Export.hh>
-#include <ignition/plugin/PluginPtr.hh>
+#include <gz/plugin/loader/Export.hh>
+#include <gz/plugin/PluginPtr.hh>
 
 namespace gz
 {

@@ -15,7 +15,7 @@
  *
 */
 
-#include <ignition/plugin/RegisterMore.hh>
+#include <gz/plugin/RegisterMore.hh>
 #include "DummyPlugins.hh"
 #include "DummyMultiPlugin.hh"
 

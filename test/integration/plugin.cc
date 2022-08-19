@@ -24,9 +24,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "ignition/plugin/Loader.hh"
-#include "ignition/plugin/PluginPtr.hh"
-#include "ignition/plugin/SpecializedPluginPtr.hh"
+#include "gz/plugin/Loader.hh"
+#include "gz/plugin/PluginPtr.hh"
+#include "gz/plugin/SpecializedPluginPtr.hh"
 
 #include "../plugins/DummyPlugins.hh"
 #include "utils.hh"
