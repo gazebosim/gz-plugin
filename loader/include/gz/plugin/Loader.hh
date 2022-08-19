@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_LOADER_HH_
-#define IGNITION_PLUGIN_LOADER_HH_
+#ifndef GZ_PLUGIN_LOADER_HH_
+#define GZ_PLUGIN_LOADER_HH_
 
 #include <memory>
 #include <set>
@@ -30,7 +30,7 @@
 #include <ignition/plugin/loader/Export.hh>
 #include <ignition/plugin/PluginPtr.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -251,6 +251,6 @@ namespace ignition
   }
 }
 
-#include <ignition/plugin/detail/Loader.hh>
+#include <gz/plugin/detail/Loader.hh>
 
 #endif

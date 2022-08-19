@@ -16,13 +16,13 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_SPECIALIZEDPLUGIN_HH_
-#define IGNITION_PLUGIN_SPECIALIZEDPLUGIN_HH_
+#ifndef GZ_PLUGIN_SPECIALIZEDPLUGIN_HH_
+#define GZ_PLUGIN_SPECIALIZEDPLUGIN_HH_
 
 #include <memory>
 #include "ignition/plugin/Plugin.hh"
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -160,6 +160,6 @@ namespace ignition
   }
 }
 
-#include "ignition/plugin/detail/SpecializedPlugin.hh"
+#include "gz/plugin/detail/SpecializedPlugin.hh"
 
 #endif

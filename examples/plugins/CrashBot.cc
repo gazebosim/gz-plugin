@@ -17,7 +17,7 @@
 
 #include "robot.hh"
 
-using namespace ignition::plugin::examples;
+using namespace gz::plugin::examples;
 
 namespace CrashBotLib {
 
@@ -33,15 +33,15 @@ class CrashBot
   }
 
   // Documentation inherited
-  public: ignition::math::Vector3d Velocity() const override
+  public: gz::math::Vector3d Velocity() const override
   {
     // If the proximity sensor detects a wall, drive straight forward,
     // aggressively into the wall
     if (detectedWall)
-      return ignition::math::Vector3d(1.0, 0.0, 0.0);
+      return gz::math::Vector3d(1.0, 0.0, 0.0);
 
     // If we have not detected a wall, drive in a spiral, searching for a wall
-    return ignition::math::Vector3d(0.5, 0.0, 20.0*IGN_PI/180.0);
+    return gz::math::Vector3d(0.5, 0.0, 20.0*IGN_PI/180.0);
   }
 
   // Documentation inherited

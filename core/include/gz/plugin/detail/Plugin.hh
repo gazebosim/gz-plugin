@@ -16,14 +16,14 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_DETAIL_PLUGIN_HH_
-#define IGNITION_PLUGIN_DETAIL_PLUGIN_HH_
+#ifndef GZ_PLUGIN_DETAIL_PLUGIN_HH_
+#define GZ_PLUGIN_DETAIL_PLUGIN_HH_
 
 #include <memory>
 #include <string>
 #include <ignition/plugin/Plugin.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

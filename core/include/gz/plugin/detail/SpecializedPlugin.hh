@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_DETAIL_SPECIALIZEDPLUGIN_HH_
-#define IGNITION_PLUGIN_DETAIL_SPECIALIZEDPLUGIN_HH_
+#ifndef GZ_PLUGIN_DETAIL_SPECIALIZEDPLUGIN_HH_
+#define GZ_PLUGIN_DETAIL_SPECIALIZEDPLUGIN_HH_
 
 #include <memory>
 #include "ignition/plugin/SpecializedPlugin.hh"
@@ -30,7 +30,7 @@ bool usedSpecializedInterfaceAccess;
 #endif
 
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -250,7 +250,7 @@ namespace ignition
             bool, HasInterface, () const, const Specializer, ())
 
         // Declare friendship
-        template <class...> friend class ignition::plugin::SpecializedPlugin;
+        template <class...> friend class gz::plugin::SpecializedPlugin;
         template <class> friend class SelectSpecializers;
         template <class, class> friend class ComposePlugin;
 
@@ -271,7 +271,7 @@ namespace ignition
         using Specialization = ComposePlugin<Base1, Base2>;
 
         // Declare friendship
-        template <class...> friend class ignition::plugin::SpecializedPlugin;
+        template <class...> friend class gz::plugin::SpecializedPlugin;
         template <class> friend class SelectSpecializers;
         template <class, class> friend class ComposePlugin;
 

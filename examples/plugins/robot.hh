@@ -15,8 +15,8 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_EXAMPLES_PLUGINS_ROBOT_HH_
-#define IGNITION_PLUGIN_EXAMPLES_PLUGINS_ROBOT_HH_
+#ifndef GZ_PLUGIN_EXAMPLES_PLUGINS_ROBOT_HH_
+#define GZ_PLUGIN_EXAMPLES_PLUGINS_ROBOT_HH_
 
 #include <utility>
 
@@ -25,7 +25,7 @@
 
 #include <ignition/plugin/Register.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -45,7 +45,7 @@ namespace ignition
         /// \return The first two components are x/y velocity (m/s). The third
         /// component is the yaw velocity (rad/s about the z-axis). The x/y
         /// coordinates are always relative to the robot's frame.
-        public: virtual ignition::math::Vector3d Velocity() const = 0;
+        public: virtual gz::math::Vector3d Velocity() const = 0;
 
         /// \brief Virtual destructor
         public: virtual ~Drive() = default;
@@ -78,7 +78,7 @@ namespace ignition
         /// \brief Get a GPS reading.
         /// \param[in] _location The world-frame x/y location of the robot.
         public: virtual void ReadGPS(
-          const ignition::math::Vector2d &_location) = 0;
+          const gz::math::Vector2d &_location) = 0;
 
         /// \brief Virtual destructor
         public: virtual ~GPSSensor() = default;
@@ -99,7 +99,7 @@ namespace ignition
       /////////////////////////////////////////////////
       /// \brief A pair of Vector2d points defines a wall.
       using Wall =
-          std::pair<ignition::math::Vector2d, ignition::math::Vector2d>;
+          std::pair<gz::math::Vector2d, gz::math::Vector2d>;
 
       /////////////////////////////////////////////////
       /// \brief The layout of an environment is defined by a set of walls.

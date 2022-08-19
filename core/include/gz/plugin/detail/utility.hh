@@ -16,13 +16,13 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_DETAIL_UTILITY_HH_
-#define IGNITION_PLUGIN_DETAIL_UTILITY_HH_
+#ifndef GZ_PLUGIN_DETAIL_UTILITY_HH_
+#define GZ_PLUGIN_DETAIL_UTILITY_HH_
 
 
 #include <type_traits>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

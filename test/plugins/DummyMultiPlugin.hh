@@ -1,5 +1,5 @@
-#ifndef IGNITION_PLUGIN_TEST_PLUGINS_DUMMYMULTIPLUGIN_HH_
-#define IGNITION_PLUGIN_TEST_PLUGINS_DUMMYMULTIPLUGIN_HH_
+#ifndef GZ_PLUGIN_TEST_PLUGINS_DUMMYMULTIPLUGIN_HH_
+#define GZ_PLUGIN_TEST_PLUGINS_DUMMYMULTIPLUGIN_HH_
 
 #include <ignition/plugin/EnablePluginFromThis.hh>
 
@@ -17,7 +17,7 @@ class DummyMultiPlugin
       public DummySetterBase,
       public DummyGetObjectBase,
       public DummyGetPluginInstancePtr,
-      public ignition::plugin::EnablePluginFromThis
+      public gz::plugin::EnablePluginFromThis
 {
   public: virtual std::string MyNameIs() const override;
   public: virtual double MyDoubleValueIs() const override;

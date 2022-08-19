@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_PLUGINPTR_HH_
-#define IGNITION_PLUGIN_PLUGINPTR_HH_
+#ifndef GZ_PLUGIN_PLUGINPTR_HH_
+#define GZ_PLUGIN_PLUGINPTR_HH_
 
 #include <map>
 #include <string>
@@ -25,7 +25,7 @@
 
 #include <ignition/plugin/Plugin.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -33,7 +33,7 @@ namespace ignition
     namespace detail { template<class, class> class ComposePlugin; }
 
     /// \brief This class manages the lifecycle of a plugin instance. It can
-    /// receive a plugin instance from the ignition::plugin::Loader class
+    /// receive a plugin instance from the gz::plugin::Loader class
     /// or by copy-construction or assignment from another PluginPtr instance.
     ///
     /// This class behaves similarly to a std::shared_ptr where multiple
@@ -218,6 +218,6 @@ namespace ignition
   }
 }
 
-#include "ignition/plugin/detail/PluginPtr.hh"
+#include "gz/plugin/detail/PluginPtr.hh"
 
 #endif

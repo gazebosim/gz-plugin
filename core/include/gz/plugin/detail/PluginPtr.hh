@@ -16,15 +16,15 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_DETAIL_PLUGINPTR_HH_
-#define IGNITION_PLUGIN_DETAIL_PLUGINPTR_HH_
+#ifndef GZ_PLUGIN_DETAIL_PLUGINPTR_HH_
+#define GZ_PLUGIN_DETAIL_PLUGINPTR_HH_
 
 #include <memory>
 #include <utility>
 #include <ignition/plugin/PluginPtr.hh>
 #include <ignition/plugin/utility.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -187,10 +187,10 @@ namespace std
   /// so that it can easily be used in STL objects like std::unordered_set and
   /// std::unordered_map
   template <typename PluginType>
-  struct hash<ignition::plugin::TemplatePluginPtr<PluginType>>
+  struct hash<gz::plugin::TemplatePluginPtr<PluginType>>
   {
     size_t operator()(
-        const ignition::plugin::TemplatePluginPtr<PluginType> &ptr) const
+        const gz::plugin::TemplatePluginPtr<PluginType> &ptr) const
     {
       return ptr.Hash();
     }

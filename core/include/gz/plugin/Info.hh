@@ -16,8 +16,8 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_INFO_HH_
-#define IGNITION_PLUGIN_INFO_HH_
+#ifndef GZ_PLUGIN_INFO_HH_
+#define GZ_PLUGIN_INFO_HH_
 
 #include <functional>
 #include <memory>
@@ -29,7 +29,7 @@
 
 #include <ignition/plugin/Export.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {

@@ -16,10 +16,10 @@
 */
 
 
-#ifndef IGNITION_PLUGIN_REGISTER_HH_
-#define IGNITION_PLUGIN_REGISTER_HH_
+#ifndef GZ_PLUGIN_REGISTER_HH_
+#define GZ_PLUGIN_REGISTER_HH_
 
-#include <ignition/plugin/detail/Register.hh>
+#include <gz/plugin/detail/Register.hh>
 
 
 // ------------- Add a set of plugins or a set of interfaces ------------------
@@ -85,7 +85,7 @@
 /// memory management system the consumer prefers.
 ///
 /// The inputs and output of a factory are defined using the
-/// ignition::plugin::Factory class in the ignition/plugin/Factory.hh header.
+/// gz::plugin::Factory class in the ignition/plugin/Factory.hh header.
 ///
 /// The first argument of this macro should be the class that implements the
 /// factory's output interface. The second argument should be the factory
@@ -109,11 +109,11 @@
 /// };
 ///
 /// /* BAD! Will not compile:
-/// IGNITION_ADD_FACTORY(MyType, ignition::plugin::Factory<MyBase, double>);
+/// IGNITION_ADD_FACTORY(MyType, gz::plugin::Factory<MyBase, double>);
 /// */
 ///
 /// // Instead do this:
-/// using MyFactory = ignition::plugin::Factory<MyBase, double>;
+/// using MyFactory = gz::plugin::Factory<MyBase, double>;
 /// IGNITION_ADD_FACTORY(MyType, MyFactory);
 /// \endcode
 #define IGNITION_ADD_FACTORY(ProductType, FactoryType) \

@@ -51,13 +51,13 @@ struct SomeDerived : public SomeBase
   }
 };
 
-using NoArgFactory = ignition::plugin::Factory<SomeBase>;
+using NoArgFactory = gz::plugin::Factory<SomeBase>;
 using NoArgProducer = NoArgFactory::Producing<SomeDerived>;
 
-using DoubleIntFactory = ignition::plugin::Factory<SomeBase, double, int>;
+using DoubleIntFactory = gz::plugin::Factory<SomeBase, double, int>;
 using DoubleIntProducer = DoubleIntFactory::Producing<SomeDerived>;
 
-using VectorFactory = ignition::plugin::Factory<
+using VectorFactory = gz::plugin::Factory<
     SomeBase, const std::vector<double>&>;
 using VectorProducer = VectorFactory::Producing<SomeDerived>;
 

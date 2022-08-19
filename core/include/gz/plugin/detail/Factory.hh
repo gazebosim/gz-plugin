@@ -15,8 +15,8 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_DETAIL_FACTORY_HH_
-#define IGNITION_PLUGIN_DETAIL_FACTORY_HH_
+#ifndef GZ_PLUGIN_DETAIL_FACTORY_HH_
+#define GZ_PLUGIN_DETAIL_FACTORY_HH_
 
 #include <memory>
 #include <utility>
@@ -25,7 +25,7 @@
 
 #include <ignition/plugin/Factory.hh>
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
@@ -50,8 +50,8 @@ namespace ignition
         public: virtual ~FactoryCounter();
 
         // friendship declaration
-        template <typename, typename...> friend class ignition::plugin::Factory;
-        template <typename> friend class ignition::plugin::ProductDeleter;
+        template <typename, typename...> friend class gz::plugin::Factory;
+        template <typename> friend class gz::plugin::ProductDeleter;
       };
     }
 

@@ -16,13 +16,13 @@
  */
 
 
-#ifndef IGNITION_PLUGIN_SPECIALIZEDPLUGINPTR_HH_
-#define IGNITION_PLUGIN_SPECIALIZEDPLUGINPTR_HH_
+#ifndef GZ_PLUGIN_SPECIALIZEDPLUGINPTR_HH_
+#define GZ_PLUGIN_SPECIALIZEDPLUGINPTR_HH_
 
 #include "ignition/plugin/PluginPtr.hh"
 #include "ignition/plugin/SpecializedPlugin.hh"
 
-namespace ignition
+namespace gz
 {
   namespace plugin
   {
