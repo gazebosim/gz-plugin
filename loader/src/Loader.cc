@@ -437,7 +437,13 @@ namespace gz
 
       // NOTE: We open using RTLD_LOCAL instead of RTLD_GLOBAL to prevent the
       // symbols of different libraries from writing over each other.
+#ifdef _WIN32
+      // RTLD_NODELETE is not defined in dlfcn-32.
+      (void) _noDelete;
+      int dlopenMode = RTLD_LAZY | RTLD_LOCAL;
+#else
       int dlopenMode = RTLD_LAZY | RTLD_LOCAL | (_noDelete ? RTLD_NODELETE : 0);
+#endif
       void *dlHandle = dlopen(_full_path.c_str(), dlopenMode);
 
       const char *loadError = dlerror();
