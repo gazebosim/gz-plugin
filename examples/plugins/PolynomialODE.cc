@@ -21,7 +21,7 @@
 
 #include "integrators.hh"
 
-namespace gz {
+namespace ignition {
 namespace plugin {
 namespace examples {
 namespace PolynomialODE {
@@ -204,10 +204,10 @@ class CubicFactory : public ODESystemFactory
 
 // Register multiple plugins for this library
 IGNITION_ADD_PLUGIN(
-    gz::plugin::examples::PolynomialODE::ParabolicFactory,
-    gz::plugin::examples::ODESystemFactory)
+    ignition::plugin::examples::PolynomialODE::ParabolicFactory,
+    ignition::plugin::examples::ODESystemFactory)
 
 IGNITION_ADD_PLUGIN(
-    gz::plugin::examples::PolynomialODE::CubicFactory,
-    gz::plugin::examples::ODESystemFactory)
+    ignition::plugin::examples::PolynomialODE::CubicFactory,
+    ignition::plugin::examples::ODESystemFactory)
 

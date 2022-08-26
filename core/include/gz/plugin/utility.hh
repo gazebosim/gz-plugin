@@ -24,7 +24,7 @@
 #include <gz/plugin/detail/utility.hh>
 #include <gz/plugin/Export.hh>
 
-namespace gz
+namespace ignition
 {
   namespace plugin
   {

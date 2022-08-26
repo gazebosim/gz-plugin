@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////
 TEST(Alias, InspectAliases)
 {
-  gz::plugin::Loader pl;
+  ignition::plugin::Loader pl;
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
@@ -49,7 +49,7 @@ TEST(Alias, InspectAliases)
 /////////////////////////////////////////////////
 TEST(Alias, ConflictingAlias)
 {
-  gz::plugin::Loader pl;
+  ignition::plugin::Loader pl;
 
   // Make sure the expected plugins were loaded.
   std::unordered_set<std::string> pluginNames =
@@ -59,7 +59,7 @@ TEST(Alias, ConflictingAlias)
   ASSERT_EQ(1u, pluginNames.count("test::util::DummyNoAliasPlugin"));
 
   // This alias conflicts between DummySinglePlugin and DummyMultiPlugin
-  gz::plugin::PluginPtr attempt = pl.Instantiate("Bar");
+  ignition::plugin::PluginPtr attempt = pl.Instantiate("Bar");
   EXPECT_TRUE(attempt.IsEmpty());
 
   // This alias conflicts between DummySinglePlugin and DummyMultiPlugin

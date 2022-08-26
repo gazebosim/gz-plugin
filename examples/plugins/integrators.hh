@@ -21,7 +21,7 @@
 #include <vector>
 #include <functional>
 
-namespace gz
+namespace ignition
 {
   namespace plugin
   {

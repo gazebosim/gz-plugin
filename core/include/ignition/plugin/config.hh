@@ -30,14 +30,4 @@
 
 // #define IGNITION_PLUGIN_VERSION_HEADER GZ_PLUGIN_VERSION_HEADER
 
-namespace gz
-{
-}
-
-namespace ignition
-{
-  using namespace gz;
-}
-
-
 #endif

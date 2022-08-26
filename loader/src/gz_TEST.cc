@@ -28,7 +28,7 @@
 #    define pclose _pclose
 #endif
 
-using namespace gz;
+using namespace ignition;
 
 static const std::string g_ignVersion("--force-version " + // NOLINT(*)
   std::string(IGN_VERSION_FULL));
@@ -145,7 +145,7 @@ TEST(ignTest, PluginInfoDummyPlugins)
   EXPECT_NE(std::string::npos, output.find("test::util::DummySetterBase"))
       << output;
   EXPECT_NE(std::string::npos,
-            output.find("gz::plugin::EnablePluginFromThis"))
+            output.find("ignition::plugin::EnablePluginFromThis"))
       << output;
 }
 
@@ -175,7 +175,7 @@ TEST(ignTest, PluginInfoVerboseDummyPlugins)
   EXPECT_NE(std::string::npos, output.find("test::util::DummySetterBase"))
       << output;
   EXPECT_NE(std::string::npos,
-            output.find("gz::plugin::EnablePluginFromThis"))
+            output.find("ignition::plugin::EnablePluginFromThis"))
       << output;
 
   EXPECT_NE(std::string::npos, output.find("Known Plugins: 3"))

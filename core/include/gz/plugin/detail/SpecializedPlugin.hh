@@ -30,7 +30,7 @@ bool usedSpecializedInterfaceAccess;
 #endif
 
 
-namespace gz
+namespace ignition
 {
   namespace plugin
   {
@@ -250,7 +250,7 @@ namespace gz
             bool, HasInterface, () const, const Specializer, ())
 
         // Declare friendship
-        template <class...> friend class gz::plugin::SpecializedPlugin;
+        template <class...> friend class ignition::plugin::SpecializedPlugin;
         template <class> friend class SelectSpecializers;
         template <class, class> friend class ComposePlugin;
 
@@ -271,7 +271,7 @@ namespace gz
         using Specialization = ComposePlugin<Base1, Base2>;
 
         // Declare friendship
-        template <class...> friend class gz::plugin::SpecializedPlugin;
+        template <class...> friend class ignition::plugin::SpecializedPlugin;
         template <class> friend class SelectSpecializers;
         template <class, class> friend class ComposePlugin;
 

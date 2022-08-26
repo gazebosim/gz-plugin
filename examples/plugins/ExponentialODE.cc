@@ -21,7 +21,7 @@
 
 #include "integrators.hh"
 
-namespace gz {
+namespace ignition {
 namespace plugin {
 namespace examples {
 namespace ExponentialODE {

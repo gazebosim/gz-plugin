@@ -85,7 +85,7 @@
 /// memory management system the consumer prefers.
 ///
 /// The inputs and output of a factory are defined using the
-/// gz::plugin::Factory class in the ignition/plugin/Factory.hh header.
+/// ignition::plugin::Factory class in the ignition/plugin/Factory.hh header.
 ///
 /// The first argument of this macro should be the class that implements the
 /// factory's output interface. The second argument should be the factory
@@ -109,11 +109,11 @@
 /// };
 ///
 /// /* BAD! Will not compile:
-/// IGNITION_ADD_FACTORY(MyType, gz::plugin::Factory<MyBase, double>);
+/// IGNITION_ADD_FACTORY(MyType, ignition::plugin::Factory<MyBase, double>);
 /// */
 ///
 /// // Instead do this:
-/// using MyFactory = gz::plugin::Factory<MyBase, double>;
+/// using MyFactory = ignition::plugin::Factory<MyBase, double>;
 /// IGNITION_ADD_FACTORY(MyType, MyFactory);
 /// \endcode
 #define IGNITION_ADD_FACTORY(ProductType, FactoryType) \
