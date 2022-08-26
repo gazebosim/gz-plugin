@@ -26,5 +26,5 @@ extern "C" void EXPORT IgnitionPluginHook(
     std::size_t *,
     std::size_t *_inputAndOutputInfoAlign)
 {
-  *_inputAndOutputInfoAlign = alignof(gz::plugin::Info)+1;
+  *_inputAndOutputInfoAlign = alignof(ignition::plugin::Info)+1;
 }

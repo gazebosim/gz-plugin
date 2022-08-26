@@ -28,23 +28,23 @@ TEST(WeakPluginPtr, Lifecycle)
 {
   const std::string &libraryPath = IGNDummyPlugins_LIB;
 
-  gz::plugin::WeakPluginPtr weak;
+  ignition::plugin::WeakPluginPtr weak;
 
   CHECK_FOR_LIBRARY(libraryPath, false);
 
   {
-    gz::plugin::Loader pl;
+    ignition::plugin::Loader pl;
     pl.LoadLib(libraryPath);
     CHECK_FOR_LIBRARY(libraryPath, true);
 
-    gz::plugin::PluginPtr plugin =
+    ignition::plugin::PluginPtr plugin =
         pl.Instantiate("test::util::DummyMultiPlugin");
 
     weak = plugin;
 
     EXPECT_FALSE(weak.IsExpired());
 
-    gz::plugin::PluginPtr copy = weak.Lock();
+    ignition::plugin::PluginPtr copy = weak.Lock();
 
     test::util::DummyIntBase* base =
         copy->QueryInterface<test::util::DummyIntBase>();
@@ -60,7 +60,7 @@ TEST(WeakPluginPtr, Lifecycle)
 
   EXPECT_TRUE(weak.IsExpired());
 
-  gz::plugin::PluginPtr empty = weak.Lock();
+  ignition::plugin::PluginPtr empty = weak.Lock();
   EXPECT_TRUE(empty.IsEmpty());
   EXPECT_FALSE(empty->QueryInterface<test::util::DummyIntBase>());
 }
@@ -68,32 +68,32 @@ TEST(WeakPluginPtr, Lifecycle)
 /////////////////////////////////////////////////
 TEST(WeakPluginPtr, CopyMove)
 {
-  gz::plugin::Loader pl;
+  ignition::plugin::Loader pl;
   pl.LoadLib(IGNDummyPlugins_LIB);
 
-  gz::plugin::PluginPtr plugin =
+  ignition::plugin::PluginPtr plugin =
       pl.Instantiate("test::util::DummyMultiPlugin");
 
-  gz::plugin::WeakPluginPtr weakConstructFromPlugin(plugin);
+  ignition::plugin::WeakPluginPtr weakConstructFromPlugin(plugin);
   EXPECT_EQ(plugin, weakConstructFromPlugin.Lock());
 
-  gz::plugin::WeakPluginPtr weakCopyFromOther(
+  ignition::plugin::WeakPluginPtr weakCopyFromOther(
         weakConstructFromPlugin);
   EXPECT_EQ(plugin, weakConstructFromPlugin.Lock());
 
-  gz::plugin::WeakPluginPtr weakCopyAssignFromOther;
+  ignition::plugin::WeakPluginPtr weakCopyAssignFromOther;
   weakCopyAssignFromOther = weakConstructFromPlugin;
   EXPECT_EQ(plugin, weakCopyAssignFromOther.Lock());
 
-  gz::plugin::WeakPluginPtr weakMoveFromOther(
+  ignition::plugin::WeakPluginPtr weakMoveFromOther(
         std::move(weakCopyFromOther));
   EXPECT_EQ(plugin, weakMoveFromOther.Lock());
 
-  gz::plugin::WeakPluginPtr weakMoveAssignFromOther;
+  ignition::plugin::WeakPluginPtr weakMoveAssignFromOther;
   weakMoveAssignFromOther = std::move(weakCopyAssignFromOther);
   EXPECT_EQ(plugin, weakMoveAssignFromOther.Lock());
 
-  gz::plugin::WeakPluginPtr weakAssignFromPlugin;
+  ignition::plugin::WeakPluginPtr weakAssignFromPlugin;
   weakAssignFromPlugin = plugin;
   EXPECT_EQ(plugin, weakAssignFromPlugin.Lock());
 }

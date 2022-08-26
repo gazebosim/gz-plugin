@@ -21,7 +21,7 @@
 #include "gz/plugin/Loader.hh"
 #include "gz/plugin/config.hh"
 
-using namespace gz;
+using namespace ignition;
 using namespace plugin;
 
 //////////////////////////////////////////////////

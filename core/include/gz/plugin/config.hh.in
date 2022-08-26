@@ -13,4 +13,13 @@
 
 #define IGNITION_PLUGIN_VERSION_HEADER "Ignition Plugin, version ${PROJECT_VERSION_FULL}\nCopyright (C) 2017 Open Source Robotics Foundation.\nReleased under the Apache 2.0 License.\n\n"
 
+namespace ignition
+{
+}
+
+namespace ignition
+{
+  using namespace ignition;
+}
+
 #endif

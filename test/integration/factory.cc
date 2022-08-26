@@ -28,7 +28,7 @@ using namespace test::util;
 /////////////////////////////////////////////////
 TEST(Factory, Inspect)
 {
-  gz::plugin::Loader pl;
+  ignition::plugin::Loader pl;
   pl.LoadLib(IGNFactoryPlugins_LIB);
 
   std::cout << pl.PrettyStr() << std::endl;
@@ -42,7 +42,7 @@ TEST(Factory, Inspect)
 /////////////////////////////////////////////////
 TEST(Factory, Construct)
 {
-  gz::plugin::Loader pl;
+  ignition::plugin::Loader pl;
   pl.LoadLib(IGNFactoryPlugins_LIB);
 
   auto nameFactory = pl.Factory<NameFactory>("test::util::DummyNameForward");
@@ -99,13 +99,13 @@ TEST(Factory, Construct)
 /////////////////////////////////////////////////
 TEST(Factory, Alias)
 {
-  gz::plugin::Loader pl;
+  ignition::plugin::Loader pl;
   pl.LoadLib(IGNFactoryPlugins_LIB);
 
   std::string symbolName;
   for (const std::string &name : pl.AllPlugins())
   {
-    if (name.find("gz::plugin::Factory") != std::string::npos &&
+    if (name.find("ignition::plugin::Factory") != std::string::npos &&
         name.find("test::util::SomeObjectAddTwo") != std::string::npos)
     {
       symbolName = name;
@@ -145,7 +145,7 @@ TEST(Factory, LibraryManagement)
     SomeObjectFactory::ProductPtrType obj;
 
     {
-      gz::plugin::Loader pl;
+      ignition::plugin::Loader pl;
       pl.LoadLib(libraryPath);
       CHECK_FOR_LIBRARY(libraryPath, true);
 
@@ -173,7 +173,7 @@ TEST(Factory, LibraryManagement)
     SomeObject *obj;
 
     {
-      gz::plugin::Loader pl;
+      ignition::plugin::Loader pl;
       pl.LoadLib(libraryPath);
       CHECK_FOR_LIBRARY(libraryPath, true);
 
@@ -191,7 +191,7 @@ TEST(Factory, LibraryManagement)
 
     CHECK_FOR_LIBRARY(libraryPath, true);
 
-    gz::plugin::ProductDeleter<SomeObject>()(obj);
+    ignition::plugin::ProductDeleter<SomeObject>()(obj);
 
     CHECK_FOR_LIBRARY(libraryPath, false);
   }
@@ -205,7 +205,7 @@ TEST(Factory, LibraryManagement)
     std::unique_ptr<SomeObject> obj;
 
     {
-      gz::plugin::Loader pl;
+      ignition::plugin::Loader pl;
       pl.LoadLib(libraryPath);
       CHECK_FOR_LIBRARY(libraryPath, true);
 
@@ -226,7 +226,7 @@ TEST(Factory, LibraryManagement)
 
   // Now the reference count for the library has been passed into the
   // lostProductManager.
-  EXPECT_EQ(1u, gz::plugin::LostProductCount());
+  EXPECT_EQ(1u, ignition::plugin::LostProductCount());
 
   // As long as the reference count is in the lostProductManager, the library
   // will remain loaded.
@@ -234,10 +234,10 @@ TEST(Factory, LibraryManagement)
 
   // This function will clean up all the lost products, deleting their reference
   // counts.
-  gz::plugin::CleanupLostProducts();
+  ignition::plugin::CleanupLostProducts();
 
   // Now there should be no more lost products, so this count is 0.
-  EXPECT_EQ(0u, gz::plugin::LostProductCount());
+  EXPECT_EQ(0u, ignition::plugin::LostProductCount());
 
   // With the reference counts deleted, the library should automatically unload.
   CHECK_FOR_LIBRARY(libraryPath, false);

@@ -51,7 +51,7 @@ namespace
   static LostProductManager lostProductManager;
 }  // namespace
 
-namespace gz
+namespace ignition
 {
   namespace plugin
   {

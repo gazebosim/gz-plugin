@@ -16,13 +16,13 @@ target_link_libraries(my_target PUBLIC ignition-plugin1::core)
 
 However, if your code wants to be able to load plugins, it should link to the
 `loader` component. In most cases, it should probably link privately, unless you
-need the `gz::plugin::Loader` class to be part of your library's API:
+need the `ignition::plugin::Loader` class to be part of your library's API:
 
 ```
 target_link_libraries(my_target PRIVATE ignition-plugin1::loader)
 ```
 
-If `gz::plugin::PluginPtr` objects are part of your library's API, then
+If `ignition::plugin::PluginPtr` objects are part of your library's API, then
 you may want `loader` to be private while `core` is public:
 
 ```
@@ -77,15 +77,15 @@ you choose exactly one.
 
 # Loading a library
 
-The `gz::common::SystemPaths` class was not ported into `ign-plugin`
+The `ignition::common::SystemPaths` class was not ported into `ign-plugin`
 because it is more related to filesystem utilities than to plugins. If you are
-currently using `gz::common::SystemPaths` to help with loading plugins,
+currently using `ignition::common::SystemPaths` to help with loading plugins,
 then you should continue to use it. It does not have a replacement in `ign-plugin`.
 
 Here is a list of things that you *should* replace:
 
 * `#include <gz/common/PluginLoader.hh>` should be replaced with `#include <gz/plugin/Loader.hh>`
-* `gz::common::PluginLoader` should be replaced with `gz::plugin::Loader`
+* `ignition::common::PluginLoader` should be replaced with `ignition::plugin::Loader`
 * When calling `Loader::Instantiate("....")` do **NOT** prefix the class name with `::`. E.g. `"::some_namespace::MyClass"` should now be `"some_namespace::MyClass"`.
 
 

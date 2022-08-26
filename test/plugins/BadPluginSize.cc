@@ -26,5 +26,5 @@ extern "C" void EXPORT IgnitionPluginHook(
     std::size_t *_inputAndOutputInfoSize,
     std::size_t *)
 {
-  *_inputAndOutputInfoSize = sizeof(gz::plugin::Info)+1;
+  *_inputAndOutputInfoSize = sizeof(ignition::plugin::Info)+1;
 }

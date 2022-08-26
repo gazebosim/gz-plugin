@@ -21,7 +21,7 @@
 
 #include "integrators.hh"
 
-namespace gz{
+namespace ignition{
 namespace plugin {
 namespace examples {
 namespace ForwardEuler {
@@ -53,7 +53,7 @@ std::vector<double> times(const double s,
 }
 
 /// \brief Forward Euler implementation of a numerical integrator
-class Integrator : public gz::plugin::examples::NumericalIntegrator
+class Integrator : public ignition::plugin::examples::NumericalIntegrator
 {
   // Documentation inherited
   public: void SetFunction(

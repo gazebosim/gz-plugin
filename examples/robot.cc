@@ -37,24 +37,24 @@ namespace bpo = boost::program_options;
 const std::string PluginLibDir = IGN_PLUGIN_EXAMPLES_LIBDIR;
 
 /////////////////////////////////////////////////
-using namespace gz::plugin::examples;
+using namespace ignition::plugin::examples;
 
 /////////////////////////////////////////////////
-using RobotPluginPtr = gz::plugin::SpecializedPluginPtr<
+using RobotPluginPtr = ignition::plugin::SpecializedPluginPtr<
     Drive, ProximitySensor, GPSSensor, Compass, MapDatabase>;
 
 /////////////////////////////////////////////////
 using EnvironmentPluginPtr =
-    gz::plugin::SpecializedPluginPtr<Environment>;
+    ignition::plugin::SpecializedPluginPtr<Environment>;
 
-using PointPair = std::pair<gz::math::Vector2d, gz::math::Vector2d>;
+using PointPair = std::pair<ignition::math::Vector2d, ignition::math::Vector2d>;
 
 /////////////////////////////////////////////////
-using IntersectionResult = std::pair<bool, gz::math::Vector2d>;
+using IntersectionResult = std::pair<bool, ignition::math::Vector2d>;
 
 /////////////////////////////////////////////////
 const IntersectionResult NoIntersection =
-    std::make_pair(false, gz::math::Vector2d());
+    std::make_pair(false, ignition::math::Vector2d());
 
 /////////////////////////////////////////////////
 IntersectionResult CheckIntersection(
@@ -93,13 +93,13 @@ IntersectionResult CheckIntersection(
       return NoIntersection;
   }
 
-  return std::make_pair(true, gz::math::Vector2d(x,y));
+  return std::make_pair(true, ignition::math::Vector2d(x,y));
 }
 
 /////////////////////////////////////////////////
 IntersectionResult CheckCollisions(
-    const gz::math::Vector2d &_x1,
-    const gz::math::Vector2d &_x0,
+    const ignition::math::Vector2d &_x1,
+    const ignition::math::Vector2d &_x0,
     const Layout &_layout)
 {
   PointPair points = std::make_pair(_x1, _x0);
@@ -135,7 +135,7 @@ void Simulate(const EnvironmentPluginPtr &_environment,
     uplink->ReadMap(layout);
 
   double time = 0.0;
-  gz::math::Vector2d x;
+  ignition::math::Vector2d x;
   double theta = 0.0;
 
   while (time < _duration)
@@ -144,7 +144,7 @@ void Simulate(const EnvironmentPluginPtr &_environment,
     if (ProximitySensor *proximity = _robot->QueryInterface<ProximitySensor>())
     {
       const double range = proximity->MaxRange();
-      const gz::math::Vector2d x_far = x + gz::math::Vector2d(
+      const ignition::math::Vector2d x_far = x + ignition::math::Vector2d(
             range*cos(theta), range*sin(theta));
       IntersectionResult result = CheckCollisions(x, x_far, layout);
 
@@ -171,11 +171,11 @@ void Simulate(const EnvironmentPluginPtr &_environment,
     }
 
     // Save the last state
-    gz::math::Vector2d x_last = x;
+    ignition::math::Vector2d x_last = x;
 
     // Get the driving information
     const double dt = 1.0/drive->Frequency();
-    const gz::math::Vector3d &vel = drive->Velocity();
+    const ignition::math::Vector3d &vel = drive->Velocity();
 
     // We integrate the position components with a half-step taken in the angle,
     // which should smooth out the behavior of sharp turns.
@@ -221,10 +221,10 @@ void Simulate(const EnvironmentPluginPtr &_environment,
 int main(int argc, char *argv[])
 {
   // Create an object that can search the system paths for the plugin libraries.
-  gz::common::SystemPaths paths;
+  ignition::common::SystemPaths paths;
 
   // Create a plugin loader
-  gz::plugin::Loader loader;
+  ignition::plugin::Loader loader;
 
   // Add the build directory path for the plugin libraries so the SystemPaths
   // object will know to search through it.
@@ -327,7 +327,7 @@ int main(int argc, char *argv[])
         paths.FindSharedLibrary(robotLib));
 
   std::unordered_set<std::string> drivePlugins =
-      loader.PluginsImplementing("gz::plugin::examples::Drive");
+      loader.PluginsImplementing("ignition::plugin::examples::Drive");
 
   RobotPluginPtr robot;
   // Get the first plugin from the robotLib library that provides a Drive
@@ -353,7 +353,7 @@ int main(int argc, char *argv[])
         paths.FindSharedLibrary(envLib));
 
   std::unordered_set<std::string> envInterfacePlugins =
-      loader.PluginsImplementing("gz::plugin::examples::Environment");
+      loader.PluginsImplementing("ignition::plugin::examples::Environment");
 
   EnvironmentPluginPtr environment;
   // Get the first plugin from the envLib library that provides an Environment

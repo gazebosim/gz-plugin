@@ -29,7 +29,7 @@
 
 #include <gz/plugin/Export.hh>
 
-namespace gz
+namespace ignition
 {
   namespace plugin
   {

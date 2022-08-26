@@ -30,7 +30,7 @@
 #include <gz/plugin/loader/Export.hh>
 #include <gz/plugin/PluginPtr.hh>
 
-namespace gz
+namespace ignition
 {
   namespace plugin
   {
