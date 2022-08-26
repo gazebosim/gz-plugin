@@ -21,7 +21,7 @@
 
 /////////////////////////////////////////////////
 TEST(PluginsWithNoDelete,
-     GZ_UTILS_TEST_DISABLED_ON_WIN32(AreNotDeletedOnUnload))
+     GZ_UTILS_TEST_ENABLED_ONLY_ON_LINUX(AreNotDeletedOnUnload))
 {
   LoadAndTestInstanceCounter(true, 1);
   // Since the plugin is not deleted on unload, the second time we load the

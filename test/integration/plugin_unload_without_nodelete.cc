@@ -21,7 +21,7 @@
 
 /////////////////////////////////////////////////
 TEST(PluginsWithoutNoDelete,
-     GZ_UTILS_TEST_DISABLED_ON_WIN32(AreDeletedOnUnload))
+     GZ_UTILS_TEST_ENABLED_ONLY_ON_LINUX(AreDeletedOnUnload))
 {
   LoadAndTestInstanceCounter(false, 1);
   // Unlike the test in *with* nodelete, the number of instances will remain 1
