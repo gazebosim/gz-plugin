@@ -10,6 +10,8 @@ add_library(GzDummyPlugins SHARED
   DummyPlugins.cc
   DummyPluginsOtherTranslationUnit.cc)
 
+add_library(GzInstanceCounter SHARED InstanceCounter.cc)
+
 add_library(GzDummyStaticPlugin       STATIC DummyStaticPlugin.cc)
 
 # Create a variable for the name of the header which will contain the dummy plugin path.
@@ -23,6 +25,7 @@ foreach(plugin_target
     GzDummyPlugins
     GzFactoryPlugins
     GzTemplatedPlugins
+    GzInstanceCounter
     GzDummyStaticPlugin)
 
   target_link_libraries(${plugin_target} PRIVATE
