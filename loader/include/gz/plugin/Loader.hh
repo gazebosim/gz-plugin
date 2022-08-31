@@ -133,7 +133,6 @@ namespace gz
       public: std::unordered_set<std::string> LoadLib(
                   const std::string &_pathToLibrary);
 
-
       /// \brief Load a library at the given path
       ///
       /// \param[in] _pathToLibrary

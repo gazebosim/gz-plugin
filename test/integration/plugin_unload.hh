@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2022 Open Source Robotics Foundation
  *
@@ -33,6 +32,7 @@
 /////////////////////////////////////////////////
 /// \brief Load the InstanceCounter plugin
 /// \param[in] _nodelete True if RTLD_NODELETE should be used when loading the
+/// \return Pointer to the plugin
 gz::plugin::PluginPtr LoadInstanceCounter(bool _nodelete)
 {
   gz::plugin::Loader pl;
