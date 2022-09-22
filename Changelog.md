@@ -15,16 +15,20 @@
 
 1. Ignition to Gazebo rename
     * [Pull request #78](https://github.com/gazebosim/gz-plugin/pull/78)
+    * [Pull request #79](https://github.com/gazebosim/gz-plugin/pull/79)
     * [Pull request #82](https://github.com/gazebosim/gz-plugin/pull/82)
     * [Pull request #83](https://github.com/gazebosim/gz-plugin/pull/83)
     * [Pull request #86](https://github.com/gazebosim/gz-plugin/pull/86)
     * [Pull request #87](https://github.com/gazebosim/gz-plugin/pull/87)
     * [Pull request #88](https://github.com/gazebosim/gz-plugin/pull/88)
     * [Pull request #89](https://github.com/gazebosim/gz-plugin/pull/89)
+    * [Pull request #90](https://github.com/gazebosim/gz-plugin/pull/90)
     * [Pull request #93](https://github.com/gazebosim/gz-plugin/pull/93)
     * [Pull request #104](https://github.com/gazebosim/gz-plugin/pull/104)
 
 1. CLI tool updates.
+    * [Pull request #55](https://github.com/gazebosim/gz-plugin/pull/55)
+    * [Pull request #65](https://github.com/gazebosim/gz-plugin/pull/65)
     * [Pull request #69](https://github.com/gazebosim/gz-plugin/pull/69)
     * [Pull request #80](https://github.com/gazebosim/gz-plugin/pull/80)
     * [Pull request #92](https://github.com/gazebosim/gz-plugin/pull/92)
