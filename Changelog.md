@@ -1,3 +1,47 @@
+## Gazebo Plugin 2.x
+
+### Gazebo Plugin 2.0.0
+
+1. Add option to use `RTLD_NODELETE` when loading a library.
+    * [Pull request #102](https://github.com/gazebosim/gz-plugin/pull/102)
+
+1. Improve install instructions.
+    * [Pull request #106](https://github.com/gazebosim/gz-plugin/pull/106)
+
+1. Version bumps for Garden and deprecations.
+    * [Pull request #74](https://github.com/gazebosim/gz-plugin/pull/74)
+    * [Pull request #76](https://github.com/gazebosim/gz-plugin/pull/76)
+    * [Pull request #77](https://github.com/gazebosim/gz-plugin/pull/77)
+
+1. Ignition to Gazebo rename
+    * [Pull request #78](https://github.com/gazebosim/gz-plugin/pull/78)
+    * [Pull request #79](https://github.com/gazebosim/gz-plugin/pull/79)
+    * [Pull request #82](https://github.com/gazebosim/gz-plugin/pull/82)
+    * [Pull request #83](https://github.com/gazebosim/gz-plugin/pull/83)
+    * [Pull request #86](https://github.com/gazebosim/gz-plugin/pull/86)
+    * [Pull request #87](https://github.com/gazebosim/gz-plugin/pull/87)
+    * [Pull request #88](https://github.com/gazebosim/gz-plugin/pull/88)
+    * [Pull request #89](https://github.com/gazebosim/gz-plugin/pull/89)
+    * [Pull request #90](https://github.com/gazebosim/gz-plugin/pull/90)
+    * [Pull request #93](https://github.com/gazebosim/gz-plugin/pull/93)
+    * [Pull request #104](https://github.com/gazebosim/gz-plugin/pull/104)
+
+1. CLI tool updates.
+    * [Pull request #55](https://github.com/gazebosim/gz-plugin/pull/55)
+    * [Pull request #65](https://github.com/gazebosim/gz-plugin/pull/65)
+    * [Pull request #69](https://github.com/gazebosim/gz-plugin/pull/69)
+    * [Pull request #80](https://github.com/gazebosim/gz-plugin/pull/80)
+    * [Pull request #92](https://github.com/gazebosim/gz-plugin/pull/92)
+
+1. Update GoogleTest to latest version.
+    * [Pull request #91](https://github.com/gazebosim/gz-plugin/pull/91)
+
+1. Clean unused lambda capture warning.
+    * [Pull request #95](https://github.com/gazebosim/gz-plugin/pull/95)
+
+1. Support static plugins.
+    * [Pull request #97](https://github.com/gazebosim/gz-plugin/pull/97)
+
 ## Gazebo Plugin 1.x
 
 ### Gazebo Plugin 1.2.1 (2021-09-24)
