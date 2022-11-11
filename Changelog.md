@@ -1,5 +1,10 @@
 ## Gazebo Plugin 1.x
 
+### Gazebo Plugin 1.3.0 (2022-11-11)
+
+1. ign -> gz Migrate Ignition Headers : gz-plugin
+    * [Pull request #101](https://github.com/gazebosim/gz-plugin/pull/101)
+
 ### Gazebo Plugin 1.3.0 (2022-08-15)
 
 1. Remove redundant namespace references
