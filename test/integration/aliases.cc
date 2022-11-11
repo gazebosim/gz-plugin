@@ -17,7 +17,7 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/Loader.hh>
+#include <gz/plugin/Loader.hh>
 
 #include "../plugins/DummyPlugins.hh"
 

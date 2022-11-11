@@ -15,15 +15,15 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_DETAIL_FACTORY_HH_
-#define IGNITION_PLUGIN_DETAIL_FACTORY_HH_
+#ifndef GZ_PLUGIN_DETAIL_FACTORY_HH_
+#define GZ_PLUGIN_DETAIL_FACTORY_HH_
 
 #include <memory>
 #include <utility>
 
-#include <ignition/utilities/SuppressWarning.hh>
+#include <gz/utilities/SuppressWarning.hh>
 
-#include <ignition/plugin/Factory.hh>
+#include <gz/plugin/Factory.hh>
 
 namespace ignition
 {

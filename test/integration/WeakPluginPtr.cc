@@ -17,8 +17,8 @@
 
 #include <gtest/gtest.h>
 
-#include <ignition/plugin/WeakPluginPtr.hh>
-#include <ignition/plugin/Loader.hh>
+#include <gz/plugin/WeakPluginPtr.hh>
+#include <gz/plugin/Loader.hh>
 
 #include "../plugins/DummyPlugins.hh"
 #include "utils.hh"

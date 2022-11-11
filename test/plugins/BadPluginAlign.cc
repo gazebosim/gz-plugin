@@ -15,7 +15,7 @@
  *
 */
 
-#include <ignition/plugin/Info.hh>
+#include <gz/plugin/Info.hh>
 
 #include "GenericExport.hh"
 

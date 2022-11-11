@@ -17,7 +17,7 @@
 
 #include <cmath>
 
-#include <ignition/plugin/Register.hh>
+#include <gz/plugin/Register.hh>
 
 #include "integrators.hh"
 

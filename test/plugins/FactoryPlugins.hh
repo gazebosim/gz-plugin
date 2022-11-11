@@ -15,10 +15,10 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_TEST_PLUGINS_FACTORYPLUGINS_HH_
-#define IGNITION_PLUGIN_TEST_PLUGINS_FACTORYPLUGINS_HH_
+#ifndef GZ_PLUGIN_TEST_PLUGINS_FACTORYPLUGINS_HH_
+#define GZ_PLUGIN_TEST_PLUGINS_FACTORYPLUGINS_HH_
 
-#include <ignition/plugin/Factory.hh>
+#include <gz/plugin/Factory.hh>
 
 #include "DummyPlugins.hh"
 

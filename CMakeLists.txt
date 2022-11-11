@@ -14,7 +14,10 @@ set(IGN_CMAKE_VER ${ignition-cmake2_VERSION_MAJOR})
 #============================================================================
 # Configure the project
 #============================================================================
-ign_configure_project(VERSION_SUFFIX)
+ign_configure_project(
+  REPLACE_IGNITION_INCLUDE_PATH gz/plugin
+  VERSION_SUFFIX
+)
 
 #============================================================================
 # Set project-specific options
@@ -71,4 +74,3 @@ ign_create_docs(
   API_MAINPAGE_MD "${CMAKE_BINARY_DIR}/api.md"
   TUTORIALS_MAINPAGE_MD "${CMAKE_BINARY_DIR}/tutorials.md"
   )
-

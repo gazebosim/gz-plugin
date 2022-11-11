@@ -22,8 +22,8 @@
 #include <cmath>
 #include <set>
 
-#include <ignition/plugin/Loader.hh>
-#include <ignition/common/SystemPaths.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/common/SystemPaths.hh>
 
 #include "plugins/integrators.hh"
 

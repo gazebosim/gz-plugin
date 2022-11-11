@@ -18,8 +18,8 @@
 #include <iostream>
 #include <string>
 
-#include "ignition/plugin/Loader.hh"
-#include "ignition/plugin/config.hh"
+#include "gz/plugin/Loader.hh"
+#include "gz/plugin/config.hh"
 
 using namespace ignition;
 using namespace plugin;

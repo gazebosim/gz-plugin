@@ -15,15 +15,15 @@
  *
 */
 
-#ifndef IGNITION_PLUGIN_EXAMPLES_PLUGINS_ROBOT_HH_
-#define IGNITION_PLUGIN_EXAMPLES_PLUGINS_ROBOT_HH_
+#ifndef GZ_PLUGIN_EXAMPLES_PLUGINS_ROBOT_HH_
+#define GZ_PLUGIN_EXAMPLES_PLUGINS_ROBOT_HH_
 
 #include <utility>
 
-#include <ignition/math/Vector2.hh>
-#include <ignition/math/Vector3.hh>
+#include <gz/math/Vector2.hh>
+#include <gz/math/Vector3.hh>
 
-#include <ignition/plugin/Register.hh>
+#include <gz/plugin/Register.hh>
 
 namespace ignition
 {

@@ -19,10 +19,10 @@
 
 #include <algorithm>
 
-#include <ignition/plugin/Loader.hh>
-#include <ignition/plugin/config.hh>
+#include <gz/plugin/Loader.hh>
+#include <gz/plugin/config.hh>
 
-#include <ignition/plugin/SpecializedPluginPtr.hh>
+#include <gz/plugin/SpecializedPluginPtr.hh>
 
 /////////////////////////////////////////////////
 TEST(Loader, InitialNoInterfacesImplemented)

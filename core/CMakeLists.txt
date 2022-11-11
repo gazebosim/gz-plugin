@@ -16,5 +16,4 @@ ign_build_tests(
   TYPE UNIT
   SOURCES ${tests})
 
-
-add_subdirectory(include/ignition/plugin)
+add_subdirectory(include)

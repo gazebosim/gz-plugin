@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include <ignition/plugin/Factory.hh>
+#include <gz/plugin/Factory.hh>
 
 // Dev Note (MXG): These tests are just here to make sure that the template and
 // inheritance schemes for Factories are working as expected. If the
