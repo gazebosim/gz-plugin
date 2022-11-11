@@ -60,6 +60,37 @@
 1. Remove gz-tools from CMakeLists.txt. Not used
     * [Pull request #56](https://github.com/gazebosim/gz-plugin/pull/56)
 
+
+## Gazebo Plugin 1.x
+
+### Gazebo Plugin 1.3.0 (2022-11-11)
+
+1. ign -> gz Migrate Ignition Headers : gz-plugin
+    * [Pull request #101](https://github.com/gazebosim/gz-plugin/pull/101)
+
+### Gazebo Plugin 1.3.0 (2022-08-15)
+
+1. Remove redundant namespace references
+    * [Pull request #100](https://github.com/gazebosim/gz-plugin/pull/100)
+
+1. Change `IGN_DESIGNATION` to `GZ_DESIGNATION`
+    * [Pull request #96](https://github.com/gazebosim/gz-plugin/pull/96)
+
+1. Ignition -> Gazebo
+    * [Pull request #94](https://github.com/gazebosim/gz-plugin/pull/94)
+
+1. Bash completion for flags
+    * [Pull request #81](https://github.com/gazebosim/gz-plugin/pull/81)
+
+1. Add LICENSE file
+    * [Pull request #72](https://github.com/gazebosim/gz-plugin/pull/72)
+
+1. Add Ubuntu Jammy CI
+    * [Pull request #68](https://github.com/gazebosim/gz-plugin/pull/68)
+
+1. Install ruby commands on Windows
+    * [Pull request #63](https://github.com/gazebosim/gz-plugin/pull/63)
+
 ### Gazebo Plugin 1.2.0 (2021-03-30)
 
 1. Infrastructure
