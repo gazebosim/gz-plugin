@@ -15,5 +15,16 @@
  *
  */
 
-#include <gz/plugin/SpecializedPlugin.hh>
-#include <ignition/plugin/config.hh>
+#include <gz/utils/ExtraTestMacros.hh>
+
+#include "plugin_unload.hh"
+
+/////////////////////////////////////////////////
+TEST(PluginsWithNoDelete,
+     GZ_UTILS_TEST_ENABLED_ONLY_ON_LINUX(AreNotDeletedOnUnload))
+{
+  LoadAndTestInstanceCounter(true, 1);
+  // Since the plugin is not deleted on unload, the second time we load the
+  // plugin, the instance count is incremenetd.
+  LoadAndTestInstanceCounter(true, 2);
+}

@@ -20,7 +20,8 @@ foreach(test ${test_targets})
       GzBadPluginSize
       GzDummyPlugins
       GzFactoryPlugins
-      GzTemplatedPlugins)
+      GzTemplatedPlugins
+      GzInstanceCounter)
 
     target_compile_definitions(${test} PRIVATE
       "${plugin_target}_LIB=\"$<TARGET_FILE:${plugin_target}>\"")
@@ -33,6 +34,8 @@ foreach(test
     INTEGRATION_EnablePluginFromThis_TEST
     INTEGRATION_factory
     INTEGRATION_plugin
+    INTEGRATION_plugin_unload_with_nodelete
+    INTEGRATION_plugin_unload_without_nodelete
     INTEGRATION_WeakPluginPtr)
 
   if(TARGET ${test})
