@@ -46,7 +46,7 @@ namespace gz
       /// \return If a library exists at the given path, get a point to its dl
       /// handle. If the library does not exist, get a nullptr.
       public: std::shared_ptr<void> LoadLib(
-        const std::string &_pathToLibrary);
+        const std::string &_pathToLibrary, bool _noDelete);
 
       /// \brief Using a dl handle produced by LoadLib, extract the
       /// Info from the loaded library.
@@ -140,11 +140,17 @@ namespace gz
     std::unordered_set<std::string> Loader::LoadLib(
         const std::string &_pathToLibrary)
     {
+      return this->LoadLib(_pathToLibrary, false);
+    }
+    /////////////////////////////////////////////////
+    std::unordered_set<std::string> Loader::LoadLib(
+        const std::string &_pathToLibrary, bool _noDelete)
+    {
       std::unordered_set<std::string> newPlugins;
 
       // Attempt to load the library at this path
       const std::shared_ptr<void> &dlHandle =
-          this->dataPtr->LoadLib(_pathToLibrary);
+          this->dataPtr->LoadLib(_pathToLibrary, _noDelete);
 
       // Quit early and return an empty set of plugin names if we did not
       // actually get a valid dlHandle.
@@ -420,7 +426,7 @@ namespace gz
 
     /////////////////////////////////////////////////
     std::shared_ptr<void> Loader::Implementation::LoadLib(
-        const std::string &_full_path)
+        const std::string &_full_path, bool _noDelete)
     {
       std::shared_ptr<void> dlHandlePtr;
 
@@ -431,7 +437,14 @@ namespace gz
 
       // NOTE: We open using RTLD_LOCAL instead of RTLD_GLOBAL to prevent the
       // symbols of different libraries from writing over each other.
-      void *dlHandle = dlopen(_full_path.c_str(), RTLD_LAZY | RTLD_LOCAL);
+#ifdef _WIN32
+      // RTLD_NODELETE is not defined in dlfcn-32.
+      (void) _noDelete;
+      int dlopenMode = RTLD_LAZY | RTLD_LOCAL;
+#else
+      int dlopenMode = RTLD_LAZY | RTLD_LOCAL | (_noDelete ? RTLD_NODELETE : 0);
+#endif
+      void *dlHandle = dlopen(_full_path.c_str(), dlopenMode);
 
       const char *loadError = dlerror();
       if (nullptr == dlHandle || nullptr != loadError)

@@ -15,6 +15,5 @@ gz_build_tests(
   TYPE UNIT
   SOURCES ${tests})
 
-
 add_subdirectory(include/gz/plugin)
-install(DIRECTORY include/gz DESTINATION ${GZ_INCLUDE_INSTALL_DIR_FULL})
+install(DIRECTORY include/ignition DESTINATION ${GZ_INCLUDE_INSTALL_DIR_FULL})

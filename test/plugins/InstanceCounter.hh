@@ -15,5 +15,22 @@
  *
  */
 
-#include <gz/plugin/SpecializedPlugin.hh>
-#include <ignition/plugin/config.hh>
+#ifndef GZ_PLUGIN_TEST_PLUGINS_INSTANCECOUNTER_HH_
+#define GZ_PLUGIN_TEST_PLUGINS_INSTANCECOUNTER_HH_
+
+namespace test
+{
+namespace util
+{
+/// \brief Get the instance count of this plugin, that's the number of times
+/// this plugin has been instantiated in this process.
+class InstanceCounterBase
+{
+  public: virtual ~InstanceCounterBase() = default;
+
+  public: virtual int Instances() = 0;
+};
+
+}  // namespace util
+}  // namespace test
+#endif

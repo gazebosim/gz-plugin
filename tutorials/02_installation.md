@@ -48,9 +48,12 @@ sudo apt install libgz-plugin2-dev
 1. Install Gazebo Tools if you want to use the `gz plugin` command line tool:
   ```bash
   sudo apt-get install gz-tools2
+  ```
 
 2. Clone the repository
   ```bash
+  # Optionally, append `-b gz-plugin#` (replace # with a number) to check out a specific version
+  # From version 2 use `gz-plugin#`, lower versions `ign-plugin#`
   git clone https://github.com/gazebosim/gz-plugin
   ```
 
@@ -101,6 +104,8 @@ Sierra (10.12) or later.
 
 2. Clone the repository
   ```bash
+  # Optionally, append `-b gz-plugin#` (replace # with a number) to check out a specific version
+  # From version 2 use `gz-plugin#`, lower versions `ign-plugin#`
   git clone https://github.com/gazebosim/gz-plugin
   ```
 
@@ -159,7 +164,8 @@ This assumes you have created and activated a Conda environment while installing
 
 2. Navigate to where you would like to build the library, and clone the repository.
   ```bash
-  # Optionally, append `-b ign-plugin#` (replace # with a number) to check out a specific version
+  # Optionally, append `-b gz-plugin#` (replace # with a number) to check out a specific version
+  # From version 2 use `gz-plugin#`, lower versions `ign-plugin#`
   git clone https://github.com/gazebosim/gz-plugin
   ```
 
@@ -191,6 +197,8 @@ You can also generate the documentation from a clone of this repository by follo
 
 2. Clone the repository
   ```bash
+  # Optionally, append `-b gz-plugin#` (replace # with a number) to check out a specific version
+  # From version 2 use `gz-plugin#`, lower versions `ign-plugin#`
   git clone https://github.com/gazebosim/gz-plugin
   ```
 

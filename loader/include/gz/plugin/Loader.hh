@@ -133,6 +133,17 @@ namespace gz
       public: std::unordered_set<std::string> LoadLib(
                   const std::string &_pathToLibrary);
 
+      /// \brief Load a library at the given path
+      ///
+      /// \param[in] _pathToLibrary
+      ///   The path to a library
+      /// \param[in] _noDelete
+      ///   If true, RTLD_NODELETE will be used when loading the library.
+      ///
+      /// \returns The set of plugins that have been loaded from the library
+      public: std::unordered_set<std::string> LoadLib(
+                  const std::string &_pathToLibrary, bool _noDelete);
+
       /// \brief Instantiates a plugin for the given plugin name
       ///
       /// \param[in] _pluginNameOrAlias
