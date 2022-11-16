@@ -24,6 +24,8 @@
 #include "gz/plugin/config.hh"
 #include "gz.hh"
 
+using Loader = gz::plugin::Loader;
+
 //////////////////////////////////////////////////
 extern "C" void cmdPluginInfo(
     const char *_plugin, int _verbose)
@@ -34,7 +36,7 @@ extern "C" void cmdPluginInfo(
     return;
   }
 
-  gz::plugin::Loader pl;
+  Loader pl;
   std::cout << "Loading plugin library file [" << _plugin << "]\n";
 
   // Print names of plugins exported by library file

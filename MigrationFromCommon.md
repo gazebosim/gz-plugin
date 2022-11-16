@@ -84,8 +84,10 @@ then you should continue to use it. It does not have a replacement in `gz-plugin
 
 Here is a list of things that you *should* replace:
 
+* `#include <ignition/common/PluginLoader.hh>` should be replaced with `#include <gz/plugin/Loader.hh>`
 * `#include <gz/common/PluginLoader.hh>` should be replaced with `#include <gz/plugin/Loader.hh>`
 * `gz::common::PluginLoader` should be replaced with `gz::plugin::Loader`
+* `ignition::common::PluginLoader` should be replaced with `gz::plugin::Loader`
 * When calling `Loader::Instantiate("....")` do **NOT** prefix the class name with `::`. E.g. `"::some_namespace::MyClass"` should now be `"some_namespace::MyClass"`.
 
 
