@@ -1,0 +1,139 @@
+load(
+    "@gz//bazel/skylark:build_defs.bzl",
+    "GZ_FEATURES",
+    "GZ_ROOT",
+    "GZ_VISIBILITY",
+    "gz_configure_header",
+    "gz_export_header",
+    "gz_include_header",
+)
+
+package(
+    default_visibility = GZ_VISIBILITY,
+    features = GZ_FEATURES,
+)
+
+licenses(["notice"])  # Apache-2.0
+
+gz_configure_header(
+    name = "config",
+    src = "core/include/gz/plugin/config.hh.in",
+    cmakelists = ["CMakeLists.txt"],
+    package = "plugin",
+)
+
+gz_export_header(
+    name = "core/include/gz/plugin/Export.hh",
+    export_base = "GZ_PLUGIN",
+    lib_name = "gz-plugin",
+    visibility = ["//visibility:private"],
+)
+
+public_headers_no_gen = glob([
+    "core/include/gz/plugin/*.hh",
+    "core/include/gz/plugin/detail/*.hh",
+])
+
+sources = glob(
+    ["core/src/*.cc"],
+    exclude = ["src/*_TEST.cc"],
+)
+
+gz_include_header(
+    name = "pluginhh_genrule",
+    out = "core/include/gz/plugin.hh",
+    hdrs = public_headers_no_gen + [
+        "core/include/gz/plugin/config.hh",
+        "core/include/gz/plugin/Export.hh",
+    ],
+)
+
+public_headers = public_headers_no_gen + [
+    "core/include/gz/plugin/config.hh",
+    "core/include/gz/plugin/Export.hh",
+    "core/include/gz/plugin.hh",
+]
+
+cc_library(
+    name = "core",
+    srcs = sources,
+    hdrs = public_headers,
+    includes = ["core/include"],
+    deps = [
+        GZ_ROOT + "utils",
+    ],
+)
+
+[cc_test(
+    name = src.replace("/", "_").replace(".cc", "").replace("src_", ""),
+    srcs = [src],
+    deps = [
+        ":core",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+) for src in glob(
+    [
+        "core/src/*_TEST.cc",
+    ],
+)]
+
+cc_library(
+    name = "register",
+    hdrs = [
+        "register/include/gz/plugin/Register.hh",
+        "register/include/gz/plugin/RegisterMore.hh",
+        "register/include/gz/plugin/RegisterStatic.hh",
+        "register/include/gz/plugin/detail/Common.hh",
+        "register/include/gz/plugin/detail/Register.hh",
+        "register/include/gz/plugin/detail/RegisterStatic.hh",
+    ],
+    includes = [
+        "register/include",
+    ],
+    deps = [
+        ":core",
+    ],
+)
+
+gz_export_header(
+    name = "loader/include/gz/plugin/loader/Export.hh",
+    export_base = "GZ_PLUGIN_LOADER",
+    lib_name = "gz-plugin-loader",
+    visibility = ["//visibility:private"],
+)
+
+cc_library(
+    name = "loader",
+    srcs = [
+        "loader/src/Loader.cc",
+        "loader/src/detail/Registry.cc",
+        "loader/src/detail/StaticRegistry.cc",
+    ],
+    hdrs = [
+        "loader/include/gz/plugin/Loader.hh",
+        "loader/include/gz/plugin/detail/Loader.hh",
+        "loader/include/gz/plugin/detail/Registry.hh",
+        "loader/include/gz/plugin/detail/StaticRegistry.hh",
+        "loader/include/gz/plugin/loader/Export.hh",
+    ],
+    includes = ["loader/include"],
+    deps = [
+        ":core",
+        GZ_ROOT + "utils",
+    ],
+)
+
+cc_test(
+    name = "Loader_TEST",
+    srcs = ["loader/src/Loader_TEST.cc"],
+    defines = [
+        'GzDummyPlugins_LIB=\\"./plugin/test/libGzDummyPlugins.so\\"',
+    ],
+    deps = [
+        ":loader",
+        GZ_ROOT + "plugin/test:test_plugins",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)

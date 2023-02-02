@@ -128,7 +128,7 @@ double RunPerformanceTest(const PluginType &plugin)
 TEST(PluginSpecialization, AccessTime)
 {
   gz::plugin::Loader pl;
-  pl.LoadLib(GzDummyPlugin_LIB);
+  pl.LoadLib(GzDummyPlugins_LIB);
 
   // Load up the generic plugin
   gz::plugin::PluginPtr plugin =
