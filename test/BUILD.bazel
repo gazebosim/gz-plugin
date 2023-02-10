@@ -225,15 +225,3 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
-
-#cc_test(
-#    name = "PERFORMANCE_plugin_specialization",
-#    srcs = [
-#        "performance/plugin_specialization.cc",
-#    ],
-#    deps = [
-#        ":test_plugins",
-#        GZ_ROOT + "plugin:loader",
-#        "@gtest//:gtest_main",
-#    ],
-#)
