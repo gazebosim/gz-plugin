@@ -30,8 +30,8 @@ It is used to register plugin libraries and load them dynamically at runtime.
 
 ## Installation
 
-See the [installation tutorial](https://gazebosim.org/api/plugin/1.2/installation.html).
+See the [installation tutorial](https://gazebosim.org/api/plugin/2/installation.html).
 
 # Documentation
 
-API documentation and tutorials can be accessed at [https://gazebosim.org/libs/plugin](https://gazebosim.org/libs/plugin)
+Visit the [documentation page](https://gazebosim.org/api/plugin/2/index.html).
