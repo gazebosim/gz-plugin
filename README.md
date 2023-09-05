@@ -12,7 +12,7 @@ Build | Status
 Test coverage | [![codecov](https://codecov.io/gh/gazebosim/gz-plugin/branch/main/graph/badge.svg)](https://codecov.io/gh/gazebosim/gz-plugin/branch/main)
 Ubuntu Focal | [![Build Status](https://build.osrfoundation.org/job/ignition_plugin-ci-main-focal-amd64/badge/icon)](https://build.osrfoundation.org/job/ignition_plugin-ci-main-focal-amd64/)
 Homebrew      | [![Build Status](https://build.osrfoundation.org/buildStatus/icon?job=ignition_plugin-ci-main-homebrew-amd64)](https://build.osrfoundation.org/job/ignition_plugin-ci-main-homebrew-amd64)
-Windows     | [![Build Status](https://build.osrfoundation.org/job/ignition_plugin-ci-main-windows7-amd64/badge/icon)](https://build.osrfoundation.org/job/ignition_plugin-ci-main-windows7-amd64/)
+Windows     | [![Build Status](https://build.osrfoundation.org/view/ign-garden/job/ign_plugin-gz-2-win/badge/icon)](https://build.osrfoundation.org/view/ign-garden/job/ign_plugin-gz-2-win/)
 
 Gazebo Plugin is a component in the [Gazebo](http://gazebosim.org) framework, a set
 of libraries designed to rapidly develop robot applications.  
