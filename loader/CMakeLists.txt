@@ -54,7 +54,8 @@ endif()
 
 install(
   DIRECTORY include/
-  DESTINATION ${IGN_INCLUDE_INSTALL_DIR_FULL})
+  DESTINATION ${IGN_INCLUDE_INSTALL_DIR_FULL}
+  PATTERN "CMakeLists.txt" EXCLUDE)
 
 #============================================================================
 # ign command line support
