@@ -14,6 +14,17 @@ target_link_libraries(${plugin_executable}
 
 set(EXE_INSTALL_DIR "${CMAKE_INSTALL_LIBEXECDIR}/gz/${GZ_DESIGNATION}${PROJECT_VERSION_MAJOR}")
 
+if (APPLE)
+  file(RELATIVE_PATH
+    EXE_INSTALL_DIR_RELATIVE_PATH_TO_PREFIX
+    "${CMAKE_INSTALL_PREFIX}/${EXE_INSTALL_DIR}"
+    "${CMAKE_INSTALL_PREFIX}"
+  )
+  set_target_properties(${plugin_executable} PROPERTIES
+    INSTALL_RPATH "@loader_path/${EXE_INSTALL_DIR_RELATIVE_PATH_TO_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
+  )
+endif()
+
 install(
   TARGETS
   ${plugin_executable}
