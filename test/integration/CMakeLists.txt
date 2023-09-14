@@ -55,6 +55,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   # linking generator expressions as described here:
   # https://cmake.org/cmake/help/latest/manual/cmake-generator-expressions.7.html#genex:LINK_LIBRARY
   target_link_libraries(INTEGRATION_static_plugins -WHOLEARCHIVE:$<TARGET_FILE:GzDummyStaticPlugin>)
+  # The whole-archive invocation doesn't correctly compute dependencies,
+  # so explicitly require the plugin before the test can build.
+  add_dependencies(INTEGRATION_static_plugins GzDummyStaticPlugin)
 else()
   target_link_libraries(INTEGRATION_static_plugins
       $<$<CXX_COMPILER_ID:GNU>:-Wl,--whole-archive>
