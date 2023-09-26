@@ -1,5 +1,32 @@
 ## Gazebo Plugin 2.x
 
+### Gazebo Plugin 2.0.2 (2023-09-26)
+
+1. Add explicit dependency on plugin library
+    * [Pull request #124](https://github.com/gazebosim/gz-plugin/pull/124)
+
+1. Documentation fixes
+    * [Pull request #122](https://github.com/gazebosim/gz-plugin/pull/122)
+    * [Pull request #112](https://github.com/gazebosim/gz-plugin/pull/112)
+
+1. Infrastructure
+    * [Pull request #121](https://github.com/gazebosim/gz-plugin/pull/121)
+    * [Pull request #120](https://github.com/gazebosim/gz-plugin/pull/120)
+    * [Pull request #115](https://github.com/gazebosim/gz-plugin/pull/115)
+
+1. Update parameter name in DemangleSymbol to match declaration
+    * [Pull request #117](https://github.com/gazebosim/gz-plugin/pull/117)
+
+1. Inline functions in plugin_unload.hh
+    * [Pull request #118](https://github.com/gazebosim/gz-plugin/pull/118)
+
+1. Rename COPYING to LICENSE
+    * [Pull request #114](https://github.com/gazebosim/gz-plugin/pull/114)
+
+1. Bazel build rules for garden
+    * [Pull request #113](https://github.com/gazebosim/gz-plugin/pull/113)
+
+
 ### Gazebo Plugin 2.0.1
 
 1. Forward port 1.4.0.
