@@ -43,7 +43,7 @@ TEST(Loader, LoadNonexistantLibrary)
 TEST(Loader, LoadNonLibrary)
 {
   gz::plugin::Loader loader;
-  EXPECT_TRUE(loader.LoadLib(std::string(GZ_PLUGIN_SOURCE_DIR)
+  EXPECT_TRUE(loader.LoadLib(std::string("")
                              + "/core/src/Plugin.cc").empty());
 }
 
@@ -51,7 +51,7 @@ TEST(Loader, LoadNonLibrary)
 TEST(Loader, LoadNonPluginLibrary)
 {
   gz::plugin::Loader loader;
-  EXPECT_TRUE(loader.LoadLib(GZ_PLUGIN_LIB).empty());
+  EXPECT_TRUE(loader.LoadLib("").empty());
 }
 
 /////////////////////////////////////////////////
