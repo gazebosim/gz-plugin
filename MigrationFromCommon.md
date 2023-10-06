@@ -11,7 +11,7 @@ framework. Some of the instructions here may also be useful to new adopters of
 just wants to use `PluginPtr` objects can link to `core`, e.g.:
 
 ```
-target_link_libraries(my_target PUBLIC gz-plugin2::core)
+target_link_libraries(my_target PUBLIC gz-plugin3::core)
 ```
 
 However, if your code wants to be able to load plugins, it should link to the
@@ -19,7 +19,7 @@ However, if your code wants to be able to load plugins, it should link to the
 need the `gz::plugin::Loader` class to be part of your library's API:
 
 ```
-target_link_libraries(my_target PRIVATE gz-plugin2::loader)
+target_link_libraries(my_target PRIVATE gz-plugin3::loader)
 ```
 
 If `gz::plugin::PluginPtr` objects are part of your library's API, then
@@ -28,9 +28,9 @@ you may want `loader` to be private while `core` is public:
 ```
 target_link_libraries(my_target
   PUBLIC
-    gz-plugin2::core
+    gz-plugin3::core
   PRIVATE
-    gz-plugin2::loader
+    gz-plugin3::loader
 )
 ```
 
@@ -39,7 +39,7 @@ then you should link against the `register` component. This should almost always
 be a private link, since plugin registration is purely internal for a library:
 
 ```
-target_link_libraries(my_plugin PRIVATE gz-plugin2::register)
+target_link_libraries(my_plugin PRIVATE gz-plugin3::register)
 ```
 
 # Registering a plugin
