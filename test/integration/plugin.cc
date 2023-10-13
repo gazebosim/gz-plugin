@@ -257,54 +257,54 @@ void TestSetAndMapUsage(
     const gz::plugin::PluginPtr &plugin)
 {
   PluginPtrType1 plugin1 = plugin;
-  PluginPtrType2 plugin3 = plugin1;
+  PluginPtrType2 plugin2 = plugin1;
 
   EXPECT_TRUE(plugin1 == plugin);
-  EXPECT_TRUE(plugin1 == plugin3);
-  EXPECT_FALSE(plugin1 != plugin3);
+  EXPECT_TRUE(plugin1 == plugin2);
+  EXPECT_FALSE(plugin1 != plugin2);
 
-  EXPECT_TRUE(plugin3 == plugin);
-  EXPECT_TRUE(plugin3 == plugin1);
-  EXPECT_FALSE(plugin3 != plugin1);
+  EXPECT_TRUE(plugin2 == plugin);
+  EXPECT_TRUE(plugin2 == plugin1);
+  EXPECT_FALSE(plugin2 != plugin1);
 
   std::set<gz::plugin::PluginPtr> orderedSet;
   EXPECT_TRUE(orderedSet.insert(plugin1).second);
   EXPECT_FALSE(orderedSet.insert(plugin1).second);
-  EXPECT_FALSE(orderedSet.insert(plugin3).second);
+  EXPECT_FALSE(orderedSet.insert(plugin2).second);
 
   std::unordered_set<gz::plugin::PluginPtr> unorderedSet;
   EXPECT_TRUE(unorderedSet.insert(plugin1).second);
   EXPECT_FALSE(unorderedSet.insert(plugin1).second);
-  EXPECT_FALSE(unorderedSet.insert(plugin3).second);
+  EXPECT_FALSE(unorderedSet.insert(plugin2).second);
 
   std::map<gz::plugin::PluginPtr, std::string> orderedMap;
   EXPECT_TRUE(orderedMap.insert(std::make_pair(plugin1, "some string")).second);
   EXPECT_FALSE(orderedMap.insert(std::make_pair(plugin1, "a string")).second);
-  EXPECT_FALSE(orderedMap.insert(std::make_pair(plugin3, "chars")).second);
+  EXPECT_FALSE(orderedMap.insert(std::make_pair(plugin2, "chars")).second);
 
   std::unordered_map<gz::plugin::PluginPtr, std::string> unorderedMap;
   EXPECT_TRUE(unorderedMap.insert(std::make_pair(plugin1, "strings")).second);
   EXPECT_FALSE(unorderedMap.insert(std::make_pair(plugin1, "letters")).second);
-  EXPECT_FALSE(unorderedMap.insert(std::make_pair(plugin3, "")).second);
+  EXPECT_FALSE(unorderedMap.insert(std::make_pair(plugin2, "")).second);
 
 
-  plugin3 = loader.Instantiate("test::util::DummyMultiPlugin");
-  EXPECT_TRUE(plugin1 != plugin3);
-  EXPECT_FALSE(plugin1 == plugin3);
-  EXPECT_TRUE(plugin3 != plugin1);
-  EXPECT_FALSE(plugin3 == plugin1);
+  plugin2 = loader.Instantiate("test::util::DummyMultiPlugin");
+  EXPECT_TRUE(plugin1 != plugin2);
+  EXPECT_FALSE(plugin1 == plugin2);
+  EXPECT_TRUE(plugin2 != plugin1);
+  EXPECT_FALSE(plugin2 == plugin1);
 
-  EXPECT_TRUE(orderedSet.insert(plugin3).second);
-  EXPECT_FALSE(orderedSet.insert(plugin3).second);
+  EXPECT_TRUE(orderedSet.insert(plugin2).second);
+  EXPECT_FALSE(orderedSet.insert(plugin2).second);
 
-  EXPECT_TRUE(unorderedSet.insert(plugin3).second);
-  EXPECT_FALSE(unorderedSet.insert(plugin3).second);
+  EXPECT_TRUE(unorderedSet.insert(plugin2).second);
+  EXPECT_FALSE(unorderedSet.insert(plugin2).second);
 
-  EXPECT_TRUE(orderedMap.insert(std::make_pair(plugin3, "letters")).second);
-  EXPECT_FALSE(orderedMap.insert(std::make_pair(plugin3, "chars")).second);
+  EXPECT_TRUE(orderedMap.insert(std::make_pair(plugin2, "letters")).second);
+  EXPECT_FALSE(orderedMap.insert(std::make_pair(plugin2, "chars")).second);
 
-  EXPECT_TRUE(unorderedMap.insert(std::make_pair(plugin3, "abc")).second);
-  EXPECT_FALSE(unorderedMap.insert(std::make_pair(plugin3, "def")).second);
+  EXPECT_TRUE(unorderedMap.insert(std::make_pair(plugin2, "abc")).second);
+  EXPECT_FALSE(unorderedMap.insert(std::make_pair(plugin2, "def")).second);
 }
 
 /////////////////////////////////////////////////
