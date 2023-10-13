@@ -4,6 +4,38 @@
 
 ## Gazebo Plugin 2.x
 
+### Gazebo Plugin 2.0.2 (2023-09-26)
+
+1. Add explicit dependency on plugin library
+    * [Pull request #124](https://github.com/gazebosim/gz-plugin/pull/124)
+
+1. Documentation fixes
+    * [Pull request #122](https://github.com/gazebosim/gz-plugin/pull/122)
+    * [Pull request #112](https://github.com/gazebosim/gz-plugin/pull/112)
+
+1. Infrastructure
+    * [Pull request #121](https://github.com/gazebosim/gz-plugin/pull/121)
+    * [Pull request #120](https://github.com/gazebosim/gz-plugin/pull/120)
+    * [Pull request #115](https://github.com/gazebosim/gz-plugin/pull/115)
+
+1. Update parameter name in DemangleSymbol to match declaration
+    * [Pull request #117](https://github.com/gazebosim/gz-plugin/pull/117)
+
+1. Inline functions in plugin_unload.hh
+    * [Pull request #118](https://github.com/gazebosim/gz-plugin/pull/118)
+
+1. Rename COPYING to LICENSE
+    * [Pull request #114](https://github.com/gazebosim/gz-plugin/pull/114)
+
+1. Bazel build rules for garden
+    * [Pull request #113](https://github.com/gazebosim/gz-plugin/pull/113)
+
+
+### Gazebo Plugin 2.0.1
+
+1. Forward port 1.4.0.
+    * [Pull request #109](https://github.com/gazebosim/gz-plugin/pull/109)
+
 ### Gazebo Plugin 2.0.0
 
 1. Add option to use `RTLD_NODELETE` when loading a library.
@@ -48,26 +80,7 @@
 
 ## Gazebo Plugin 1.x
 
-### Gazebo Plugin 1.2.1 (2021-09-24)
-
-1. Add Doxygen documentation checks to CI
-    * [Pull request #59](https://github.com/gazebosim/gz-plugin/pull/59)
-
-1. Infrastructure
-    * [Pull request #58](https://github.com/gazebosim/gz-plugin/pull/58)
-    * [Pull request #52](https://github.com/gazebosim/gz-plugin/pull/52)
-    * [Pull request #51](https://github.com/gazebosim/gz-plugin/pull/51)
-
-1. Find gz program instead of gz-tools
-    * [Pull request #57](https://github.com/gazebosim/gz-plugin/pull/57)
-
-1. Remove gz-tools from CMakeLists.txt. Not used
-    * [Pull request #56](https://github.com/gazebosim/gz-plugin/pull/56)
-
-
-## Gazebo Plugin 1.x
-
-### Gazebo Plugin 1.3.0 (2022-11-11)
+### Gazebo Plugin 1.4.0 (2022-11-11)
 
 1. ign -> gz Migrate Ignition Headers : gz-plugin
     * [Pull request #101](https://github.com/gazebosim/gz-plugin/pull/101)
@@ -94,6 +107,22 @@
 
 1. Install ruby commands on Windows
     * [Pull request #63](https://github.com/gazebosim/gz-plugin/pull/63)
+
+### Gazebo Plugin 1.2.1 (2021-09-24)
+
+1. Add Doxygen documentation checks to CI
+    * [Pull request #59](https://github.com/gazebosim/gz-plugin/pull/59)
+
+1. Infrastructure
+    * [Pull request #58](https://github.com/gazebosim/gz-plugin/pull/58)
+    * [Pull request #52](https://github.com/gazebosim/gz-plugin/pull/52)
+    * [Pull request #51](https://github.com/gazebosim/gz-plugin/pull/51)
+
+1. Find gz program instead of gz-tools
+    * [Pull request #57](https://github.com/gazebosim/gz-plugin/pull/57)
+
+1. Remove gz-tools from CMakeLists.txt. Not used
+    * [Pull request #56](https://github.com/gazebosim/gz-plugin/pull/56)
 
 ### Gazebo Plugin 1.2.0 (2021-03-30)
 

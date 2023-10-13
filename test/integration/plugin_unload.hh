@@ -33,7 +33,7 @@
 /// \brief Load the InstanceCounter plugin
 /// \param[in] _nodelete True if RTLD_NODELETE should be used when loading the
 /// \return Pointer to the plugin
-gz::plugin::PluginPtr LoadInstanceCounter(bool _nodelete)
+inline gz::plugin::PluginPtr LoadInstanceCounter(bool _nodelete)
 {
   gz::plugin::Loader pl;
 
@@ -50,7 +50,8 @@ gz::plugin::PluginPtr LoadInstanceCounter(bool _nodelete)
 /// \param[in] _nodelete True if RTLD_NODELETE should be used when loading the
 /// library.
 /// \param[in] _numExpectedInstances Expected number of instances of the plugin.
-void LoadAndTestInstanceCounter(bool _nodelete, int _numExpectedInstances)
+inline void LoadAndTestInstanceCounter(bool _nodelete,
+                                       int _numExpectedInstances)
 {
   gz::plugin::PluginPtr instanceCounterPlugin = LoadInstanceCounter(_nodelete);
   test::util::InstanceCounterBase *instanceCounter =
