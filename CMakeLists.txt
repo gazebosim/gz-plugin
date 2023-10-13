@@ -45,7 +45,7 @@ gz_find_package(DL
 #--------------------------------------
 # Find gz-tools
 find_program(GZ_TOOLS_PROGRAM gz)
-set(GZ_TOOLS_VER 2)
+set(GZ_TOOLS_VER 3)
 
 #--------------------------------------
 # Find gz-utils

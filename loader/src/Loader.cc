@@ -155,7 +155,9 @@ namespace gz
       // Quit early and return an empty set of plugin names if we did not
       // actually get a valid dlHandle.
       if (nullptr == dlHandle)
+      {
         return newPlugins;
+      }
 
       // Found a shared library, does it have the symbols we're looking for?
       std::vector<Info> loadedPlugins = this->dataPtr->LoadPlugins(
