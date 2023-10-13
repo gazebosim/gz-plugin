@@ -23,7 +23,6 @@
 /// \brief External hook to read the library version.
 /// \return C-string representing the version. Ex.: 0.1.2
 extern "C" const char *gzVersion();
-extern "C" const char GZ_DEPRECATED(2) *ignitionVersion();
 
 /// \brief Plugin info
 /// \param[in] _plugin Name of the plugin
