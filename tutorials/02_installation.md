@@ -35,19 +35,19 @@ wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 On Ubuntu systems, `apt-get` can be used to install `gz-plugin`:
 ```bash
 sudo apt-get update
-sudo apt install libgz-plugin2-dev
+sudo apt install libgz-plugin3-dev
 ```
 
 ## Source Installation
 
 1. Install Gazebo dependencies
   ```
-  sudo apt-get install libgz-cmake3-dev libgz-tools2-dev libgz-utils2-cli-dev
+  sudo apt-get install libgz-cmake4-dev libgz-tools3-dev libgz-utils3-cli-dev
   ```
 
 1. Install Gazebo Tools if you want to use the `gz plugin` command line tool:
   ```bash
-  sudo apt-get install gz-tools2
+  sudo apt-get install gz-tools3
   ```
 
 2. Clone the repository
@@ -91,7 +91,7 @@ Sierra (10.12) or later.
 2. Run the following commands
   ```bash
   brew tap osrf/simulation
-  brew install gz-plugin2
+  brew install gz-plugin3
   ```
 
 ## Source Installation
@@ -99,7 +99,7 @@ Sierra (10.12) or later.
 1. Install dependencies
   ```bash
   brew tap osrf/simulation
-  brew install gz-plugin2 --only-dependencies
+  brew install gz-plugin3 --only-dependencies
   ```
 
 2. Clone the repository

@@ -5,11 +5,11 @@ project(examples)
 find_package(gz-plugin3 QUIET REQUIRED COMPONENTS all)
 set(GZ_PLUGIN_VER ${gz-plugin3_VERSION_MAJOR})
 
-find_package(gz-common5 QUIET)
-set(GZ_COMMON_VER ${gz-common5_VERSION_MAJOR})
+find_package(gz-common6 QUIET)
+set(GZ_COMMON_VER ${gz-common6_VERSION_MAJOR})
 
-find_package(gz-math7 QUIET)
-set(GZ_MATH_VER ${gz-math7_VERSION_MAJOR})
+find_package(gz-math8 QUIET)
+set(GZ_MATH_VER ${gz-math8_VERSION_MAJOR})
 
 add_subdirectory(plugins)
 

@@ -3,7 +3,7 @@ set(gz_library_path "${CMAKE_BINARY_DIR}/test/lib/$<CONFIG>/ruby/gz/cmd${GZ_DESI
 
 # Generate a configuration file for internal testing.
 # Note that the major version of the library is included in the name.
-# Ex: plugin2.yaml
+# Ex: plugin3.yaml
 configure_file(
   "${GZ_DESIGNATION}.yaml.in"
   "${CMAKE_CURRENT_BINARY_DIR}/${GZ_DESIGNATION}${PROJECT_VERSION_MAJOR}.yaml.configured" @ONLY)
@@ -17,7 +17,7 @@ set(gz_library_path "${CMAKE_INSTALL_PREFIX}/lib/ruby/gz/cmd${GZ_DESIGNATION}${P
 
 # Generate the configuration file that is installed.
 # Note that the major version of the library is included in the name.
-# Ex: plugin2.yaml
+# Ex: plugin3.yaml
 configure_file(
   "${GZ_DESIGNATION}.yaml.in"
   "${CMAKE_CURRENT_BINARY_DIR}/${GZ_DESIGNATION}${PROJECT_VERSION_MAJOR}.yaml" @ONLY)
