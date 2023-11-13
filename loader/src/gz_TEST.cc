@@ -20,6 +20,8 @@
 #include <iostream>
 #include <string>
 
+#include <gz/utils/ExtraTestMacros.hh>
+
 #include "gtest/gtest.h"
 #include "gz/plugin/Loader.hh"
 
@@ -211,7 +213,7 @@ TEST(gzTest, PluginInfoVerboseDummyPlugins)
 
 //////////////////////////////////////////////////
 /// \brief Check --help message and bash completion script for consistent flags
-TEST(gzTest, PluginHelpVsCompletionFlags)
+TEST(gzTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(PluginHelpVsCompletionFlags))
 {
   // Path to gz executable
   std::string gz = std::string(GZ_PATH);
