@@ -9,13 +9,14 @@
 
 Build | Status
 -- | --
-Test coverage | [![codecov](https://codecov.io/gh/gazebosim/gz-plugin/branch/main/graph/badge.svg)](https://codecov.io/gh/gazebosim/gz-plugin/branch/main)
-Ubuntu Focal | [![Build Status](https://build.osrfoundation.org/job/ignition_plugin-ci-main-focal-amd64/badge/icon)](https://build.osrfoundation.org/job/ignition_plugin-ci-main-focal-amd64/)
-Homebrew      | [![Build Status](https://build.osrfoundation.org/buildStatus/icon?job=ignition_plugin-ci-main-homebrew-amd64)](https://build.osrfoundation.org/job/ignition_plugin-ci-main-homebrew-amd64)
-Windows     | [![Build Status](https://build.osrfoundation.org/view/ign-garden/job/ign_plugin-gz-2-win/badge/icon)](https://build.osrfoundation.org/view/ign-garden/job/ign_plugin-gz-2-win/)
+Test coverage | [![codecov](https://codecov.io/gh/gazebosim/gz-plugin/tree/gz-plugin2/graph/badge.svg)](https://codecov.io/gh/gazebosim/gz-plugin/tree/gz-plugin2)
+Ubuntu Jammy  | [![Build Status](https://build.osrfoundation.org/job/gz_plugin-ci-gz-plugin2-jammy-amd64/badge/icon)](https://build.osrfoundation.org/job/gz_plugin-ci-gz-plugin2-jammy-amd64/)
+Homebrew      | [![Build Status](https://build.osrfoundation.org/buildStatus/icon?job=gz_plugin-ci-gz-plugin2-homebrew-amd64)](https://build.osrfoundation.org/job/gz_plugin-ci-gz-plugin2-homebrew-amd64)
+Windows       | [![Build Status](https://build.osrfoundation.org/buildStatus/icon?job=gz_plugin-2-win)](https://build.osrfoundation.org/job/gz_plugin-2-win)
+
 
 Gazebo Plugin is a component in the [Gazebo](http://gazebosim.org) framework, a set
-of libraries designed to rapidly develop robot applications.  
+of libraries designed to rapidly develop robot applications.
 It is used to register plugin libraries and load them dynamically at runtime.
 
 [http://gazebosim.org](http://gazebosim.org)
