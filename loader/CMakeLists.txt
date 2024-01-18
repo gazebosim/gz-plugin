@@ -1,3 +1,4 @@
+
 # Collect source files into the "sources" variable and unit test files into the
 # "tests" variable
 gz_get_libsources_and_unittests(sources tests)
@@ -53,7 +54,8 @@ endif()
 
 install(
   DIRECTORY include/
-  DESTINATION ${GZ_INCLUDE_INSTALL_DIR_FULL})
+  DESTINATION ${GZ_INCLUDE_INSTALL_DIR_FULL}
+  PATTERN "CMakeLists.txt" EXCLUDE)
 
 #============================================================================
 # gz command line support
