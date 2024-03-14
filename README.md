@@ -1,6 +1,6 @@
 # Gazebo Plugin
 
-**Maintainer:** grey [AT] openrobotics [DOT] org
+**Maintainer:** ahcorde [AT] gmail [DOT] com
 
 [![GitHub open issues](https://img.shields.io/github/issues-raw/gazebosim/gz-plugin.svg)](https://github.com/gazebosim/gz-plugin/issues)
 [![GitHub open pull requests](https://img.shields.io/github/issues-pr-raw/gazebosim/gz-plugin.svg)](https://github.com/gazebosim/gz-plugin/pulls)
