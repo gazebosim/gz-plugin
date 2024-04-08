@@ -1,5 +1,26 @@
 ## Gazebo Plugin 2.x
 
+### Gazebo Plugin 2.0.3 (2024-04-08)
+
+1. Use relative install path for gz tool data
+    * [Pull request #140](https://github.com/gazebosim/gz-plugin/pull/140)
+
+1. Remove @mxgrey as codeowner and assign maintainership to @ahcorde
+    * [Pull request #137](https://github.com/gazebosim/gz-plugin/pull/137)
+
+1. Update CI badges in README
+    * [Pull request #134](https://github.com/gazebosim/gz-plugin/pull/134)
+
+1. Infrastructure
+    * [Pull request #132](https://github.com/gazebosim/gz-plugin/pull/132)
+
+1. Enable and fix gz test on windows
+    * [Pull request #128](https://github.com/gazebosim/gz-plugin/pull/128)
+    * [Pull request #131](https://github.com/gazebosim/gz-plugin/pull/131)
+
+1. Do not install CMakeLists.txt in loader/register
+    * [Pull request #123](https://github.com/gazebosim/gz-plugin/pull/123)
+
 ### Gazebo Plugin 2.0.2 (2023-09-26)
 
 1. Add explicit dependency on plugin library
