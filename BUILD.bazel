@@ -1,6 +1,5 @@
 load(
     "@gz//bazel/skylark:build_defs.bzl",
-    "GZ_FEATURES",
     "GZ_ROOT",
     "GZ_VISIBILITY",
     "gz_configure_header",
@@ -10,7 +9,6 @@ load(
 
 package(
     default_visibility = GZ_VISIBILITY,
-    features = GZ_FEATURES,
 )
 
 licenses(["notice"])  # Apache-2.0
@@ -43,8 +41,8 @@ gz_include_header(
     name = "pluginhh_genrule",
     out = "core/include/gz/plugin.hh",
     hdrs = public_headers_no_gen + [
-        "core/include/gz/plugin/config.hh",
         "core/include/gz/plugin/Export.hh",
+        "core/include/gz/plugin/config.hh",
     ],
 )
 
@@ -93,6 +91,7 @@ cc_library(
     ],
     deps = [
         ":core",
+        ":loader",
     ],
 )
 
@@ -126,11 +125,15 @@ cc_library(
 
 cc_test(
     name = "Loader_TEST",
-    srcs = ["loader/src/Loader_TEST.cc"],
+    srcs = [
+        "loader/src/Loader_TEST.cc",
+        ":config",
+    ],
     defines = [
         'GzDummyPlugins_LIB=\\"./plugin/test/libGzDummyPlugins.so\\"',
     ],
     deps = [
+        ":core",
         ":loader",
         GZ_ROOT + "plugin/test:test_plugins",
         "@gtest",
