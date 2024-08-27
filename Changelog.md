@@ -1,6 +1,30 @@
 ## Gazebo Plugin 3.x
 
-### Gazebo Plugin 3.X.X (202X-XX-XX)
+### Gazebo Plugin 3.0.0 (2024-08-27)
+
+Changes since 2.0.3:
+
+1. Enable 24.04 CI, require cmake 3.22.1
+    * [Pull request #146](https://github.com/gazebosim/gz-plugin/pull/146)
+
+1. Add package.xml
+    * [Pull request #139](https://github.com/gazebosim/gz-plugin/pull/139)
+
+1. Add bazel deps to pass layering_check
+    * [Pull request #143](https://github.com/gazebosim/gz-plugin/pull/143)
+
+1. Remove HIDE_SYMBOLS_BY_DEFAULT: replace by a default configuration in gz-cmake.
+    * [Pull request #135](https://github.com/gazebosim/gz-plugin/pull/135)
+
+1. Use HIDE_SYMBOLS_BY_DEFAULT
+    * [Pull request #130](https://github.com/gazebosim/gz-plugin/pull/130)
+
+1. Bumps in ionic: gz-plugin3
+    * [Pull request #127](https://github.com/gazebosim/gz-plugin/pull/127)
+
+1. Remove ignition
+    * [Pull request #119](https://github.com/gazebosim/gz-plugin/pull/119)
+
 
 ## Gazebo Plugin 2.x
 
