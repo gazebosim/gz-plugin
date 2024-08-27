@@ -2,7 +2,13 @@
 
 ### Gazebo Plugin 3.0.0 (2024-08-27)
 
-Changes since 2.0.3:
+1. **Baseline:** this includes all changes from 2.0.3 and earlier.
+
+1. Update gz-plugin3 badge URLs
+    * [Pull request #148](https://github.com/gazebosim/gz-plugin/pull/148)
+
+1. Ionic changelog
+    * [Pull request #147](https://github.com/gazebosim/gz-plugin/pull/147)
 
 1. Enable 24.04 CI, require cmake 3.22.1
     * [Pull request #146](https://github.com/gazebosim/gz-plugin/pull/146)
