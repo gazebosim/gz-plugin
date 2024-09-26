@@ -1,8 +1,12 @@
 ## Gazebo Plugin 3.x
 
-### Gazebo Plugin 3.0.0 (2024-08-27)
+### Gazebo Plugin 3.0.0 (2024-09-25)
 
 1. **Baseline:** this includes all changes from 2.0.3 and earlier.
+
+1. Miscellaneous documentation fixes
+    * [Pull request #153](https://github.com/gazebosim/gz-plugin/pull/153)
+    * [Pull request #150](https://github.com/gazebosim/gz-plugin/pull/150)
 
 1. Update gz-plugin3 badge URLs
     * [Pull request #148](https://github.com/gazebosim/gz-plugin/pull/148)
