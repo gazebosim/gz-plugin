@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.22.1 FATAL_ERROR)
 
 project(examples)
 
-find_package(gz-plugin3 QUIET REQUIRED COMPONENTS all)
-set(GZ_PLUGIN_VER ${gz-plugin3_VERSION_MAJOR})
+find_package(gz-plugin4 QUIET REQUIRED COMPONENTS all)
+set(GZ_PLUGIN_VER ${gz-plugin4_VERSION_MAJOR})
 
 find_package(gz-common6 QUIET)
 set(GZ_COMMON_VER ${gz-common6_VERSION_MAJOR})
