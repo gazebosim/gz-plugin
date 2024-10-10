@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.22.1 FATAL_ERROR)
 #============================================================================
 # Initialize the project
 #============================================================================
-project(gz-plugin3 VERSION 3.0.0)
+project(gz-plugin4 VERSION 4.0.0)
 
 #============================================================================
 # Find gz-cmake
@@ -17,7 +17,7 @@ set(GZ_CMAKE_VER ${gz-cmake4_VERSION_MAJOR})
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-gz_configure_project()
+gz_configure_project(VERSION_SUFFIX pre1)
 
 #============================================================================
 # Set project-specific options

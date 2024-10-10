@@ -35,7 +35,7 @@ wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 On Ubuntu systems, `apt-get` can be used to install `gz-plugin`:
 ```bash
 sudo apt-get update
-sudo apt install libgz-plugin3-dev
+sudo apt install libgz-plugin4-dev
 ```
 
 ## Source Installation
@@ -91,7 +91,7 @@ Sierra (10.12) or later.
 2. Run the following commands
   ```bash
   brew tap osrf/simulation
-  brew install gz-plugin3
+  brew install gz-plugin4
   ```
 
 ## Source Installation
@@ -99,7 +99,7 @@ Sierra (10.12) or later.
 1. Install dependencies
   ```bash
   brew tap osrf/simulation
-  brew install gz-plugin3 --only-dependencies
+  brew install gz-plugin4 --only-dependencies
   ```
 
 2. Clone the repository
