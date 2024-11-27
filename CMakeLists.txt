@@ -19,9 +19,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 gz_configure_project(VERSION_SUFFIX)
 
-if (POLICY CMP0177)
-  cmake_policy(SET CMP0177 NEW)
-endif()
+cmake_policy(SET CMP0177 NEW)
 
 #============================================================================
 # Set project-specific options
