@@ -1,5 +1,16 @@
 ## Gazebo Plugin 2.x
 
+### Gazebo Plugin 2.0.4 (2025-01-30)
+
+1. Fix typo in documentation
+    * [Pull request #151](https://github.com/gazebosim/gz-plugin/pull/151)
+
+1. Add package.xml
+    * [Pull request #139](https://github.com/gazebosim/gz-plugin/pull/139)
+
+1. Add bazel deps to pass layering_check
+    * [Pull request #143](https://github.com/gazebosim/gz-plugin/pull/143)
+
 ### Gazebo Plugin 2.0.3 (2024-04-08)
 
 1. Use relative install path for gz tool data
