@@ -1,5 +1,13 @@
 ## Gazebo Plugin 3.x
 
+### Gazebo Plugin 3.0.1 (2025-02-12)
+
+1. Require cmake 3.10.2 for consistency
+    * [Pull request #162](https://github.com/gazebosim/gz-plugin/pull/162)
+
+1. Fix typo in documentation (#150)
+    * [Pull request #151](https://github.com/gazebosim/gz-plugin/pull/151)
+
 ### Gazebo Plugin 3.0.0 (2024-09-25)
 
 1. **Baseline:** this includes all changes from 2.0.3 and earlier.

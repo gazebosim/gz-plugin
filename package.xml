@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
   <name>gz-plugin3</name>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <description>Gazebo Plugin : Cross-platform C++ library for dynamically loading plugins.</description>
   <maintainer email="ahcorde@gmail.com">Alejandro Hernández Cordero</maintainer>
   <license>Apache License 2.0</license>
