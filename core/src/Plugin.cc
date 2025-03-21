@@ -224,7 +224,7 @@ namespace gz
       /// \param[in] _info
       ///   A reference to the plugin's Info
       /// \param[in] _instance
-      ///   A reference to the plugin's abstact instance
+      ///   A reference to the plugin's abstract instance
       public: void Copy(const ConstInfoPtr &_info,
                         const std::shared_ptr<void> &_instance)
       {
