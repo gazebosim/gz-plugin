@@ -218,7 +218,7 @@ namespace gz
         /// the ComposePlugin class.
         ///
         /// The dispatch is performed by casting this object to the type that
-        /// specializes for the requested Interface, if such a type is availabe
+        /// specializes for the requested Interface, if such a type is available
         /// within its inheritance structure. Otherwise, we cast to the generic
         /// Plugin type.
         #define DETAIL_GZ_PLUGIN_COMPOSEPLUGIN_DISPATCH( \

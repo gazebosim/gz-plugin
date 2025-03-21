@@ -72,7 +72,7 @@ namespace gz
       public: virtual void ForgetInfo(
           const std::string &/*_pluginName*/) override { }
 
-      /// \brief Construtor
+      /// \brief Constructor
       protected: StaticRegistry() = default;
 
       /// \brief Holds info required to construct a plugin

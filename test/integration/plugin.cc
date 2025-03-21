@@ -216,7 +216,7 @@ TEST(SpecializedPluginPtr, Construction)
   EXPECT_EQ(newIntValue, fooBase->MyIntegerValueIs());
 
   // SomeSpecializedPluginPtr is not specialized for DummyDoubleBase, so here we
-  // make sure that it is not being retrieved through specialized acccess.
+  // make sure that it is not being retrieved through specialized access.
   usedSpecializedInterfaceAccess = false;
   test::util::DummyDoubleBase *doubleBase =
       plugin->QueryInterface<test::util::DummyDoubleBase>();
@@ -586,7 +586,7 @@ TEST(PluginPtr, LibraryManagement)
 
   CHECK_FOR_LIBRARY(path, false);
 
-  // Check that mulitple Loaders can work side-by-side
+  // Check that multiple Loaders can work side-by-side
   {
     gz::plugin::Loader pl1;
     pl1.LoadLib(path);

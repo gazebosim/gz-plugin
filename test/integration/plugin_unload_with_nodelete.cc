@@ -25,6 +25,6 @@ TEST(PluginsWithNoDelete,
 {
   LoadAndTestInstanceCounter(true, 1);
   // Since the plugin is not deleted on unload, the second time we load the
-  // plugin, the instance count is incremenetd.
+  // plugin, the instance count is incremented.
   LoadAndTestInstanceCounter(true, 2);
 }
