@@ -107,7 +107,7 @@ namespace gz
     /// never need to call this function.
     ///
     /// \warning Note that this function should be called ONLY while there are
-    /// no Products that are actively destructing, or else there is a miniscule
+    /// no Products that are actively destructing, or else there is a minuscule
     /// probability of causing a segmentation fault. This is never an issue in a
     /// single-threaded application.
     ///
