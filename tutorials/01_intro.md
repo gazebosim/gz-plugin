@@ -18,7 +18,7 @@ following concepts:
 The **loader** component can dynamically load plugin interfaces at runtime
 either by specifying a desired plugin or by listing plugins within a library
 file that provide a specific interface.
-There are highly performant ways to get direct access to a plugin interace
+There are highly performant ways to get direct access to a plugin interface
 that can be anticipated ahead of time by specializing the `Plugin` object at
 compile time.
 The loader also can use reference counting of plugin objects to unload
