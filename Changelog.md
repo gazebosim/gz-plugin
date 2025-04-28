@@ -4,9 +4,27 @@
 
 ## Gazebo Plugin 3.x
 
-### Gazebo Plugin 3.0.0 (2024-08-27)
+### Gazebo Plugin 3.0.1 (2025-02-12)
 
-Changes since 2.0.3:
+1. Require cmake 3.10.2 for consistency
+    * [Pull request #162](https://github.com/gazebosim/gz-plugin/pull/162)
+
+1. Fix typo in documentation (#150)
+    * [Pull request #151](https://github.com/gazebosim/gz-plugin/pull/151)
+
+### Gazebo Plugin 3.0.0 (2024-09-25)
+
+1. **Baseline:** this includes all changes from 2.0.3 and earlier.
+
+1. Miscellaneous documentation fixes
+    * [Pull request #153](https://github.com/gazebosim/gz-plugin/pull/153)
+    * [Pull request #150](https://github.com/gazebosim/gz-plugin/pull/150)
+
+1. Update gz-plugin3 badge URLs
+    * [Pull request #148](https://github.com/gazebosim/gz-plugin/pull/148)
+
+1. Ionic changelog
+    * [Pull request #147](https://github.com/gazebosim/gz-plugin/pull/147)
 
 1. Enable 24.04 CI, require cmake 3.22.1
     * [Pull request #146](https://github.com/gazebosim/gz-plugin/pull/146)
@@ -31,6 +49,17 @@ Changes since 2.0.3:
 
 
 ## Gazebo Plugin 2.x
+
+### Gazebo Plugin 2.0.4 (2025-01-30)
+
+1. Fix typo in documentation
+    * [Pull request #151](https://github.com/gazebosim/gz-plugin/pull/151)
+
+1. Add package.xml
+    * [Pull request #139](https://github.com/gazebosim/gz-plugin/pull/139)
+
+1. Add bazel deps to pass layering_check
+    * [Pull request #143](https://github.com/gazebosim/gz-plugin/pull/143)
 
 ### Gazebo Plugin 2.0.3 (2024-04-08)
 
