@@ -4,8 +4,14 @@ target_link_libraries(gz PUBLIC
   ${PROJECT_LIBRARY_TARGET_NAME}
 )
 
-set(plugin_executable gz-plugin)
+# Define the desired output name of the executable
+set(plugin_executable_output_name gz-plugin)
+# Append "-exe" to cmake target name to differ from the library target name
+set(plugin_executable gz-plugin-exe)
 add_executable(${plugin_executable} plugin_main.cc)
+set_target_properties(${plugin_executable}
+  PROPERTIES OUTPUT_NAME ${plugin_executable_output_name})
+
 target_link_libraries(${plugin_executable}
   gz
   gz-utils::cli
