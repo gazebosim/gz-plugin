@@ -8,7 +8,7 @@ set(plugin_executable gz-plugin)
 add_executable(${plugin_executable} plugin_main.cc)
 target_link_libraries(${plugin_executable}
   gz
-  gz-utils${GZ_UTILS_VER}::cli
+  gz-utils::cli
   ${loader}
 )
 

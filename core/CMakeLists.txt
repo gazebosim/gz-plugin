@@ -8,7 +8,7 @@ gz_create_core_library(
 )
 
 target_link_libraries(${PROJECT_LIBRARY_TARGET_NAME}
-  PUBLIC gz-utils${GZ_UTILS_VER}::gz-utils${GZ_UTILS_VER})
+  PUBLIC gz-utils::gz-utils)
 
 # Build the unit tests
 gz_build_tests(
