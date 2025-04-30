@@ -13,8 +13,8 @@ foreach(plugin_file ${plugin_files})
 
   target_link_libraries(${plugin}
     PRIVATE
-      gz-plugin${GZ_PLUGIN_VER}::register
-      gz-math${GZ_MATH_VER}::core)
+      gz-plugin::register
+      gz-math::core)
 
   # All these libraries will go into the same directory, so it's sufficient for
   # us to grab the last one.

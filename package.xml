@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
-  <name>gz-plugin4</name>
+  <name>gz-plugin</name>
   <version>4.0.0</version>
   <description>Gazebo Plugin : Cross-platform C++ library for dynamically loading plugins.</description>
   <maintainer email="ahcorde@gmail.com">Alejandro Hernández Cordero</maintainer>
@@ -10,10 +10,10 @@
 
   <buildtool_depend>cmake</buildtool_depend>
 
-  <build_depend>gz-cmake4</build_depend>
+  <build_depend>gz-cmake</build_depend>
 
   <depend>gz-tools2</depend>
-  <depend>gz-utils3</depend>
+  <depend>gz-utils</depend>
 
   <export>
     <build_type>cmake</build_type>

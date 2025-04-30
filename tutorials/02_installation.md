@@ -42,7 +42,7 @@ sudo apt install libgz-plugin4-dev
 
 1. Install Gazebo dependencies
   ```
-  sudo apt-get install libgz-cmake4-dev libgz-tools2-dev libgz-utils3-cli-dev
+  sudo apt-get install libgz-cmake5-dev libgz-tools2-dev libgz-utils4-cli-dev
   ```
 
 1. Install Gazebo Tools if you want to use the `gz plugin` command line tool:

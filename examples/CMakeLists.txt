@@ -2,14 +2,11 @@ cmake_minimum_required(VERSION 3.22.1 FATAL_ERROR)
 
 project(examples)
 
-find_package(gz-plugin4 QUIET REQUIRED COMPONENTS all)
-set(GZ_PLUGIN_VER ${gz-plugin4_VERSION_MAJOR})
+find_package(gz-plugin QUIET REQUIRED COMPONENTS all)
 
-find_package(gz-common6 QUIET)
-set(GZ_COMMON_VER ${gz-common6_VERSION_MAJOR})
+find_package(gz-common QUIET)
 
-find_package(gz-math8 QUIET)
-set(GZ_MATH_VER ${gz-math8_VERSION_MAJOR})
+find_package(gz-math QUIET)
 
 add_subdirectory(plugins)
 
@@ -30,9 +27,9 @@ foreach(example_file ${example_files})
 
   target_link_libraries(${example}
     PRIVATE
-      gz-plugin${GZ_PLUGIN_VER}::loader
-      gz-common${GZ_COMMON_VER}::core
-      gz-math${GZ_MATH_VER}::core
+      gz-plugin::loader
+      gz-common::core
+      gz-math::core
   )
 
   # This is only needed for the examples that use plugins, but it doesn't hurt
