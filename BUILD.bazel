@@ -1,30 +1,33 @@
-load(
-    "@gz//bazel/skylark:build_defs.bzl",
-    "GZ_ROOT",
-    "GZ_VISIBILITY",
-    "gz_configure_header",
-    "gz_export_header",
-    "gz_include_header",
-)
+load("@rules_gazebo//gazebo:headers.bzl", "gz_configure_header", "gz_export_header")
+load("@rules_license//rules:license.bzl", "license")
 
 package(
-    default_visibility = GZ_VISIBILITY,
+    default_applicable_licenses = [":license"],
+    features = [
+        "layering_check",
+        "parse_headers",
+    ],
 )
 
-licenses(["notice"])  # Apache-2.0
+license(
+    name = "license",
+    package_name = "gz-plugin",
+)
+
+licenses(["notice"])
 
 gz_configure_header(
-    name = "config",
+    name = "Config",
     src = "core/include/gz/plugin/config.hh.in",
-    cmakelists = ["CMakeLists.txt"],
-    package = "plugin",
+    out = "core/include/gz/plugin/config.hh",
+    package_xml = "package.xml",
 )
 
 gz_export_header(
-    name = "core/include/gz/plugin/Export.hh",
+    name = "Export",
+    out = "core/include/gz/plugin/Export.hh",
     export_base = "GZ_PLUGIN",
     lib_name = "gz-plugin",
-    visibility = ["//visibility:private"],
 )
 
 public_headers_no_gen = glob([
@@ -37,19 +40,9 @@ sources = glob(
     exclude = ["core/src/*_TEST.cc"],
 )
 
-gz_include_header(
-    name = "pluginhh_genrule",
-    out = "core/include/gz/plugin.hh",
-    hdrs = public_headers_no_gen + [
-        "core/include/gz/plugin/Export.hh",
-        "core/include/gz/plugin/config.hh",
-    ],
-)
-
 public_headers = public_headers_no_gen + [
     "core/include/gz/plugin/config.hh",
     "core/include/gz/plugin/Export.hh",
-    "core/include/gz/plugin.hh",
 ]
 
 cc_library(
@@ -57,8 +50,9 @@ cc_library(
     srcs = sources,
     hdrs = public_headers,
     includes = ["core/include"],
+    visibility = ["//visibility:public"],
     deps = [
-        GZ_ROOT + "utils",
+        "@gz-utils",
     ],
 )
 
@@ -67,8 +61,7 @@ cc_library(
     srcs = [src],
     deps = [
         ":core",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 ) for src in glob(
     [
@@ -89,6 +82,7 @@ cc_library(
     includes = [
         "register/include",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         ":core",
         ":loader",
@@ -96,10 +90,10 @@ cc_library(
 )
 
 gz_export_header(
-    name = "loader/include/gz/plugin/loader/Export.hh",
+    name = "loader_export",
+    out = "loader/include/gz/plugin/loader/Export.hh",
     export_base = "GZ_PLUGIN_LOADER",
     lib_name = "gz-plugin-loader",
-    visibility = ["//visibility:private"],
 )
 
 cc_library(
@@ -117,9 +111,10 @@ cc_library(
         "loader/include/gz/plugin/loader/Export.hh",
     ],
     includes = ["loader/include"],
+    visibility = ["//visibility:public"],
     deps = [
         ":core",
-        GZ_ROOT + "utils",
+        "@gz-utils",
     ],
 )
 
@@ -127,16 +122,14 @@ cc_test(
     name = "Loader_TEST",
     srcs = [
         "loader/src/Loader_TEST.cc",
-        ":config",
     ],
     defines = [
-        'GzDummyPlugins_LIB=\\"./plugin/test/libGzDummyPlugins.so\\"',
+        'GzDummyPlugins_LIB=\\"./test/libGzDummyPlugins.so\\"',
     ],
     deps = [
         ":core",
         ":loader",
-        GZ_ROOT + "plugin/test:test_plugins",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "//test:test_plugins",
+        "@googletest//:gtest_main",
     ],
 )
