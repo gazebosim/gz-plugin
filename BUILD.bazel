@@ -52,7 +52,7 @@ cc_library(
     includes = ["core/include"],
     visibility = ["//visibility:public"],
     deps = [
-        "@gz-utils",
+        "@gz-utils//:SuppressWarning",
     ],
 )
 
@@ -61,6 +61,7 @@ cc_library(
     srcs = [src],
     deps = [
         ":core",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 ) for src in glob(
@@ -114,7 +115,7 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":core",
-        "@gz-utils",
+        "@gz-utils//:SuppressWarning",
     ],
 )
 
@@ -130,6 +131,7 @@ cc_test(
         ":core",
         ":loader",
         "//test:test_plugins",
+        "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
