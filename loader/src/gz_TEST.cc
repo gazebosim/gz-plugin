@@ -58,26 +58,40 @@ std::string custom_exec_str(std::string _cmd)
 }
 
 //////////////////////////////////////////////////
+/// \brief Verify that two substrings are found within a larger string,
+/// separated only by spaces
+void verifySpaceSeparatedSubstrings(const std::string &_stringToSearch,
+                                    const std::string &_substring1,
+                                    const std::string &_substring2)
+{
+  auto iterator1 = _stringToSearch.find(_substring1);
+  EXPECT_NE(std::string::npos, iterator1)
+    << " failed to find \"" << _substring1 << "\" in:\n" << _stringToSearch;
+  ASSERT_LE(iterator1 + _substring1.size(), _stringToSearch.size());
+  auto iterator2 =
+      _stringToSearch.find_first_not_of(' ', iterator1 + _substring1.size());
+  EXPECT_NE(std::string::npos, iterator2);
+  ASSERT_LE(iterator2 + _substring2.size(), _stringToSearch.size());
+  EXPECT_EQ(_substring2, _stringToSearch.substr(iterator2, _substring2.size()));
+}
+
+//////////////////////////////////////////////////
 /// \brief Check 'gz plugin --help'.
-TEST(gzTest, IgnPluginHelp)
+TEST(gzTest, GzPluginHelp)
 {
   // Path to gz executable
   std::string gz = std::string(GZ_PATH);
   std::string output = custom_exec_str(gz + " plugin --help");
-  EXPECT_NE(std::string::npos,
-    output.find("-i [--info]                 Get info about a plugin."))
-      << output;
-  EXPECT_NE(std::string::npos,
-    output.find("-p [--plugin] TEXT          Path to a plugin."))
-      << output;
+  verifySpaceSeparatedSubstrings(
+      output, "-i [--info]", "Get info about a plugin.");
+  verifySpaceSeparatedSubstrings(
+      output, "-p [--plugin] TEXT", "Path to a plugin.");
 
   output = custom_exec_str(gz + " plugin");
-  EXPECT_NE(std::string::npos,
-    output.find("-i [--info]                 Get info about a plugin."))
-      << output;
-  EXPECT_NE(std::string::npos,
-    output.find("-p [--plugin] TEXT          Path to a plugin."))
-      << output;
+  verifySpaceSeparatedSubstrings(
+      output, "-i [--info]", "Get info about a plugin.");
+  verifySpaceSeparatedSubstrings(
+      output, "-p [--plugin] TEXT", "Path to a plugin.");
 }
 
 //////////////////////////////////////////////////
