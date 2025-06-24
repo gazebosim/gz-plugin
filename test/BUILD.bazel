@@ -1,7 +1,9 @@
-load(
-    "@gz//bazel/skylark:build_defs.bzl",
-    "GZ_ROOT",
-    "GZ_VISIBILITY",
+package(
+    default_applicable_licenses = ["//:license"],
+    features = [
+        "layering_check",
+        "parse_headers",
+    ],
 )
 
 cc_library(
@@ -26,7 +28,8 @@ cc_binary(
     linkshared = 1,
     deps = [
         ":test_plugins_core",
-        GZ_ROOT + "plugin:register",
+        "//:core",
+        "//:register",
     ],
 )
 
@@ -39,7 +42,8 @@ cc_binary(
     linkshared = 1,
     deps = [
         ":test_plugins_core",
-        GZ_ROOT + "plugin:register",
+        "//:core",
+        "//:register",
     ],
 )
 
@@ -52,7 +56,8 @@ cc_binary(
     linkshared = 1,
     deps = [
         ":test_plugins_core",
-        GZ_ROOT + "plugin:register",
+        "//:core",
+        "//:register",
     ],
 )
 
@@ -65,7 +70,8 @@ cc_binary(
     linkshared = 1,
     deps = [
         ":test_plugins_core",
-        GZ_ROOT + "plugin:register",
+        "//:core",
+        "//:register",
     ],
 )
 
@@ -78,7 +84,8 @@ cc_binary(
     linkshared = 1,
     deps = [
         ":test_plugins_core",
-        GZ_ROOT + "plugin:register",
+        "//:core",
+        "//:register",
     ],
 )
 
@@ -91,7 +98,7 @@ cc_binary(
     linkshared = 1,
     deps = [
         ":test_plugins_core",
-        GZ_ROOT + "plugin:register",
+        "//:register",
     ],
 )
 
@@ -104,7 +111,7 @@ cc_binary(
     linkshared = 1,
     deps = [
         ":test_plugins_core",
-        GZ_ROOT + "plugin:register",
+        "//:register",
     ],
 )
 
@@ -118,7 +125,7 @@ cc_binary(
     linkshared = 1,
     deps = [
         ":test_plugins_core",
-        GZ_ROOT + "plugin:register",
+        "//:register",
     ],
 )
 
@@ -136,16 +143,16 @@ cc_library(
         ":libGzTemplatedPlugins.so",
     ],
     defines = [
-        'GzDummyPlugins_LIB=\\"./plugin/test/libGzDummyPlugins.so\\"',
-        'GzFactoryPlugins_LIB=\\"./plugin/test/libGzFactoryPlugins.so\\"',
-        'GzTemplatedPlugins_LIB=\\"./plugin/test/libGzTemplatedPlugins.so\\"',
-        'GzBadPluginAlign_LIB=\\"./plugin/test/lbGzBadPluginAlign.so\\"',
-        'GzBadPluginNoInfo_LIB=\\"./plugin/test/lbGzBadPluginNoInfo.so\\"',
-        'GzBadPluginSize_LIB=\\"./plugin/test/lbGzBadPluginSize.so\\"',
-        'GzBadPluginAPIVersionOld_LIB=\\"./plugin/test/lbGzBadPluginAPIVersionOld.so\\"',
-        'GzBadPluginAPIVersionNew_LIB=\\"./plugin/test/lbGzBadPluginAPIVersionNew.so\\"',
+        'GzDummyPlugins_LIB=\\"./test/libGzDummyPlugins.so\\"',
+        'GzFactoryPlugins_LIB=\\"./test/libGzFactoryPlugins.so\\"',
+        'GzTemplatedPlugins_LIB=\\"./test/libGzTemplatedPlugins.so\\"',
+        'GzBadPluginAlign_LIB=\\"./test/lbGzBadPluginAlign.so\\"',
+        'GzBadPluginNoInfo_LIB=\\"./test/lbGzBadPluginNoInfo.so\\"',
+        'GzBadPluginSize_LIB=\\"./test/lbGzBadPluginSize.so\\"',
+        'GzBadPluginAPIVersionOld_LIB=\\"./test/lbGzBadPluginAPIVersionOld.so\\"',
+        'GzBadPluginAPIVersionNew_LIB=\\"./test/lbGzBadPluginAPIVersionNew.so\\"',
     ],
-    visibility = GZ_VISIBILITY,
+    visibility = ["//:__subpackages__"],
     deps = [
         ":test_plugins_core",
     ],
@@ -156,8 +163,10 @@ cc_test(
     srcs = ["integration/aliases.cc"],
     deps = [
         ":test_plugins",
-        GZ_ROOT + "plugin:loader",
-        "@gtest//:gtest_main",
+        ":test_plugins_core",
+        "//:loader",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -169,8 +178,11 @@ cc_test(
     ],
     deps = [
         ":test_plugins",
-        GZ_ROOT + "plugin:loader",
-        "@gtest//:gtest_main",
+        ":test_plugins_core",
+        "//:core",
+        "//:loader",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -182,8 +194,11 @@ cc_test(
     ],
     deps = [
         ":test_plugins",
-        GZ_ROOT + "plugin:loader",
-        "@gtest//:gtest_main",
+        ":test_plugins_core",
+        "//:core",
+        "//:loader",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -195,8 +210,11 @@ cc_test(
     ],
     deps = [
         ":test_plugins",
-        GZ_ROOT + "plugin:loader",
-        "@gtest//:gtest_main",
+        ":test_plugins_core",
+        "//:core",
+        "//:loader",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -208,8 +226,11 @@ cc_test(
     ],
     deps = [
         ":test_plugins",
-        GZ_ROOT + "plugin:loader",
-        "@gtest//:gtest_main",
+        ":test_plugins_core",
+        "//:core",
+        "//:loader",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -221,7 +242,10 @@ cc_test(
     ],
     deps = [
         ":test_plugins",
-        GZ_ROOT + "plugin:loader",
-        "@gtest//:gtest_main",
+        ":test_plugins_core",
+        "//:core",
+        "//:loader",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
     ],
 )

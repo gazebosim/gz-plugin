@@ -4,6 +4,21 @@
 
 ## Gazebo Plugin 3.x
 
+### Gazebo Plugin 3.1.0 (2025-05-14)
+
+1. Migrate bazel build setup to use bzlmod
+    * [Pull request #176](https://github.com/gazebosim/gz-plugin/pull/176)
+    * [Pull request #177](https://github.com/gazebosim/gz-plugin/pull/177)
+
+1. ci: run cppcheck, cpplint, doxygen on noble
+    * [Pull request #172](https://github.com/gazebosim/gz-plugin/pull/172)
+
+1. used codespell to fix spellcheck errors (#168)
+    * [Pull request #169](https://github.com/gazebosim/gz-plugin/pull/#169)
+
+1. Update README.md - fix windows badge
+    * [Pull request #166](https://github.com/gazebosim/gz-plugin/pull/166)
+
 ### Gazebo Plugin 3.0.1 (2025-02-12)
 
 1. Require cmake 3.10.2 for consistency
