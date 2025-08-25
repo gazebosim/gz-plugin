@@ -1,6 +1,11 @@
 ## Gazebo Plugin 4.x
 
-### Gazebo Plugin 4.0.0 (20XX-XX-XX)
+### Gazebo Plugin 4.0.0 (2025-08-25)
+
+1. Improve robustness to whitespace in gz_TEST
+    * [Pull request #176](https://github.com/gazebosim/gz-plugin/pull/180)
+1. readme: mention plugin development tutorial
+    *     * [Pull request #176](https://github.com/gazebosim/gz-plugin/pull/181)
 
 ## Gazebo Plugin 3.x
 
@@ -255,4 +260,3 @@
 ### Gazebo Plugin 1.0.0 (2019-02-05)
 
 1. Initial release
-
