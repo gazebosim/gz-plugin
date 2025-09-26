@@ -1,6 +1,12 @@
 ## Gazebo Plugin 4.x
 
-### Gazebo Plugin 4.0.0 (2025-08-25)
+### Gazebo Plugin 4.0.0 (2025-09-30)
+
+1. [Bazel] Update bazel module to use jetty release branches
+    * [Pull request #186](https://github.com/gazebosim/gz-plugin/pull/186)
+
+1. Use stable branch for gz-plugin4
+    * [Pull request #185](https://github.com/gazebosim/gz-plugin/pull/185)
 
 1. Improve robustness to whitespace in gz_TEST
     * [Pull request #180](https://github.com/gazebosim/gz-plugin/pull/180)
