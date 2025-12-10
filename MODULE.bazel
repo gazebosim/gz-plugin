@@ -10,4 +10,4 @@ bazel_dep(name = "rules_license", version = "1.0.0")
 
 # Gazebo Dependencies
 bazel_dep(name = "rules_gazebo", version = "0.0.2")
-bazel_dep(name = "gz-utils", version = "4.0.0-pre1")
+bazel_dep(name = "gz-utils", version = "4.0.0")
