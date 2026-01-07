@@ -8,7 +8,7 @@ project(gz-plugin VERSION 4.0.0)
 #============================================================================
 # Find gz-cmake
 #============================================================================
-find_package(gz-cmake REQUIRED)
+find_package(gz-cmake 5 REQUIRED)
 
 #============================================================================
 # Configure the project
@@ -48,7 +48,7 @@ set(GZ_TOOLS_VER 2)
 
 #--------------------------------------
 # Find gz-utils
-gz_find_package(gz-utils REQUIRED COMPONENTS cli)
+gz_find_package(gz-utils VERSION 4 REQUIRED COMPONENTS cli)
 
 #============================================================================
 # Configure the build
