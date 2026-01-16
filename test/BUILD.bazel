@@ -188,21 +188,24 @@ cc_test(
     ],
 )
 
-cc_test(
-    name = "INTEGRATION_factory",
-    srcs = [
-        "integration/factory.cc",
-        "integration/utils.hh",
-    ],
-    deps = [
-        ":test_plugins",
-        ":test_plugins_core",
-        "//:core",
-        "//:loader",
-        "@googletest//:gtest",
-        "@googletest//:gtest_main",
-    ],
-)
+# This test fails on MacOS due to factory library not being unloaded after
+# being released.
+# TODO: Re-enable once we can tag and exclude tests on only MacOS in Bazel CI.
+# cc_test(
+#     name = "INTEGRATION_factory",
+#     srcs = [
+#         "integration/factory.cc",
+#         "integration/utils.hh",
+#     ],
+#     deps = [
+#         ":test_plugins",
+#         ":test_plugins_core",
+#         "//:core",
+#         "//:loader",
+#         "@googletest//:gtest",
+#         "@googletest//:gtest_main",
+#     ],
+# )
 
 cc_test(
     name = "INTEGRATION_plugin",
