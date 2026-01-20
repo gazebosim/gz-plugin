@@ -126,9 +126,6 @@ cc_test(
     srcs = [
         "loader/src/Loader_TEST.cc",
     ],
-    defines = [
-        'GzDummyPlugins_LIB=\\"./test/libGzDummyPlugins.so\\"',
-    ],
     deps = [
         ":core",
         ":loader",

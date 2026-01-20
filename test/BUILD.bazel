@@ -19,6 +19,7 @@ cc_library(
         "plugins/TemplatedPlugins.hh",
     ],
     includes = ["plugins"],
+    deps = ["//:core"],
 )
 
 cc_binary(
@@ -145,14 +146,14 @@ cc_library(
         ":libGzTemplatedPlugins.so",
     ],
     defines = [
-        'GzDummyPlugins_LIB=\\"./test/libGzDummyPlugins.so\\"',
-        'GzFactoryPlugins_LIB=\\"./test/libGzFactoryPlugins.so\\"',
-        'GzTemplatedPlugins_LIB=\\"./test/libGzTemplatedPlugins.so\\"',
-        'GzBadPluginAlign_LIB=\\"./test/lbGzBadPluginAlign.so\\"',
-        'GzBadPluginNoInfo_LIB=\\"./test/lbGzBadPluginNoInfo.so\\"',
-        'GzBadPluginSize_LIB=\\"./test/lbGzBadPluginSize.so\\"',
-        'GzBadPluginAPIVersionOld_LIB=\\"./test/lbGzBadPluginAPIVersionOld.so\\"',
-        'GzBadPluginAPIVersionNew_LIB=\\"./test/lbGzBadPluginAPIVersionNew.so\\"',
+        'GzDummyPlugins_LIB=\\"$(rootpath :libGzDummyPlugins.so)\\"',
+        'GzFactoryPlugins_LIB=\\"$(rootpath :libGzFactoryPlugins.so)\\"',
+        'GzTemplatedPlugins_LIB=\\"$(rootpath :libGzTemplatedPlugins.so)\\"',
+        'GzBadPluginAlign_LIB=\\"$(rootpath :libGzBadPluginAlign.so)\\"',
+        'GzBadPluginNoInfo_LIB=\\"$(rootpath :libGzBadPluginNoInfo.so)\\"',
+        'GzBadPluginSize_LIB=\\"$(rootpath :libGzBadPluginSize.so)\\"',
+        'GzBadPluginAPIVersionOld_LIB=\\"$(rootpath :libGzBadPluginAPIVersionOld.so)\\"',
+        'GzBadPluginAPIVersionNew_LIB=\\"$(rootpath :libGzBadPluginAPIVersionNew.so)\\"',
     ],
     visibility = ["//:__subpackages__"],
     deps = [
