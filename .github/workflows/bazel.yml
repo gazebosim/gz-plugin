@@ -12,7 +12,11 @@ concurrency:
 
 jobs:
   test:
+<<<<<<< HEAD
     uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.7.0
+=======
+    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.2.3
+>>>>>>> 250fd7c ([bazel/infra] CI updates (#193))
     with:
       folders: |
         [
