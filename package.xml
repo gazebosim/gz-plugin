@@ -12,7 +12,7 @@
 
   <build_depend>gz-cmake</build_depend>
 
-  <depend>gz-tools2</depend>
+  <depend>gz-tools</depend>
   <depend>gz-utils</depend>
 
   <export>
