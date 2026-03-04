@@ -18,7 +18,7 @@ target_link_libraries(${plugin_executable}
   ${loader}
 )
 
-set(EXE_INSTALL_DIR "${CMAKE_INSTALL_LIBEXECDIR}/gz/${GZ_DESIGNATION}${PROJECT_VERSION_MAJOR}")
+set(EXE_INSTALL_DIR "${CMAKE_INSTALL_LIBEXECDIR}/gz/${GZ_DESIGNATION}")
 
 install(
   TARGETS
