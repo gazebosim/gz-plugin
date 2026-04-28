@@ -144,6 +144,36 @@ namespace gz
       public: std::unordered_set<std::string> LoadLib(
                   const std::string &_pathToLibrary, bool _noDelete);
 
+      /// \brief Load a library at the given path, capturing any diagnostic
+      /// error message into a caller-provided string instead of writing it
+      /// to std::cerr.
+      ///
+      /// This is useful when callers want to route plugin-loading errors
+      /// through their own logging system (e.g., gz-common's `gzerr`).
+      /// On success, _errorMsg is left untouched. On failure, _errorMsg is
+      /// set to a human-readable description of the failure (which may
+      /// include the dlerror() text on POSIX systems) and nothing is
+      /// written to std::cerr. Pass nullptr for _errorMsg to keep the
+      /// historical behavior of writing to std::cerr.
+      ///
+      /// An empty returned set may indicate either that the library failed
+      /// to load or that it loaded successfully but exposed no plugins.
+      /// Inspect _errorMsg to disambiguate.
+      ///
+      /// \param[in] _pathToLibrary
+      ///   The path to a library
+      /// \param[in] _noDelete
+      ///   If true, RTLD_NODELETE will be used when loading the library.
+      /// \param[out] _errorMsg
+      ///   If non-null, on failure receives a description of the error and
+      ///   no message is written to std::cerr. If null, errors are reported
+      ///   to std::cerr (legacy behavior).
+      ///
+      /// \returns The set of plugins that have been loaded from the library
+      public: std::unordered_set<std::string> LoadLib(
+                  const std::string &_pathToLibrary, bool _noDelete,
+                  std::string *_errorMsg);
+
       /// \brief Instantiates a plugin for the given plugin name
       ///
       /// \param[in] _pluginNameOrAlias

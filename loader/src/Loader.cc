@@ -33,6 +33,25 @@
 #include <gz/plugin/detail/StaticRegistry.hh>
 #include <gz/plugin/utility.hh>
 
+namespace
+{
+  /// \brief Append a single-line diagnostic to _errorMsg if non-null;
+  /// otherwise write it to std::cerr (legacy behavior).
+  inline void ReportError(std::string *_errorMsg, const std::string &_line)
+  {
+    if (_errorMsg)
+    {
+      if (!_errorMsg->empty())
+        _errorMsg->push_back('\n');
+      _errorMsg->append(_line);
+    }
+    else
+    {
+      std::cerr << _line << std::endl;
+    }
+  }
+}
+
 namespace gz
 {
   namespace plugin
@@ -43,20 +62,29 @@ namespace gz
     {
       /// \brief Attempt to load a library at the given path.
       /// \param[in] _pathToLibrary The full path to the desired library
+      /// \param[in] _noDelete See Loader::LoadLib.
+      /// \param[out] _errorMsg If non-null, on failure receives the error
+      /// message and nothing is written to std::cerr. If null, errors are
+      /// written to std::cerr (legacy behavior).
       /// \return If a library exists at the given path, get a point to its dl
       /// handle. If the library does not exist, get a nullptr.
       public: std::shared_ptr<void> LoadLib(
-        const std::string &_pathToLibrary, bool _noDelete);
+        const std::string &_pathToLibrary, bool _noDelete,
+        std::string *_errorMsg);
 
       /// \brief Using a dl handle produced by LoadLib, extract the
       /// Info from the loaded library.
       /// \param[in] _dlHandle A handle produced by LoadLib
       /// \param[in] _pathToLibrary The path that the library was loaded from
       /// (used for debug purposes)
+      /// \param[out] _errorMsg If non-null, error messages are appended to
+      /// this string and nothing is written to std::cerr. If null, errors are
+      /// written to std::cerr (legacy behavior).
       /// \return All the Info provided by the loaded library.
       public: std::vector<Info> LoadPlugins(
         const std::shared_ptr<void> &_dlHandle,
-        const std::string &_pathToLibrary) const;
+        const std::string &_pathToLibrary,
+        std::string *_errorMsg) const;
 
       /// \sa Loader::ForgetLibrary()
       public: bool ForgetLibrary(void *_dlHandle);
@@ -140,17 +168,24 @@ namespace gz
     std::unordered_set<std::string> Loader::LoadLib(
         const std::string &_pathToLibrary)
     {
-      return this->LoadLib(_pathToLibrary, false);
+      return this->LoadLib(_pathToLibrary, false, nullptr);
     }
     /////////////////////////////////////////////////
     std::unordered_set<std::string> Loader::LoadLib(
         const std::string &_pathToLibrary, bool _noDelete)
     {
+      return this->LoadLib(_pathToLibrary, _noDelete, nullptr);
+    }
+    /////////////////////////////////////////////////
+    std::unordered_set<std::string> Loader::LoadLib(
+        const std::string &_pathToLibrary, bool _noDelete,
+        std::string *_errorMsg)
+    {
       std::unordered_set<std::string> newPlugins;
 
       // Attempt to load the library at this path
       const std::shared_ptr<void> &dlHandle =
-          this->dataPtr->LoadLib(_pathToLibrary, _noDelete);
+          this->dataPtr->LoadLib(_pathToLibrary, _noDelete, _errorMsg);
 
       // Quit early and return an empty set of plugin names if we did not
       // actually get a valid dlHandle.
@@ -161,7 +196,7 @@ namespace gz
 
       // Found a shared library, does it have the symbols we're looking for?
       std::vector<Info> loadedPlugins = this->dataPtr->LoadPlugins(
-            dlHandle, _pathToLibrary);
+            dlHandle, _pathToLibrary, _errorMsg);
 
       for (Info &plugin : loadedPlugins)
       {
@@ -428,7 +463,8 @@ namespace gz
 
     /////////////////////////////////////////////////
     std::shared_ptr<void> Loader::Implementation::LoadLib(
-        const std::string &_full_path, bool _noDelete)
+        const std::string &_full_path, bool _noDelete,
+        std::string *_errorMsg)
     {
       std::shared_ptr<void> dlHandlePtr;
 
@@ -451,8 +487,10 @@ namespace gz
       const char *loadError = dlerror();
       if (nullptr == dlHandle || nullptr != loadError)
       {
-        std::cerr << "Error while loading the library [" << _full_path << "]: "
-                  << loadError << std::endl;
+        std::ostringstream msg;
+        msg << "Error while loading the library [" << _full_path << "]: "
+            << (loadError ? loadError : "unknown error");
+        ReportError(_errorMsg, msg.str());
 
         // Just return a nullptr if the library could not be loaded. The
         // Loader::LoadLib(~) function will handle this gracefully.
@@ -525,7 +563,8 @@ namespace gz
     /////////////////////////////////////////////////
     std::vector<Info> Loader::Implementation::LoadPlugins(
         const std::shared_ptr<void> &_dlHandle,
-        const std::string& _pathToLibrary) const
+        const std::string& _pathToLibrary,
+        std::string *_errorMsg) const
     {
       std::vector<Info> loadedPlugins;
 
@@ -540,9 +579,11 @@ namespace gz
       // Does the library have the right symbol?
       if (nullptr == infoFuncPtr)
       {
-        std::cerr << "Library [" << _pathToLibrary << "] does not export any "
-                  << "plugins. The symbol [" << infoSymbol << "] is missing, "
-                  << "or it is not externally visible.\n";
+        std::ostringstream msg;
+        msg << "Library [" << _pathToLibrary << "] does not export any "
+            << "plugins. The symbol [" << infoSymbol << "] is missing, "
+            << "or it is not externally visible.";
+        ReportError(_errorMsg, msg.str());
 
         return loadedPlugins;
       }
@@ -594,31 +635,37 @@ namespace gz
         // We can call GzPluginHook(~) again with the
         // API version that it expects.
 
-        std::cerr << "The library [" << _pathToLibrary << "] is using an "
-                  << "incompatible version [" << version << "] of the "
-                  << "gz::plugin Info API. The version in this library "
-                  << "is [" << INFO_API_VERSION << "].\n";
+        std::ostringstream msg;
+        msg << "The library [" << _pathToLibrary << "] is using an "
+            << "incompatible version [" << version << "] of the "
+            << "gz::plugin Info API. The version in this library "
+            << "is [" << INFO_API_VERSION << "].";
+        ReportError(_errorMsg, msg.str());
         return loadedPlugins;
       }
 
       if (sizeof(Info) != size || alignof(Info) != alignment)
       {
-        std::cerr << "The plugin::Info size or alignment are not consistent "
-               << "with the expected values for the library [" << _pathToLibrary
-               << "]:\n -- size: expected " << sizeof(Info)
-               << " | received " << size << "\n -- alignment: expected "
-               << alignof(Info) << " | received " << alignment << "\n"
-               << " -- We will not be able to safely load plugins from that "
-               << "library.\n";
+        std::ostringstream msg;
+        msg << "The plugin::Info size or alignment are not consistent "
+            << "with the expected values for the library [" << _pathToLibrary
+            << "]:\n -- size: expected " << sizeof(Info)
+            << " | received " << size << "\n -- alignment: expected "
+            << alignof(Info) << " | received " << alignment << "\n"
+            << " -- We will not be able to safely load plugins from that "
+            << "library.";
+        ReportError(_errorMsg, msg.str());
 
         return loadedPlugins;
       }
 
       if (!allInfo)
       {
-        std::cerr << "The library [" << _pathToLibrary << "] failed to provide "
-                  << "gz::plugin Info for unknown reasons. Please report "
-                  << "this error as a bug!\n";
+        std::ostringstream msg;
+        msg << "The library [" << _pathToLibrary << "] failed to provide "
+            << "gz::plugin Info for unknown reasons. Please report "
+            << "this error as a bug!";
+        ReportError(_errorMsg, msg.str());
 
         return loadedPlugins;
       }
