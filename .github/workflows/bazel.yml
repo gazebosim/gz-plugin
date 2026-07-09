@@ -1,17 +1,10 @@
 name: Bazel CI
 on:
-<<<<<<< HEAD
-  push:
-    branches: [gz-plugin3, main]
-  pull_request:
-    branches: [gz-plugin3, main]
-=======
   pull_request:
   push:
     branches:
       - 'gz-plugin[1-9]?[0-9]'
       - 'main'
->>>>>>> 250fd7c ([bazel/infra] CI updates (#193))
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
