@@ -11,13 +11,17 @@ concurrency:
 
 jobs:
   test:
+<<<<<<< HEAD
     uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7
+=======
+    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.7.0
+>>>>>>> cb46527 ([bazel/infra] Update bazel CI to use workflow v7.7.0 (#215))
     with:
       folders: |
         [
-          ".",
+          "."
         ]
       exclude: |
         [
-          {"folder": ".", "bzlmodEnabled": false},
+          {"folder": ".", "bzlmodEnabled": false}
         ]
