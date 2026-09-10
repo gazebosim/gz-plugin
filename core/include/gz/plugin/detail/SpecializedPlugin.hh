@@ -108,6 +108,15 @@ namespace gz
       #ifdef GZ_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
       usedSpecializedInterfaceAccess = true;
       #endif
+
+      const void *currentInstance = this->PrivateGetInstancePtr().get();
+      if (currentInstance != this->privateLastInstancePtr)
+      {
+        this->privateSpecializedInterfaceIterator =
+            this->PrivateGetOrCreateIterator(typeid(SpecInterface).name());
+        this->privateLastInstancePtr = currentInstance;
+      }
+
       return static_cast<SpecInterface*>(
             this->privateSpecializedInterfaceIterator->second);
     }
@@ -129,6 +138,15 @@ namespace gz
       #ifdef GZ_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
       usedSpecializedInterfaceAccess = true;
       #endif
+
+      const void *currentInstance = this->PrivateGetInstancePtr().get();
+      if (currentInstance != this->privateLastInstancePtr)
+      {
+        this->privateSpecializedInterfaceIterator =
+            this->PrivateGetOrCreateIterator(typeid(SpecInterface).name());
+        this->privateLastInstancePtr = currentInstance;
+      }
+
       return static_cast<SpecInterface*>(
             this->privateSpecializedInterfaceIterator->second);
     }
@@ -150,17 +168,23 @@ namespace gz
       #ifdef GZ_UNITTEST_SPECIALIZED_PLUGIN_ACCESS
       usedSpecializedInterfaceAccess = true;
       #endif
+
+      const void *currentInstance = this->PrivateGetInstancePtr().get();
+      if (currentInstance != this->privateLastInstancePtr)
+      {
+        this->privateSpecializedInterfaceIterator =
+            this->PrivateGetOrCreateIterator(typeid(SpecInterface).name());
+        this->privateLastInstancePtr = currentInstance;
+      }
+
       return (nullptr != this->privateSpecializedInterfaceIterator->second);
     }
 
     /////////////////////////////////////////////////
     template <class SpecInterface>
     SpecializedPlugin<SpecInterface>::SpecializedPlugin()
-      : privateSpecializedInterfaceIterator(
-          this->PrivateGetOrCreateIterator(
-            typeid(SpecInterface).name()))
     {
-      // Do nothing
+      // Do nothing. We use lazy initialization for the iterator.
     }
 
     namespace detail

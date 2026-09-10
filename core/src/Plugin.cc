@@ -119,8 +119,11 @@ namespace gz
         // This would break any specialized plugins that provide instant access
         // to specialized interfaces. Instead, we simply overwrite the map
         // entries with a nullptr.
-        for (auto &entry : this->interfaces)
-          entry.second = nullptr;
+        //
+        // However, if this Implementation is being cleared, we should also
+        // ensure we aren't affecting other wrappers that might be sharing
+        // this map. We'll give this implementation a fresh map.
+        this->interfaces = std::make_shared<Plugin::InterfaceMap>();
       }
 
       /// \brief Initialize this object by creating a new plugin instance from
@@ -182,7 +185,7 @@ namespace gz
           // entry.second: function which casts the loadedInstance pointer to
           //               the correct location of the interface within the
           //               plugin
-          this->interfaces[entry.first] =
+          (*this->interfaces)[entry.first] =
               entry.second(this->loadedInstancePtr.get());
         }
       }
@@ -191,8 +194,6 @@ namespace gz
       /// \param[in] _other Another instance of a Plugin::Implementation object
       public: void Copy(const Implementation *_other)
       {
-        this->Clear();
-
         if (!_other)
         {
           // LCOV_EXCL_START
@@ -205,19 +206,12 @@ namespace gz
           // LCOV_EXCL_STOP
         }
 
+        if (this == _other)
+          return;
+
         this->loadedInstancePtr = _other->loadedInstancePtr;
         this->info = _other->info;
-
-        if (this->loadedInstancePtr)
-        {
-          for (const auto &entry : _other->interfaces)
-          {
-            // entry.first:  name of the interface
-            // entry.second: pointer to the location of that interface within
-            //               the plugin instance
-            this->interfaces[entry.first] = entry.second;
-          }
-        }
+        this->interfaces = _other->interfaces;
       }
 
       /// \brief Initialize this object using another instance
@@ -230,6 +224,7 @@ namespace gz
       {
         this->loadedInstancePtr = _instance;
         this->info = _info;
+        this->interfaces = std::make_shared<Plugin::InterfaceMap>();
 
         if (this->loadedInstancePtr)
         {
@@ -253,7 +248,7 @@ namespace gz
             // entry.second: function which casts the loadedInstance pointer to
             //               the correct location of the interface within the
             //               plugin
-            this->interfaces[entry.first] =
+            (*this->interfaces)[entry.first] =
                 entry.second(this->loadedInstancePtr.get());
           }
         }
@@ -275,7 +270,8 @@ namespace gz
       // characters) and a relatively small number of entries in the set (5-20
       // entries). Those conditions match our expected use case here. In fact,
       // ordered lookup can sometimes outperform unordered in these conditions.
-      public: Plugin::InterfaceMap interfaces;
+      public: std::shared_ptr<Plugin::InterfaceMap> interfaces =
+          std::make_shared<Plugin::InterfaceMap>();
 
       /// \brief shared_ptr which manages the lifecycle of the plugin instance.
       ///
@@ -316,7 +312,7 @@ namespace gz
         return (info->demangledInterfaces.count(_interfaceName) != 0);
       }
 
-      return (this->dataPtr->interfaces.count(_interfaceName) != 0);
+      return (this->dataPtr->interfaces->count(_interfaceName) != 0);
     }
 
     //////////////////////////////////////////////////
@@ -339,8 +335,8 @@ namespace gz
     void *Plugin::PrivateQueryInterface(
         const std::string &_interfaceName) const
     {
-      const auto &it = this->dataPtr->interfaces.find(_interfaceName);
-      if (this->dataPtr->interfaces.end() == it)
+      const auto &it = this->dataPtr->interfaces->find(_interfaceName);
+      if (this->dataPtr->interfaces->end() == it)
         return nullptr;
 
       return it->second;
@@ -390,11 +386,11 @@ namespace gz
 
     //////////////////////////////////////////////////
     Plugin::InterfaceMap::iterator Plugin::PrivateGetOrCreateIterator(
-        const std::string &_interfaceName)
+        const std::string &_interfaceName) const
     {
       // We want to use the insert function here to avoid accidentally
       // overwriting a value which might exist at the desired map key.
-      return this->dataPtr->interfaces.insert(
+      return this->dataPtr->interfaces->insert(
             std::make_pair(_interfaceName, nullptr)).first;
     }
 
