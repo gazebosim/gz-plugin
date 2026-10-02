@@ -5,7 +5,7 @@
   <version>3.1.0</version>
   <description>Gazebo Plugin : Cross-platform C++ library for dynamically loading plugins.</description>
   <maintainer email="ahcorde@gmail.com">Alejandro Hernández Cordero</maintainer>
-  <license>Apache License 2.0</license>
+  <license>Apache-2.0</license>
   <url type="website">https://github.com/gazebosim/gz-plugin</url>
 
   <buildtool_depend>cmake</buildtool_depend>
