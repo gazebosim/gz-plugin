@@ -18,11 +18,28 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <iostream>
+#include <sstream>
+#include <string>
 
 #include <gz/plugin/Loader.hh>
 #include <gz/plugin/config.hh>
 
 #include <gz/plugin/SpecializedPluginPtr.hh>
+
+namespace
+{
+  // RAII helper that redirects std::cerr to a stringstream for the lifetime
+  // of the object, restoring the original buffer on destruction.
+  class CerrCapture
+  {
+    public: CerrCapture() : oldBuf(std::cerr.rdbuf(captured.rdbuf())) {}
+    public: ~CerrCapture() { std::cerr.rdbuf(this->oldBuf); }
+    public: std::string str() const { return this->captured.str(); }
+    private: std::stringstream captured;
+    private: std::streambuf *oldBuf;
+  };
+}
 
 /////////////////////////////////////////////////
 TEST(Loader, InitialNoInterfacesImplemented)
@@ -90,6 +107,67 @@ TEST(Loader, DoubleLoad)
 
   loader.LoadLib(GzDummyPlugins_LIB);
   EXPECT_EQ(interfaceCount, loader.InterfacesImplemented().size());
+}
+
+/////////////////////////////////////////////////
+TEST(Loader, LoadLibCapturesDlopenErrorIntoOutParam)
+{
+  gz::plugin::Loader loader;
+  std::string errorMsg;
+  CerrCapture capture;
+
+  auto plugins = loader.LoadLib("/path/to/libDoesNotExist.so",
+                                /*_noDelete=*/false, &errorMsg);
+
+  EXPECT_TRUE(plugins.empty());
+  EXPECT_FALSE(errorMsg.empty())
+      << "Expected dlopen failure to populate the error string";
+  EXPECT_NE(std::string::npos,
+            errorMsg.find("/path/to/libDoesNotExist.so"))
+      << "Expected the failing path to appear in the error message, got: "
+      << errorMsg;
+  EXPECT_TRUE(capture.str().empty())
+      << "Expected std::cerr to be silent when an error string is provided, "
+      << "but got: " << capture.str();
+}
+
+/////////////////////////////////////////////////
+TEST(Loader, LoadLibLegacyOverloadsStillWriteToCerr)
+{
+  // The 1-arg and 2-arg overloads must keep writing to std::cerr when the
+  // load fails — that's the contract callers depended on before the
+  // out-param overload existed.
+  gz::plugin::Loader loader;
+
+  {
+    CerrCapture capture;
+    auto plugins = loader.LoadLib("/path/to/libDoesNotExist.so");
+    EXPECT_TRUE(plugins.empty());
+    EXPECT_FALSE(capture.str().empty())
+        << "Legacy 1-arg overload must still write to std::cerr";
+  }
+
+  {
+    CerrCapture capture;
+    auto plugins =
+        loader.LoadLib("/path/to/libDoesNotExist.so", /*_noDelete=*/true);
+    EXPECT_TRUE(plugins.empty());
+    EXPECT_FALSE(capture.str().empty())
+        << "Legacy 2-arg overload must still write to std::cerr";
+  }
+}
+
+/////////////////////////////////////////////////
+TEST(Loader, LoadLibSuccessLeavesErrorMsgUntouched)
+{
+  gz::plugin::Loader loader;
+  std::string errorMsg = "should not be cleared";
+
+  auto plugins = loader.LoadLib(GzDummyPlugins_LIB,
+                                /*_noDelete=*/false, &errorMsg);
+
+  EXPECT_LT(0u, plugins.size());
+  EXPECT_EQ("should not be cleared", errorMsg);
 }
 
 /////////////////////////////////////////////////
