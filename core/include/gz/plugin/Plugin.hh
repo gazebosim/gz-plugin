@@ -182,7 +182,7 @@ namespace gz
       /// \brief Get or create an iterator to the std::map that holds pointers
       /// to the various interfaces provided by this plugin instance.
       private: InterfaceMap::iterator PrivateGetOrCreateIterator(
-          const std::string &_interfaceName);
+          const std::string &_interfaceName) const;
 
       class Implementation;
       GZ_UTILS_WARN_IGNORE__DLL_INTERFACE_MISSING

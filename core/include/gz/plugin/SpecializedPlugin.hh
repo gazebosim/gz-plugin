@@ -148,11 +148,15 @@ namespace gz
 
       // Dev note (MXG): The privateSpecializedInterfaceIterator object must be
       // available to the user during their compile time, so it cannot be hidden
-      // using PIMPL. The iterator is const because it must always point to the
-      // same entry throughout its entire lifecycle.
+      // using PIMPL. The iterator is mutable because it may need to be
+      // re-initialized if the underlying plugin instance changes.
       /// \brief Iterator that points to the entry of the specialized interface
-      private:
-      const Plugin::InterfaceMap::iterator privateSpecializedInterfaceIterator;
+      private: mutable Plugin::InterfaceMap::iterator
+          privateSpecializedInterfaceIterator;
+
+      /// \brief Pointer to the instance that the iterator is currently
+      /// associated with.
+      private: mutable const void *privateLastInstancePtr = nullptr;
 
       /// \brief Default constructor
       protected: SpecializedPlugin();
