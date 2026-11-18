@@ -2,6 +2,10 @@
 
 ### Gazebo Plugin 5.0.0 (20XX-XX-XX)
 
+1. Add `Loader::LoadLib` overload taking a `std::string *_errorMsg` out
+   parameter so callers can route plugin-loading errors through their own
+   logger instead of `std::cerr`.
+
 ## Gazebo Plugin 4.x
 
 ### Gazebo Plugin 4.0.0 (2025-08-25)
